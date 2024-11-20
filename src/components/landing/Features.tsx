@@ -4,14 +4,14 @@ import { Card } from "@/components/ui/card";
 const Features = () => {
   const features = [
     {
-      title: "Intelligent Task Management",
-      description: "Streamline your tasks and collaborate seamlessly with our cutting-edge SaaS startup platform.",
-      points: ["Smart Task Assignment", "Real-time Collaboration", "Data Security & Privacy"]
+      title: "Share Your Expertise",
+      description: "Whether you're a professional ceramist or a passionate home cook, create and manage your craft classes with our easy-to-use platform.",
+      points: ["Simple Class Creation", "Flexible Scheduling", "Student Management"]
     },
     {
-      title: "Advanced Analytics",
-      description: "Harness the power of AI-driven analytics to optimize your campaigns and understand your audience better.",
-      points: ["Smart Audience Segmentation", "Predictive Performance", "Real-time Visualization"]
+      title: "Discover Local Classes",
+      description: "Find and book hands-on classes in your area. Learn from experienced craftspeople and join a community of creative learners.",
+      points: ["Browse by Category", "Read Reviews", "Secure Booking"]
     }
   ];
 
@@ -20,11 +20,11 @@ const Features = () => {
       <div className="container-padding">
         <div className="text-center mb-16">
           <span className="bg-accent-purple/10 text-accent-purple px-4 py-1.5 rounded-full text-sm font-medium">
-            TWO-COL FEATURES
+            HOW IT WORKS
           </span>
-          <h2 className="heading-lg mt-6">Supercharge Your Workflows</h2>
+          <h2 className="heading-lg mt-6">Connect, Create, and Learn</h2>
           <p className="text-neutral-600 mt-4 max-w-2xl mx-auto">
-            Unlock your team's true potential with our state-of-the-art SaaS platform.
+            ClassCorner brings together craft enthusiasts and skilled artisans in your local community.
           </p>
         </div>
 
@@ -44,9 +44,9 @@ const Features = () => {
                 ))}
               </ul>
               <div className="mt-8 flex gap-4">
-                <button className="button-primary">Start 14-day trial</button>
+                <button className="button-primary">Start Teaching</button>
                 <button className="px-6 py-3 text-neutral-600 hover:text-primary transition-colors">
-                  Contact Sales
+                  Learn More
                 </button>
               </div>
             </div>

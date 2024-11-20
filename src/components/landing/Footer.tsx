@@ -6,54 +6,54 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-primary rounded-full"></div>
-              <span className="text-xl font-semibold">Lovely</span>
+              <span className="text-xl font-semibold">ClassCorner</span>
             </div>
             <p className="text-neutral-600 text-sm">
-              Modern SaaS Platform for Businesses
+              Connect with Local Craft Classes
             </p>
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">Product</h4>
+            <h4 className="font-semibold mb-4">Discover</h4>
             <ul className="space-y-3 text-sm text-neutral-600">
-              <li><a href="#" className="hover:text-primary transition-colors">Features</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Documentation</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Browse Classes</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Categories</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Teachers</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Company</h4>
+            <h4 className="font-semibold mb-4">Teach</h4>
             <ul className="space-y-3 text-sm text-neutral-600">
-              <li><a href="#" className="hover:text-primary transition-colors">About</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Careers</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Start Teaching</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Resources</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Community</a></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-semibold mb-4">Legal</h4>
+            <h4 className="font-semibold mb-4">Support</h4>
             <ul className="space-y-3 text-sm text-neutral-600">
-              <li><a href="#" className="hover:text-primary transition-colors">Privacy</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">Terms</a></li>
-              <li><a href="#" className="hover:text-primary transition-colors">License</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Safety</a></li>
+              <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
             </ul>
           </div>
         </div>
 
         <div className="border-t border-neutral-200 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-neutral-600">
-            © 2024 Lovely. All rights reserved.
+            © 2024 ClassCorner. All rights reserved.
           </p>
           <div className="flex gap-6">
             <a href="#" className="text-neutral-600 hover:text-primary transition-colors">
-              Twitter
+              Instagram
             </a>
             <a href="#" className="text-neutral-600 hover:text-primary transition-colors">
-              GitHub
+              Pinterest
             </a>
             <a href="#" className="text-neutral-600 hover:text-primary transition-colors">
-              Discord
+              Facebook
             </a>
           </div>
         </div>
