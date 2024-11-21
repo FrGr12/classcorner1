@@ -11,7 +11,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Share Your Craft, Find Your Next Class
+          Find Your Next Creative Class
         </motion.h1>
         <motion.p 
           className="text-xl text-neutral-600 mb-8"
@@ -19,7 +19,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          Connect with local artisans and craft enthusiasts. Book classes in ceramics, painting, cooking, and more.
+          Discover and book local craft classes in ceramics, painting, cooking, and more. Learn from experienced artisans in your city.
         </motion.p>
         <motion.div 
           className="flex flex-wrap justify-center gap-4"
@@ -28,10 +28,10 @@ const Hero = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <button className="button-primary flex items-center gap-2">
-            Start Teaching
+            Browse Classes
           </button>
           <button className="px-6 py-3 border border-neutral-300 rounded-lg hover:bg-neutral-200/50 transition-colors">
-            Browse Classes
+            Teach a Class
           </button>
         </motion.div>
       </div>

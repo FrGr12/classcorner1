@@ -1,6 +1,6 @@
 import Navigation from "@/components/landing/Navigation";
 import Hero from "@/components/landing/Hero";
-import TrustedBy from "@/components/landing/TrustedBy";
+import Categories from "@/components/landing/Categories";
 import Features from "@/components/landing/Features";
 import Footer from "@/components/landing/Footer";
 
@@ -9,7 +9,7 @@ const Index = () => {
     <div className="min-h-screen bg-neutral-100">
       <Navigation />
       <Hero />
-      <TrustedBy />
+      <Categories />
       <Features />
       <Footer />
     </div>
