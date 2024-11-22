@@ -78,7 +78,7 @@ const Hero = () => {
               <MapPin className="w-5 h-5 text-neutral-400" />
               <Select>
                 <SelectTrigger className="border-0 p-0 h-auto w-[140px]">
-                  <SelectValue placeholder="Pick a city" />
+                  <SelectValue placeholder="Pick a city (optional)" />
                 </SelectTrigger>
                 <SelectContent>
                   {cities.map((city) => (

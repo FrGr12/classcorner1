@@ -49,7 +49,7 @@ const Categories = () => {
                 key={category.name}
                 onClick={() => setSelectedCategory(category.name)}
                 className={cn(
-                  "flex items-center gap-2 px-6 py-3 rounded-full transition-all",
+                  "flex items-center gap-2 px-8 py-3 rounded-full transition-all whitespace-nowrap min-w-[200px]",
                   "hover:shadow-md",
                   selectedCategory === category.name
                     ? "bg-primary text-primary-foreground shadow-md"
