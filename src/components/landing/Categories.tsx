@@ -56,13 +56,15 @@ const Categories = () => {
           </div>
         </div>
 
-        {/* Classes in Selected Category */}
-        {selectedCategory && (
-          <div className="mt-12">
-            <h2 className="heading-lg mb-8">Classes in {selectedCategory}</h2>
-            <ClassGrid category={selectedCategory} />
-          </div>
-        )}
+        {/* Classes Display */}
+        <div className="mt-12">
+          <h2 className="heading-lg mb-8">
+            {selectedCategory 
+              ? `Classes in ${selectedCategory}`
+              : "Highly Rated Classes"}
+          </h2>
+          <ClassGrid category={selectedCategory || "featured"} />
+        </div>
 
         {/* Popular Cities */}
         <div className="mt-16">

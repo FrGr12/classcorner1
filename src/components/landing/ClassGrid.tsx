@@ -15,9 +15,22 @@ const mockClasses = {
   ],
   Painting: [
     { id: 1, title: "Oil Painting Fundamentals", instructor: "Robert Ross", price: 79, rating: 4.8, image: "/placeholder.svg", level: "Beginner" },
-    // ... similar structure for other painting classes
+    { id: 2, title: "Watercolor Techniques", instructor: "Maria Chen", price: 89, rating: 4.7, image: "/placeholder.svg", level: "Intermediate" },
   ],
-  // ... similar structure for other categories
+  Cooking: [
+    { id: 1, title: "Italian Cuisine Basics", instructor: "Marco Rossi", price: 99, rating: 4.9, image: "/placeholder.svg", level: "Beginner" },
+    { id: 2, title: "Advanced Pastry Making", instructor: "Sophie Laurent", price: 129, rating: 4.8, image: "/placeholder.svg", level: "Advanced" },
+  ],
+  featured: [
+    { id: 1, title: "Introduction to Pottery", instructor: "Jane Smith", price: 89, rating: 4.9, image: "/placeholder.svg", level: "Beginner", category: "Ceramics" },
+    { id: 2, title: "Oil Painting Masterclass", instructor: "Robert Ross", price: 99, rating: 4.9, image: "/placeholder.svg", level: "Advanced", category: "Painting" },
+    { id: 3, title: "Italian Cuisine Basics", instructor: "Marco Rossi", price: 79, rating: 4.8, image: "/placeholder.svg", level: "Beginner", category: "Cooking" },
+    { id: 4, title: "Portrait Photography", instructor: "Sarah Lee", price: 149, rating: 4.8, image: "/placeholder.svg", level: "Intermediate", category: "Photography" },
+    { id: 5, title: "Woodworking Essentials", instructor: "John Wood", price: 129, rating: 4.8, image: "/placeholder.svg", level: "Beginner", category: "Woodworking" },
+    { id: 6, title: "Ring Making Workshop", instructor: "Emma Silver", price: 99, rating: 4.8, image: "/placeholder.svg", level: "Intermediate", category: "Jewelry" },
+    { id: 7, title: "Advanced Ceramic Sculpture", instructor: "Tom Wilson", price: 159, rating: 4.8, image: "/placeholder.svg", level: "Advanced", category: "Ceramics" },
+    { id: 8, title: "Watercolor Landscapes", instructor: "Maria Chen", price: 89, rating: 4.8, image: "/placeholder.svg", level: "Intermediate", category: "Painting" },
+  ]
 };
 
 interface ClassGridProps {

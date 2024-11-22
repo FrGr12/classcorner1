@@ -47,7 +47,7 @@ const Hero = () => {
               <Search className="w-5 h-5 text-neutral-400" />
               <Select>
                 <SelectTrigger className="border-0 p-0 h-auto w-full text-left">
-                  <SelectValue placeholder="Where are you looking?" />
+                  <SelectValue placeholder="What do you want to do?" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="ny">New York City</SelectItem>
