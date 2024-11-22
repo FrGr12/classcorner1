@@ -27,12 +27,12 @@ const categories = [
 ];
 
 const cities = [
-  { name: "New York", image: "/placeholder.svg", count: "250+ Classes" },
-  { name: "Los Angeles", image: "/placeholder.svg", count: "180+ Classes" },
-  { name: "Chicago", image: "/placeholder.svg", count: "150+ Classes" },
-  { name: "San Francisco", image: "/placeholder.svg", count: "120+ Classes" },
-  { name: "Austin", image: "/placeholder.svg", count: "90+ Classes" },
-  { name: "Seattle", image: "/placeholder.svg", count: "85+ Classes" },
+  { name: "New York", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c", count: "250+ Classes" },
+  { name: "Los Angeles", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81", count: "180+ Classes" },
+  { name: "Chicago", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04", count: "150+ Classes" },
+  { name: "San Francisco", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c", count: "120+ Classes" },
+  { name: "Austin", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81", count: "90+ Classes" },
+  { name: "Seattle", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04", count: "85+ Classes" },
 ];
 
 const Categories = () => {
