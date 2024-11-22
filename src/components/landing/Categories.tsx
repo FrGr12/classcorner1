@@ -56,26 +56,6 @@ const Categories = () => {
           </div>
         </div>
 
-        {/* Featured Classes */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-          {categories.slice(0, 4).map((category) => (
-            <Card key={category.name} className="overflow-hidden group">
-              <div className="relative aspect-[4/3]">
-                <img
-                  src={category.image}
-                  alt={category.name}
-                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white">
-                  <h3 className="text-xl font-semibold">{category.name}</h3>
-                  <p className="text-sm text-white/80">{category.count}</p>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-
         {/* Classes in Selected Category */}
         {selectedCategory && (
           <div className="mt-12">
