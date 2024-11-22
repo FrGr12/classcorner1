@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import ClassGrid from "./ClassGrid";
 
 const categories = [
   { name: "Ceramics", image: "/placeholder.svg", count: "120+ Classes", icon: "🏺" },
@@ -74,6 +75,14 @@ const Categories = () => {
             </Card>
           ))}
         </div>
+
+        {/* Classes in Selected Category */}
+        {selectedCategory && (
+          <div className="mt-12">
+            <h2 className="heading-lg mb-8">Classes in {selectedCategory}</h2>
+            <ClassGrid category={selectedCategory} />
+          </div>
+        )}
 
         {/* Popular Cities */}
         <div className="mt-16">
