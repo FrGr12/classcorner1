@@ -20,7 +20,7 @@
 
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-sm bg-white/80 border border-white/20 shadow-lg;
+    @apply backdrop-blur-md bg-white/90 border border-white/20 shadow-lg;
   }
   
   .container-padding {
