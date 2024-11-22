@@ -4,14 +4,14 @@ import { Card } from "@/components/ui/card";
 const Features = () => {
   const features = [
     {
-      title: "Share Your Expertise",
-      description: "Whether you're a professional ceramist or a passionate home cook, create and manage your craft classes with our easy-to-use platform.",
-      points: ["Simple Class Creation", "Flexible Scheduling", "Student Management"]
-    },
-    {
       title: "Discover Local Classes",
       description: "Find and book hands-on classes in your area. Learn from experienced craftspeople and join a community of creative learners.",
       points: ["Browse by Category", "Read Reviews", "Secure Booking"]
+    },
+    {
+      title: "Share Your Expertise",
+      description: "Whether you're a professional ceramist or a passionate home cook, create and manage your craft classes with our easy-to-use platform.",
+      points: ["Simple Class Creation", "Flexible Scheduling", "Student Management"]
     }
   ];
 

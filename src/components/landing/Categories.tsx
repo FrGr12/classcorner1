@@ -11,12 +11,19 @@ import { cn } from "@/lib/utils";
 import ClassGrid from "./ClassGrid";
 
 const categories = [
-  { name: "Ceramics", image: "/placeholder.svg", count: "120+ Classes", icon: "🏺" },
-  { name: "Painting", image: "/placeholder.svg", count: "85+ Classes", icon: "🎨" },
+  { name: "Painting & Art", image: "/placeholder.svg", count: "120+ Classes", icon: "🎨" },
+  { name: "Baking", image: "/placeholder.svg", count: "85+ Classes", icon: "🥖" },
+  { name: "Candle Making", image: "/placeholder.svg", count: "45+ Classes", icon: "🕯️" },
+  { name: "Cocktail & Wine", image: "/placeholder.svg", count: "60+ Classes", icon: "🍷" },
   { name: "Cooking", image: "/placeholder.svg", count: "200+ Classes", icon: "👨‍🍳" },
-  { name: "Photography", image: "/placeholder.svg", count: "65+ Classes", icon: "📸" },
-  { name: "Woodworking", image: "/placeholder.svg", count: "45+ Classes", icon: "🪚" },
-  { name: "Jewelry", image: "/placeholder.svg", count: "30+ Classes", icon: "💍" },
+  { name: "Wood Craft", image: "/placeholder.svg", count: "75+ Classes", icon: "🪚" },
+  { name: "Jewellery & Metal Craft", image: "/placeholder.svg", count: "90+ Classes", icon: "💍" },
+  { name: "Textile Craft", image: "/placeholder.svg", count: "110+ Classes", icon: "🧵" },
+  { name: "Flower & Plants", image: "/placeholder.svg", count: "70+ Classes", icon: "🌸" },
+  { name: "Pottery", image: "/placeholder.svg", count: "95+ Classes", icon: "🏺" },
+  { name: "Photography", image: "/placeholder.svg", count: "80+ Classes", icon: "📸" },
+  { name: "Music & Dance", image: "/placeholder.svg", count: "150+ Classes", icon: "🎵" },
+  { name: "Paper Craft", image: "/placeholder.svg", count: "40+ Classes", icon: "📜" },
 ];
 
 const cities = [

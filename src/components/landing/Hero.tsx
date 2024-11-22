@@ -50,10 +50,19 @@ const Hero = () => {
                   <SelectValue placeholder="What do you want to do?" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="ny">New York City</SelectItem>
-                  <SelectItem value="sf">San Francisco</SelectItem>
-                  <SelectItem value="la">Los Angeles</SelectItem>
-                  <SelectItem value="ch">Chicago</SelectItem>
+                  <SelectItem value="painting">Painting & Art</SelectItem>
+                  <SelectItem value="baking">Baking</SelectItem>
+                  <SelectItem value="candle">Candle Making</SelectItem>
+                  <SelectItem value="drinks">Cocktail & Wine</SelectItem>
+                  <SelectItem value="cooking">Cooking</SelectItem>
+                  <SelectItem value="woodcraft">Wood Craft</SelectItem>
+                  <SelectItem value="jewelry">Jewellery & Metal Craft</SelectItem>
+                  <SelectItem value="textile">Textile Craft</SelectItem>
+                  <SelectItem value="flowers">Flower & Plants</SelectItem>
+                  <SelectItem value="pottery">Pottery</SelectItem>
+                  <SelectItem value="photography">Photography</SelectItem>
+                  <SelectItem value="music">Music & Dance</SelectItem>
+                  <SelectItem value="paper">Paper Craft</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -63,7 +72,7 @@ const Hero = () => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button variant="ghost" className="p-0 h-auto">
-                    {date ? format(date, 'PPP') : <span className="text-neutral-500">Pick a date</span>}
+                    {date ? format(date, 'PPP') : <span className="text-neutral-500">Pick a date (optional)</span>}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
@@ -75,21 +84,6 @@ const Hero = () => {
                   />
                 </PopoverContent>
               </Popover>
-            </div>
-            
-            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
-              <Users className="w-5 h-5 text-neutral-400" />
-              <Select>
-                <SelectTrigger className="border-0 p-0 h-auto w-24">
-                  <SelectValue placeholder="Guests" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1">1 person</SelectItem>
-                  <SelectItem value="2">2 people</SelectItem>
-                  <SelectItem value="3">3 people</SelectItem>
-                  <SelectItem value="4">4+ people</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
             
             <button className="button-primary rounded-full whitespace-nowrap">
