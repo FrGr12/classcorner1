@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
 
 const cities = [
   "New York",
@@ -24,8 +25,19 @@ const cities = [
 ];
 
 const Hero = () => {
+  const navigate = useNavigate();
   const [date, setDate] = useState<Date>();
   const [searchInput, setSearchInput] = useState("");
+  const [selectedCity, setSelectedCity] = useState<string>();
+
+  const handleSearch = () => {
+    const params = new URLSearchParams();
+    if (searchInput) params.set("q", searchInput);
+    if (selectedCity) params.set("city", selectedCity);
+    if (date) params.set("date", date.toISOString());
+    
+    navigate(`/browse?${params.toString()}`);
+  };
 
   return (
     <header className="relative container-padding py-12">
@@ -71,12 +83,15 @@ const Hero = () => {
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 className="border-0 focus-visible:ring-0 p-0 h-auto placeholder:text-neutral-500"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') handleSearch();
+                }}
               />
             </div>
             
             <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
               <MapPin className="w-5 h-5 text-neutral-400" />
-              <Select>
+              <Select onValueChange={setSelectedCity}>
                 <SelectTrigger className="border-0 p-0 h-auto w-[140px]">
                   <SelectValue placeholder="Pick a city (optional)" />
                 </SelectTrigger>
@@ -109,7 +124,10 @@ const Hero = () => {
               </Popover>
             </div>
             
-            <button className="button-primary rounded-full whitespace-nowrap">
+            <button 
+              className="button-primary rounded-full whitespace-nowrap"
+              onClick={handleSearch}
+            >
               Search
             </button>
           </div>
