@@ -32,11 +32,13 @@ const ClassCard = ({
           <CarouselContent>
             {images?.map((image, index) => (
               <CarouselItem key={index}>
-                <img
-                  src={image}
-                  alt={`${title} - Image ${index + 1}`}
-                  className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                />
+                <div className="aspect-[3/2] w-full">
+                  <img
+                    src={image}
+                    alt={`${title} - Image ${index + 1}`}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
               </CarouselItem>
             ))}
           </CarouselContent>
@@ -49,7 +51,7 @@ const ClassCard = ({
           <h3 className="text-lg font-semibold line-clamp-2">{title}</h3>
           <Badge 
             variant="secondary" 
-            className="bg-white text-primary hover:bg-white/90"
+            className="bg-white text-primary border border-neutral-200 hover:bg-white/90"
           >
             {level}
           </Badge>

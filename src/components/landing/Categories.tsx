@@ -11,28 +11,28 @@ import { cn } from "@/lib/utils";
 import ClassGrid from "./ClassGrid";
 
 const categories = [
-  { name: "Painting & Art", image: "/placeholder.svg", count: "120+ Classes", icon: "🎨" },
-  { name: "Baking", image: "/placeholder.svg", count: "85+ Classes", icon: "🥖" },
-  { name: "Candle Making", image: "/placeholder.svg", count: "45+ Classes", icon: "🕯️" },
-  { name: "Cocktail & Wine", image: "/placeholder.svg", count: "60+ Classes", icon: "🍷" },
-  { name: "Cooking", image: "/placeholder.svg", count: "200+ Classes", icon: "👨‍🍳" },
-  { name: "Wood Craft", image: "/placeholder.svg", count: "75+ Classes", icon: "🪚" },
-  { name: "Jewellery & Metal Craft", image: "/placeholder.svg", count: "90+ Classes", icon: "💍" },
-  { name: "Textile Craft", image: "/placeholder.svg", count: "110+ Classes", icon: "🧵" },
-  { name: "Flower & Plants", image: "/placeholder.svg", count: "70+ Classes", icon: "🌸" },
-  { name: "Pottery", image: "/placeholder.svg", count: "95+ Classes", icon: "🏺" },
-  { name: "Photography", image: "/placeholder.svg", count: "80+ Classes", icon: "📸" },
-  { name: "Music & Dance", image: "/placeholder.svg", count: "150+ Classes", icon: "🎵" },
-  { name: "Paper Craft", image: "/placeholder.svg", count: "40+ Classes", icon: "📜" },
+  { name: "Painting & Art", count: "120+ Classes", icon: "🎨" },
+  { name: "Baking", count: "85+ Classes", icon: "🥖" },
+  { name: "Candle Making", count: "45+ Classes", icon: "🕯️" },
+  { name: "Cocktail & Wine", count: "60+ Classes", icon: "🍷" },
+  { name: "Cooking", count: "200+ Classes", icon: "👨‍🍳" },
+  { name: "Wood Craft", count: "75+ Classes", icon: "🪚" },
+  { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: "💍" },
+  { name: "Textile Craft", count: "110+ Classes", icon: "🧵" },
+  { name: "Flower & Plants", count: "70+ Classes", icon: "🌸" },
+  { name: "Pottery", count: "95+ Classes", icon: "🏺" },
+  { name: "Photography", count: "80+ Classes", icon: "📸" },
+  { name: "Music & Dance", count: "150+ Classes", icon: "🎵" },
+  { name: "Paper Craft", count: "40+ Classes", icon: "📜" },
 ];
 
 const cities = [
-  { name: "New York", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c", count: "250+ Classes" },
-  { name: "Los Angeles", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81", count: "180+ Classes" },
-  { name: "Chicago", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04", count: "150+ Classes" },
-  { name: "San Francisco", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c", count: "120+ Classes" },
-  { name: "Austin", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81", count: "90+ Classes" },
-  { name: "Seattle", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04", count: "85+ Classes" },
+  { name: "New York", count: "250+ Classes" },
+  { name: "Los Angeles", count: "180+ Classes" },
+  { name: "Chicago", count: "150+ Classes" },
+  { name: "San Francisco", count: "120+ Classes" },
+  { name: "Austin", count: "90+ Classes" },
+  { name: "Seattle", count: "85+ Classes" },
 ];
 
 const Categories = () => {
@@ -87,16 +87,10 @@ const Categories = () => {
               {cities.map((city) => (
                 <CarouselItem key={city.name} className="pl-4 md:basis-1/3 lg:basis-1/4">
                   <Card className="overflow-hidden group">
-                    <div className="relative aspect-[4/3]">
-                      <img
-                        src={city.image}
-                        alt={city.name}
-                        className="object-cover w-full h-full transition-transform group-hover:scale-105"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-                      <div className="absolute bottom-4 left-4 text-white">
+                    <div className="relative aspect-[3/2] bg-neutral-200">
+                      <div className="absolute bottom-4 left-4">
                         <h3 className="text-xl font-semibold">{city.name}</h3>
-                        <p className="text-sm text-white/80">{city.count}</p>
+                        <p className="text-sm text-neutral-600">{city.count}</p>
                       </div>
                     </div>
                   </Card>
