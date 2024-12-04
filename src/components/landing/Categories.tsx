@@ -87,9 +87,11 @@ const Categories = () => {
               {cities.map((city) => (
                 <CarouselItem key={city.name} className="pl-4 md:basis-1/3 lg:basis-1/4">
                   <Card className="overflow-hidden group">
-                    <div className="p-4">
-                      <h3 className="text-xl font-semibold">{city.name}</h3>
-                      <p className="text-sm text-neutral-600">{city.count}</p>
+                    <div className="relative aspect-[3/2] bg-neutral-200">
+                      <div className="absolute bottom-4 left-4">
+                        <h3 className="text-xl font-semibold">{city.name}</h3>
+                        <p className="text-sm text-neutral-600">{city.count}</p>
+                      </div>
                     </div>
                   </Card>
                 </CarouselItem>
