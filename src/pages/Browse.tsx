@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import ClassGrid from "@/components/landing/ClassGrid";
 import Footer from "@/components/landing/Footer";
-import { Search, MapPin, Calendar } from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -13,9 +13,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format } from "date-fns";
 
 const cities = [
   "New York",
@@ -31,15 +28,11 @@ const Browse = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("featured");
   const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
-  const [date, setDate] = useState<Date | undefined>(
-    searchParams.get("date") ? new Date(searchParams.get("date")!) : undefined
-  );
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchInput) params.set("q", searchInput);
     if (selectedCity) params.set("city", selectedCity);
-    if (date) params.set("date", date.toISOString());
     setSearchParams(params);
   };
 
@@ -77,25 +70,6 @@ const Browse = () => {
                   ))}
                 </SelectContent>
               </Select>
-            </div>
-            
-            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
-              <Calendar className="w-5 h-5 text-neutral-400" />
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="ghost" className="p-0 h-auto">
-                    {date ? format(date, 'PPP') : <span className="text-neutral-500">Pick a date (optional)</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
             </div>
             
             <button 
