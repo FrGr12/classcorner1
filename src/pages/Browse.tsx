@@ -12,7 +12,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const cities = [
   "New York",
@@ -21,6 +26,22 @@ const cities = [
   "San Francisco",
   "Austin",
   "Seattle",
+];
+
+const categories = [
+  { name: "Painting & Art", icon: "🎨" },
+  { name: "Baking", icon: "🥖" },
+  { name: "Candle Making", icon: "🕯️" },
+  { name: "Cocktail & Wine", icon: "🍷" },
+  { name: "Cooking", icon: "👨‍🍳" },
+  { name: "Wood Craft", icon: "🪚" },
+  { name: "Jewellery & Metal Craft", icon: "💍" },
+  { name: "Textile Craft", icon: "🧵" },
+  { name: "Flower & Plants", icon: "🌸" },
+  { name: "Pottery", icon: "🏺" },
+  { name: "Photography", icon: "📸" },
+  { name: "Music & Dance", icon: "🎵" },
+  { name: "Paper Craft", icon: "📜" },
 ];
 
 const Browse = () => {
@@ -82,16 +103,25 @@ const Browse = () => {
         </div>
 
         <div className="mb-8">
-          <select 
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="px-4 py-2 rounded-lg border border-neutral-200 bg-white"
-          >
-            <option value="featured">Featured Classes</option>
-            <option value="Ceramics">Ceramics</option>
-            <option value="Painting">Painting</option>
-            <option value="Cooking">Cooking</option>
-          </select>
+          <DropdownMenu>
+            <DropdownMenuTrigger className="px-4 py-2 rounded-lg border border-neutral-200 bg-white hover:bg-neutral-50 transition-colors">
+              Browse Classes
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-56">
+              <DropdownMenuItem onClick={() => setSelectedCategory("featured")}>
+                All Classes
+              </DropdownMenuItem>
+              {categories.map((category) => (
+                <DropdownMenuItem
+                  key={category.name}
+                  onClick={() => setSelectedCategory(category.name)}
+                >
+                  <span className="mr-2">{category.icon}</span>
+                  {category.name}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
         <ClassGrid category={selectedCategory} />
       </main>
