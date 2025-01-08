@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
 
 interface ClassCardProps {
   title: string;
@@ -8,6 +9,7 @@ interface ClassCardProps {
   rating: number;
   images: string[];
   level: string;
+  date: Date;
 }
 
 const ClassCard = ({
@@ -16,6 +18,7 @@ const ClassCard = ({
   price,
   rating,
   level,
+  date,
 }: ClassCardProps) => {
   return (
     <Card className="overflow-hidden group">
@@ -30,13 +33,16 @@ const ClassCard = ({
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground mb-2">by {instructor}</p>
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-1">
             <span className="text-yellow-400">★</span>
             <span className="text-sm font-medium">{rating}</span>
           </div>
           <span className="font-semibold">${price}</span>
         </div>
+        <p className="text-sm text-muted-foreground">
+          {format(new Date(date), 'MMM d, yyyy')}
+        </p>
       </div>
     </Card>
   );

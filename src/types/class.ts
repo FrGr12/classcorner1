@@ -7,6 +7,7 @@ export interface ClassItem {
   images: string[];
   level: string;
   category?: string;
+  date: Date;
 }
 
 export interface ClassData {
