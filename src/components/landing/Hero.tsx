@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Search, Users, MapPin } from "lucide-react";
+import { Search, Users, Calendar, MapPin } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -7,9 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
+import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 
 const cities = [
@@ -23,6 +26,7 @@ const cities = [
 
 const Hero = () => {
   const navigate = useNavigate();
+  const [date, setDate] = useState<Date>();
   const [searchInput, setSearchInput] = useState("");
   const [selectedCity, setSelectedCity] = useState<string>();
 
@@ -30,6 +34,7 @@ const Hero = () => {
     const params = new URLSearchParams();
     if (searchInput) params.set("q", searchInput);
     if (selectedCity) params.set("city", selectedCity);
+    if (date) params.set("date", date.toISOString());
     
     navigate(`/browse?${params.toString()}`);
   };
@@ -98,6 +103,25 @@ const Hero = () => {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+            
+            <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
+              <Calendar className="w-5 h-5 text-neutral-400" />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button variant="ghost" className="p-0 h-auto">
+                    {date ? format(date, 'PPP') : <span className="text-neutral-500">Pick a date (optional)</span>}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <CalendarComponent
+                    mode="single"
+                    selected={date}
+                    onSelect={setDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             
             <button 
