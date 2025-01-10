@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Menu } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
+import { Input } from "@/components/ui/input";
 
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,29 +16,26 @@ const Navigation = () => {
           <span className="text-xl font-semibold">ClassCorner</span>
         </Link>
         
+        {/* Search Field */}
+        <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+          <div className="relative w-full">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+            <Input 
+              type="text" 
+              placeholder="Search for classes..." 
+              className="pl-10 bg-neutral-100 border-none"
+            />
+          </div>
+        </div>
+        
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-8">
-          <Link 
-            to="/browse" 
-            className={`font-medium ${location.pathname === '/browse' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
-          >
-            Browse Classes
-          </Link>
-          <Link 
-            to="/teach" 
-            className={`font-medium ${location.pathname === '/teach' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
-          >
-            Teach
-          </Link>
+        <div className="hidden md:flex items-center gap-4">
           <Link 
             to="/about" 
             className={`font-medium ${location.pathname === '/about' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
           >
             About
           </Link>
-        </div>
-        
-        <div className="hidden md:flex items-center gap-4">
           <button className="px-4 py-2 text-primary hover:text-primary/80 transition-colors font-medium">
             Log in
           </button>
@@ -64,20 +62,15 @@ const Navigation = () => {
           transition={{ duration: 0.2 }}
         >
           <div className="flex flex-col gap-4">
-            <Link 
-              to="/browse" 
-              className="text-neutral-600 hover:text-primary transition-colors font-medium px-4 py-2 hover:bg-neutral-200/50 rounded-lg"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Browse Classes
-            </Link>
-            <Link 
-              to="/teach" 
-              className="text-neutral-600 hover:text-primary transition-colors font-medium px-4 py-2 hover:bg-neutral-200/50 rounded-lg"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Teach
-            </Link>
+            {/* Mobile Search */}
+            <div className="relative w-full mb-2">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+              <Input 
+                type="text" 
+                placeholder="Search for classes..." 
+                className="pl-10 bg-neutral-100 border-none w-full"
+              />
+            </div>
             <Link 
               to="/about" 
               className="text-neutral-600 hover:text-primary transition-colors font-medium px-4 py-2 hover:bg-neutral-200/50 rounded-lg"
