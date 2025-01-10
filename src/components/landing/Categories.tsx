@@ -1,26 +1,9 @@
 import { useState } from "react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import FilterButtons from "./filters/FilterButtons";
+import LocationSearch from "./filters/LocationSearch";
+import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
-import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandDialog,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import { Dialog } from "@/components/ui/dialog";
-import { Search } from "lucide-react";
+import PopularCities from "./cities/PopularCities";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: "🏺" },
@@ -69,115 +52,32 @@ const Categories = () => {
   return (
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
-        {/* Filter Options */}
-        <div className="flex flex-wrap gap-4 mb-8">
-          <Button
-            variant="outline"
-            className={cn(
-              "rounded-full",
-              !selectedCategory && "bg-accent-purple text-white hover:bg-accent-purple/90"
-            )}
-            onClick={() => setSelectedCategory(null)}
-          >
-            All classes
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-full"
-            onClick={() => setOpen(true)}
-          >
-            {selectedLocation}
-          </Button>
-          <Button
-            variant="outline"
-            className="rounded-full"
-          >
-            {selectedTime}
-          </Button>
-        </div>
+        <FilterButtons
+          selectedCategory={selectedCategory}
+          selectedLocation={selectedLocation}
+          selectedTime={selectedTime}
+          setSelectedCategory={setSelectedCategory}
+          setOpen={setOpen}
+        />
 
-        <CommandDialog open={open} onOpenChange={setOpen}>
-          <Command className="rounded-lg border shadow-md">
-            <div className="flex items-center border-b px-3">
-              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
-              <CommandInput 
-                placeholder="Search locations..." 
-                className="h-11 flex-1 bg-transparent outline-none placeholder:text-neutral-500 focus:outline-none focus:ring-0 border-0"
-              />
-            </div>
-            <CommandList>
-              <CommandEmpty>No results found.</CommandEmpty>
-              <CommandGroup heading="Suggested locations">
-                {swedishCities.map((city) => (
-                  <CommandItem
-                    key={city}
-                    onSelect={(value) => {
-                      setSelectedLocation(value);
-                      setOpen(false);
-                    }}
-                  >
-                    {city}
-                  </CommandItem>
-                ))}
-              </CommandGroup>
-            </CommandList>
-          </Command>
-        </CommandDialog>
+        <LocationSearch
+          open={open}
+          onOpenChange={setOpen}
+          setSelectedLocation={setSelectedLocation}
+          cities={swedishCities}
+        />
 
-        {/* Category Pills */}
-        <div className="mb-8">
-          <div className="flex gap-4 pb-4 overflow-x-auto no-scrollbar">
-            {categories.map((category) => (
-              <button
-                key={category.name}
-                onClick={() => setSelectedCategory(
-                  selectedCategory === category.name ? null : category.name
-                )}
-                className={cn(
-                  "flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap min-w-fit",
-                  selectedCategory === category.name
-                    ? "bg-accent-purple text-white"
-                    : "bg-white text-neutral-600 hover:bg-neutral-50"
-                )}
-              >
-                <span className="text-2xl">{category.icon}</span>
-                <span className="text-xs font-medium">{category.name}</span>
-              </button>
-            ))}
-          </div>
-        </div>
+        <CategoryPills
+          categories={categories}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
 
-        {/* Classes Display */}
         <div className="mt-12">
           <ClassGrid category={selectedCategory} />
         </div>
 
-        {/* Popular Cities */}
-        <div className="mt-16">
-          <h2 className="heading-lg mb-8 text-center">Popular Cities</h2>
-          <Carousel
-            opts={{
-              align: "start",
-              loop: true,
-            }}
-            className="w-full"
-          >
-            <CarouselContent className="-ml-4">
-              {cities.map((city) => (
-                <CarouselItem key={city.name} className="pl-4 md:basis-1/3 lg:basis-1/4">
-                  <Card className="overflow-hidden group">
-                    <div className="p-4">
-                      <h3 className="text-xl font-semibold">{city.name}</h3>
-                      <p className="text-sm text-neutral-600">{city.count}</p>
-                    </div>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious />
-            <CarouselNext />
-          </Carousel>
-        </div>
+        <PopularCities cities={cities} />
       </div>
     </section>
   );
