@@ -3,11 +3,14 @@ import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
 
 interface ClassGridProps {
-  category: string;
+  category: string | null;
 }
 
 const ClassGrid = ({ category }: ClassGridProps) => {
-  const classes = mockClasses[category as keyof typeof mockClasses] || [];
+  // If no category is selected, combine all classes from all categories
+  const classes = category 
+    ? mockClasses[category as keyof typeof mockClasses] || []
+    : Object.values(mockClasses).flat();
   
   // Sort classes by date
   const sortedClasses = [...classes].sort((a, b) => {
