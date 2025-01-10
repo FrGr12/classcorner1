@@ -1,6 +1,4 @@
 import { useState } from "react";
-import FilterButtons from "./filters/FilterButtons";
-import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
 import PopularCities from "./cities/PopularCities";
@@ -30,43 +28,12 @@ const cities = [
   { name: "Seattle", count: "85+ Classes" },
 ];
 
-const swedishCities = [
-  "Stockholm",
-  "Göteborg",
-  "Malmö",
-  "Uppsala",
-  "Västerås",
-  "Örebro",
-  "Linköping",
-  "Helsingborg",
-  "Jönköping",
-  "Norrköping",
-];
-
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedLocation, setSelectedLocation] = useState<string>("Everywhere");
-  const [selectedTime, setSelectedTime] = useState<string>("Any week");
-  const [open, setOpen] = useState(false);
 
   return (
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
-        <FilterButtons
-          selectedCategory={selectedCategory}
-          selectedLocation={selectedLocation}
-          selectedTime={selectedTime}
-          setSelectedCategory={setSelectedCategory}
-          setOpen={setOpen}
-        />
-
-        <LocationSearch
-          open={open}
-          onOpenChange={setOpen}
-          setSelectedLocation={setSelectedLocation}
-          cities={swedishCities}
-        />
-
         <CategoryPills
           categories={categories}
           selectedCategory={selectedCategory}
