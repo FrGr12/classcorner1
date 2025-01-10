@@ -9,6 +9,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import ClassGrid from "./ClassGrid";
+import { Button } from "@/components/ui/button";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: "🏺" },
@@ -37,10 +38,38 @@ const cities = [
 
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedLocation, setSelectedLocation] = useState<string>("Everywhere");
+  const [selectedTime, setSelectedTime] = useState<string>("Any week");
 
   return (
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
+        {/* Filter Options */}
+        <div className="flex flex-wrap gap-4 mb-8">
+          <Button
+            variant="outline"
+            className={cn(
+              "rounded-full",
+              !selectedCategory && "bg-accent-purple text-white hover:bg-accent-purple/90"
+            )}
+            onClick={() => setSelectedCategory(null)}
+          >
+            All classes
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+          >
+            {selectedLocation}
+          </Button>
+          <Button
+            variant="outline"
+            className="rounded-full"
+          >
+            {selectedTime}
+          </Button>
+        </div>
+
         {/* Category Pills */}
         <div className="mb-8">
           <div className="flex gap-4 pb-4 overflow-x-auto no-scrollbar">
@@ -66,9 +95,6 @@ const Categories = () => {
 
         {/* Classes Display */}
         <div className="mt-12">
-          <h2 className="heading-lg mb-8">
-            {selectedCategory ? `Classes in ${selectedCategory}` : "All Classes"}
-          </h2>
           <ClassGrid category={selectedCategory} />
         </div>
 
