@@ -40,7 +40,7 @@ const Hero = () => {
   };
 
   return (
-    <header className="relative container-padding py-12">
+    <header className="relative container-padding py-8">
       {/* Background Image */}
       <div 
         className="absolute inset-0 z-0 bg-cover bg-center"
@@ -50,9 +50,9 @@ const Hero = () => {
         }}
       />
       
-      <div className="max-w-4xl mx-auto text-center relative z-10 pt-32 pb-24">
+      <div className="max-w-4xl mx-auto text-center relative z-10 pt-20 pb-16">
         <motion.h1 
-          className="heading-xl mb-6 text-white"
+          className="heading-xl mb-4 text-white"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -60,7 +60,7 @@ const Hero = () => {
           Discover Creative Classes
         </motion.h1>
         <motion.p 
-          className="text-2xl text-white mb-12"
+          className="text-2xl text-white mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
