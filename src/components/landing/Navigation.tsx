@@ -4,9 +4,31 @@ import { motion } from "framer-motion";
 import { Link, useLocation } from "react-router-dom";
 import { Input } from "@/components/ui/input";
 
+const categories = [
+  { name: "Pottery", icon: "🏺" },
+  { name: "Cooking", icon: "👨‍🍳" },
+  { name: "Baking", icon: "🥖" },
+  { name: "Painting & Art", icon: "🎨" },
+  { name: "Cocktail & Wine", icon: "🍷" },
+  { name: "Photography", icon: "📸" },
+  { name: "Music & Dance", icon: "🎵" },
+  { name: "Candle Making", icon: "🕯️" },
+  { name: "Wood Craft", icon: "🪚" },
+  { name: "Jewellery & Metal Craft", icon: "💍" },
+  { name: "Textile Craft", icon: "🧵" },
+  { name: "Paper Craft", icon: "📜" },
+  { name: "Flower & Plants", icon: "🌸" },
+];
+
 const Navigation = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchValue, setSearchValue] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
   const location = useLocation();
+
+  const filteredCategories = categories.filter(category =>
+    category.name.toLowerCase().includes(searchValue.toLowerCase())
+  );
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
@@ -24,7 +46,43 @@ const Navigation = () => {
               type="text" 
               placeholder="Search for classes..." 
               className="pl-10 bg-neutral-100 border-none"
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+                setShowDropdown(true);
+              }}
+              onFocus={() => setShowDropdown(true)}
             />
+            
+            {/* Categories Dropdown */}
+            {showDropdown && searchValue && (
+              <motion.div 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg overflow-hidden"
+              >
+                {filteredCategories.length > 0 ? (
+                  filteredCategories.map((category) => (
+                    <Link
+                      key={category.name}
+                      to={`/browse?category=${category.name}`}
+                      className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 transition-colors"
+                      onClick={() => {
+                        setShowDropdown(false);
+                        setSearchValue("");
+                      }}
+                    >
+                      <span className="text-xl">{category.icon}</span>
+                      <span className="text-sm text-neutral-700">{category.name}</span>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="px-4 py-2 text-sm text-neutral-500">
+                    No categories found
+                  </div>
+                )}
+              </motion.div>
+            )}
           </div>
         </div>
         
@@ -69,7 +127,44 @@ const Navigation = () => {
                 type="text" 
                 placeholder="Search for classes..." 
                 className="pl-10 bg-neutral-100 border-none w-full"
+                value={searchValue}
+                onChange={(e) => {
+                  setSearchValue(e.target.value);
+                  setShowDropdown(true);
+                }}
+                onFocus={() => setShowDropdown(true)}
               />
+              
+              {/* Mobile Categories Dropdown */}
+              {showDropdown && searchValue && (
+                <motion.div 
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg overflow-hidden z-50"
+                >
+                  {filteredCategories.length > 0 ? (
+                    filteredCategories.map((category) => (
+                      <Link
+                        key={category.name}
+                        to={`/browse?category=${category.name}`}
+                        className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-50 transition-colors"
+                        onClick={() => {
+                          setShowDropdown(false);
+                          setSearchValue("");
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        <span className="text-xl">{category.icon}</span>
+                        <span className="text-sm text-neutral-700">{category.name}</span>
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="px-4 py-2 text-sm text-neutral-500">
+                      No categories found
+                    </div>
+                  )}
+                </motion.div>
+              )}
             </div>
             <Link 
               to="/about" 
