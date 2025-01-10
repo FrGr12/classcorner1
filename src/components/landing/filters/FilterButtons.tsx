@@ -42,10 +42,9 @@ const FilterButtons = ({
     <div className="flex flex-wrap gap-4 mb-8">
       <Button
         variant="outline"
-        className={cn(
-          "rounded-full",
-          !selectedCategory && "bg-accent-purple text-white hover:bg-accent-purple/90"
-        )}
+        className={cn("rounded-full", {
+          "bg-primary text-primary-foreground": !selectedCategory,
+        })}
         onClick={() => setSelectedCategory(null)}
       >
         All classes
@@ -58,7 +57,7 @@ const FilterButtons = ({
             {selectedLocation}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-[200px]">
+        <DropdownMenuContent align="start" className="w-[200px] bg-white">
           {cities.map((city) => (
             <DropdownMenuItem
               key={city}
@@ -74,6 +73,7 @@ const FilterButtons = ({
       <Button
         variant="outline"
         className="rounded-full"
+        onClick={() => setOpen(true)}
       >
         {selectedTime}
       </Button>
