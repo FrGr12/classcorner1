@@ -63,13 +63,20 @@ const Categories = () => {
         </div>
 
         {/* Classes Display */}
-        <div className="mt-12">
-          <h2 className="heading-lg mb-8">
-            {selectedCategory 
-              ? `Classes in ${selectedCategory}`
-              : "Highly Rated Classes"}
-          </h2>
-          <ClassGrid category={selectedCategory || "featured"} />
+        <div className={cn(
+          "fixed inset-0 z-50 bg-accent-purple/80 backdrop-blur-sm transition-all duration-300",
+          selectedCategory ? "opacity-100" : "opacity-0 pointer-events-none"
+        )}>
+          <div className="absolute inset-0 overflow-y-auto">
+            <div className="min-h-screen px-4 py-16">
+              <div className="container mx-auto">
+                <h2 className="heading-lg mb-8 text-white">
+                  {selectedCategory && `Classes in ${selectedCategory}`}
+                </h2>
+                <ClassGrid category={selectedCategory || "featured"} />
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Popular Cities */}
