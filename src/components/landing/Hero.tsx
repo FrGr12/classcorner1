@@ -29,8 +29,6 @@ const Hero = () => {
   const [date, setDate] = useState<Date>();
   const [searchInput, setSearchInput] = useState("");
   const [selectedCity, setSelectedCity] = useState<string>();
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  const [selectedTime, setSelectedTime] = useState<string>("Any week");
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -42,7 +40,7 @@ const Hero = () => {
   };
 
   return (
-    <header className="relative container-padding py-32">
+    <header className="relative container-padding py-4">
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.div 
           className="glass-panel p-2 rounded-full flex flex-col md:flex-row gap-2 shadow-lg"
