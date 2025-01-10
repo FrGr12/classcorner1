@@ -58,6 +58,7 @@ const Categories = () => {
           selectedTime={selectedTime}
           setSelectedCategory={setSelectedCategory}
           setOpen={setOpen}
+          setSelectedLocation={setSelectedLocation}
         />
 
         <LocationSearch
