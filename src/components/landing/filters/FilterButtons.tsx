@@ -47,10 +47,7 @@ const FilterButtons = ({
   setOpen,
   setSelectedLocation,
 }: FilterButtonsProps) => {
-  const [date, setDate] = useState<DateRange | undefined>({
-    from: new Date(),
-    to: addDays(new Date(), 7),
-  });
+  const [date, setDate] = useState<DateRange | undefined>();
 
   return (
     <div className="flex flex-wrap gap-4 mb-8">
@@ -100,7 +97,7 @@ const FilterButtons = ({
                 format(date.from, "LLL dd")
               )
             ) : (
-              "Pick a date"
+              "Anytime"
             )}
           </Button>
         </PopoverTrigger>
@@ -108,7 +105,7 @@ const FilterButtons = ({
           <Calendar
             initialFocus
             mode="range"
-            defaultMonth={date?.from}
+            defaultMonth={new Date()}
             selected={date}
             onSelect={setDate}
             numberOfMonths={2}
