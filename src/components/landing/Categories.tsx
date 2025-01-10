@@ -10,6 +10,16 @@ import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import ClassGrid from "./ClassGrid";
 import { Button } from "@/components/ui/button";
+import {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import { Dialog } from "@/components/ui/dialog";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: "🏺" },
@@ -36,10 +46,24 @@ const cities = [
   { name: "Seattle", count: "85+ Classes" },
 ];
 
+const swedishCities = [
+  "Stockholm",
+  "Göteborg",
+  "Malmö",
+  "Uppsala",
+  "Västerås",
+  "Örebro",
+  "Linköping",
+  "Helsingborg",
+  "Jönköping",
+  "Norrköping",
+];
+
 const Categories = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedLocation, setSelectedLocation] = useState<string>("Everywhere");
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
+  const [open, setOpen] = useState(false);
 
   return (
     <section className="py-12 bg-neutral-100">
@@ -59,6 +83,7 @@ const Categories = () => {
           <Button
             variant="outline"
             className="rounded-full"
+            onClick={() => setOpen(true)}
           >
             {selectedLocation}
           </Button>
@@ -69,6 +94,28 @@ const Categories = () => {
             {selectedTime}
           </Button>
         </div>
+
+        <CommandDialog open={open} onOpenChange={setOpen}>
+          <Command className="rounded-lg border shadow-md">
+            <CommandInput placeholder="Search locations..." />
+            <CommandList>
+              <CommandEmpty>No results found.</CommandEmpty>
+              <CommandGroup heading="Suggested locations">
+                {swedishCities.map((city) => (
+                  <CommandItem
+                    key={city}
+                    onSelect={(value) => {
+                      setSelectedLocation(value);
+                      setOpen(false);
+                    }}
+                  >
+                    {city}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            </CommandList>
+          </Command>
+        </CommandDialog>
 
         {/* Category Pills */}
         <div className="mb-8">
