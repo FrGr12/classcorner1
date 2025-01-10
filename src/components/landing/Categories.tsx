@@ -42,8 +42,8 @@ const Categories = () => {
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
         {/* Category Pills */}
-        <div className="mb-8 overflow-x-auto scrollbar-none">
-          <div className="flex gap-2 pb-4">
+        <div className="mb-8">
+          <div className="flex gap-2 pb-4 overflow-x-auto no-scrollbar">
             {categories.map((category) => (
               <button
                 key={category.name}
