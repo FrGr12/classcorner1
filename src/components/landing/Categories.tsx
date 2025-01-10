@@ -42,7 +42,7 @@ const Categories = () => {
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
         {/* Category Pills */}
-        <div className="mb-8 overflow-x-auto">
+        <div className="mb-8 overflow-x-auto scrollbar-none">
           <div className="flex gap-2 pb-4">
             {categories.map((category) => (
               <button
