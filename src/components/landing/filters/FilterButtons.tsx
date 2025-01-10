@@ -6,13 +6,14 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuCheckboxItem,
 } from "@/components/ui/dropdown-menu";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { MapPin, Calendar as CalendarIcon } from "lucide-react";
+import { MapPin, Calendar as CalendarIcon, Filter } from "lucide-react";
 import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { useState } from "react";
@@ -25,6 +26,22 @@ interface FilterButtonsProps {
   setOpen: (open: boolean) => void;
   setSelectedLocation: (location: string) => void;
 }
+
+const categories = [
+  "Pottery",
+  "Cooking",
+  "Baking",
+  "Painting & Art",
+  "Cocktail & Wine",
+  "Photography",
+  "Music & Dance",
+  "Candle Making",
+  "Wood Craft",
+  "Jewellery & Metal Craft",
+  "Textile Craft",
+  "Paper Craft",
+  "Flower & Plants",
+];
 
 const cities = [
   "Stockholm",
@@ -48,18 +65,42 @@ const FilterButtons = ({
   setSelectedLocation,
 }: FilterButtonsProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+
+  const handleCategoryChange = (category: string) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(category)) {
+        return prev.filter((c) => c !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
+  };
 
   return (
     <div className="flex flex-wrap gap-4 mb-8">
-      <Button
-        variant="outline"
-        className={cn("rounded-full", {
-          "bg-primary text-primary-foreground": !selectedCategory,
-        })}
-        onClick={() => setSelectedCategory(null)}
-      >
-        All classes
-      </Button>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="rounded-full flex items-center gap-2">
+            <Filter className="w-4 h-4" />
+            {selectedCategories.length === 0
+              ? "All classes"
+              : `${selectedCategories.length} selected`}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-[200px] bg-white">
+          {categories.map((category) => (
+            <DropdownMenuCheckboxItem
+              key={category}
+              checked={selectedCategories.includes(category)}
+              onCheckedChange={() => handleCategoryChange(category)}
+              className="cursor-pointer"
+            >
+              {category}
+            </DropdownMenuCheckboxItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
