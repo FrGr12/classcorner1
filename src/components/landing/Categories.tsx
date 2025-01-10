@@ -11,19 +11,19 @@ import { cn } from "@/lib/utils";
 import ClassGrid from "./ClassGrid";
 
 const categories = [
-  { name: "Painting & Art", count: "120+ Classes", icon: "🎨" },
-  { name: "Baking", count: "85+ Classes", icon: "🥖" },
-  { name: "Candle Making", count: "45+ Classes", icon: "🕯️" },
-  { name: "Cocktail & Wine", count: "60+ Classes", icon: "🍷" },
+  { name: "Pottery", count: "95+ Classes", icon: "🏺" },
   { name: "Cooking", count: "200+ Classes", icon: "👨‍🍳" },
+  { name: "Baking", count: "85+ Classes", icon: "🥖" },
+  { name: "Painting & Art", count: "120+ Classes", icon: "🎨" },
+  { name: "Cocktail & Wine", count: "60+ Classes", icon: "🍷" },
+  { name: "Photography", count: "80+ Classes", icon: "📸" },
+  { name: "Music & Dance", count: "150+ Classes", icon: "🎵" },
+  { name: "Candle Making", count: "45+ Classes", icon: "🕯️" },
   { name: "Wood Craft", count: "75+ Classes", icon: "🪚" },
   { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: "💍" },
   { name: "Textile Craft", count: "110+ Classes", icon: "🧵" },
-  { name: "Flower & Plants", count: "70+ Classes", icon: "🌸" },
-  { name: "Pottery", count: "95+ Classes", icon: "🏺" },
-  { name: "Photography", count: "80+ Classes", icon: "📸" },
-  { name: "Music & Dance", count: "150+ Classes", icon: "🎵" },
   { name: "Paper Craft", count: "40+ Classes", icon: "📜" },
+  { name: "Flower & Plants", count: "70+ Classes", icon: "🌸" },
 ];
 
 const cities = [
