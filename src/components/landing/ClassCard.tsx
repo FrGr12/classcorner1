@@ -17,18 +17,17 @@ const ClassCard = ({
   instructor,
   price,
   rating,
-  images,
   level,
   date,
 }: ClassCardProps) => {
   return (
     <Card className="overflow-hidden group">
-      <div className="relative aspect-[4/3] overflow-hidden">
-        <img 
-          src={images[0] || "/placeholder.svg"} 
-          alt={title}
-          className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
-        />
+      <div 
+        className="relative aspect-[4/3] overflow-hidden"
+        style={{
+          background: "linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)"
+        }}
+      >
         <Badge 
           variant="secondary" 
           className="absolute top-3 right-3 bg-white/90 text-primary border-none hover:bg-white"
