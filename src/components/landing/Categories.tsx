@@ -43,21 +43,20 @@ const Categories = () => {
       <div className="container-padding">
         {/* Category Pills */}
         <div className="mb-8">
-          <div className="flex gap-2 pb-4 overflow-x-auto no-scrollbar">
+          <div className="flex gap-4 pb-4 overflow-x-auto no-scrollbar">
             {categories.map((category) => (
               <button
                 key={category.name}
                 onClick={() => setSelectedCategory(category.name)}
                 className={cn(
-                  "flex items-center gap-1 px-1.5 py-1 rounded-full transition-all whitespace-nowrap text-xs border border-primary/20",
-                  "hover:shadow-md min-w-fit",
+                  "flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap min-w-fit",
                   selectedCategory === category.name
-                    ? "bg-primary text-primary-foreground shadow-md"
-                    : "bg-white text-neutral-600"
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-white text-neutral-600 hover:bg-neutral-50"
                 )}
               >
-                <span className="text-sm">{category.icon}</span>
-                <span>{category.name}</span>
+                <span className="text-2xl">{category.icon}</span>
+                <span className="text-xs font-medium">{category.name}</span>
               </button>
             ))}
           </div>
