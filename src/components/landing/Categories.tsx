@@ -20,6 +20,7 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Dialog } from "@/components/ui/dialog";
+import { Search } from "lucide-react";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: "🏺" },
@@ -97,7 +98,13 @@ const Categories = () => {
 
         <CommandDialog open={open} onOpenChange={setOpen}>
           <Command className="rounded-lg border shadow-md">
-            <CommandInput placeholder="Search locations..." />
+            <div className="flex items-center border-b px-3">
+              <Search className="mr-2 h-4 w-4 shrink-0 opacity-50" />
+              <CommandInput 
+                placeholder="Search locations..." 
+                className="h-11 flex-1 bg-transparent outline-none placeholder:text-neutral-500 focus:outline-none focus:ring-0 border-0"
+              />
+            </div>
             <CommandList>
               <CommandEmpty>No results found.</CommandEmpty>
               <CommandGroup heading="Suggested locations">
