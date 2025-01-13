@@ -12,11 +12,12 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   const [showAll, setShowAll] = useState(false);
   const ITEMS_PER_PAGE = 24;
 
-  // Get all classes and filter based on category
-  const allClasses = Object.values(mockClasses).flat();
+  // Get classes based on category
   const filteredClasses = category
-    ? allClasses.filter(classItem => classItem.category === category)
-    : allClasses;
+    ? Object.entries(mockClasses)
+        .filter(([key]) => key === category)
+        .flatMap(([, classes]) => classes)
+    : Object.values(mockClasses).flat();
   
   // Sort classes by the earliest date
   const sortedClasses = [...filteredClasses].sort((a, b) => {
@@ -32,7 +33,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {displayedClasses.map((classItem: ClassItem) => (
           <ClassCard
-            key={classItem.id}
+            key={`${classItem.id}-${classItem.category}`}
             title={classItem.title}
             instructor={classItem.instructor}
             price={classItem.price}
