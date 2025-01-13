@@ -1,34 +1,16 @@
 import { motion } from "framer-motion";
-import { Search, MapPin } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const cities = [
-  "New York",
-  "Los Angeles",
-  "Chicago",
-  "San Francisco",
-  "Austin",
-  "Seattle",
-];
-
 const Hero = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
-  const [selectedCity, setSelectedCity] = useState<string>();
 
   const handleSearch = () => {
     const params = new URLSearchParams();
     if (searchInput) params.set("q", searchInput);
-    if (selectedCity) params.set("city", selectedCity);
     
     navigate(`/browse?${params.toString()}`);
   };
@@ -54,22 +36,6 @@ const Hero = () => {
                 if (e.key === 'Enter') handleSearch();
               }}
             />
-          </div>
-          
-          <div className="flex items-center gap-2 bg-white rounded-full px-4 py-2">
-            <MapPin className="w-5 h-5 text-neutral-400" />
-            <Select onValueChange={setSelectedCity}>
-              <SelectTrigger className="border-0 p-0 h-auto w-[140px]">
-                <SelectValue placeholder="Pick a city" />
-              </SelectTrigger>
-              <SelectContent>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city.toLowerCase()}>
-                    {city}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </motion.div>
       </div>
