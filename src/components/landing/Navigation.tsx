@@ -39,7 +39,7 @@ const Navigation = () => {
         </Link>
         
         {/* Search Field */}
-        <div className="flex items-center flex-1 max-w-2xl mx-4">
+        <div className="flex items-center flex-1 max-w-3xl mx-4">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <Input 
