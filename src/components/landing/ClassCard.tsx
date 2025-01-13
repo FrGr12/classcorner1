@@ -30,7 +30,7 @@ const ClassCard = ({
   level,
   date,
   city,
-  category,
+  category = "Other",
 }: ClassCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -59,14 +59,12 @@ const ClassCard = ({
           />
         </Badge>
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
-          {category && (
-            <Badge 
-              variant="secondary" 
-              className="bg-white/90 text-primary border-none"
-            >
-              {category}
-            </Badge>
-          )}
+          <Badge 
+            variant="secondary" 
+            className="bg-white/90 text-primary border-none"
+          >
+            {category}
+          </Badge>
         </div>
       </div>
       <div className="p-4">
