@@ -38,7 +38,7 @@ const Navigation = () => {
           <span className="text-sm font-semibold">ClassCorner</span>
         </Link>
         
-        <div className="flex items-center flex-1 max-w-4xl mx-4">
+        <div className="flex items-center flex-1 max-w-[600px] mx-4">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <Input 
