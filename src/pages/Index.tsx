@@ -4,7 +4,6 @@ import Reviews from "@/components/landing/Reviews";
 import Categories from "@/components/landing/Categories";
 import Features from "@/components/landing/Features";
 import Footer from "@/components/landing/Footer";
-import CrossSections from "@/components/landing/CrossSections";
 
 const Index = () => {
   return (
@@ -12,7 +11,6 @@ const Index = () => {
       <Navigation />
       <Hero />
       <Categories />
-      <CrossSections />
       <Reviews />
       <Features />
       <Footer />
