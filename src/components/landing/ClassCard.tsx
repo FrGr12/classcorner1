@@ -66,7 +66,7 @@ const ClassCard = ({
             <Button
               key={index}
               variant="ghost"
-              className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 transition-colors"
+              className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
               onClick={() => {
                 // Handle date selection
                 console.log('Selected date:', d);
@@ -80,7 +80,7 @@ const ClassCard = ({
               <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-sm text-primary font-medium hover:text-primary/80 hover:bg-neutral-100"
+                  className="w-full justify-start text-sm text-primary font-medium hover:text-primary/80 hover:bg-neutral-100 border border-neutral-200 rounded-lg"
                 >
                   See more dates
                 </Button>
@@ -91,7 +91,7 @@ const ClassCard = ({
                     <Button
                       key={index}
                       variant="ghost"
-                      className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100"
+                      className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
                       onClick={() => {
                         // Handle date selection
                         console.log('Selected date:', d);
