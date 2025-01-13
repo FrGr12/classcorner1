@@ -52,7 +52,7 @@ const ClassCard = ({
       >
         <Badge 
           variant="secondary" 
-          className="absolute bottom-3 right-3 bg-white/90 text-primary border-none hover:bg-white cursor-pointer"
+          className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm shadow-lg text-primary border-none hover:bg-white cursor-pointer transition-all duration-200"
           onClick={handleSave}
         >
           <Heart 
