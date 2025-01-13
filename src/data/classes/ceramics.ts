@@ -12,8 +12,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-04-15'),
-    city: "Stockholm"
+    date: new Date('2024-04-15')
   },
   { 
     id: 2, 
@@ -26,8 +25,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-04-18'),
-    city: "Göteborg"
+    date: new Date('2024-04-18')
   },
   { 
     id: 3, 
@@ -40,8 +38,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Advanced",
-    date: new Date('2024-04-22'),
-    city: "Malmö"
+    date: new Date('2024-04-22')
   },
   { 
     id: 4, 
@@ -54,8 +51,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Intermediate",
-    date: new Date('2024-04-30'),
-    city: "Uppsala"
+    date: new Date('2024-04-30')
   },
   { 
     id: 5, 
@@ -68,8 +64,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-05-05'),
-    city: "Västerås"
+    date: new Date('2024-05-05')
   },
   { 
     id: 6, 
@@ -82,8 +77,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Intermediate",
-    date: new Date('2024-05-10'),
-    city: "Örebro"
+    date: new Date('2024-05-10')
   },
   { 
     id: 7, 
@@ -96,8 +90,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Advanced",
-    date: new Date('2024-05-15'),
-    city: "Linköping"
+    date: new Date('2024-05-15')
   },
   { 
     id: 8, 
@@ -110,7 +103,6 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-05-20'),
-    city: "Helsingborg"
+    date: new Date('2024-05-20')
   },
 ];

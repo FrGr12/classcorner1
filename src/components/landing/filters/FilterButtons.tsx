@@ -1,33 +1,38 @@
+import { useState } from "react";
+
 interface FilterButtonsProps {
-  selectedCategories: string[];
-  setSelectedCategories: React.Dispatch<React.SetStateAction<string[]>>;
-  selectedLocations: string[];
-  selectedTime: string;
-  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  setSelectedLocations: React.Dispatch<React.SetStateAction<string[]>>;
+  onFilterChange: (filters: string[]) => void;
 }
 
-const FilterButtons = ({
-  selectedCategories,
-  setSelectedCategories,
-  selectedLocations,
-  selectedTime,
-  setOpen,
-  setSelectedLocations,
-}: FilterButtonsProps) => {
+const FilterButtons = ({ onFilterChange }: FilterButtonsProps) => {
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+
+  const handleFilterClick = (filter: string) => {
+    setSelectedFilters((prev: string[]) => {
+      if (prev.includes(filter)) {
+        return prev.filter(f => f !== filter);
+      }
+      return [...prev, filter];
+    });
+  };
+
+  const handleApplyFilters = () => {
+    onFilterChange(selectedFilters);
+  };
+
   return (
     <div className="flex space-x-2">
-      <button 
-        onClick={() => setSelectedCategories([])} 
-        className="filter-button"
-      >
-        Clear Filters
+      <button onClick={() => handleFilterClick("Beginner")} className={`filter-button ${selectedFilters.includes("Beginner") ? "active" : ""}`}>
+        Beginner
       </button>
-      <button 
-        onClick={() => setOpen(true)} 
-        className="filter-button"
-      >
-        Location
+      <button onClick={() => handleFilterClick("Intermediate")} className={`filter-button ${selectedFilters.includes("Intermediate") ? "active" : ""}`}>
+        Intermediate
+      </button>
+      <button onClick={() => handleFilterClick("Advanced")} className={`filter-button ${selectedFilters.includes("Advanced") ? "active" : ""}`}>
+        Advanced
+      </button>
+      <button onClick={handleApplyFilters} className="apply-filters-button">
+        Apply Filters
       </button>
     </div>
   );
