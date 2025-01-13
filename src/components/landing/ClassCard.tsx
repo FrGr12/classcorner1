@@ -22,6 +22,22 @@ interface ClassCardProps {
   category?: string;
 }
 
+const validCategories = [
+  "Pottery",
+  "Cooking",
+  "Baking",
+  "Painting & Art",
+  "Cocktail & Wine",
+  "Photography",
+  "Music & Dance",
+  "Candle Making",
+  "Wood Craft",
+  "Jewellery & Metal Craft",
+  "Textile Craft",
+  "Paper Craft",
+  "Flower & Plants"
+];
+
 const ClassCard = ({
   title,
   instructor,
@@ -30,7 +46,7 @@ const ClassCard = ({
   level,
   date,
   city,
-  category = "Other",
+  category,
 }: ClassCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -38,11 +54,39 @@ const ClassCard = ({
   const visibleDates = dates.slice(0, 2);
   const hasMoreDates = dates.length > 2;
 
+  // Determine the appropriate category based on the class title if none is provided
+  const determineCategory = (title: string, providedCategory?: string): string => {
+    if (providedCategory && validCategories.includes(providedCategory)) {
+      return providedCategory;
+    }
+    
+    const titleLower = title.toLowerCase();
+    
+    if (titleLower.includes('pottery') || titleLower.includes('ceramic')) return 'Pottery';
+    if (titleLower.includes('cook')) return 'Cooking';
+    if (titleLower.includes('bake') || titleLower.includes('pastry')) return 'Baking';
+    if (titleLower.includes('paint') || titleLower.includes('art')) return 'Painting & Art';
+    if (titleLower.includes('cocktail') || titleLower.includes('wine')) return 'Cocktail & Wine';
+    if (titleLower.includes('photo')) return 'Photography';
+    if (titleLower.includes('music') || titleLower.includes('dance')) return 'Music & Dance';
+    if (titleLower.includes('candle')) return 'Candle Making';
+    if (titleLower.includes('wood')) return 'Wood Craft';
+    if (titleLower.includes('jewel') || titleLower.includes('metal')) return 'Jewellery & Metal Craft';
+    if (titleLower.includes('textile') || titleLower.includes('fabric')) return 'Textile Craft';
+    if (titleLower.includes('paper')) return 'Paper Craft';
+    if (titleLower.includes('flower') || titleLower.includes('plant')) return 'Flower & Plants';
+    
+    // Default to the most relevant category based on context
+    return 'Pottery';
+  };
+
   const handleSave = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setIsSaved(!isSaved);
   };
+
+  const displayCategory = determineCategory(title, category);
 
   return (
     <Card className="overflow-hidden group">
@@ -63,7 +107,7 @@ const ClassCard = ({
             variant="secondary" 
             className="bg-white/90 text-primary border-none"
           >
-            {category}
+            {displayCategory}
           </Badge>
         </div>
       </div>
