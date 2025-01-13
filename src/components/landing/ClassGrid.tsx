@@ -12,13 +12,14 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   const [showAll, setShowAll] = useState(false);
   const ITEMS_PER_PAGE = 24;
 
-  // Filter classes based on the selected category
-  const classes = category 
-    ? mockClasses[category as keyof typeof mockClasses] || []
-    : Object.values(mockClasses).flat();
+  // Get all classes and filter based on category
+  const allClasses = Object.values(mockClasses).flat();
+  const filteredClasses = category
+    ? allClasses.filter(classItem => classItem.category === category)
+    : allClasses;
   
   // Sort classes by the earliest date
-  const sortedClasses = [...classes].sort((a, b) => {
+  const sortedClasses = [...filteredClasses].sort((a, b) => {
     const dateA = Array.isArray(a.date) ? a.date[0] : a.date;
     const dateB = Array.isArray(b.date) ? b.date[0] : b.date;
     return new Date(dateA).getTime() - new Date(dateB).getTime();
@@ -40,7 +41,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             level={classItem.level}
             date={classItem.date}
             city={classItem.city}
-            category={category || classItem.category}
+            category={classItem.category}
           />
         ))}
       </div>
