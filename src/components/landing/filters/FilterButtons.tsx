@@ -86,17 +86,15 @@ const FilterButtons = ({
   };
 
   const handleLocationChange = (location: string) => {
-    setSelectedLocations((prev: string[]) => {
-      if (location === "Everywhere") {
-        return ["Everywhere"];
-      }
+    if (location === "Everywhere") {
+      setSelectedLocations(["Everywhere"]);
+    } else {
+      const newLocations = selectedLocations.includes(location)
+        ? selectedLocations.filter((l) => l !== location)
+        : [...selectedLocations.filter((l) => l !== "Everywhere"), location];
       
-      const newLocations = prev.includes(location)
-        ? prev.filter((l) => l !== location)
-        : [...prev.filter((l) => l !== "Everywhere"), location];
-      
-      return newLocations.length === 0 ? ["Everywhere"] : newLocations;
-    });
+      setSelectedLocations(newLocations.length === 0 ? ["Everywhere"] : newLocations);
+    }
   };
 
   const handleTimeRangeSelect = (label: string, range?: DateRange) => {

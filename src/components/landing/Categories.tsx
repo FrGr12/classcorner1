@@ -4,7 +4,7 @@ import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
 import { 
-  Paintbrush, 
+  Amphora, 
   ChefHat, 
   Cookie, 
   Palette, 
@@ -20,7 +20,7 @@ import {
 } from "lucide-react";
 
 const categories = [
-  { name: "Pottery", count: "95+ Classes", icon: Paintbrush },
+  { name: "Pottery", count: "95+ Classes", icon: Amphora },
   { name: "Cooking", count: "200+ Classes", icon: ChefHat },
   { name: "Baking", count: "85+ Classes", icon: Cookie },
   { name: "Painting & Art", count: "120+ Classes", icon: Palette },
