@@ -50,7 +50,7 @@ const Categories = () => {
   };
 
   return (
-    <section className="py-12 bg-neutral-100">
+    <section className="pt-6 sm:pt-8 bg-neutral-100">
       <div className="container-padding">
         <FilterButtons
           selectedCategories={selectedCategories}
