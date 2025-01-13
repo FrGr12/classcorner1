@@ -14,8 +14,10 @@ const sections = [
   { title: "This Week", filter: (classes: ClassItem[]) => {
     const today = new Date();
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    console.log('Filtering for This Week:', { today, nextWeek });
     return classes.filter(c => {
       const classDate = new Date(c.date);
+      console.log('Class date:', classDate, 'for class:', c.title);
       return classDate >= today && classDate <= nextWeek;
     }).slice(0, 4);
   }},
@@ -35,19 +37,21 @@ const sections = [
 const CrossSections = () => {
   // Combine all classes from all categories
   const allClasses = Object.values(mockClasses).flat();
+  console.log('Total classes:', allClasses.length);
 
   return (
     <section className="py-12 bg-neutral-100">
-      <div className="container px-4 mx-auto space-y-12">
+      <div className="container mx-auto space-y-12">
         {sections.map((section) => {
           const filteredClasses = section.filter(allClasses);
+          console.log(`${section.title} filtered classes:`, filteredClasses.length);
           
           if (filteredClasses.length === 0) {
             return null;
           }
 
           return (
-            <div key={section.title} className="space-y-6">
+            <div key={section.title} className="space-y-6 px-4">
               <h2 className="text-2xl font-semibold">{section.title}</h2>
               <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                 {filteredClasses.map((classItem) => (
