@@ -3,21 +3,36 @@ import FilterButtons from "./filters/FilterButtons";
 import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
+import { 
+  Palette, 
+  ChefHat, 
+  Croissant, 
+  Paintbrush, 
+  Wine, 
+  Camera, 
+  Music, 
+  Sparkles, 
+  Hammer, 
+  Gem, 
+  Scissors, 
+  Pencil,
+  Flower2
+} from "lucide-react";
 
 const categories = [
-  { name: "Pottery", count: "95+ Classes", icon: "🎨" },
-  { name: "Cooking", count: "200+ Classes", icon: "👨‍🍳" },
-  { name: "Baking", count: "85+ Classes", icon: "🥐" },
-  { name: "Painting & Art", count: "120+ Classes", icon: "🖼️" },
-  { name: "Cocktail & Wine", count: "60+ Classes", icon: "🍸" },
-  { name: "Photography", count: "80+ Classes", icon: "📸" },
-  { name: "Music & Dance", count: "150+ Classes", icon: "💃" },
-  { name: "Candle Making", count: "45+ Classes", icon: "✨" },
-  { name: "Wood Craft", count: "75+ Classes", icon: "🪚" },
-  { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: "💎" },
-  { name: "Textile Craft", count: "110+ Classes", icon: "🧵" },
-  { name: "Paper Craft", count: "40+ Classes", icon: "🎨" },
-  { name: "Flower & Plants", count: "70+ Classes", icon: "🌺" },
+  { name: "Pottery", count: "95+ Classes", icon: Palette },
+  { name: "Cooking", count: "200+ Classes", icon: ChefHat },
+  { name: "Baking", count: "85+ Classes", icon: Croissant },
+  { name: "Painting & Art", count: "120+ Classes", icon: Paintbrush },
+  { name: "Cocktail & Wine", count: "60+ Classes", icon: Wine },
+  { name: "Photography", count: "80+ Classes", icon: Camera },
+  { name: "Music & Dance", count: "150+ Classes", icon: Music },
+  { name: "Candle Making", count: "45+ Classes", icon: Sparkles },
+  { name: "Wood Craft", count: "75+ Classes", icon: Hammer },
+  { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: Gem },
+  { name: "Textile Craft", count: "110+ Classes", icon: Scissors },
+  { name: "Paper Craft", count: "40+ Classes", icon: Pencil },
+  { name: "Flower & Plants", count: "70+ Classes", icon: Flower2 },
 ];
 
 const swedishCities = [
