@@ -7,7 +7,7 @@ export interface ClassItem {
   images: string[];
   level: string;
   category?: string;
-  date: Date;
+  date: Date | Date[];
   city: string;
 }
 

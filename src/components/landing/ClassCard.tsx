@@ -1,6 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 interface ClassCardProps {
   title: string;
@@ -9,7 +16,7 @@ interface ClassCardProps {
   rating: number;
   images: string[];
   level: string;
-  date: Date;
+  date: Date | Date[];
   city: string;
 }
 
@@ -22,6 +29,11 @@ const ClassCard = ({
   date,
   city,
 }: ClassCardProps) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const dates = Array.isArray(date) ? date : [date];
+  const visibleDates = dates.slice(0, 2);
+  const hasMoreDates = dates.length > 2;
+
   return (
     <Card className="overflow-hidden group">
       <div 
@@ -49,9 +61,51 @@ const ClassCard = ({
           </div>
           <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
         </div>
-        <p className="text-sm text-neutral-600 mt-1">
-          {format(new Date(date), 'MMM d, yyyy')}
-        </p>
+        <div className="mt-2 space-y-1">
+          {visibleDates.map((d, index) => (
+            <Button
+              key={index}
+              variant="ghost"
+              className="p-0 h-auto text-sm text-neutral-600 hover:text-primary hover:bg-transparent"
+              onClick={() => {
+                // Handle date selection
+                console.log('Selected date:', d);
+              }}
+            >
+              {format(new Date(d), 'MMM d, yyyy')}
+            </Button>
+          ))}
+          {hasMoreDates && (
+            <Popover open={isOpen} onOpenChange={setIsOpen}>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="p-0 h-auto text-sm text-primary hover:text-primary/80 hover:bg-transparent"
+                >
+                  See more dates
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-2">
+                <div className="space-y-1">
+                  {dates.slice(2).map((d, index) => (
+                    <Button
+                      key={index}
+                      variant="ghost"
+                      className="w-full justify-start text-sm text-neutral-600 hover:text-primary"
+                      onClick={() => {
+                        // Handle date selection
+                        console.log('Selected date:', d);
+                        setIsOpen(false);
+                      }}
+                    >
+                      {format(new Date(d), 'MMM d, yyyy')}
+                    </Button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+          )}
+        </div>
       </div>
     </Card>
   );

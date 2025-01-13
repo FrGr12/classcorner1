@@ -12,7 +12,12 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-04-15'),
+    date: [
+      new Date('2024-04-15'),
+      new Date('2024-04-22'),
+      new Date('2024-04-29'),
+      new Date('2024-05-06')
+    ],
     city: "Stockholm"
   },
   { 
