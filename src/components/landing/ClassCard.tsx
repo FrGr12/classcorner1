@@ -10,6 +10,7 @@ interface ClassCardProps {
   images: string[];
   level: string;
   date: Date;
+  city: string;
 }
 
 const ClassCard = ({
@@ -19,6 +20,7 @@ const ClassCard = ({
   rating,
   level,
   date,
+  city,
 }: ClassCardProps) => {
   return (
     <Card className="overflow-hidden group">
@@ -47,9 +49,12 @@ const ClassCard = ({
           </div>
           <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
         </div>
-        <p className="text-sm text-neutral-600 mt-1">
-          {format(new Date(date), 'MMM d, yyyy')}
-        </p>
+        <div className="flex items-center justify-between mt-1">
+          <p className="text-sm text-neutral-600">
+            {format(new Date(date), 'MMM d, yyyy')}
+          </p>
+          <p className="text-sm text-neutral-600">{city}</p>
+        </div>
       </div>
     </Card>
   );
