@@ -39,13 +39,13 @@ const Navigation = () => {
         </Link>
         
         {/* Search Field */}
-        <div className="flex items-center flex-1 max-w-xl mx-6">
+        <div className="flex items-center flex-1 max-w-2xl mx-4">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..."
-              className="pl-10 bg-white border-none w-full h-10 text-sm placeholder:text-neutral-500"
+              className="pl-9 bg-white border-none w-full h-8 text-xs sm:text-sm placeholder:text-neutral-500"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
