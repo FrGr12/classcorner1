@@ -86,11 +86,12 @@ const FilterButtons = ({
   };
 
   const handleLocationChange = (location: string) => {
-    setSelectedLocations((prev: string[]) => {
-      if (location === "Everywhere") {
-        return ["Everywhere"];
-      }
-      
+    if (location === "Everywhere") {
+      setSelectedLocations(["Everywhere"]);
+      return;
+    }
+    
+    setSelectedLocations((prev) => {
       const newLocations = prev.includes(location)
         ? prev.filter((l) => l !== location)
         : [...prev.filter((l) => l !== "Everywhere"), location];
@@ -105,12 +106,12 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="grid grid-cols-3 w-full gap-2 mb-8">
+    <div className="flex flex-col sm:flex-row gap-2 mb-8 w-full sm:w-auto">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedCategories.length === 0
@@ -136,7 +137,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedLocations.includes("Everywhere")
@@ -164,7 +165,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedTimeRange}
