@@ -45,14 +45,11 @@ const ClassCard = ({
   return (
     <Card className="overflow-hidden group">
       <div 
-        className="relative aspect-[4/3] overflow-hidden"
-        style={{
-          background: "linear-gradient(90deg, hsla(277, 75%, 84%, 1) 0%, hsla(297, 50%, 51%, 1) 100%)"
-        }}
+        className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-purple-200 to-purple-400"
       >
         <Badge 
           variant="secondary" 
-          className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm shadow-lg text-primary border-none hover:bg-white cursor-pointer transition-all duration-200 z-10 p-2"
+          className="absolute bottom-3 right-3 bg-white shadow-lg text-primary border-none hover:bg-white/90 cursor-pointer transition-all duration-200 z-10 p-2.5"
           onClick={handleSave}
         >
           <Heart 
