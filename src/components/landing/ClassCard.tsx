@@ -19,6 +19,7 @@ interface ClassCardProps {
   level: string;
   date: Date | Date[];
   city: string;
+  category?: string;
 }
 
 const ClassCard = ({
@@ -29,6 +30,7 @@ const ClassCard = ({
   level,
   date,
   city,
+  category,
 }: ClassCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -56,12 +58,22 @@ const ClassCard = ({
             className={`w-5 h-5 ${isSaved ? 'fill-red-500 text-red-500' : 'fill-none text-neutral-600'}`}
           />
         </Badge>
-        <Badge 
-          variant="secondary" 
-          className="absolute bottom-3 left-3 bg-white/90 text-primary border-none"
-        >
-          {level}
-        </Badge>
+        <div className="absolute bottom-3 left-3 flex gap-2">
+          <Badge 
+            variant="secondary" 
+            className="bg-white/90 text-primary border-none"
+          >
+            {level}
+          </Badge>
+          {category && (
+            <Badge 
+              variant="secondary" 
+              className="bg-white/90 text-primary border-none"
+            >
+              {category}
+            </Badge>
+          )}
+        </div>
       </div>
       <div className="p-4">
         <div className="flex items-start justify-between mb-1">
