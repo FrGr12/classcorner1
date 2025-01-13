@@ -91,7 +91,7 @@ const FilterButtons = ({
       return;
     }
     
-    setSelectedLocations((prevLocations) => {
+    setSelectedLocations((prevLocations: string[]) => {
       const newLocations = prevLocations.includes(location)
         ? prevLocations.filter((l) => l !== location)
         : [...prevLocations.filter((l) => l !== "Everywhere"), location];
@@ -106,12 +106,12 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="grid grid-cols-3 gap-2 mb-8 w-full">
+    <div className="grid grid-cols-3 gap-1 mb-8 w-full">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full rounded-full flex items-center justify-center gap-1 h-8 px-1.5 text-[10px] sm:text-sm sm:h-9 sm:px-4 sm:gap-2"
           >
             <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="truncate">
@@ -139,7 +139,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full rounded-full flex items-center justify-center gap-1 h-8 px-1.5 text-[10px] sm:text-sm sm:h-9 sm:px-4 sm:gap-2"
           >
             <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="truncate">
@@ -169,7 +169,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="w-full rounded-full flex items-center justify-center gap-1 h-8 px-1.5 text-[10px] sm:text-sm sm:h-9 sm:px-4 sm:gap-2"
           >
             <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
             <span className="truncate">{selectedTimeRange}</span>
