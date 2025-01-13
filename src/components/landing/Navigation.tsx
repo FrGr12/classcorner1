@@ -34,8 +34,8 @@ const Navigation = () => {
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
       <div className="glass-panel rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
         <Link to="/" className="flex items-center gap-1.5">
-          <div className="w-5 h-5 bg-primary rounded-full"></div>
-          <span className="text-base font-semibold">ClassCorner</span>
+          <div className="w-4 h-4 bg-primary rounded-full"></div>
+          <span className="text-sm font-semibold">ClassCorner</span>
         </Link>
         
         {/* Search Field */}
@@ -54,7 +54,6 @@ const Navigation = () => {
               onFocus={() => setShowDropdown(true)}
             />
             
-            {/* Categories Dropdown */}
             {showDropdown && searchValue && (
               <motion.div 
                 initial={{ opacity: 0, y: -10 }}
@@ -86,7 +85,6 @@ const Navigation = () => {
           </div>
         </div>
         
-        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center gap-3">
           <Link 
             to="/about" 
@@ -111,7 +109,6 @@ const Navigation = () => {
         </button>
       </div>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <motion.div 
           className="md:hidden glass-panel mt-2 rounded-xl p-4 shadow-lg"
