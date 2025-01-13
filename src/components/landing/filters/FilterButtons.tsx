@@ -86,7 +86,7 @@ const FilterButtons = ({
   };
 
   const handleLocationChange = (location: string) => {
-    setSelectedLocations((prev) => {
+    setSelectedLocations((prev: string[]) => {
       if (location === "Everywhere") {
         return ["Everywhere"];
       }
@@ -105,14 +105,17 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-4 mb-8">
+    <div className="flex flex-wrap gap-2 mb-8">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="rounded-full flex items-center gap-2">
-            <Filter className="w-4 h-4" />
+          <Button 
+            variant="outline" 
+            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+          >
+            <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedCategories.length === 0
-              ? "All classes"
-              : `${selectedCategories.length} selected`}
+              ? "All"
+              : `${selectedCategories.length}`}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
@@ -131,13 +134,16 @@ const FilterButtons = ({
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="rounded-full flex items-center gap-2">
-            <MapPin className="w-4 h-4" />
+          <Button 
+            variant="outline" 
+            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+          >
+            <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedLocations.includes("Everywhere")
-              ? "Everywhere"
+              ? "All"
               : selectedLocations.length === 1
               ? selectedLocations[0]
-              : `${selectedLocations.length} locations`}
+              : `${selectedLocations.length}`}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
@@ -156,8 +162,11 @@ const FilterButtons = ({
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline" className="rounded-full flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4" />
+          <Button 
+            variant="outline" 
+            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+          >
+            <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedTimeRange}
           </Button>
         </DropdownMenuTrigger>
