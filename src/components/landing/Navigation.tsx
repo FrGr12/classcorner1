@@ -32,20 +32,20 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
-      <div className="glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-lg backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-6 h-6 bg-primary rounded-full"></div>
-          <span className="text-lg font-semibold">ClassCorner</span>
+      <div className="glass-panel rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
+        <Link to="/" className="flex items-center gap-1.5">
+          <div className="w-5 h-5 bg-primary rounded-full"></div>
+          <span className="text-base font-semibold">ClassCorner</span>
         </Link>
         
         {/* Search Field */}
-        <div className="flex items-center flex-1 max-w-md mx-8">
+        <div className="flex items-center flex-1 max-w-xl mx-6">
           <div className="relative w-full">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..."
-              className="pl-12 bg-white border-none w-full h-12 text-base placeholder:text-neutral-500 placeholder:font-medium"
+              className="pl-10 bg-white border-none w-full h-10 text-sm placeholder:text-neutral-500"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
@@ -87,17 +87,17 @@ const Navigation = () => {
         </div>
         
         {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           <Link 
             to="/about" 
-            className={`font-medium ${location.pathname === '/about' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
+            className={`text-sm font-medium ${location.pathname === '/about' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
           >
             About
           </Link>
-          <button className="px-4 py-2 text-primary hover:text-primary/80 transition-colors font-medium">
+          <button className="px-3 py-1.5 text-sm text-primary hover:text-primary/80 transition-colors font-medium">
             Log in
           </button>
-          <Link to="/teach" className="button-secondary">
+          <Link to="/teach" className="button-secondary text-sm px-4 py-1.5">
             Start Teaching
           </Link>
         </div>
@@ -107,7 +107,7 @@ const Navigation = () => {
           className="md:hidden p-2 hover:bg-neutral-200/50 rounded-full transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <Menu className="w-6 h-6" />
+          <Menu className="w-5 h-5" />
         </button>
       </div>
 
