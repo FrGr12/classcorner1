@@ -8,7 +8,6 @@ export interface ClassItem {
   level: string;
   category?: string;
   date: Date;
-  city: string;
 }
 
 export interface ClassData {
