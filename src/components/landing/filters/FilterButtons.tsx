@@ -14,15 +14,14 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { MapPin, Calendar as CalendarIcon, Filter } from "lucide-react";
-import { addDays, format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { useState } from "react";
 
 interface FilterButtonsProps {
-  selectedCategory: string | null;
+  selectedCategories: string[];
   selectedLocation: string;
   selectedTime: string;
-  setSelectedCategory: (category: string | null) => void;
+  setSelectedCategories: (categories: string[]) => void;
   setOpen: (open: boolean) => void;
   setSelectedLocation: (location: string) => void;
 }
@@ -57,24 +56,21 @@ const cities = [
 ];
 
 const FilterButtons = ({
-  selectedCategory,
+  selectedCategories,
   selectedLocation,
   selectedTime,
-  setSelectedCategory,
+  setSelectedCategories,
   setOpen,
   setSelectedLocation,
 }: FilterButtonsProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
-  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
 
   const handleCategoryChange = (category: string) => {
-    setSelectedCategories((prev) => {
-      if (prev.includes(category)) {
-        return prev.filter((c) => c !== category);
-      } else {
-        return [...prev, category];
-      }
-    });
+    setSelectedCategories(
+      selectedCategories.includes(category)
+        ? selectedCategories.filter((c) => c !== category)
+        : [...selectedCategories, category]
+    );
   };
 
   return (

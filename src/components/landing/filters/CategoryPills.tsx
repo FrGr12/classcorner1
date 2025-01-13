@@ -8,14 +8,14 @@ interface Category {
 
 interface CategoryPillsProps {
   categories: Category[];
-  selectedCategory: string | null;
-  setSelectedCategory: (category: string | null) => void;
+  selectedCategories: string[];
+  onCategorySelect: (category: string) => void;
 }
 
 const CategoryPills = ({
   categories,
-  selectedCategory,
-  setSelectedCategory,
+  selectedCategories,
+  onCategorySelect,
 }: CategoryPillsProps) => {
   return (
     <div className="mb-8">
@@ -23,12 +23,10 @@ const CategoryPills = ({
         {categories.map((category) => (
           <button
             key={category.name}
-            onClick={() => setSelectedCategory(
-              selectedCategory === category.name ? null : category.name
-            )}
+            onClick={() => onCategorySelect(category.name)}
             className={cn(
               "flex flex-col items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
-              selectedCategory === category.name
+              selectedCategories.includes(category.name)
                 ? "bg-accent-purple text-white shadow-lg"
                 : "bg-white text-neutral-600 hover:bg-neutral-50 shadow-sm hover:shadow-md"
             )}

@@ -34,19 +34,29 @@ const swedishCities = [
 ];
 
 const Categories = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocation, setSelectedLocation] = useState<string>("Everywhere");
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
   const [open, setOpen] = useState(false);
+
+  const handleCategorySelect = (category: string) => {
+    setSelectedCategories((prev) => {
+      if (prev.includes(category)) {
+        return prev.filter((c) => c !== category);
+      } else {
+        return [...prev, category];
+      }
+    });
+  };
 
   return (
     <section className="py-12 bg-neutral-100">
       <div className="container-padding">
         <FilterButtons
-          selectedCategory={selectedCategory}
+          selectedCategories={selectedCategories}
+          setSelectedCategories={setSelectedCategories}
           selectedLocation={selectedLocation}
           selectedTime={selectedTime}
-          setSelectedCategory={setSelectedCategory}
           setOpen={setOpen}
           setSelectedLocation={setSelectedLocation}
         />
@@ -60,12 +70,12 @@ const Categories = () => {
 
         <CategoryPills
           categories={categories}
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
+          selectedCategories={selectedCategories}
+          onCategorySelect={handleCategorySelect}
         />
 
         <div className="mt-12">
-          <ClassGrid category={selectedCategory} />
+          <ClassGrid category={selectedCategories.length === 1 ? selectedCategories[0] : null} />
         </div>
       </div>
     </section>
