@@ -33,18 +33,18 @@ const Navigation = () => {
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
       <div className="glass-panel rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
-        <Link to="/" className="flex items-center gap-1.5">
-          <div className="w-4 h-4 bg-primary rounded-full"></div>
-          <span className="text-sm font-semibold">ClassCorner</span>
+        <Link to="/" className="flex items-center gap-1 min-w-fit">
+          <div className="w-3 h-3 bg-primary rounded-full"></div>
+          <span className="text-xs font-semibold">ClassCorner</span>
         </Link>
         
-        <div className="flex items-center flex-1 max-w-[600px] mx-4">
+        <div className="flex items-center flex-1 max-w-[800px] mx-6">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..."
-              className="pl-9 bg-white border border-neutral-200 w-full h-8 text-xs sm:text-sm placeholder:text-neutral-500 rounded-lg"
+              className="pl-9 bg-white border border-neutral-200 w-full h-10 text-sm placeholder:text-neutral-500 rounded-lg"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
@@ -84,7 +84,7 @@ const Navigation = () => {
           </div>
         </div>
         
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-3 min-w-fit">
           <Link 
             to="/about" 
             className={`text-sm font-medium ${location.pathname === '/about' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
