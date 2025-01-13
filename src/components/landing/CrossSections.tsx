@@ -14,9 +14,14 @@ const sections = [
   { title: "This Week", filter: (classes: ClassItem[]) => {
     const today = new Date();
     const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
-    return classes.filter(c => c.date >= today && c.date <= nextWeek).slice(0, 4);
+    return classes.filter(c => {
+      const classDate = new Date(c.date);
+      return classDate >= today && classDate <= nextWeek;
+    }).slice(0, 4);
   }},
-  { title: "Recently Added", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 4) },
+  { title: "Recently Added", filter: (classes: ClassItem[]) => 
+    [...classes].sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()).slice(0, 4)
+  },
   { title: "Popular Near You", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
   { title: "Most Loved", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
   { title: "Last Minute Deals", filter: (classes: ClassItem[]) => classes.filter(c => c.date.getTime() - new Date().getTime() < 7 * 24 * 60 * 60 * 1000).slice(0, 4) },
@@ -33,52 +38,60 @@ const CrossSections = () => {
 
   return (
     <section className="py-12 bg-neutral-100">
-      <div className="container-padding space-y-12">
-        {sections.map((section) => (
-          <div key={section.title} className="space-y-6">
-            <h2 className="text-2xl font-semibold">{section.title}</h2>
-            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {section.filter(allClasses).map((classItem) => (
-                <ClassCard
-                  key={classItem.id}
-                  title={classItem.title}
-                  instructor={classItem.instructor}
-                  price={classItem.price}
-                  rating={classItem.rating}
-                  images={classItem.images}
-                  level={classItem.level}
-                  date={classItem.date}
-                />
-              ))}
+      <div className="container px-4 mx-auto space-y-12">
+        {sections.map((section) => {
+          const filteredClasses = section.filter(allClasses);
+          
+          if (filteredClasses.length === 0) {
+            return null;
+          }
+
+          return (
+            <div key={section.title} className="space-y-6">
+              <h2 className="text-2xl font-semibold">{section.title}</h2>
+              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredClasses.map((classItem) => (
+                  <ClassCard
+                    key={classItem.id}
+                    title={classItem.title}
+                    instructor={classItem.instructor}
+                    price={classItem.price}
+                    rating={classItem.rating}
+                    images={classItem.images}
+                    level={classItem.level}
+                    date={classItem.date}
+                  />
+                ))}
+              </div>
+              <div className="block md:hidden">
+                <Carousel
+                  opts={{
+                    align: "start",
+                    loop: true,
+                  }}
+                >
+                  <CarouselContent>
+                    {filteredClasses.map((classItem) => (
+                      <CarouselItem key={classItem.id}>
+                        <ClassCard
+                          title={classItem.title}
+                          instructor={classItem.instructor}
+                          price={classItem.price}
+                          rating={classItem.rating}
+                          images={classItem.images}
+                          level={classItem.level}
+                          date={classItem.date}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
             </div>
-            <div className="block md:hidden">
-              <Carousel
-                opts={{
-                  align: "start",
-                  loop: true,
-                }}
-              >
-                <CarouselContent>
-                  {section.filter(allClasses).map((classItem) => (
-                    <CarouselItem key={classItem.id}>
-                      <ClassCard
-                        title={classItem.title}
-                        instructor={classItem.instructor}
-                        price={classItem.price}
-                        rating={classItem.rating}
-                        images={classItem.images}
-                        level={classItem.level}
-                        date={classItem.date}
-                      />
-                    </CarouselItem>
-                  ))}
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-              </Carousel>
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </section>
   );
