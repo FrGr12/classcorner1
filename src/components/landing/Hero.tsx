@@ -19,7 +19,7 @@ const Hero = () => {
     <header className="relative container-padding py-4">
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.div 
-          className="glass-panel p-2 rounded-full flex flex-col md:flex-row gap-2 shadow-lg"
+          className="flex flex-col md:flex-row gap-2"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
