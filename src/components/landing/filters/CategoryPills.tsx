@@ -27,13 +27,15 @@ const CategoryPills = ({
               selectedCategory === category.name ? null : category.name
             )}
             className={cn(
-              "flex flex-col items-center gap-2 px-4 py-2 rounded-lg transition-all whitespace-nowrap min-w-fit",
+              "flex flex-col items-center gap-2 px-6 py-3 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
               selectedCategory === category.name
-                ? "bg-accent-purple text-white"
-                : "bg-white text-neutral-600 hover:bg-neutral-50"
+                ? "bg-accent-purple text-white shadow-lg"
+                : "bg-white text-neutral-600 hover:bg-neutral-50 shadow-sm hover:shadow-md"
             )}
           >
-            <span className="text-2xl">{category.icon}</span>
+            <span className="text-3xl transition-transform duration-300 ease-in-out transform group-hover:scale-110">
+              {category.icon}
+            </span>
             <span className="text-xs font-medium">{category.name}</span>
           </button>
         ))}
