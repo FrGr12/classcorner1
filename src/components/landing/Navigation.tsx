@@ -41,11 +41,11 @@ const Navigation = () => {
         {/* Search Field */}
         <div className="flex items-center flex-1 max-w-md mx-8">
           <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..." 
-              className="pl-10 bg-white border-none w-full"
+              className="pl-12 bg-white border-none w-full h-12 text-base"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
