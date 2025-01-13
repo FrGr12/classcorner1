@@ -40,6 +40,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             level={classItem.level}
             date={classItem.date}
             city={classItem.city}
+            category={category || classItem.category}
           />
         ))}
       </div>
