@@ -59,14 +59,6 @@ const ClassCard = ({
           />
         </Badge>
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
-          {level && (
-            <Badge 
-              variant="secondary" 
-              className="bg-white/90 text-primary border-none"
-            >
-              {level}
-            </Badge>
-          )}
           {category && (
             <Badge 
               variant="secondary" 
