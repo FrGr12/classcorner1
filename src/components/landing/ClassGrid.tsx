@@ -12,7 +12,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   const [showAll, setShowAll] = useState(false);
   const ITEMS_PER_PAGE = 24;
 
-  // If no category is selected, combine all classes from all categories
+  // Filter classes based on the selected category
   const classes = category 
     ? mockClasses[category as keyof typeof mockClasses] || []
     : Object.values(mockClasses).flat();
@@ -40,7 +40,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             level={classItem.level}
             date={classItem.date}
             city={classItem.city}
-            category={category || classItem.category}
+            category={classItem.category || category}
           />
         ))}
       </div>
