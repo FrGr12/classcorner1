@@ -10,7 +10,7 @@ import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
 
 const sections = [
-  { title: "This Week's Recommended for You", filter: (classes: ClassItem[]) => classes.slice(0, 4) },
+  { title: "Recommended for You", filter: (classes: ClassItem[]) => classes.slice(0, 4) },
   { title: "Recently Added", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 4) },
   { title: "Popular Near You", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
   { title: "Most Loved", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
