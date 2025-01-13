@@ -12,12 +12,10 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   const [showAll, setShowAll] = useState(false);
   const ITEMS_PER_PAGE = 24;
 
-  // If no category is selected, combine all classes from all categories
   const classes = category 
     ? mockClasses[category as keyof typeof mockClasses] || []
     : Object.values(mockClasses).flat();
   
-  // Sort classes by date
   const sortedClasses = [...classes].sort((a, b) => {
     return new Date(a.date).getTime() - new Date(b.date).getTime();
   });
@@ -37,6 +35,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             images={classItem.images}
             level={classItem.level}
             date={classItem.date}
+            city={classItem.city}
           />
         ))}
       </div>
