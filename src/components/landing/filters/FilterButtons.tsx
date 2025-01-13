@@ -91,10 +91,10 @@ const FilterButtons = ({
       return;
     }
     
-    setSelectedLocations((prev) => {
-      const newLocations = prev.includes(location)
-        ? prev.filter((l) => l !== location)
-        : [...prev.filter((l) => l !== "Everywhere"), location];
+    setSelectedLocations((prevLocations: string[]) => {
+      const newLocations = prevLocations.includes(location)
+        ? prevLocations.filter((l) => l !== location)
+        : [...prevLocations.filter((l) => l !== "Everywhere"), location];
       
       return newLocations.length === 0 ? ["Everywhere"] : newLocations;
     });
@@ -106,12 +106,12 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="flex flex-col sm:flex-row gap-2 mb-8 w-full sm:w-auto">
+    <div className="flex gap-2 mb-8 w-full overflow-x-auto no-scrollbar">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
           >
             <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedCategories.length === 0
@@ -137,7 +137,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
           >
             <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedLocations.includes("Everywhere")
@@ -165,7 +165,7 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="w-full sm:w-auto rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
           >
             <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
             {selectedTimeRange}
