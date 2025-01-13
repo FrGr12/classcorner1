@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Heart } from "lucide-react";
 import {
   Popover,
   PopoverContent,
@@ -30,9 +31,16 @@ const ClassCard = ({
   city,
 }: ClassCardProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
   const dates = Array.isArray(date) ? date : [date];
   const visibleDates = dates.slice(0, 2);
   const hasMoreDates = dates.length > 2;
+
+  const handleSave = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsSaved(!isSaved);
+  };
 
   return (
     <Card className="overflow-hidden group">
@@ -44,9 +52,12 @@ const ClassCard = ({
       >
         <Badge 
           variant="secondary" 
-          className="absolute top-3 right-3 bg-white/90 text-primary border-none hover:bg-white"
+          className="absolute top-3 right-3 bg-white/90 text-primary border-none hover:bg-white cursor-pointer"
+          onClick={handleSave}
         >
-          {level}
+          <Heart 
+            className={`w-4 h-4 ${isSaved ? 'fill-red-500 text-red-500' : 'fill-none text-neutral-600'}`}
+          />
         </Badge>
       </div>
       <div className="p-4">
