@@ -18,15 +18,6 @@ import { DateRange } from "react-day-picker";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addMonths } from "date-fns";
 import { useState } from "react";
 
-interface FilterButtonsProps {
-  selectedCategories: string[];
-  selectedLocations: string[];
-  selectedTime: string;
-  setSelectedCategories: (categories: string[]) => void;
-  setOpen: (open: boolean) => void;
-  setSelectedLocations: (locations: string[]) => void;
-}
-
 const categories = [
   "Pottery",
   "Cooking",
@@ -66,6 +57,15 @@ const timeRanges = [
   }},
 ];
 
+interface FilterButtonsProps {
+  selectedCategories: string[];
+  selectedLocations: string[];
+  selectedTime: string;
+  setSelectedCategories: (categories: string[]) => void;
+  setOpen: (open: boolean) => void;
+  setSelectedLocations: (locations: string[]) => void;
+}
+
 const FilterButtons = ({
   selectedCategories,
   selectedLocations,
@@ -91,7 +91,7 @@ const FilterButtons = ({
       return;
     }
     
-    setSelectedLocations((prevLocations: string[]) => {
+    setSelectedLocations((prevLocations) => {
       const newLocations = prevLocations.includes(location)
         ? prevLocations.filter((l) => l !== location)
         : [...prevLocations.filter((l) => l !== "Everywhere"), location];
@@ -106,17 +106,19 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="flex gap-2 mb-8 w-full overflow-x-auto no-scrollbar">
+    <div className="grid grid-cols-3 gap-2 mb-8 w-full">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
+            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
-            {selectedCategories.length === 0
-              ? "All"
-              : `${selectedCategories.length}`}
+            <span className="truncate">
+              {selectedCategories.length === 0
+                ? "All"
+                : `${selectedCategories.length}`}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
@@ -137,14 +139,16 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
+            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
-            {selectedLocations.includes("Everywhere")
-              ? "All"
-              : selectedLocations.length === 1
-              ? selectedLocations[0]
-              : `${selectedLocations.length}`}
+            <span className="truncate">
+              {selectedLocations.includes("Everywhere")
+                ? "All"
+                : selectedLocations.length === 1
+                ? selectedLocations[0]
+                : `${selectedLocations.length}`}
+            </span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
@@ -165,10 +169,10 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="flex-1 min-w-[110px] rounded-full flex items-center justify-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4 sm:min-w-0 sm:flex-initial"
+            className="w-full rounded-full flex items-center justify-center gap-1.5 h-8 px-2 text-xs sm:text-sm sm:h-9 sm:px-4"
           >
             <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
-            {selectedTimeRange}
+            <span className="truncate">{selectedTimeRange}</span>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
