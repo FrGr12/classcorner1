@@ -38,14 +38,13 @@ const Navigation = () => {
           <span className="text-sm font-semibold">ClassCorner</span>
         </Link>
         
-        {/* Search Field */}
         <div className="flex items-center flex-1 max-w-3xl mx-4">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..."
-              className="pl-9 bg-white border-none w-full h-8 text-xs sm:text-sm placeholder:text-neutral-500"
+              className="pl-9 bg-white border border-neutral-200 w-full h-8 text-xs sm:text-sm placeholder:text-neutral-500 rounded-lg"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
@@ -100,7 +99,6 @@ const Navigation = () => {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button 
           className="md:hidden p-2 hover:bg-neutral-200/50 rounded-full transition-colors"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
