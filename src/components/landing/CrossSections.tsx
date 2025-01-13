@@ -11,6 +11,11 @@ import { ClassItem } from "@/types/class";
 
 const sections = [
   { title: "Recommended for You", filter: (classes: ClassItem[]) => classes.slice(0, 4) },
+  { title: "This Week", filter: (classes: ClassItem[]) => {
+    const today = new Date();
+    const nextWeek = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return classes.filter(c => c.date >= today && c.date <= nextWeek).slice(0, 4);
+  }},
   { title: "Recently Added", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.date.getTime() - a.date.getTime()).slice(0, 4) },
   { title: "Popular Near You", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
   { title: "Most Loved", filter: (classes: ClassItem[]) => classes.sort((a, b) => b.rating - a.rating).slice(0, 4) },
