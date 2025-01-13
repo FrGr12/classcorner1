@@ -58,13 +58,15 @@ const ClassCard = ({
             className={`w-5 h-5 ${isSaved ? 'fill-red-500 text-red-500' : 'fill-none text-neutral-600'}`}
           />
         </Badge>
-        <div className="absolute bottom-3 left-3 flex gap-2">
-          <Badge 
-            variant="secondary" 
-            className="bg-white/90 text-primary border-none"
-          >
-            {level}
-          </Badge>
+        <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
+          {level && (
+            <Badge 
+              variant="secondary" 
+              className="bg-white/90 text-primary border-none"
+            >
+              {level}
+            </Badge>
+          )}
           {category && (
             <Badge 
               variant="secondary" 
