@@ -5,6 +5,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { Separator } from "@/components/ui/separator";
 import ClassCard from "./ClassCard";
 import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
@@ -42,7 +43,8 @@ const CrossSections = () => {
   return (
     <section className="py-12 bg-neutral-100">
       <div className="container mx-auto space-y-12">
-        {sections.map((section) => {
+        {/* First two sections */}
+        {sections.slice(0, 2).map((section) => {
           const filteredClasses = section.filter(allClasses);
           console.log(`${section.title} filtered classes:`, filteredClasses.length);
           
@@ -68,12 +70,64 @@ const CrossSections = () => {
                 ))}
               </div>
               <div className="block md:hidden">
-                <Carousel
-                  opts={{
-                    align: "start",
-                    loop: true,
-                  }}
-                >
+                <Carousel opts={{ align: "start", loop: true }}>
+                  <CarouselContent>
+                    {filteredClasses.map((classItem) => (
+                      <CarouselItem key={classItem.id}>
+                        <ClassCard
+                          title={classItem.title}
+                          instructor={classItem.instructor}
+                          price={classItem.price}
+                          rating={classItem.rating}
+                          images={classItem.images}
+                          level={classItem.level}
+                          date={classItem.date}
+                        />
+                      </CarouselItem>
+                    ))}
+                  </CarouselContent>
+                  <CarouselPrevious />
+                  <CarouselNext />
+                </Carousel>
+              </div>
+            </div>
+          );
+        })}
+
+        {/* Section Divider */}
+        <div className="px-4 py-8">
+          <Separator className="mb-8" />
+          <h2 className="text-3xl font-bold text-primary">Discover</h2>
+        </div>
+
+        {/* Remaining sections */}
+        {sections.slice(2).map((section) => {
+          const filteredClasses = section.filter(allClasses);
+          console.log(`${section.title} filtered classes:`, filteredClasses.length);
+          
+          if (filteredClasses.length === 0) {
+            return null;
+          }
+
+          return (
+            <div key={section.title} className="space-y-6 px-4">
+              <h2 className="text-2xl font-semibold">{section.title}</h2>
+              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {filteredClasses.map((classItem) => (
+                  <ClassCard
+                    key={classItem.id}
+                    title={classItem.title}
+                    instructor={classItem.instructor}
+                    price={classItem.price}
+                    rating={classItem.rating}
+                    images={classItem.images}
+                    level={classItem.level}
+                    date={classItem.date}
+                  />
+                ))}
+              </div>
+              <div className="block md:hidden">
+                <Carousel opts={{ align: "start", loop: true }}>
                   <CarouselContent>
                     {filteredClasses.map((classItem) => (
                       <CarouselItem key={classItem.id}>
