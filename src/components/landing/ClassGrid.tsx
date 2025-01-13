@@ -17,9 +17,11 @@ const ClassGrid = ({ category }: ClassGridProps) => {
     ? mockClasses[category as keyof typeof mockClasses] || []
     : Object.values(mockClasses).flat();
   
-  // Sort classes by date
+  // Sort classes by the earliest date
   const sortedClasses = [...classes].sort((a, b) => {
-    return new Date(a.date).getTime() - new Date(b.date).getTime();
+    const dateA = Array.isArray(a.date) ? a.date[0] : a.date;
+    const dateB = Array.isArray(b.date) ? b.date[0] : b.date;
+    return new Date(dateA).getTime() - new Date(dateB).getTime();
   });
 
   const displayedClasses = showAll ? sortedClasses : sortedClasses.slice(0, ITEMS_PER_PAGE);

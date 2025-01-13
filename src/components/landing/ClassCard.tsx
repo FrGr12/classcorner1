@@ -61,12 +61,12 @@ const ClassCard = ({
           </div>
           <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
         </div>
-        <div className="mt-2 space-y-1">
+        <div className="mt-4 space-y-2">
           {visibleDates.map((d, index) => (
             <Button
               key={index}
               variant="ghost"
-              className="p-0 h-auto text-sm text-neutral-600 hover:text-primary hover:bg-transparent"
+              className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 transition-colors"
               onClick={() => {
                 // Handle date selection
                 console.log('Selected date:', d);
@@ -80,18 +80,18 @@ const ClassCard = ({
               <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="p-0 h-auto text-sm text-primary hover:text-primary/80 hover:bg-transparent"
+                  className="w-full justify-start text-sm text-primary font-medium hover:text-primary/80 hover:bg-neutral-100"
                 >
                   See more dates
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-2">
-                <div className="space-y-1">
+                <div className="space-y-2">
                   {dates.slice(2).map((d, index) => (
                     <Button
                       key={index}
                       variant="ghost"
-                      className="w-full justify-start text-sm text-neutral-600 hover:text-primary"
+                      className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100"
                       onClick={() => {
                         // Handle date selection
                         console.log('Selected date:', d);
