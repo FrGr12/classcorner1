@@ -32,20 +32,20 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
-      <div className="glass-panel rounded-full px-6 py-4 flex items-center justify-between shadow-lg backdrop-blur-md">
+      <div className="glass-panel rounded-full px-6 py-3 flex items-center justify-between shadow-lg backdrop-blur-md">
         <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-full"></div>
-          <span className="text-xl font-semibold">ClassCorner</span>
+          <div className="w-6 h-6 bg-primary rounded-full"></div>
+          <span className="text-lg font-semibold">ClassCorner</span>
         </Link>
         
         {/* Search Field */}
-        <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+        <div className="flex items-center flex-1 max-w-md mx-8">
           <div className="relative w-full">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-neutral-500" />
             <Input 
               type="text" 
               placeholder="Search for classes..." 
-              className="pl-10 bg-neutral-100 border-none"
+              className="pl-10 bg-white border-none w-full"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
