@@ -23,12 +23,6 @@ const Navigation = () => {
           <Tabs defaultValue="experiences" className="w-[200px]">
             <TabsList className="bg-transparent border-none">
               <TabsTrigger 
-                value="stays" 
-                className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
-              >
-                Stays
-              </TabsTrigger>
-              <TabsTrigger 
                 value="experiences" 
                 className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
               >
