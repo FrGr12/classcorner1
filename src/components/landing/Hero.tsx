@@ -46,10 +46,10 @@ const Hero = () => {
             <Search className="w-5 h-5 text-neutral-400" />
             <Input
               type="text"
-              placeholder="What do you want to do?"
+              placeholder="Search for classes..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border-0 focus-visible:ring-0 p-0 h-auto placeholder:text-neutral-500"
+              className="pl-10 bg-neutral-100 border-none w-full"
               onKeyDown={(e) => {
                 if (e.key === 'Enter') handleSearch();
               }}
@@ -71,13 +71,6 @@ const Hero = () => {
               </SelectContent>
             </Select>
           </div>
-          
-          <button 
-            className="button-primary rounded-full whitespace-nowrap"
-            onClick={handleSearch}
-          >
-            Search
-          </button>
         </motion.div>
       </div>
     </header>
