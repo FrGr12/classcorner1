@@ -18,6 +18,26 @@ const Navigation = () => {
           <span className="text-xl font-semibold">ClassCorner</span>
         </Link>
 
+        {/* Navigation Tabs */}
+        <div className="hidden md:block">
+          <Tabs defaultValue="experiences" className="w-[200px]">
+            <TabsList className="bg-transparent border-none">
+              <TabsTrigger 
+                value="stays" 
+                className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
+              >
+                Stays
+              </TabsTrigger>
+              <TabsTrigger 
+                value="experiences" 
+                className="data-[state=active]:bg-transparent data-[state=active]:text-primary data-[state=active]:shadow-none"
+              >
+                Experiences
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
         {/* Search Bar */}
         <div className="hidden md:flex items-center gap-4 bg-white rounded-full border shadow-sm px-2 py-1">
           <button className="px-4 py-2 hover:bg-neutral-100 rounded-full text-sm font-medium">
