@@ -12,6 +12,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
+    category: "Pottery",
     date: [
       new Date('2024-04-15'),
       new Date('2024-04-22'),
@@ -31,6 +32,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
+    category: "Pottery",
     date: new Date('2024-04-18'),
     city: "Gothenburg"
   },
@@ -45,6 +47,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Advanced",
+    category: "Pottery",
     date: new Date('2024-04-22'),
     city: "Malmö"
   },
@@ -59,6 +62,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Intermediate",
+    category: "Pottery",
     date: new Date('2024-04-30'),
     city: "Uppsala"
   },
@@ -73,6 +77,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
+    category: "Pottery",
     date: new Date('2024-05-05'),
     city: "Stockholm"
   },
@@ -87,6 +92,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Intermediate",
+    category: "Pottery",
     date: new Date('2024-05-10'),
     city: "Gothenburg"
   },
@@ -101,6 +107,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Advanced",
+    category: "Pottery",
     date: new Date('2024-05-15'),
     city: "Malmö"
   },
@@ -115,6 +122,7 @@ export const ceramicsClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
+    category: "Pottery",
     date: new Date('2024-05-20'),
     city: "Stockholm"
   },

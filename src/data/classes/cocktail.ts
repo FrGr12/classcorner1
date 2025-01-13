@@ -9,6 +9,7 @@ export const cocktailClasses: ClassItem[] = [
     rating: 4.7,
     images: [],
     level: "Beginner",
+    category: "Cocktail & Wine",
     date: new Date('2024-04-18'),
     city: "Stockholm"
   },
@@ -20,6 +21,7 @@ export const cocktailClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
+    category: "Cocktail & Wine",
     date: new Date('2024-04-25'),
     city: "Gothenburg"
   },

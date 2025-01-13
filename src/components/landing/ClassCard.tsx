@@ -95,7 +95,6 @@ const ClassCard = ({
               size="sm"
               className="px-3 py-1 h-auto text-xs text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
               onClick={() => {
-                // Handle date selection
                 console.log('Selected date:', d);
               }}
             >
@@ -121,7 +120,6 @@ const ClassCard = ({
                       variant="ghost"
                       className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
                       onClick={() => {
-                        // Handle date selection
                         console.log('Selected date:', d);
                         setIsOpen(false);
                       }}
