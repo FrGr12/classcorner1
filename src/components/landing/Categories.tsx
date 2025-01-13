@@ -4,7 +4,7 @@ import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
 import { 
-  PenTool, 
+  Paintbrush, 
   ChefHat, 
   Cookie, 
   Palette, 
@@ -13,14 +13,14 @@ import {
   Music2, 
   Flame, 
   Axe, 
-  Ring, 
+  Pencil, 
   Scissors, 
   FileText,
   Flower2
 } from "lucide-react";
 
 const categories = [
-  { name: "Pottery", count: "95+ Classes", icon: PenTool },
+  { name: "Pottery", count: "95+ Classes", icon: Paintbrush },
   { name: "Cooking", count: "200+ Classes", icon: ChefHat },
   { name: "Baking", count: "85+ Classes", icon: Cookie },
   { name: "Painting & Art", count: "120+ Classes", icon: Palette },
@@ -29,7 +29,7 @@ const categories = [
   { name: "Music & Dance", count: "150+ Classes", icon: Music2 },
   { name: "Candle Making", count: "45+ Classes", icon: Flame },
   { name: "Wood Craft", count: "75+ Classes", icon: Axe },
-  { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: Ring },
+  { name: "Jewellery & Metal Craft", count: "90+ Classes", icon: Pencil },
   { name: "Textile Craft", count: "110+ Classes", icon: Scissors },
   { name: "Paper Craft", count: "40+ Classes", icon: FileText },
   { name: "Flower & Plants", count: "70+ Classes", icon: Flower2 },
