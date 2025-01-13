@@ -37,6 +37,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             images={classItem.images}
             level={classItem.level}
             date={classItem.date}
+            city={classItem.city}
           />
         ))}
       </div>
