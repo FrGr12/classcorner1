@@ -13,10 +13,16 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   const ITEMS_PER_PAGE = 24;
 
   // Filter classes based on category
-  const filteredClasses = category
-    ? mockClasses[category as keyof typeof mockClasses] || []
-    : Object.values(mockClasses).flat();
-  
+  const filteredClasses = category 
+    ? (mockClasses[category as keyof typeof mockClasses] || [])
+    : Object.values(mockClasses).reduce((acc: ClassItem[], curr) => {
+        // Ensure each class has a unique ID-category combination
+        return [...acc, ...curr.map(item => ({
+          ...item,
+          id: `${item.id}-${item.category}`
+        }))];
+      }, []);
+
   // Sort classes by the earliest date
   const sortedClasses = [...filteredClasses].sort((a, b) => {
     const dateA = Array.isArray(a.date) ? a.date[0] : a.date;
@@ -31,7 +37,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {displayedClasses.map((classItem: ClassItem) => (
           <ClassCard
-            key={`${classItem.id}-${classItem.category}`}
+            key={typeof classItem.id === 'string' ? classItem.id : `${classItem.id}-${classItem.category}`}
             title={classItem.title}
             instructor={classItem.instructor}
             price={classItem.price}
