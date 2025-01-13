@@ -3,7 +3,6 @@ import FilterButtons from "./filters/FilterButtons";
 import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
-import PopularCities from "./cities/PopularCities";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: "🏺" },
@@ -19,15 +18,6 @@ const categories = [
   { name: "Textile Craft", count: "110+ Classes", icon: "🧵" },
   { name: "Paper Craft", count: "40+ Classes", icon: "📜" },
   { name: "Flower & Plants", count: "70+ Classes", icon: "🌸" },
-];
-
-const cities = [
-  { name: "New York", count: "250+ Classes" },
-  { name: "Los Angeles", count: "180+ Classes" },
-  { name: "Chicago", count: "150+ Classes" },
-  { name: "San Francisco", count: "120+ Classes" },
-  { name: "Austin", count: "90+ Classes" },
-  { name: "Seattle", count: "85+ Classes" },
 ];
 
 const swedishCities = [
@@ -77,8 +67,6 @@ const Categories = () => {
         <div className="mt-12">
           <ClassGrid category={selectedCategory} />
         </div>
-
-        <PopularCities cities={cities} />
       </div>
     </section>
   );
