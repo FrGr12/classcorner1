@@ -28,7 +28,7 @@ const validCategories = [
   "Baking",
   "Painting & Art",
   "Candle Making",
-  "Jewellery & Metal Craft",
+  "Jewellery & Metal",
   "Cocktail & Wine",
   "Photography",
   "Music & Dance",
@@ -71,7 +71,7 @@ const ClassCard = ({
     if (titleLower.includes('music') || titleLower.includes('dance')) return 'Music & Dance';
     if (titleLower.includes('candle')) return 'Candle Making';
     if (titleLower.includes('wood')) return 'Wood Craft';
-    if (titleLower.includes('jewel') || titleLower.includes('metal')) return 'Jewellery & Metal Craft';
+    if (titleLower.includes('jewel') || titleLower.includes('metal')) return 'Jewellery & Metal';
     if (titleLower.includes('textile') || titleLower.includes('fabric')) return 'Textile Craft';
     if (titleLower.includes('paper')) return 'Paper Craft';
     if (titleLower.includes('flower') || titleLower.includes('plant')) return 'Flower & Plants';
