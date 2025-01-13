@@ -18,8 +18,8 @@ export const cookingClasses: ClassItem[] = [
   },
   { 
     id: 2, 
-    title: "Advanced Pastry Making", 
-    instructor: "Sophie Laurent", 
+    title: "Nordic Food Workshop", 
+    instructor: "Erik Larsson", 
     price: 129, 
     rating: 4.8, 
     images: [
@@ -30,5 +30,5 @@ export const cookingClasses: ClassItem[] = [
     category: "Cooking",
     date: new Date('2024-05-01'),
     city: "Malmö"
-  },
+  }
 ];

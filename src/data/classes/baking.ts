@@ -10,7 +10,8 @@ export const bakingClasses: ClassItem[] = [
     images: [],
     level: "Beginner",
     date: new Date('2024-04-15'),
-    city: "Stockholm"
+    city: "Stockholm",
+    category: "Baking"
   },
   {
     id: 2,
@@ -21,6 +22,31 @@ export const bakingClasses: ClassItem[] = [
     images: [],
     level: "Intermediate",
     date: new Date('2024-04-20'),
-    city: "Malmö"
+    city: "Malmö",
+    category: "Baking"
   },
+  {
+    id: 3,
+    title: "Artisan Bread Workshop",
+    instructor: "Sofia Andersson",
+    price: 95,
+    rating: 4.7,
+    images: [],
+    level: "Beginner",
+    date: new Date('2024-04-25'),
+    city: "Göteborg",
+    category: "Baking"
+  },
+  {
+    id: 4,
+    title: "Advanced Pastry Techniques",
+    instructor: "Marie Dubois",
+    price: 129,
+    rating: 4.9,
+    images: [],
+    level: "Advanced",
+    date: new Date('2024-05-01'),
+    city: "Stockholm",
+    category: "Baking"
+  }
 ];
