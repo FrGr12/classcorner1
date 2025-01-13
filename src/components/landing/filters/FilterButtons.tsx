@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuCheckboxItem,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 import {
   Popover,
@@ -15,6 +16,7 @@ import {
 } from "@/components/ui/popover";
 import { MapPin, Calendar as CalendarIcon, Filter } from "lucide-react";
 import { DateRange } from "react-day-picker";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addMonths } from "date-fns";
 import { useState } from "react";
 
 interface FilterButtonsProps {
@@ -55,6 +57,15 @@ const cities = [
   "Norrköping",
 ];
 
+const timeRanges = [
+  { label: "This week", getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
+  { label: "This month", getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
+  { label: "Next month", getValue: () => {
+    const nextMonth = addMonths(new Date(), 1);
+    return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
+  }},
+];
+
 const FilterButtons = ({
   selectedCategories,
   selectedLocation,
@@ -64,6 +75,7 @@ const FilterButtons = ({
   setSelectedLocation,
 }: FilterButtonsProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
+  const [selectedTimeRange, setSelectedTimeRange] = useState<string>("Anytime");
 
   const handleCategoryChange = (category: string) => {
     setSelectedCategories(
@@ -71,6 +83,11 @@ const FilterButtons = ({
         ? selectedCategories.filter((c) => c !== category)
         : [...selectedCategories, category]
     );
+  };
+
+  const handleTimeRangeSelect = (label: string, range?: DateRange) => {
+    setSelectedTimeRange(label);
+    setDate(range);
   };
 
   return (
@@ -118,37 +135,63 @@ const FilterButtons = ({
         </DropdownMenuContent>
       </DropdownMenu>
 
-      <Popover>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            className="rounded-full flex items-center gap-2"
-          >
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="outline" className="rounded-full flex items-center gap-2">
             <CalendarIcon className="w-4 h-4" />
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd")} - {format(date.to, "LLL dd")}
-                </>
-              ) : (
-                format(date.from, "LLL dd")
-              )
-            ) : (
-              "Anytime"
-            )}
+            {selectedTimeRange}
           </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-auto p-0 bg-white" align="start">
-          <Calendar
-            initialFocus
-            mode="range"
-            defaultMonth={new Date()}
-            selected={date}
-            onSelect={setDate}
-            numberOfMonths={2}
-          />
-        </PopoverContent>
-      </Popover>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-[200px] bg-white">
+          <DropdownMenuItem
+            onClick={() => handleTimeRangeSelect("Anytime", undefined)}
+          >
+            Anytime
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          {timeRanges.map((range) => (
+            <DropdownMenuItem
+              key={range.label}
+              onClick={() => handleTimeRangeSelect(range.label, range.getValue())}
+            >
+              {range.label}
+            </DropdownMenuItem>
+          ))}
+          <DropdownMenuSeparator />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="ghost"
+                className="w-full justify-start font-normal"
+              >
+                Specific dates
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                initialFocus
+                mode="range"
+                defaultMonth={new Date()}
+                selected={date}
+                onSelect={(newDate) => {
+                  setDate(newDate);
+                  if (newDate?.from) {
+                    setSelectedTimeRange(
+                      newDate.to
+                        ? `${format(newDate.from, "MMM d")} - ${format(
+                            newDate.to,
+                            "MMM d"
+                          )}`
+                        : format(newDate.from, "MMM d")
+                    );
+                  }
+                }}
+                numberOfMonths={2}
+              />
+            </PopoverContent>
+          </Popover>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   );
 };
