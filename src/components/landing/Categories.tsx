@@ -35,7 +35,7 @@ const swedishCities = [
 
 const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedLocation, setSelectedLocation] = useState<string>("Everywhere");
+  const [selectedLocations, setSelectedLocations] = useState<string[]>(["Everywhere"]);
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
   const [open, setOpen] = useState(false);
 
@@ -55,16 +55,16 @@ const Categories = () => {
         <FilterButtons
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
-          selectedLocation={selectedLocation}
+          selectedLocations={selectedLocations}
           selectedTime={selectedTime}
           setOpen={setOpen}
-          setSelectedLocation={setSelectedLocation}
+          setSelectedLocations={setSelectedLocations}
         />
 
         <LocationSearch
           open={open}
           onOpenChange={setOpen}
-          setSelectedLocation={setSelectedLocation}
+          setSelectedLocations={setSelectedLocations}
           cities={swedishCities}
         />
 

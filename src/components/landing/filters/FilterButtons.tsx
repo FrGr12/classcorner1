@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,11 +20,11 @@ import { useState } from "react";
 
 interface FilterButtonsProps {
   selectedCategories: string[];
-  selectedLocation: string;
+  selectedLocations: string[];
   selectedTime: string;
   setSelectedCategories: (categories: string[]) => void;
   setOpen: (open: boolean) => void;
-  setSelectedLocation: (location: string) => void;
+  setSelectedLocations: (locations: string[]) => void;
 }
 
 const categories = [
@@ -45,6 +44,7 @@ const categories = [
 ];
 
 const cities = [
+  "Everywhere",
   "Stockholm",
   "Göteborg",
   "Malmö",
@@ -68,11 +68,11 @@ const timeRanges = [
 
 const FilterButtons = ({
   selectedCategories,
-  selectedLocation,
+  selectedLocations,
   selectedTime,
   setSelectedCategories,
   setOpen,
-  setSelectedLocation,
+  setSelectedLocations,
 }: FilterButtonsProps) => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [selectedTimeRange, setSelectedTimeRange] = useState<string>("Anytime");
@@ -83,6 +83,20 @@ const FilterButtons = ({
         ? selectedCategories.filter((c) => c !== category)
         : [...selectedCategories, category]
     );
+  };
+
+  const handleLocationChange = (location: string) => {
+    setSelectedLocations((prev) => {
+      if (location === "Everywhere") {
+        return ["Everywhere"];
+      }
+      
+      const newLocations = prev.includes(location)
+        ? prev.filter((l) => l !== location)
+        : [...prev.filter((l) => l !== "Everywhere"), location];
+      
+      return newLocations.length === 0 ? ["Everywhere"] : newLocations;
+    });
   };
 
   const handleTimeRangeSelect = (label: string, range?: DateRange) => {
@@ -119,18 +133,23 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="rounded-full flex items-center gap-2">
             <MapPin className="w-4 h-4" />
-            {selectedLocation}
+            {selectedLocations.includes("Everywhere")
+              ? "Everywhere"
+              : selectedLocations.length === 1
+              ? selectedLocations[0]
+              : `${selectedLocations.length} locations`}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px] bg-white">
           {cities.map((city) => (
-            <DropdownMenuItem
+            <DropdownMenuCheckboxItem
               key={city}
-              onClick={() => setSelectedLocation(city)}
+              checked={selectedLocations.includes(city)}
+              onCheckedChange={() => handleLocationChange(city)}
               className="cursor-pointer"
             >
               {city}
-            </DropdownMenuItem>
+            </DropdownMenuCheckboxItem>
           ))}
         </DropdownMenuContent>
       </DropdownMenu>

@@ -12,14 +12,14 @@ import { Search } from "lucide-react";
 interface LocationSearchProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  setSelectedLocation: (location: string) => void;
+  setSelectedLocations: (locations: string[]) => void;
   cities: string[];
 }
 
 const LocationSearch = ({
   open,
   onOpenChange,
-  setSelectedLocation,
+  setSelectedLocations,
   cities,
 }: LocationSearchProps) => {
   return (
@@ -39,7 +39,7 @@ const LocationSearch = ({
               <CommandItem
                 key={city}
                 onSelect={(value) => {
-                  setSelectedLocation(value);
+                  setSelectedLocations([value]);
                   onOpenChange(false);
                 }}
               >
