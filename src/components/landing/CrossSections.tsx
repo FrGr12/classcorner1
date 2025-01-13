@@ -1,3 +1,10 @@
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 import ClassCard from "./ClassCard";
 import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
@@ -25,7 +32,7 @@ const CrossSections = () => {
         {sections.map((section) => (
           <div key={section.title} className="space-y-6">
             <h2 className="text-2xl font-semibold">{section.title}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {section.filter(allClasses).map((classItem) => (
                 <ClassCard
                   key={classItem.id}
@@ -38,6 +45,32 @@ const CrossSections = () => {
                   date={classItem.date}
                 />
               ))}
+            </div>
+            <div className="block md:hidden">
+              <Carousel
+                opts={{
+                  align: "start",
+                  loop: true,
+                }}
+              >
+                <CarouselContent>
+                  {section.filter(allClasses).map((classItem) => (
+                    <CarouselItem key={classItem.id}>
+                      <ClassCard
+                        title={classItem.title}
+                        instructor={classItem.instructor}
+                        price={classItem.price}
+                        rating={classItem.rating}
+                        images={classItem.images}
+                        level={classItem.level}
+                        date={classItem.date}
+                      />
+                    </CarouselItem>
+                  ))}
+                </CarouselContent>
+                <CarouselPrevious />
+                <CarouselNext />
+              </Carousel>
             </div>
           </div>
         ))}
