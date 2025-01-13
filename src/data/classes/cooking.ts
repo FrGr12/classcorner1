@@ -12,7 +12,8 @@ export const cookingClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Beginner",
-    date: new Date('2024-04-25')
+    date: new Date('2024-04-25'),
+    city: "Stockholm"
   },
   { 
     id: 2, 
@@ -25,6 +26,7 @@ export const cookingClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
     ],
     level: "Advanced",
-    date: new Date('2024-05-01')
+    date: new Date('2024-05-01'),
+    city: "Malmö"
   },
 ];

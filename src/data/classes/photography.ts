@@ -9,7 +9,8 @@ export const photographyClasses: ClassItem[] = [
     rating: 4.9,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-16')
+    date: new Date('2024-04-16'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const photographyClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Intermediate",
-    date: new Date('2024-04-23')
+    date: new Date('2024-04-23'),
+    city: "Gothenburg"
   },
 ];

@@ -13,7 +13,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Beginner",
     category: "Ceramics",
-    date: new Date('2024-04-15')
+    date: new Date('2024-04-15'),
+    city: "Stockholm"
   },
   { 
     id: 2, 
@@ -27,7 +28,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Advanced",
     category: "Painting",
-    date: new Date('2024-04-20')
+    date: new Date('2024-04-20'),
+    city: "Gothenburg"
   },
   { 
     id: 3, 
@@ -41,7 +43,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Beginner",
     category: "Cooking",
-    date: new Date('2024-04-25')
+    date: new Date('2024-04-25'),
+    city: "Stockholm"
   },
   { 
     id: 4, 
@@ -55,7 +58,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     category: "Photography",
-    date: new Date('2024-04-30')
+    date: new Date('2024-04-30'),
+    city: "Gothenburg"
   },
   { 
     id: 5, 
@@ -69,7 +73,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Beginner",
     category: "Woodworking",
-    date: new Date('2024-05-05')
+    date: new Date('2024-05-05'),
+    city: "Stockholm"
   },
   { 
     id: 6, 
@@ -83,7 +88,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     category: "Jewelry",
-    date: new Date('2024-05-10')
+    date: new Date('2024-05-10'),
+    city: "Gothenburg"
   },
   { 
     id: 7, 
@@ -97,7 +103,8 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Advanced",
     category: "Ceramics",
-    date: new Date('2024-05-15')
+    date: new Date('2024-05-15'),
+    city: "Stockholm"
   },
   { 
     id: 8, 
@@ -111,6 +118,7 @@ export const featuredClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     category: "Painting",
-    date: new Date('2024-05-20')
+    date: new Date('2024-05-20'),
+    city: "Gothenburg"
   },
 ];

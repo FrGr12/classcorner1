@@ -9,7 +9,8 @@ export const musicClasses: ClassItem[] = [
     rating: 4.7,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-17')
+    date: new Date('2024-04-17'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const musicClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-24')
+    date: new Date('2024-04-24'),
+    city: "Malmö"
   },
 ];

@@ -9,7 +9,8 @@ export const flowerClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-25')
+    date: new Date('2024-04-25'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const flowerClasses: ClassItem[] = [
     rating: 4.7,
     images: [],
     level: "Beginner",
-    date: new Date('2024-05-02')
+    date: new Date('2024-05-02'),
+    city: "Uppsala"
   },
 ];

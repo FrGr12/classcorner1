@@ -12,7 +12,8 @@ export const paintingClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
     ],
     level: "Beginner",
-    date: new Date('2024-04-20')
+    date: new Date('2024-04-20'),
+    city: "Stockholm"
   },
   { 
     id: 2, 
@@ -25,6 +26,7 @@ export const paintingClasses: ClassItem[] = [
       "https://images.unsplash.com/photo-1605810230434-7631ac76ec81",
     ],
     level: "Intermediate",
-    date: new Date('2024-04-22')
+    date: new Date('2024-04-22'),
+    city: "Gothenburg"
   },
 ];

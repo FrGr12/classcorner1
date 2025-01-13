@@ -9,7 +9,8 @@ export const woodClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-21')
+    date: new Date('2024-04-21'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const woodClasses: ClassItem[] = [
     rating: 4.9,
     images: [],
     level: "Intermediate",
-    date: new Date('2024-04-28')
+    date: new Date('2024-04-28'),
+    city: "Gothenburg"
   },
 ];

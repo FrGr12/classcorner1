@@ -9,7 +9,8 @@ export const candleClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-19')
+    date: new Date('2024-04-19'),
+    city: "Uppsala"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const candleClasses: ClassItem[] = [
     rating: 4.7,
     images: [],
     level: "Advanced",
-    date: new Date('2024-04-26')
+    date: new Date('2024-04-26'),
+    city: "Stockholm"
   },
 ];

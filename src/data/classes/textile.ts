@@ -9,7 +9,8 @@ export const textileClasses: ClassItem[] = [
     rating: 4.7,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-23')
+    date: new Date('2024-04-23'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const textileClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Advanced",
-    date: new Date('2024-04-30')
+    date: new Date('2024-04-30'),
+    city: "Malmö"
   },
 ];

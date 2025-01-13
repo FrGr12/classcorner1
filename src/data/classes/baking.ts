@@ -9,7 +9,8 @@ export const bakingClasses: ClassItem[] = [
     rating: 4.8,
     images: [],
     level: "Beginner",
-    date: new Date('2024-04-15')
+    date: new Date('2024-04-15'),
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -19,6 +20,7 @@ export const bakingClasses: ClassItem[] = [
     rating: 4.9,
     images: [],
     level: "Intermediate",
-    date: new Date('2024-04-20')
+    date: new Date('2024-04-20'),
+    city: "Malmö"
   },
 ];
