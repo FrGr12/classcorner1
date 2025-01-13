@@ -29,9 +29,9 @@ const ClassGrid = ({ category }: ClassGridProps) => {
   return (
     <div className="space-y-8">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {displayedClasses.map((classItem: ClassItem) => (
+        {displayedClasses.map((classItem: ClassItem, index: number) => (
           <ClassCard
-            key={`${classItem.id}-${classItem.category}`}
+            key={`${classItem.id}-${classItem.category}-${index}`}
             title={classItem.title}
             instructor={classItem.instructor}
             price={classItem.price}
