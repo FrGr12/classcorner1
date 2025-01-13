@@ -44,7 +44,7 @@ const Navigation = () => {
             <Input 
               type="text" 
               placeholder="Search for classes..."
-              className="pl-9 bg-white border border-neutral-200 w-full h-10 text-sm placeholder:text-neutral-500 rounded-lg"
+              className="pl-9 bg-white border border-neutral-200 w-full h-10 text-xs sm:text-sm placeholder:text-neutral-500 rounded-lg"
               value={searchValue}
               onChange={(e) => {
                 setSearchValue(e.target.value);
