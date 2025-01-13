@@ -35,7 +35,7 @@ const Navigation = () => {
       <div className="glass-panel rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
         <Link to="/" className="flex items-center gap-1 min-w-fit">
           <div className="w-3 h-3 bg-primary rounded-full"></div>
-          <span className="text-xs font-semibold">ClassCorner</span>
+          <span className="text-xs sm:text-sm font-semibold">ClassCorner</span>
         </Link>
         
         <div className="flex items-center flex-1 max-w-[800px] mx-6">
