@@ -61,18 +61,19 @@ const ClassCard = ({
           </div>
           <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
         </div>
-        <div className="mt-4 space-y-2">
+        <div className="mt-4 flex gap-2 items-center">
           {visibleDates.map((d, index) => (
             <Button
               key={index}
               variant="ghost"
-              className="w-full justify-start text-sm text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
+              size="sm"
+              className="px-3 py-1 h-auto text-xs text-accent-purple hover:text-accent-purple/80 hover:bg-neutral-100 border border-accent-purple/20 rounded-lg transition-all"
               onClick={() => {
                 // Handle date selection
                 console.log('Selected date:', d);
               }}
             >
-              {format(new Date(d), 'MMM d, yyyy')}
+              {format(new Date(d), 'MMM d')}
             </Button>
           ))}
           {hasMoreDates && (
@@ -80,9 +81,10 @@ const ClassCard = ({
               <PopoverTrigger asChild>
                 <Button
                   variant="ghost"
-                  className="w-full justify-start text-sm text-primary font-medium hover:text-primary/80 hover:bg-neutral-100 border border-neutral-200 rounded-lg"
+                  size="sm"
+                  className="px-3 py-1 h-auto text-xs text-primary font-medium hover:text-primary/80 hover:bg-neutral-100 border border-neutral-200 rounded-lg"
                 >
-                  See more dates
+                  +{dates.length - 2}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-2">
