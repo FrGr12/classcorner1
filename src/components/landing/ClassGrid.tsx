@@ -32,6 +32,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
         {displayedClasses.map((classItem: ClassItem, index: number) => (
           <ClassCard
             key={`${classItem.id}-${classItem.category}-${index}`}
+            id={classItem.id}
             title={classItem.title}
             instructor={classItem.instructor}
             price={classItem.price}
