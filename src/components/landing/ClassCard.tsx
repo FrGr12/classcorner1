@@ -89,9 +89,13 @@ const ClassCard = ({
   };
 
   const handleCardClick = () => {
+    console.log('Card clicked:', { id, title, category });
     if (id) {
       const displayCategory = determineCategory(title, category);
+      console.log('Navigating to:', `/class/${displayCategory}/${id}`);
       navigate(`/class/${displayCategory}/${id}`);
+    } else {
+      console.warn('No ID provided for class card:', title);
     }
   };
 
