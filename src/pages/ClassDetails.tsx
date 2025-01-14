@@ -109,7 +109,7 @@ const ClassDetails = () => {
               Located in {classItem.city}
             </p>
             <Button size="lg" className="bg-white text-primary hover:bg-white/90">
-              Enroll Now
+              Book Now
             </Button>
           </div>
         </div>
@@ -226,7 +226,7 @@ const ClassDetails = () => {
                 </div>
                 
                 <Button className="w-full" size="lg">
-                  Enroll Now
+                  Book Now
                 </Button>
 
                 <div className="space-y-4 pt-4">
