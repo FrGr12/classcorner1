@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Browse from "./pages/Browse";
 import Teach from "./pages/Teach";
 import About from "./pages/About";
+import ClassDetails from "./pages/ClassDetails";
 
 const queryClient = new QueryClient();
 
@@ -21,6 +22,7 @@ const App = () => (
           <Route path="/browse" element={<Browse />} />
           <Route path="/teach" element={<Teach />} />
           <Route path="/about" element={<About />} />
+          <Route path="/class/:category/:id" element={<ClassDetails />} />
         </Routes>
       </BrowserRouter>
     </TooltipProvider>

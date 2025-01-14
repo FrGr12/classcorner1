@@ -4,6 +4,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/popover";
 
 interface ClassCardProps {
+  id?: number;
   title: string;
   instructor: string;
   price: number;
@@ -39,6 +41,7 @@ const validCategories = [
 ];
 
 const ClassCard = ({
+  id,
   title,
   instructor,
   price,
@@ -48,13 +51,13 @@ const ClassCard = ({
   city,
   category,
 }: ClassCardProps) => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const dates = Array.isArray(date) ? date : [date];
   const visibleDates = dates.slice(0, 2);
   const hasMoreDates = dates.length > 2;
 
-  // Determine the appropriate category based on the class title if none is provided
   const determineCategory = (title: string, providedCategory?: string): string => {
     if (providedCategory && validCategories.includes(providedCategory)) {
       return providedCategory;
@@ -76,7 +79,6 @@ const ClassCard = ({
     if (titleLower.includes('paper')) return 'Paper Craft';
     if (titleLower.includes('flower') || titleLower.includes('plant')) return 'Flower & Plants';
     
-    // Default to the most relevant category based on context
     return 'Pottery';
   };
 
@@ -86,10 +88,20 @@ const ClassCard = ({
     setIsSaved(!isSaved);
   };
 
+  const handleCardClick = () => {
+    if (id) {
+      const displayCategory = determineCategory(title, category);
+      navigate(`/class/${displayCategory}/${id}`);
+    }
+  };
+
   const displayCategory = determineCategory(title, category);
 
   return (
-    <Card className="overflow-hidden group">
+    <Card 
+      className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-200"
+      onClick={handleCardClick}
+    >
       <div 
         className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-purple-200 to-purple-400"
       >
