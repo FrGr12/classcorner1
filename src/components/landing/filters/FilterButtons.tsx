@@ -18,15 +18,6 @@ import { DateRange } from "react-day-picker";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addMonths } from "date-fns";
 import { useState } from "react";
 
-interface FilterButtonsProps {
-  selectedCategories: string[];
-  selectedLocations: string[];
-  selectedTime: string;
-  setSelectedCategories: (categories: string[]) => void;
-  setOpen: (open: boolean) => void;
-  setSelectedLocations: (locations: string[]) => void;
-}
-
 const categories = [
   "Pottery",
   "Cooking",
@@ -66,6 +57,15 @@ const timeRanges = [
   }},
 ];
 
+interface FilterButtonsProps {
+  selectedCategories: string[];
+  selectedLocations: string[];
+  selectedTime: string;
+  setSelectedCategories: (categories: string[]) => void;
+  setOpen: (open: boolean) => void;
+  setSelectedLocations: (locations: string[]) => void;
+}
+
 const FilterButtons = ({
   selectedCategories,
   selectedLocations,
@@ -103,14 +103,14 @@ const FilterButtons = ({
   };
 
   return (
-    <div className="flex flex-wrap gap-2 mb-8">
+    <div className="inline-flex rounded-lg shadow-sm">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="h-11 px-5 text-sm rounded-l-lg rounded-r-none border-r-0"
           >
-            <Filter className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Filter className="w-4 h-4 mr-2" />
             {selectedCategories.length === 0
               ? "All"
               : `${selectedCategories.length}`}
@@ -134,9 +134,9 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="h-11 px-5 text-sm rounded-none border-x-0"
           >
-            <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
+            <MapPin className="w-4 h-4 mr-2" />
             {selectedLocations.includes("Everywhere")
               ? "All"
               : selectedLocations.length === 1
@@ -162,9 +162,9 @@ const FilterButtons = ({
         <DropdownMenuTrigger asChild>
           <Button 
             variant="outline" 
-            className="rounded-full flex items-center gap-1.5 h-8 px-3 text-xs sm:text-sm sm:h-9 sm:px-4"
+            className="h-11 px-5 text-sm rounded-r-lg rounded-l-none border-l-0"
           >
-            <CalendarIcon className="w-3 h-3 sm:w-4 sm:h-4" />
+            <CalendarIcon className="w-4 h-4 mr-2" />
             {selectedTimeRange}
           </Button>
         </DropdownMenuTrigger>
