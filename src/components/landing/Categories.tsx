@@ -67,23 +67,25 @@ const Categories = () => {
   return (
     <section className="pt-6 sm:pt-8 bg-neutral-100">
       <div className="container-padding">
-        <div className="text-neutral-600">
-          <FilterButtons
-            selectedCategories={selectedCategories}
-            setSelectedCategories={setSelectedCategories}
-            selectedLocations={selectedLocations}
-            selectedTime={selectedTime}
-            setOpen={setOpen}
+        <div className="glass-panel rounded-xl p-4 shadow-lg">
+          <div className="text-neutral-700">
+            <FilterButtons
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              selectedLocations={selectedLocations}
+              selectedTime={selectedTime}
+              setOpen={setOpen}
+              setSelectedLocations={setSelectedLocations}
+            />
+          </div>
+
+          <LocationSearch
+            open={open}
+            onOpenChange={setOpen}
             setSelectedLocations={setSelectedLocations}
+            cities={swedishCities}
           />
         </div>
-
-        <LocationSearch
-          open={open}
-          onOpenChange={setOpen}
-          setSelectedLocations={setSelectedLocations}
-          cities={swedishCities}
-        />
 
         <div className="mt-8 text-neutral-600">
           <CategoryPills
