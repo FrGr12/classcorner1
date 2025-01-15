@@ -67,14 +67,16 @@ const Categories = () => {
   return (
     <section className="pt-6 sm:pt-8 bg-neutral-100">
       <div className="container-padding">
-        <FilterButtons
-          selectedCategories={selectedCategories}
-          setSelectedCategories={setSelectedCategories}
-          selectedLocations={selectedLocations}
-          selectedTime={selectedTime}
-          setOpen={setOpen}
-          setSelectedLocations={setSelectedLocations}
-        />
+        <div className="text-neutral-600">
+          <FilterButtons
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedLocations={selectedLocations}
+            selectedTime={selectedTime}
+            setOpen={setOpen}
+            setSelectedLocations={setSelectedLocations}
+          />
+        </div>
 
         <LocationSearch
           open={open}
@@ -83,11 +85,13 @@ const Categories = () => {
           cities={swedishCities}
         />
 
-        <CategoryPills
-          categories={categories}
-          selectedCategories={selectedCategories}
-          onCategorySelect={handleCategorySelect}
-        />
+        <div className="mt-8 text-neutral-600">
+          <CategoryPills
+            categories={categories}
+            selectedCategories={selectedCategories}
+            onCategorySelect={handleCategorySelect}
+          />
+        </div>
 
         <div className="mt-12">
           <ClassGrid category={selectedCategories.length === 1 ? selectedCategories[0] : null} />
