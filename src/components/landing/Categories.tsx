@@ -67,8 +67,8 @@ const Categories = () => {
   return (
     <section className="pt-6 sm:pt-8 bg-neutral-100">
       <div className="container-padding">
-        <div className="glass-panel rounded-xl p-6 shadow-lg bg-white/80 flex flex-col items-center">
-          <div className="text-neutral-700 w-full">
+        <div className="glass-panel rounded-xl p-4 shadow-lg">
+          <div className="text-neutral-700">
             <FilterButtons
               selectedCategories={selectedCategories}
               setSelectedCategories={setSelectedCategories}
