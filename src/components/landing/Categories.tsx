@@ -1,6 +1,4 @@
 import { useState } from "react";
-import FilterButtons from "./filters/FilterButtons";
-import LocationSearch from "./filters/LocationSearch";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
 import { 
@@ -35,24 +33,8 @@ const categories = [
   { name: "Flower & Plants", count: "70+ Classes", icon: Flower2 },
 ];
 
-const swedishCities = [
-  "Stockholm",
-  "Göteborg",
-  "Malmö",
-  "Uppsala",
-  "Västerås",
-  "Örebro",
-  "Linköping",
-  "Helsingborg",
-  "Jönköping",
-  "Norrköping",
-];
-
 const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [selectedLocations, setSelectedLocations] = useState<string[]>(["Everywhere"]);
-  const [selectedTime, setSelectedTime] = useState<string>("Any week");
-  const [open, setOpen] = useState(false);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategories((prev) => {
@@ -67,26 +49,6 @@ const Categories = () => {
   return (
     <section className="pt-6 sm:pt-8 bg-neutral-100">
       <div className="container-padding">
-        <div className="glass-panel rounded-xl p-4 shadow-lg flex flex-col items-center">
-          <div className="text-neutral-700 w-full flex justify-center">
-            <FilterButtons
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
-              selectedLocations={selectedLocations}
-              selectedTime={selectedTime}
-              setOpen={setOpen}
-              setSelectedLocations={setSelectedLocations}
-            />
-          </div>
-
-          <LocationSearch
-            open={open}
-            onOpenChange={setOpen}
-            setSelectedLocations={setSelectedLocations}
-            cities={swedishCities}
-          />
-        </div>
-
         <div className="mt-8 text-neutral-600">
           <CategoryPills
             categories={categories}
