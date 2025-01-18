@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { mockClasses } from "@/data/mockClasses";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +24,7 @@ import { Separator } from "@/components/ui/separator";
 
 const ClassDetails = () => {
   const { id, category } = useParams();
+  const navigate = useNavigate();
   
   const classItem = Object.values(mockClasses)
     .flat()
@@ -43,6 +44,10 @@ const ClassDetails = () => {
       </div>
     );
   }
+
+  const handleBookNow = () => {
+    navigate("/booking-confirmation", { state: { classItem } });
+  };
 
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
 
@@ -108,7 +113,11 @@ const ClassDetails = () => {
             <p className="text-xl text-white/90 mb-8">
               Located in {classItem.city}
             </p>
-            <Button size="lg" className="bg-white text-primary hover:bg-white/90">
+            <Button 
+              size="lg" 
+              className="bg-white text-primary hover:bg-white/90"
+              onClick={handleBookNow}
+            >
               Book Now
             </Button>
           </div>
@@ -225,7 +234,7 @@ const ClassDetails = () => {
                   <Badge variant="secondary">{classItem.level}</Badge>
                 </div>
                 
-                <Button className="w-full" size="lg">
+                <Button className="w-full" size="lg" onClick={handleBookNow}>
                   Book Now
                 </Button>
 
