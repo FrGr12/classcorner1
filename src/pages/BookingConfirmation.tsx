@@ -21,6 +21,14 @@ const BookingConfirmation = () => {
     navigate("/payment", { state: { classItem } });
   };
 
+  // Handle the case where date might be an array
+  const formatClassDate = (date: Date | Date[]) => {
+    if (Array.isArray(date)) {
+      return format(date[0], "MMMM d, yyyy");
+    }
+    return format(date, "MMMM d, yyyy");
+  };
+
   return (
     <div className="min-h-screen bg-neutral-100">
       <Navigation />
@@ -44,7 +52,7 @@ const BookingConfirmation = () => {
               <div>
                 <h3 className="font-medium">Date</h3>
                 <p className="text-neutral-600">
-                  {format(new Date(classItem.date), "MMMM d, yyyy")}
+                  {formatClassDate(classItem.date)}
                 </p>
               </div>
               <div>
