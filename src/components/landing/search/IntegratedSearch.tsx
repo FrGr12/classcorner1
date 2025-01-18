@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { Search, MapPin, Calendar, Filter } from "lucide-react";
+import { Search, MapPin, Calendar, X } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
 import FilterButtons from "../filters/FilterButtons";
-import LocationSearch from "../filters/LocationSearch";
-import { useNavigate } from "react-router-dom";
 import { Input } from "@/components/ui/input";
+import { useNavigate } from "react-router-dom";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 const IntegratedSearch = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const IntegratedSearch = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>(["Everywhere"]);
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
-  const [locationOpen, setLocationOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -28,94 +29,86 @@ const IntegratedSearch = () => {
     if (selectedTime !== "Any week") params.set("time", selectedTime);
     
     navigate(`/browse?${params.toString()}`);
+    setIsOpen(false);
   };
 
   return (
-    <div className="flex-1 max-w-2xl">
-      <div className="glass-panel rounded-full flex items-center divide-x divide-neutral-200 p-2">
-        <div className="flex-1 px-4 py-2">
-          <Input
-            type="text"
-            placeholder="Search for classes..."
-            value={searchInput}
-            onChange={(e) => setSearchInput(e.target.value)}
-            className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
-          />
-        </div>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
-              <Filter className="w-4 h-4 text-neutral-500" />
-              <span className="text-sm font-medium hidden sm:inline">
-                {selectedCategories.length === 0 ? "All categories" : `${selectedCategories.length} selected`}
-              </span>
-            </button>
-          </DialogTrigger>
-          <DialogContent>
-            <FilterButtons
-              selectedCategories={selectedCategories}
-              setSelectedCategories={setSelectedCategories}
-              selectedLocations={selectedLocations}
-              selectedTime={selectedTime}
-              setOpen={setLocationOpen}
-              setSelectedLocations={setSelectedLocations}
-            />
-          </DialogContent>
-        </Dialog>
-
-        <button 
-          onClick={() => setLocationOpen(true)}
-          className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors"
-        >
-          <MapPin className="w-4 h-4 text-neutral-500" />
-          <span className="text-sm font-medium hidden sm:inline">
-            {selectedLocations.includes("Everywhere") 
-              ? "Anywhere" 
-              : selectedLocations.join(", ")}
-          </span>
-        </button>
-
-        <Dialog>
-          <DialogTrigger asChild>
-            <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
-              <Calendar className="w-4 h-4 text-neutral-500" />
-              <span className="text-sm font-medium hidden sm:inline">{selectedTime}</span>
-            </button>
-          </DialogTrigger>
-          <DialogContent>
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-4">Select Time Range</h3>
-              {/* Time selection options will go here */}
+    <div className="w-full max-w-2xl">
+      {/* Mobile View */}
+      <div className="md:hidden w-full">
+        <Sheet open={isOpen} onOpenChange={setIsOpen}>
+          <SheetTrigger className="w-full">
+            <div className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
+              <Search className="w-4 h-4 text-neutral-500" />
+              <span className="text-sm text-neutral-600">Search classes...</span>
             </div>
-          </DialogContent>
-        </Dialog>
+          </SheetTrigger>
+          <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl">
+            <SheetHeader className="pb-4">
+              <SheetTitle className="text-lg font-semibold">Search Classes</SheetTitle>
+            </SheetHeader>
+            <div className="space-y-6">
+              <div className="relative">
+                <Input
+                  type="text"
+                  placeholder="Search for classes..."
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  className="w-full pl-10 py-6 text-base"
+                />
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+              </div>
+              
+              <FilterButtons
+                selectedCategories={selectedCategories}
+                setSelectedCategories={setSelectedCategories}
+                selectedLocations={selectedLocations}
+                selectedTime={selectedTime}
+                setOpen={() => {}}
+                setSelectedLocations={setSelectedLocations}
+              />
 
-        <button 
-          onClick={handleSearch}
-          className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-purple/90 transition-colors"
-        >
-          <Search className="w-4 h-4" />
-        </button>
+              <button
+                onClick={handleSearch}
+                className="w-full py-3 bg-accent-purple text-white rounded-xl font-medium hover:bg-accent-purple/90 transition-colors"
+              >
+                Search
+              </button>
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
-      <LocationSearch
-        open={locationOpen}
-        onOpenChange={setLocationOpen}
-        setSelectedLocations={setSelectedLocations}
-        cities={[
-          "Stockholm",
-          "Göteborg",
-          "Malmö",
-          "Uppsala",
-          "Västerås",
-          "Örebro",
-          "Linköping",
-          "Helsingborg",
-          "Jönköping",
-          "Norrköping",
-        ]}
-      />
+      {/* Desktop View */}
+      <div className="hidden md:block w-full">
+        <div className="glass-panel rounded-full flex items-center divide-x divide-neutral-200 p-2">
+          <div className="flex-1 px-4 py-2">
+            <Input
+              type="text"
+              placeholder="Search for classes..."
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
+            />
+          </div>
+
+          <FilterButtons
+            selectedCategories={selectedCategories}
+            setSelectedCategories={setSelectedCategories}
+            selectedLocations={selectedLocations}
+            selectedTime={selectedTime}
+            setOpen={() => {}}
+            setSelectedLocations={setSelectedLocations}
+          />
+
+          <button 
+            onClick={handleSearch}
+            className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-purple/90 transition-colors"
+          >
+            <Search className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
