@@ -12,6 +12,19 @@ const Navigation = () => {
         </Link>
         
         <IntegratedSearch />
+
+        {/* Desktop Navigation Links */}
+        <div className="hidden md:flex items-center gap-6 ml-auto">
+          <Link to="/about" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+            About
+          </Link>
+          <Link to="/teach" className="text-sm text-neutral-700 hover:text-primary transition-colors">
+            Start teaching
+          </Link>
+          <button className="text-sm text-neutral-700 hover:text-primary transition-colors">
+            Log in
+          </button>
+        </div>
       </div>
     </nav>
   );
