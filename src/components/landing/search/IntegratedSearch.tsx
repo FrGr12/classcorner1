@@ -31,93 +31,91 @@ const IntegratedSearch = () => {
   };
 
   return (
-    <div className="flex items-center flex-1 max-w-[800px] mx-6">
-      <div className="relative w-full">
-        <div className="glass-panel rounded-full flex items-center divide-x divide-neutral-200 p-2 shadow-lg">
-          <div className="flex-1 px-4 py-2">
-            <Input
-              type="text"
-              placeholder="Search for classes..."
-              value={searchInput}
-              onChange={(e) => setSearchInput(e.target.value)}
-              className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
-            />
-          </div>
-
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
-                <Filter className="w-4 h-4 text-neutral-500" />
-                <span className="text-sm font-medium">
-                  {selectedCategories.length === 0 ? "All categories" : `${selectedCategories.length} selected`}
-                </span>
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <FilterButtons
-                selectedCategories={selectedCategories}
-                setSelectedCategories={setSelectedCategories}
-                selectedLocations={selectedLocations}
-                selectedTime={selectedTime}
-                setOpen={setLocationOpen}
-                setSelectedLocations={setSelectedLocations}
-              />
-            </DialogContent>
-          </Dialog>
-
-          <button 
-            onClick={() => setLocationOpen(true)}
-            className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors"
-          >
-            <MapPin className="w-4 h-4 text-neutral-500" />
-            <span className="text-sm font-medium">
-              {selectedLocations.includes("Everywhere") 
-                ? "Anywhere" 
-                : selectedLocations.join(", ")}
-            </span>
-          </button>
-
-          <Dialog>
-            <DialogTrigger asChild>
-              <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
-                <Calendar className="w-4 h-4 text-neutral-500" />
-                <span className="text-sm font-medium">{selectedTime}</span>
-              </button>
-            </DialogTrigger>
-            <DialogContent>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold mb-4">Select Time Range</h3>
-                {/* Time selection options will go here */}
-              </div>
-            </DialogContent>
-          </Dialog>
-
-          <button 
-            onClick={handleSearch}
-            className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-purple/90 transition-colors"
-          >
-            <Search className="w-4 h-4" />
-          </button>
+    <div className="flex-1 max-w-2xl">
+      <div className="glass-panel rounded-full flex items-center divide-x divide-neutral-200 p-2">
+        <div className="flex-1 px-4 py-2">
+          <Input
+            type="text"
+            placeholder="Search for classes..."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
+          />
         </div>
 
-        <LocationSearch
-          open={locationOpen}
-          onOpenChange={setLocationOpen}
-          setSelectedLocations={setSelectedLocations}
-          cities={[
-            "Stockholm",
-            "Göteborg",
-            "Malmö",
-            "Uppsala",
-            "Västerås",
-            "Örebro",
-            "Linköping",
-            "Helsingborg",
-            "Jönköping",
-            "Norrköping",
-          ]}
-        />
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
+              <Filter className="w-4 h-4 text-neutral-500" />
+              <span className="text-sm font-medium hidden sm:inline">
+                {selectedCategories.length === 0 ? "All categories" : `${selectedCategories.length} selected`}
+              </span>
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <FilterButtons
+              selectedCategories={selectedCategories}
+              setSelectedCategories={setSelectedCategories}
+              selectedLocations={selectedLocations}
+              selectedTime={selectedTime}
+              setOpen={setLocationOpen}
+              setSelectedLocations={setSelectedLocations}
+            />
+          </DialogContent>
+        </Dialog>
+
+        <button 
+          onClick={() => setLocationOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors"
+        >
+          <MapPin className="w-4 h-4 text-neutral-500" />
+          <span className="text-sm font-medium hidden sm:inline">
+            {selectedLocations.includes("Everywhere") 
+              ? "Anywhere" 
+              : selectedLocations.join(", ")}
+          </span>
+        </button>
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <button className="flex items-center gap-2 px-4 py-2 hover:bg-neutral-100 rounded-full transition-colors">
+              <Calendar className="w-4 h-4 text-neutral-500" />
+              <span className="text-sm font-medium hidden sm:inline">{selectedTime}</span>
+            </button>
+          </DialogTrigger>
+          <DialogContent>
+            <div className="p-4">
+              <h3 className="text-lg font-semibold mb-4">Select Time Range</h3>
+              {/* Time selection options will go here */}
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        <button 
+          onClick={handleSearch}
+          className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-purple/90 transition-colors"
+        >
+          <Search className="w-4 h-4" />
+        </button>
       </div>
+
+      <LocationSearch
+        open={locationOpen}
+        onOpenChange={setLocationOpen}
+        setSelectedLocations={setSelectedLocations}
+        cities={[
+          "Stockholm",
+          "Göteborg",
+          "Malmö",
+          "Uppsala",
+          "Västerås",
+          "Örebro",
+          "Linköping",
+          "Helsingborg",
+          "Jönköping",
+          "Norrköping",
+        ]}
+      />
     </div>
   );
 };

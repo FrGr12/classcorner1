@@ -10,7 +10,7 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
-      <div className="glass-panel rounded-full px-4 py-2.5 flex items-center justify-between shadow-lg backdrop-blur-md">
+      <div className="glass-panel rounded-full px-4 py-2.5 flex items-center gap-4">
         <Link to="/" className="flex items-center gap-1 min-w-fit">
           <div className="w-3 h-3 bg-primary rounded-full"></div>
           <span className="text-xs sm:text-base font-semibold">ClassCorner</span>
@@ -18,7 +18,7 @@ const Navigation = () => {
         
         <IntegratedSearch />
         
-        <div className="hidden md:flex items-center gap-3 min-w-fit">
+        <div className="hidden md:flex items-center gap-3">
           <Link 
             to="/about" 
             className={`text-sm font-medium ${location.pathname === '/about' ? 'text-primary' : 'text-neutral-600 hover:text-primary'} transition-colors`}
@@ -34,7 +34,7 @@ const Navigation = () => {
         </div>
 
         <button 
-          className="md:hidden p-2 hover:bg-neutral-200/50 rounded-full transition-colors"
+          className="md:hidden p-2 hover:bg-neutral-200/50 rounded-full transition-colors ml-auto"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <Menu className="w-5 h-5" />
