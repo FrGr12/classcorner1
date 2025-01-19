@@ -7,10 +7,7 @@ export const cookingClasses: ClassItem[] = [
     instructor: "Marco Rossi", 
     price: 99, 
     rating: 4.9, 
-    images: [
-      "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-    ],
+    images: [],
     level: "Beginner",
     category: "Cooking",
     date: new Date('2024-04-25'),
@@ -22,10 +19,7 @@ export const cookingClasses: ClassItem[] = [
     instructor: "Erik Larsson", 
     price: 129, 
     rating: 4.8, 
-    images: [
-      "https://images.unsplash.com/photo-1721322800607-8c38375eef04",
-      "https://images.unsplash.com/photo-1519389950473-47ba0277781c",
-    ],
+    images: [],
     level: "Advanced",
     category: "Cooking",
     date: new Date('2024-05-01'),
