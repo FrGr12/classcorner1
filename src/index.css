@@ -14,13 +14,13 @@
   }
 
   body {
-    @apply bg-neutral-100 text-primary font-sans antialiased;
+    @apply bg-neutral-50 text-primary font-sans antialiased;
   }
 }
 
 @layer components {
   .glass-panel {
-    @apply backdrop-blur-md bg-white/90 border border-white/20 shadow-lg;
+    @apply bg-white/80 backdrop-blur-sm border border-neutral-200;
   }
   
   .container-padding {
@@ -28,24 +28,23 @@
   }
 
   .heading-xl {
-    @apply text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight;
+    @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight;
   }
 
   .heading-lg {
-    @apply text-3xl md:text-4xl font-bold tracking-tight;
+    @apply text-3xl md:text-4xl font-medium tracking-tight;
   }
 
   .button-primary {
     @apply px-6 py-3 bg-primary text-primary-foreground rounded-lg 
            hover:bg-primary/90 transition-all duration-200
-           font-medium tracking-wide shadow-sm hover:shadow-md;
+           font-medium tracking-wide;
   }
 
   .button-secondary {
-    @apply px-6 py-3 bg-accent-purple text-white rounded-lg 
-           hover:bg-accent-purple/90 transition-all duration-200
-           font-medium tracking-wide shadow-sm hover:shadow-md
-           backdrop-blur-sm border border-white/10;
+    @apply px-6 py-3 bg-accent-purple/90 text-white rounded-lg 
+           hover:bg-accent-purple transition-all duration-200
+           font-medium tracking-wide backdrop-blur-sm;
   }
 }
 
