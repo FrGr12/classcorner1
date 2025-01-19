@@ -47,7 +47,7 @@ const Categories = () => {
   };
 
   return (
-    <section className="pt-6 sm:pt-8 bg-neutral-100">
+    <section className="pt-24 sm:pt-28 bg-neutral-100">
       <div className="container-padding">
         <div className="mt-8 text-neutral-600">
           <CategoryPills
