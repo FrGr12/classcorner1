@@ -3,13 +3,20 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Heart } from "lucide-react";
+import { Heart, Image } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface ClassCardProps {
   id?: number;
@@ -46,6 +53,7 @@ const ClassCard = ({
   instructor,
   price,
   rating,
+  images,
   level,
   date,
   city,
@@ -101,17 +109,51 @@ const ClassCard = ({
 
   const displayCategory = determineCategory(title, category);
 
+  const PlaceholderImage = () => (
+    <div className="flex items-center justify-center w-full h-full bg-neutral-200">
+      <Image className="w-12 h-12 text-neutral-400" />
+    </div>
+  );
+
   return (
     <Card 
-      className="overflow-hidden group cursor-pointer hover:shadow-md transition-shadow duration-200"
+      className="overflow-hidden group cursor-pointer hover:bg-neutral-50 transition-colors duration-200"
       onClick={handleCardClick}
     >
-      <div 
-        className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-purple-200 to-purple-400"
-      >
+      <div className="relative aspect-[4/3] overflow-hidden">
+        {images && images.length > 0 ? (
+          <Carousel className="w-full h-full">
+            <CarouselContent>
+              {images.map((image, index) => (
+                <CarouselItem key={index}>
+                  <div className="relative aspect-[4/3] overflow-hidden">
+                    {image ? (
+                      <img
+                        src={image}
+                        alt={`${title} - Image ${index + 1}`}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <PlaceholderImage />
+                    )}
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            {images.length > 1 && (
+              <>
+                <CarouselPrevious className="left-2" />
+                <CarouselNext className="right-2" />
+              </>
+            )}
+          </Carousel>
+        ) : (
+          <PlaceholderImage />
+        )}
+        
         <Badge 
           variant="secondary" 
-          className="absolute top-3 right-3 bg-white shadow-lg text-primary border-none hover:bg-white/90 cursor-pointer transition-all duration-200 z-10 p-2.5"
+          className="absolute top-3 right-3 bg-white/90 text-primary border-none hover:bg-white cursor-pointer transition-all duration-200 z-10 p-2.5"
           onClick={handleSave}
         >
           <Heart 
