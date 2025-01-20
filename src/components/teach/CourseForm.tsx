@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Loader2, Upload } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +35,7 @@ const formSchema = z.object({
       message: "Maximum participants must be a positive number",
     }
   ),
+  tags: z.string().optional(),
 });
 
 const CourseForm = () => {
@@ -52,6 +53,7 @@ const CourseForm = () => {
       location: "",
       category: "",
       maxParticipants: "",
+      tags: "",
     },
   });
 
@@ -59,12 +61,16 @@ const CourseForm = () => {
     try {
       setIsLoading(true);
 
-      // Get the current user
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("You must be logged in to create a course");
         return;
       }
+
+      // Convert tags string to array
+      const tagsArray = values.tags
+        ? values.tags.split(",").map((tag) => tag.trim())
+        : [];
 
       // Insert course
       const { data: course, error: courseError } = await supabase
@@ -78,6 +84,7 @@ const CourseForm = () => {
           max_participants: Number(values.maxParticipants),
           instructor_id: user.id,
           status: "draft",
+          tags: tagsArray,
         })
         .select()
         .single();
@@ -156,7 +163,7 @@ const CourseForm = () => {
               <FormLabel>Description</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Describe your course"
+                  placeholder="Describe your course in detail. Include what students will learn, prerequisites, and what materials will be provided."
                   className="min-h-[120px]"
                   {...field}
                 />
@@ -245,6 +252,23 @@ const CourseForm = () => {
                   <option value="crafts">Crafts</option>
                   <option value="photography">Photography</option>
                 </select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="tags"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Tags (comma-separated)</FormLabel>
+              <FormControl>
+                <Input 
+                  placeholder="e.g., beginner, watercolor, painting"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
