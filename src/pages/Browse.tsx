@@ -45,7 +45,7 @@ const categories = [
 
 const Browse = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
   const [date, setDate] = useState<Date | undefined>(
@@ -120,7 +120,7 @@ const Browse = () => {
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Categories</SelectItem>
+                  <SelectItem value="all">All Categories</SelectItem>
                   {categories.map((category) => (
                     <SelectItem key={category} value={category}>
                       {category}
@@ -174,7 +174,7 @@ const Browse = () => {
           </div>
         </div>
 
-        <ClassGrid category={selectedCategory || null} />
+        <ClassGrid category={selectedCategory === "all" ? null : selectedCategory} />
       </main>
       <Footer />
     </div>
