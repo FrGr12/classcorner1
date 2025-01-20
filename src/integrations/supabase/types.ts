@@ -9,7 +9,115 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      course_images: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          display_order: number
+          id: number
+          image_path: string
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          display_order: number
+          id?: number
+          image_path: string
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          display_order?: number
+          id?: number
+          image_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_images_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_sessions: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          end_time: string
+          id: number
+          start_time: string
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          end_time: string
+          id?: number
+          start_time: string
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          end_time?: string
+          id?: number
+          start_time?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      courses: {
+        Row: {
+          category: string
+          created_at: string
+          description: string
+          id: number
+          instructor_id: string
+          location: string
+          max_participants: number | null
+          price: number
+          status: Database["public"]["Enums"]["course_status"] | null
+          tags: string[] | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description: string
+          id?: number
+          instructor_id: string
+          location: string
+          max_participants?: number | null
+          price: number
+          status?: Database["public"]["Enums"]["course_status"] | null
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          id?: number
+          instructor_id?: string
+          location?: string
+          max_participants?: number | null
+          price?: number
+          status?: Database["public"]["Enums"]["course_status"] | null
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +126,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      course_status: "draft" | "published" | "archived"
     }
     CompositeTypes: {
       [_ in never]: never
