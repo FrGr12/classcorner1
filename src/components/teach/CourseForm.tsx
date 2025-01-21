@@ -24,12 +24,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import ImageUpload from "./ImageUpload";
 import SessionsForm from "./SessionsForm";
 import { cn } from "@/lib/utils";
@@ -69,7 +63,6 @@ const CourseForm = () => {
       location: "",
       category: "",
       maxParticipants: "",
-      tags: "",
       learningObjectives: "",
       materialsIncluded: "",
       setupInstructions: "",
@@ -87,10 +80,6 @@ const CourseForm = () => {
         return;
       }
 
-      const tagsArray = values.tags
-        ? values.tags.split(",").map((tag) => tag.trim())
-        : [];
-
       const { data: course, error: courseError } = await supabase
         .from("courses")
         .insert({
@@ -102,7 +91,6 @@ const CourseForm = () => {
           max_participants: Number(values.maxParticipants),
           instructor_id: user.id,
           status: "draft",
-          tags: tagsArray,
           learning_objectives: values.learningObjectives,
           materials_included: values.materialsIncluded,
           setup_instructions: values.setupInstructions,
@@ -409,15 +397,6 @@ const CourseForm = () => {
                 )}
               />
             </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Location & Category</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            {/* Location and Category fields have been moved to Basic Information section */}
           </CardContent>
         </Card>
 
