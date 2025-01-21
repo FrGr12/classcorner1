@@ -37,18 +37,17 @@ import { cn } from "@/lib/utils";
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(10, "Description must be at least 10 characters"),
+  category: z.string().min(1, "Category is required"),
+  location: z.string().min(1, "Location is required"),
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Price must be a positive number",
   }),
-  location: z.string().min(1, "Location is required"),
-  category: z.string().min(1, "Category is required"),
   maxParticipants: z.string().refine(
     (val) => !isNaN(Number(val)) && Number(val) > 0,
     {
       message: "Maximum participants must be a positive number",
     }
   ),
-  tags: z.string().optional(),
   learningObjectives: z.string().min(10, "Learning objectives are required"),
   materialsIncluded: z.string().min(10, "Materials included are required"),
   setupInstructions: z.string().min(10, "Setup instructions are required"),
@@ -203,6 +202,48 @@ const CourseForm = () => {
                 </FormItem>
               )}
             />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Category</FormLabel>
+                    <FormControl>
+                      <select
+                        className={cn(
+                          "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                        )}
+                        {...field}
+                      >
+                        <option value="">Select a category</option>
+                        <option value="art">Art</option>
+                        <option value="cooking">Cooking</option>
+                        <option value="music">Music</option>
+                        <option value="crafts">Crafts</option>
+                        <option value="photography">Photography</option>
+                      </select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="location"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Location</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Enter course location" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </CardContent>
         </Card>
 
@@ -376,62 +417,7 @@ const CourseForm = () => {
             <CardTitle>Location & Category</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter course location" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <select
-                      className={cn(
-                        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                      )}
-                      {...field}
-                    >
-                      <option value="">Select a category</option>
-                      <option value="art">Art</option>
-                      <option value="cooking">Cooking</option>
-                      <option value="music">Music</option>
-                      <option value="crafts">Crafts</option>
-                      <option value="photography">Photography</option>
-                    </select>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="tags"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tags (comma-separated)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="e.g., beginner, watercolor, painting"
-                      {...field} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {/* Location and Category fields have been moved to Basic Information section */}
           </CardContent>
         </Card>
 
