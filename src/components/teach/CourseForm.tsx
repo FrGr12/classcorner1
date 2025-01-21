@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Loader2 } from "lucide-react";
+import { Loader2, Clock, Package, GraduationCap, Settings } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,6 +17,19 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import ImageUpload from "./ImageUpload";
 import SessionsForm from "./SessionsForm";
 import { cn } from "@/lib/utils";
@@ -36,6 +49,10 @@ const formSchema = z.object({
     }
   ),
   tags: z.string().optional(),
+  learningObjectives: z.string().min(10, "Learning objectives are required"),
+  materialsIncluded: z.string().min(10, "Materials included are required"),
+  setupInstructions: z.string().min(10, "Setup instructions are required"),
+  duration: z.string().min(1, "Duration is required"),
 });
 
 const CourseForm = () => {
@@ -54,6 +71,10 @@ const CourseForm = () => {
       category: "",
       maxParticipants: "",
       tags: "",
+      learningObjectives: "",
+      materialsIncluded: "",
+      setupInstructions: "",
+      duration: "",
     },
   });
 
@@ -67,12 +88,10 @@ const CourseForm = () => {
         return;
       }
 
-      // Convert tags string to array
       const tagsArray = values.tags
         ? values.tags.split(",").map((tag) => tag.trim())
         : [];
 
-      // Insert course
       const { data: course, error: courseError } = await supabase
         .from("courses")
         .insert({
@@ -85,6 +104,10 @@ const CourseForm = () => {
           instructor_id: user.id,
           status: "draft",
           tags: tagsArray,
+          learning_objectives: values.learningObjectives,
+          materials_included: values.materialsIncluded,
+          setup_instructions: values.setupInstructions,
+          duration: values.duration,
         })
         .select()
         .single();
@@ -141,139 +164,276 @@ const CourseForm = () => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <FormField
-          control={form.control}
-          name="title"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Course Title</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter course title" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Basic Information</CardTitle>
+            <CardDescription>
+              Start with the fundamental details of your course
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Course Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter course title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Textarea
-                  placeholder="Describe your course in detail. Include what students will learn, prerequisites, and what materials will be provided."
-                  className="min-h-[120px]"
-                  {...field}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Provide an engaging overview of your course"
+                      className="min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <GraduationCap className="w-5 h-5" />
+              Learning Experience
+            </CardTitle>
+            <CardDescription>
+              Detail what students will learn and do in your course
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="learningObjectives"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>What Students Will Learn</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="List the key skills and knowledge students will gain"
+                      className="min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Package className="w-5 h-5" />
+              Course Materials
+            </CardTitle>
+            <CardDescription>
+              Specify what's included in the course
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <FormField
+              control={form.control}
+              name="materialsIncluded"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>What's Included</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="List all materials, tools, and resources provided"
+                      className="min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Settings className="w-5 h-5" />
+              Course Setup
+            </CardTitle>
+            <CardDescription>
+              Provide setup and duration details
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="setupInstructions"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Setup Instructions</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="What students need to prepare or bring"
+                      className="min-h-[120px]"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Course Duration</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="e.g., 2 hours per session, 4 weeks"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
         <ImageUpload images={images} setImages={setImages} />
 
         <SessionsForm sessions={sessions} setSessions={setSessions} />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter price"
-                    min="0"
-                    step="0.01"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <Card>
+          <CardHeader>
+            <CardTitle>Course Details</CardTitle>
+            <CardDescription>
+              Set pricing and participation limits
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Price</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter price"
+                        min="0"
+                        step="0.01"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-          <FormField
-            control={form.control}
-            name="maxParticipants"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Maximum Participants</FormLabel>
-                <FormControl>
-                  <Input
-                    type="number"
-                    placeholder="Enter max participants"
-                    min="1"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+              <FormField
+                control={form.control}
+                name="maxParticipants"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Maximum Participants</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="number"
+                        placeholder="Enter max participants"
+                        min="1"
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+          </CardContent>
+        </Card>
 
-        <FormField
-          control={form.control}
-          name="location"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Location</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter course location" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <Card>
+          <CardHeader>
+            <CardTitle>Location & Category</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter course location" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="category"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-                <select
-                  className={cn(
-                    "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  )}
-                  {...field}
-                >
-                  <option value="">Select a category</option>
-                  <option value="art">Art</option>
-                  <option value="cooking">Cooking</option>
-                  <option value="music">Music</option>
-                  <option value="crafts">Crafts</option>
-                  <option value="photography">Photography</option>
-                </select>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <select
+                      className={cn(
+                        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                      )}
+                      {...field}
+                    >
+                      <option value="">Select a category</option>
+                      <option value="art">Art</option>
+                      <option value="cooking">Cooking</option>
+                      <option value="music">Music</option>
+                      <option value="crafts">Crafts</option>
+                      <option value="photography">Photography</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="tags"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tags (comma-separated)</FormLabel>
-              <FormControl>
-                <Input 
-                  placeholder="e.g., beginner, watercolor, painting"
-                  {...field} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+            <FormField
+              control={form.control}
+              name="tags"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tags (comma-separated)</FormLabel>
+                  <FormControl>
+                    <Input 
+                      placeholder="e.g., beginner, watercolor, painting"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </CardContent>
+        </Card>
 
         <Button
           type="submit"
