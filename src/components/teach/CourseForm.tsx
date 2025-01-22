@@ -48,11 +48,19 @@ const formSchema = z.object({
   duration: z.string().min(1, "Duration is required"),
 });
 
+interface Session {
+  start: Date;
+  isRecurring: boolean;
+  recurrencePattern?: string;
+  recurrenceEndDate?: Date;
+  recurrenceCount?: number;
+}
+
 const CourseForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
-  const [sessions, setSessions] = useState<{ start: Date; end: Date }[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -113,7 +121,6 @@ const CourseForm = () => {
 
         if (uploadError) throw uploadError;
 
-        // Insert image metadata
         const { error: imageError } = await supabase
           .from("course_images")
           .insert({
@@ -132,7 +139,10 @@ const CourseForm = () => {
           .insert({
             course_id: course.id,
             start_time: session.start.toISOString(),
-            end_time: session.end.toISOString(),
+            is_recurring: session.isRecurring,
+            recurrence_pattern: session.recurrencePattern,
+            recurrence_end_date: session.recurrenceEndDate?.toISOString(),
+            recurrence_count: session.recurrenceCount,
           });
 
         if (sessionError) throw sessionError;

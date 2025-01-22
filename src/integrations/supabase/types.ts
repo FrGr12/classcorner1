@@ -45,22 +45,31 @@ export type Database = {
         Row: {
           course_id: number | null
           created_at: string
-          end_time: string
           id: number
+          is_recurring: boolean | null
+          recurrence_count: number | null
+          recurrence_end_date: string | null
+          recurrence_pattern: string | null
           start_time: string
         }
         Insert: {
           course_id?: number | null
           created_at?: string
-          end_time: string
           id?: number
+          is_recurring?: boolean | null
+          recurrence_count?: number | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
           start_time: string
         }
         Update: {
           course_id?: number | null
           created_at?: string
-          end_time?: string
           id?: number
+          is_recurring?: boolean | null
+          recurrence_count?: number | null
+          recurrence_end_date?: string | null
+          recurrence_pattern?: string | null
           start_time?: string
         }
         Relationships: [
