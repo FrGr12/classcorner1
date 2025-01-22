@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "sonner";
-import { Loader2, Clock, Package, GraduationCap, Settings } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/card";
 import ImageUpload from "./ImageUpload";
 import SessionsForm from "./SessionsForm";
+import BookingSettings from "./course-form/BookingSettings";
 import { cn } from "@/lib/utils";
 
 const formSchema = z.object({
@@ -46,15 +47,14 @@ const formSchema = z.object({
   materialsIncluded: z.string().min(10, "Materials included are required"),
   setupInstructions: z.string().min(10, "Setup instructions are required"),
   duration: z.string().min(1, "Duration is required"),
+  groupBookingsEnabled: z.boolean().default(false),
+  privateBookingsEnabled: z.boolean().default(false),
+  basePriceGroup: z.string().optional(),
+  basePricePrivate: z.string().optional(),
+  minGroupSize: z.string().optional(),
+  maxGroupSize: z.string().optional(),
+  paymentTiming: z.enum(["instant", "post_course"]).default("instant"),
 });
-
-interface Session {
-  start: Date;
-  isRecurring: boolean;
-  recurrencePattern?: string;
-  recurrenceEndDate?: Date;
-  recurrenceCount?: number;
-}
 
 const CourseForm = () => {
   const navigate = useNavigate();
@@ -75,6 +75,9 @@ const CourseForm = () => {
       materialsIncluded: "",
       setupInstructions: "",
       duration: "",
+      groupBookingsEnabled: false,
+      privateBookingsEnabled: false,
+      paymentTiming: "instant",
     },
   });
 
@@ -103,6 +106,13 @@ const CourseForm = () => {
           materials_included: values.materialsIncluded,
           setup_instructions: values.setupInstructions,
           duration: values.duration,
+          group_bookings_enabled: values.groupBookingsEnabled,
+          private_bookings_enabled: values.privateBookingsEnabled,
+          base_price_group: values.basePriceGroup ? Number(values.basePriceGroup) : null,
+          base_price_private: values.basePricePrivate ? Number(values.basePricePrivate) : null,
+          min_group_size: values.minGroupSize ? Number(values.minGroupSize) : null,
+          max_group_size: values.maxGroupSize ? Number(values.maxGroupSize) : null,
+          payment_timing: values.paymentTiming,
         })
         .select()
         .single();
@@ -247,10 +257,19 @@ const CourseForm = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <GraduationCap className="w-5 h-5" />
-              Learning Experience
-            </CardTitle>
+            <CardTitle>Booking Options</CardTitle>
+            <CardDescription>
+              Configure how students can book your course
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <BookingSettings form={form} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Learning Experience</CardTitle>
             <CardDescription>
               Detail what students will learn and do in your course
             </CardDescription>
@@ -278,10 +297,7 @@ const CourseForm = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Package className="w-5 h-5" />
-              Course Materials
-            </CardTitle>
+            <CardTitle>Course Materials</CardTitle>
             <CardDescription>
               Specify what's included in the course
             </CardDescription>
@@ -309,10 +325,7 @@ const CourseForm = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Settings className="w-5 h-5" />
-              Course Setup
-            </CardTitle>
+            <CardTitle>Course Setup</CardTitle>
             <CardDescription>
               Provide setup and duration details
             </CardDescription>
@@ -358,57 +371,6 @@ const CourseForm = () => {
         <ImageUpload images={images} setImages={setImages} />
 
         <SessionsForm sessions={sessions} setSessions={setSessions} />
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Course Details</CardTitle>
-            <CardDescription>
-              Set pricing and participation limits
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter price"
-                        min="0"
-                        step="0.01"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="maxParticipants"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Maximum Participants</FormLabel>
-                    <FormControl>
-                      <Input
-                        type="number"
-                        placeholder="Enter max participants"
-                        min="1"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </CardContent>
-        </Card>
 
         <Button
           type="submit"

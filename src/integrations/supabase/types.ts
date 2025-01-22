@@ -9,6 +9,110 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          booking_type: string | null
+          course_id: number | null
+          created_at: string
+          group_size: number | null
+          id: number
+          payment_status: string | null
+          session_id: number | null
+          status: string | null
+          student_id: string | null
+          total_price: number | null
+          updated_at: string
+        }
+        Insert: {
+          booking_type?: string | null
+          course_id?: number | null
+          created_at?: string
+          group_size?: number | null
+          id?: number
+          payment_status?: string | null
+          session_id?: number | null
+          status?: string | null
+          student_id?: string | null
+          total_price?: number | null
+          updated_at?: string
+        }
+        Update: {
+          booking_type?: string | null
+          course_id?: number | null
+          created_at?: string
+          group_size?: number | null
+          id?: number
+          payment_status?: string | null
+          session_id?: number | null
+          status?: string | null
+          student_id?: string | null
+          total_price?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_discounts: {
+        Row: {
+          code: string | null
+          course_id: number | null
+          created_at: string
+          current_uses: number | null
+          discount_type: string | null
+          discount_value: number | null
+          end_date: string | null
+          id: number
+          max_uses: number | null
+          start_date: string | null
+        }
+        Insert: {
+          code?: string | null
+          course_id?: number | null
+          created_at?: string
+          current_uses?: number | null
+          discount_type?: string | null
+          discount_value?: number | null
+          end_date?: string | null
+          id?: number
+          max_uses?: number | null
+          start_date?: string | null
+        }
+        Update: {
+          code?: string | null
+          course_id?: number | null
+          created_at?: string
+          current_uses?: number | null
+          discount_type?: string | null
+          discount_value?: number | null
+          end_date?: string | null
+          id?: number
+          max_uses?: number | null
+          start_date?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_discounts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_images: {
         Row: {
           course_id: number | null
@@ -34,6 +138,47 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "course_images_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_reviews: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          id: number
+          instructor_response: string | null
+          rating: number | null
+          review_text: string | null
+          reviewer_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          instructor_response?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          instructor_response?: string | null
+          rating?: number | null
+          review_text?: string | null
+          reviewer_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_reviews_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
@@ -84,42 +229,72 @@ export type Database = {
       }
       courses: {
         Row: {
+          base_price_group: number | null
+          base_price_private: number | null
           category: string
           created_at: string
           description: string
+          group_bookings_enabled: boolean | null
           id: number
           instructor_id: string
+          learning_objectives: string | null
           location: string
+          materials_included: string | null
+          max_group_size: number | null
           max_participants: number | null
+          min_group_size: number | null
+          payment_timing: string | null
           price: number
+          private_bookings_enabled: boolean | null
+          setup_instructions: string | null
           status: Database["public"]["Enums"]["course_status"] | null
           tags: string[] | null
           title: string
           updated_at: string
         }
         Insert: {
+          base_price_group?: number | null
+          base_price_private?: number | null
           category: string
           created_at?: string
           description: string
+          group_bookings_enabled?: boolean | null
           id?: number
           instructor_id: string
+          learning_objectives?: string | null
           location: string
+          materials_included?: string | null
+          max_group_size?: number | null
           max_participants?: number | null
+          min_group_size?: number | null
+          payment_timing?: string | null
           price: number
+          private_bookings_enabled?: boolean | null
+          setup_instructions?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
           title: string
           updated_at?: string
         }
         Update: {
+          base_price_group?: number | null
+          base_price_private?: number | null
           category?: string
           created_at?: string
           description?: string
+          group_bookings_enabled?: boolean | null
           id?: number
           instructor_id?: string
+          learning_objectives?: string | null
           location?: string
+          materials_included?: string | null
+          max_group_size?: number | null
           max_participants?: number | null
+          min_group_size?: number | null
+          payment_timing?: string | null
           price?: number
+          private_bookings_enabled?: boolean | null
+          setup_instructions?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
           title?: string
