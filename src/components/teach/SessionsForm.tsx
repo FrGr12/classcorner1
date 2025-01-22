@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, Plus, X } from "lucide-react";
+import { Calendar as CalendarIcon, Clock, Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -35,6 +35,7 @@ interface SessionsFormProps {
 
 const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
   const [startDate, setStartDate] = useState<Date>();
+  const [startTime, setStartTime] = useState<string>("12:00");
   const [isRecurring, setIsRecurring] = useState(false);
   const [recurrencePattern, setRecurrencePattern] = useState<string>();
   const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date>();
@@ -42,8 +43,13 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 
   const addSession = () => {
     if (startDate) {
+      // Combine date and time
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const combinedDateTime = new Date(startDate);
+      combinedDateTime.setHours(hours, minutes);
+
       const newSession: Session = {
-        start: startDate,
+        start: combinedDateTime,
         isRecurring,
       };
 
@@ -64,6 +70,7 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 
   const resetForm = () => {
     setStartDate(undefined);
+    setStartTime("12:00");
     setIsRecurring(false);
     setRecurrencePattern(undefined);
     setRecurrenceEndDate(undefined);
@@ -78,30 +85,45 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
     <div className="space-y-6">
       <div className="space-y-4">
         <div className="flex flex-col space-y-4">
-          <div>
-            <Label>Start Time</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className={cn(
-                    "w-full justify-start text-left font-normal",
-                    !startDate && "text-muted-foreground"
-                  )}
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {startDate ? format(startDate, "PPP") : "Select date"}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
-                <Calendar
-                  mode="single"
-                  selected={startDate}
-                  onSelect={setStartDate}
-                  initialFocus
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left font-normal",
+                      !startDate && "text-muted-foreground"
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 h-4 w-4" />
+                    {startDate ? format(startDate, "PPP") : "Select date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={setStartDate}
+                    initialFocus
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+
+            <div>
+              <Label>Time</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  type="time"
+                  value={startTime}
+                  onChange={(e) => setStartTime(e.target.value)}
+                  className="w-full"
                 />
-              </PopoverContent>
-            </Popover>
+                <Clock className="h-4 w-4 text-muted-foreground" />
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center space-x-2">
@@ -195,7 +217,7 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
               >
                 <div className="flex-1">
                   <p className="text-sm">
-                    {format(session.start, "PPP")}
+                    {format(session.start, "PPP 'at' h:mm a")}
                     {session.isRecurring && (
                       <span className="ml-2 text-muted-foreground">
                         (Recurring {session.recurrencePattern})
