@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import ImageCarousel from "./class-card/ImageCarousel";
 import SaveButton from "./class-card/SaveButton";
 import CategoryBadge from "./class-card/CategoryBadge";
@@ -16,6 +17,10 @@ interface ClassCardProps {
   date: Date | Date[];
   city: string;
   category?: string;
+  groupBookingsEnabled?: boolean;
+  privateBookingsEnabled?: boolean;
+  basePriceGroup?: number;
+  basePricePrivate?: number;
 }
 
 const validCategories = [
@@ -45,6 +50,10 @@ const ClassCard = ({
   date,
   city,
   category,
+  groupBookingsEnabled,
+  privateBookingsEnabled,
+  basePriceGroup,
+  basePricePrivate,
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
@@ -94,6 +103,16 @@ const ClassCard = ({
         <SaveButton />
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
           <CategoryBadge category={displayCategory} />
+          {groupBookingsEnabled && (
+            <Badge variant="secondary" className="bg-blue-100 text-blue-800">
+              Group Bookings
+            </Badge>
+          )}
+          {privateBookingsEnabled && (
+            <Badge variant="secondary" className="bg-purple-100 text-purple-800">
+              Private Sessions
+            </Badge>
+          )}
         </div>
       </div>
       <div className="p-4">
@@ -106,7 +125,16 @@ const ClassCard = ({
             <span className="text-yellow-400">★</span>
             <span className="text-sm font-medium">{rating}</span>
           </div>
-          <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
+          <div className="text-right">
+            <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
+            {(groupBookingsEnabled || privateBookingsEnabled) && (
+              <p className="text-sm text-neutral-600">
+                {groupBookingsEnabled && `From $${basePriceGroup}/person (group)`}
+                {groupBookingsEnabled && privateBookingsEnabled && ' · '}
+                {privateBookingsEnabled && `Private $${basePricePrivate}`}
+              </p>
+            )}
+          </div>
         </div>
         <DateButtons dates={dates} />
       </div>
