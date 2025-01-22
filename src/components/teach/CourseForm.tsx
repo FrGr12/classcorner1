@@ -24,6 +24,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Session } from "@/types/session";
 import ImageUpload from "./ImageUpload";
 import SessionsForm from "./SessionsForm";
 import BookingSettings from "./course-form/BookingSettings";

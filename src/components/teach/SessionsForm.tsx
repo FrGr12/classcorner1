@@ -19,14 +19,7 @@ import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
-
-interface Session {
-  start: Date;
-  isRecurring: boolean;
-  recurrencePattern?: string;
-  recurrenceEndDate?: Date;
-  recurrenceCount?: number;
-}
+import { Session } from "@/types/session";
 
 interface SessionsFormProps {
   sessions: Session[];
