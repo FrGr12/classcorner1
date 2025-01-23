@@ -25,10 +25,9 @@ interface WaitlistEntry {
   course: {
     title: string;
   };
-  profile: {
+  user: {
     first_name: string;
     last_name: string;
-    email: string;
   };
 }
 
@@ -47,7 +46,7 @@ const TeacherWaitlist = () => {
         .select(`
           *,
           course:courses(title),
-          profile:profiles(first_name, last_name)
+          user:profiles(first_name, last_name)
         `)
         .eq('status', 'waiting');
 
@@ -135,7 +134,7 @@ const TeacherWaitlist = () => {
                       {entry.course?.title}
                     </TableCell>
                     <TableCell>
-                      {entry.profile?.first_name} {entry.profile?.last_name}
+                      {entry.user?.first_name} {entry.user?.last_name}
                     </TableCell>
                     <TableCell>
                       {format(new Date(entry.created_at), 'MMM d, yyyy')}
