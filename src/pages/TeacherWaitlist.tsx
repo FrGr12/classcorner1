@@ -56,16 +56,29 @@ const TeacherWaitlist = () => {
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
-          *,
+          id,
+          course_id,
+          session_id,
+          user_id,
+          status,
+          created_at,
           course:courses(title),
-          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
+          profile:profiles(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .in('course_id', courses.map(c => c.id));
 
       if (error) throw error;
+      
+      // Type assertion after validating the data structure
+      const validEntries = data.filter(entry => 
+        entry.profile && 
+        typeof entry.profile === 'object' && 
+        'first_name' in entry.profile && 
+        'last_name' in entry.profile
+      ) as WaitlistEntry[];
 
-      setWaitlistEntries(data as WaitlistEntry[]);
+      setWaitlistEntries(validEntries);
     } catch (error: any) {
       toast({
         title: "Error",
