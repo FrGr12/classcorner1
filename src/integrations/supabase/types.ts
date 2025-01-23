@@ -242,6 +242,7 @@ export type Database = {
           materials_included: string | null
           max_group_size: number | null
           max_participants: number | null
+          max_waitlist_size: number | null
           min_group_size: number | null
           payment_timing: string | null
           price: number
@@ -251,6 +252,7 @@ export type Database = {
           tags: string[] | null
           title: string
           updated_at: string
+          waitlist_enabled: boolean | null
         }
         Insert: {
           base_price_group?: number | null
@@ -266,6 +268,7 @@ export type Database = {
           materials_included?: string | null
           max_group_size?: number | null
           max_participants?: number | null
+          max_waitlist_size?: number | null
           min_group_size?: number | null
           payment_timing?: string | null
           price: number
@@ -275,6 +278,7 @@ export type Database = {
           tags?: string[] | null
           title: string
           updated_at?: string
+          waitlist_enabled?: boolean | null
         }
         Update: {
           base_price_group?: number | null
@@ -290,6 +294,7 @@ export type Database = {
           materials_included?: string | null
           max_group_size?: number | null
           max_participants?: number | null
+          max_waitlist_size?: number | null
           min_group_size?: number | null
           payment_timing?: string | null
           price?: number
@@ -299,6 +304,7 @@ export type Database = {
           tags?: string[] | null
           title?: string
           updated_at?: string
+          waitlist_enabled?: boolean | null
         }
         Relationships: []
       }
@@ -337,6 +343,51 @@ export type Database = {
           user_type?: Database["public"]["Enums"]["user_type"]
         }
         Relationships: []
+      }
+      waitlist_entries: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          id: number
+          notification_sent_at: string | null
+          session_id: number | null
+          status: string | null
+          user_id: string | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          notification_sent_at?: string | null
+          session_id?: number | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          notification_sent_at?: string | null
+          session_id?: number | null
+          status?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "waitlist_entries_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "waitlist_entries_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

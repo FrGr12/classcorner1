@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/carousel";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import WaitlistButton from "@/components/class-details/WaitlistButton";
 
 const ClassDetails = () => {
   const { id, category } = useParams();
@@ -237,6 +238,13 @@ const ClassDetails = () => {
                 <Button className="w-full" size="lg" onClick={handleBookNow}>
                   Book Now
                 </Button>
+
+                {classItem.waitlist_enabled && (
+                  <WaitlistButton 
+                    courseId={classItem.id} 
+                    isWaitlistEnabled={classItem.waitlist_enabled}
+                  />
+                )}
 
                 <div className="space-y-4 pt-4">
                   <div className="flex items-center gap-2">
