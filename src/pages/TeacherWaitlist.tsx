@@ -25,7 +25,7 @@ interface WaitlistEntry {
   course: {
     title: string;
   };
-  user: {
+  profile: {
     first_name: string;
     last_name: string;
   };
@@ -41,17 +41,31 @@ const TeacherWaitlist = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // First get the courses taught by this instructor
+      const { data: courses } = await supabase
+        .from('courses')
+        .select('id')
+        .eq('instructor_id', user.id);
+
+      if (!courses || courses.length === 0) {
+        setWaitlistEntries([]);
+        return;
+      }
+
+      // Then get waitlist entries for these courses
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
           *,
           course:courses(title),
-          user:profiles(first_name, last_name)
+          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
         `)
-        .eq('status', 'waiting');
+        .eq('status', 'waiting')
+        .in('course_id', courses.map(c => c.id));
 
       if (error) throw error;
-      setWaitlistEntries(data || []);
+
+      setWaitlistEntries(data as WaitlistEntry[]);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -134,7 +148,7 @@ const TeacherWaitlist = () => {
                       {entry.course?.title}
                     </TableCell>
                     <TableCell>
-                      {entry.user?.first_name} {entry.user?.last_name}
+                      {entry.profile?.first_name} {entry.profile?.last_name}
                     </TableCell>
                     <TableCell>
                       {format(new Date(entry.created_at), 'MMM d, yyyy')}
