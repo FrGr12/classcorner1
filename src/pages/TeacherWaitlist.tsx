@@ -28,7 +28,7 @@ interface WaitlistEntry {
   profile: {
     first_name: string;
     last_name: string;
-  };
+  } | null;
 }
 
 const TeacherWaitlist = () => {
@@ -41,7 +41,6 @@ const TeacherWaitlist = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // First get the courses taught by this instructor
       const { data: courses } = await supabase
         .from('courses')
         .select('id')
@@ -52,7 +51,6 @@ const TeacherWaitlist = () => {
         return;
       }
 
-      // Then get waitlist entries for these courses
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
@@ -63,22 +61,14 @@ const TeacherWaitlist = () => {
           status,
           created_at,
           course:courses(title),
-          profile:profiles(first_name, last_name)
+          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .in('course_id', courses.map(c => c.id));
 
       if (error) throw error;
       
-      // Type assertion after validating the data structure
-      const validEntries = data.filter(entry => 
-        entry.profile && 
-        typeof entry.profile === 'object' && 
-        'first_name' in entry.profile && 
-        'last_name' in entry.profile
-      ) as WaitlistEntry[];
-
-      setWaitlistEntries(validEntries);
+      setWaitlistEntries(data as WaitlistEntry[]);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -161,7 +151,7 @@ const TeacherWaitlist = () => {
                       {entry.course?.title}
                     </TableCell>
                     <TableCell>
-                      {entry.profile?.first_name} {entry.profile?.last_name}
+                      {entry.profile ? `${entry.profile.first_name} ${entry.profile.last_name}` : 'Unknown'}
                     </TableCell>
                     <TableCell>
                       {format(new Date(entry.created_at), 'MMM d, yyyy')}
