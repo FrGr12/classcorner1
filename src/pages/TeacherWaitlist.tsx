@@ -1,35 +1,11 @@
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { format } from "date-fns";
-import { Loader2, UserCheck, UserX } from "lucide-react";
-
-interface WaitlistEntry {
-  id: number;
-  course_id: number;
-  session_id?: number;
-  user_id: string;
-  status: string;
-  created_at: string;
-  course: {
-    title: string;
-  };
-  profile: {
-    first_name: string;
-    last_name: string;
-  } | null;
-}
+import WaitlistTable from "@/components/teach/waitlist/WaitlistTable";
+import { WaitlistEntry } from "@/types/waitlist";
 
 const TeacherWaitlist = () => {
   const [waitlistEntries, setWaitlistEntries] = useState<WaitlistEntry[]>([]);
@@ -61,14 +37,20 @@ const TeacherWaitlist = () => {
           status,
           created_at,
           course:courses(title),
-          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
+          profile:profiles(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .in('course_id', courses.map(c => c.id));
 
       if (error) throw error;
-      
-      setWaitlistEntries(data as WaitlistEntry[]);
+
+      // Validate and transform the data
+      const validEntries = data.map(entry => ({
+        ...entry,
+        profile: entry.profile || null
+      })) as WaitlistEntry[];
+
+      setWaitlistEntries(validEntries);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -94,7 +76,6 @@ const TeacherWaitlist = () => {
         description: `Waitlist entry ${newStatus === 'approved' ? 'approved' : 'rejected'}`,
       });
 
-      // Refresh the list
       fetchWaitlistEntries();
     } catch (error: any) {
       toast({
@@ -134,53 +115,10 @@ const TeacherWaitlist = () => {
             <p className="text-neutral-600">No waitlist entries found.</p>
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Course</TableHead>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Joined On</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {waitlistEntries.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell className="font-medium">
-                      {entry.course?.title}
-                    </TableCell>
-                    <TableCell>
-                      {entry.profile ? `${entry.profile.first_name} ${entry.profile.last_name}` : 'Unknown'}
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(entry.created_at), 'MMM d, yyyy')}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={() => handleStatusUpdate(entry.id, 'approved')}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          <UserCheck className="h-4 w-4 mr-1" />
-                          Approve
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="destructive"
-                          onClick={() => handleStatusUpdate(entry.id, 'rejected')}
-                        >
-                          <UserX className="h-4 w-4 mr-1" />
-                          Reject
-                        </Button>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
+          <WaitlistTable 
+            entries={waitlistEntries} 
+            onStatusUpdate={handleStatusUpdate}
+          />
         )}
       </main>
       <Footer />
