@@ -1,7 +1,7 @@
 export interface WaitlistEntry {
   id: number;
   course_id: number;
-  session_id?: number;
+  session_id: number;
   user_id: string;
   status: string;
   created_at: string;

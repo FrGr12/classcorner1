@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import ClassGrid from "@/components/landing/ClassGrid";
 import Footer from "@/components/landing/Footer";
-import { Search, MapPin, Calendar, Star, Filter } from "lucide-react";
+import { Search, MapPin, Calendar, Filter } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -17,6 +17,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Slider } from "@/components/ui/slider";
+import UserPreferences from "@/components/preferences/UserPreferences";
 
 const cities = [
   "New York",
@@ -107,74 +108,81 @@ const Browse = () => {
           </div>
         </div>
 
-        <div className="mb-8 space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {/* Category Filter */}
-            <div className="bg-white p-4 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Filter className="w-4 h-4" />
-                Category
-              </h3>
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="lg:col-span-2">
+            <div className="mb-8 space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {/* Category Filter */}
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <Filter className="w-4 h-4" />
+                    Category
+                  </h3>
+                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Categories</SelectItem>
+                      {categories.map((category) => (
+                        <SelectItem key={category} value={category}>
+                          {category}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
-            {/* Date Filter */}
-            <div className="bg-white p-4 rounded-lg">
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Calendar className="w-4 h-4" />
-                Date
-              </h3>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start text-left font-normal">
-                    {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <CalendarComponent
-                    mode="single"
-                    selected={date}
-                    onSelect={setDate}
-                    initialFocus
-                  />
-                </PopoverContent>
-              </Popover>
-            </div>
+                {/* Date Filter */}
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-medium mb-2 flex items-center gap-2">
+                    <Calendar className="w-4 h-4" />
+                    Date
+                  </h3>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal">
+                        {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
 
-            {/* Price Range Filter */}
-            <div className="bg-white p-4 rounded-lg">
-              <h3 className="font-medium mb-2">Price Range</h3>
-              <div className="px-2">
-                <Slider
-                  defaultValue={[0, 200]}
-                  max={200}
-                  step={10}
-                  value={priceRange}
-                  onValueChange={setPriceRange}
-                  className="mt-6"
-                />
-                <div className="flex justify-between mt-2 text-sm text-neutral-600">
-                  <span>${priceRange[0]}</span>
-                  <span>${priceRange[1]}</span>
+                {/* Price Range Filter */}
+                <div className="bg-white p-4 rounded-lg">
+                  <h3 className="font-medium mb-2">Price Range</h3>
+                  <div className="px-2">
+                    <Slider
+                      defaultValue={[0, 200]}
+                      max={200}
+                      step={10}
+                      value={priceRange}
+                      onValueChange={setPriceRange}
+                      className="mt-6"
+                    />
+                    <div className="flex justify-between mt-2 text-sm text-neutral-600">
+                      <span>${priceRange[0]}</span>
+                      <span>${priceRange[1]}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
+            <ClassGrid category={selectedCategory === "all" ? null : selectedCategory} />
+          </div>
+          
+          <div>
+            <UserPreferences />
           </div>
         </div>
-
-        <ClassGrid category={selectedCategory === "all" ? null : selectedCategory} />
       </main>
       <Footer />
     </div>

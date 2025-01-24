@@ -1,43 +1,46 @@
 import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import Navigation from "@/components/landing/Navigation";
-import Footer from "@/components/landing/Footer";
-import WaitlistTable from "@/components/teach/waitlist/WaitlistTable";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { WaitlistEntry } from "@/types/waitlist";
 
 const TeacherWaitlist = () => {
+  const [courses, setCourses] = useState<Course[]>([]);
   const [waitlistEntries, setWaitlistEntries] = useState<WaitlistEntry[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  useEffect(() => {
+    fetchWaitlistEntries();
+  }, []);
 
   const fetchWaitlistEntries = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: courses } = await supabase
+      // First get all courses for the instructor
+      const { data: courses, error: coursesError } = await supabase
         .from('courses')
-        .select('id')
+        .select('*')
         .eq('instructor_id', user.id);
 
-      if (!courses || courses.length === 0) {
-        setWaitlistEntries([]);
+      if (coursesError) throw coursesError;
+      setCourses(courses);
+
+      if (!courses.length) {
+        setLoading(false);
         return;
       }
 
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
-          id,
-          course_id,
-          session_id,
-          user_id,
-          status,
-          created_at,
+          *,
           course:courses(title),
-          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
+          profile:profiles!inner(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .in('course_id', courses.map(c => c.id));
@@ -48,75 +51,72 @@ const TeacherWaitlist = () => {
     } catch (error: any) {
       toast({
         title: "Error",
-        description: error.message || "Failed to fetch waitlist entries",
+        description: error.message,
         variant: "destructive",
       });
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleStatusUpdate = async (entryId: number, newStatus: string) => {
-    try {
-      const { error } = await supabase
-        .from('waitlist_entries')
-        .update({ status: newStatus })
-        .eq('id', entryId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `Waitlist entry ${newStatus === 'approved' ? 'approved' : 'rejected'}`,
-      });
-
-      fetchWaitlistEntries();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to update status",
-        variant: "destructive",
-      });
-    }
-  };
-
-  useEffect(() => {
-    fetchWaitlistEntries();
-  }, []);
-
-  if (isLoading) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-neutral-100">
-        <Navigation />
-        <main className="container mx-auto px-4 py-16">
-          <div className="flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin" />
-          </div>
-        </main>
-        <Footer />
+      <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <Navigation />
-      <main className="container mx-auto px-4 py-16">
-        <h1 className="text-3xl font-bold mb-8">Waitlist Management</h1>
-        
+    <Card>
+      <CardHeader>
+        <CardTitle>Teacher Waitlist</CardTitle>
+        <CardDescription>
+          View and manage students waiting for your courses
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
         {waitlistEntries.length === 0 ? (
-          <div className="text-center py-8">
-            <p className="text-neutral-600">No waitlist entries found.</p>
-          </div>
+          <p className="text-center text-neutral-600 py-8">
+            No students are currently on the waitlist.
+          </p>
         ) : (
-          <WaitlistTable 
-            entries={waitlistEntries} 
-            onStatusUpdate={handleStatusUpdate}
-          />
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Student</TableHead>
+                <TableHead>Course</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {waitlistEntries.map((entry) => (
+                <TableRow key={entry.id}>
+                  <TableCell>
+                    {entry.profile ? 
+                      `${entry.profile.first_name} ${entry.profile.last_name}` : 
+                      "Anonymous User"
+                    }
+                  </TableCell>
+                  <TableCell>{entry.course.title}</TableCell>
+                  <TableCell>{entry.status}</TableCell>
+                  <TableCell>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => handleNotify(entry)}
+                    >
+                      Notify
+                    </Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
         )}
-      </main>
-      <Footer />
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

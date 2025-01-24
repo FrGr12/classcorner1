@@ -55,13 +55,13 @@ const CourseMatches = () => {
         .select(`
           *,
           course:courses(title),
-          profile:profiles!course_matches_user_id_fkey(first_name, last_name)
+          profile:profiles!inner(first_name, last_name)
         `)
         .order('match_score', { ascending: false });
 
       if (error) throw error;
 
-      setMatches(data || []);
+      setMatches(data as CourseMatch[]);
     } catch (error: any) {
       toast({
         variant: "destructive",
