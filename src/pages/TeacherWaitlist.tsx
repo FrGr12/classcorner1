@@ -37,20 +37,14 @@ const TeacherWaitlist = () => {
           status,
           created_at,
           course:courses(title),
-          profile:profiles(first_name, last_name)
+          profile:profiles!waitlist_entries_user_id_fkey(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .in('course_id', courses.map(c => c.id));
 
       if (error) throw error;
 
-      // Validate and transform the data
-      const validEntries = data.map(entry => ({
-        ...entry,
-        profile: entry.profile || null
-      })) as WaitlistEntry[];
-
-      setWaitlistEntries(validEntries);
+      setWaitlistEntries(data as WaitlistEntry[]);
     } catch (error: any) {
       toast({
         title: "Error",

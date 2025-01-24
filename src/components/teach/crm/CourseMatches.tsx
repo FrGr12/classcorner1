@@ -51,13 +51,13 @@ const CourseMatches = () => {
       if (!user) return;
 
       const { data, error } = await supabase
-        .from("course_matches")
+        .from('course_matches')
         .select(`
           *,
           course:courses(title),
-          profile:profiles(first_name, last_name)
+          profile:profiles!course_matches_user_id_fkey(first_name, last_name)
         `)
-        .order("match_score", { ascending: false });
+        .order('match_score', { ascending: false });
 
       if (error) throw error;
 
@@ -76,9 +76,9 @@ const CourseMatches = () => {
   const handleNotify = async (match: CourseMatch) => {
     try {
       const { error } = await supabase
-        .from("course_matches")
+        .from('course_matches')
         .update({ notified_at: new Date().toISOString() })
-        .eq("id", match.id);
+        .eq('id', match.id);
 
       if (error) throw error;
 
@@ -87,7 +87,6 @@ const CourseMatches = () => {
         description: "Notification sent successfully",
       });
 
-      // Refresh matches to update UI
       fetchMatches();
     } catch (error: any) {
       toast({
