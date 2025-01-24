@@ -145,6 +145,41 @@ export type Database = {
           },
         ]
       }
+      course_matches: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          id: number
+          match_score: number | null
+          notified_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          match_score?: number | null
+          notified_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          match_score?: number | null
+          notified_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_matches_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_reviews: {
         Row: {
           course_id: number | null
@@ -344,6 +379,42 @@ export type Database = {
         }
         Relationships: []
       }
+      user_preferences: {
+        Row: {
+          created_at: string
+          id: string
+          interests: string[] | null
+          max_distance: number | null
+          notification_preference:
+            | Database["public"]["Enums"]["notification_preference"]
+            | null
+          preferred_location: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id: string
+          interests?: string[] | null
+          max_distance?: number | null
+          notification_preference?:
+            | Database["public"]["Enums"]["notification_preference"]
+            | null
+          preferred_location?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          interests?: string[] | null
+          max_distance?: number | null
+          notification_preference?:
+            | Database["public"]["Enums"]["notification_preference"]
+            | null
+          preferred_location?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       waitlist_entries: {
         Row: {
           course_id: number | null
@@ -398,6 +469,7 @@ export type Database = {
     }
     Enums: {
       course_status: "draft" | "published" | "archived"
+      notification_preference: "email" | "in_app" | "both" | "none"
       user_type: "student" | "teacher"
     }
     CompositeTypes: {
