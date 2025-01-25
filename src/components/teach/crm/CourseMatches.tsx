@@ -8,33 +8,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Loader2, Send } from "lucide-react";
-
-interface CourseMatch {
-  id: number;
-  user_id: string;
-  course_id: number;
-  match_score: number;
-  notified_at: string | null;
-  created_at: string;
-  course: {
-    title: string;
-  };
-  profile: {
-    first_name: string;
-    last_name: string;
-    email?: string;
-  } | null;
-}
+import { Loader2 } from "lucide-react";
+import MatchesTable from "./MatchesTable";
+import type { CourseMatch } from "@/types/course-match";
 
 const CourseMatches = () => {
   const [matches, setMatches] = useState<CourseMatch[]>([]);
@@ -55,7 +31,7 @@ const CourseMatches = () => {
         .select(`
           *,
           course:courses(title),
-          profile:profiles!inner(first_name, last_name)
+          profile:profiles(first_name, last_name)
         `)
         .order('match_score', { ascending: false });
 
@@ -119,48 +95,7 @@ const CourseMatches = () => {
             No matches found yet. Try adding more tags to your courses to attract interested students.
           </p>
         ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Match Score</TableHead>
-                <TableHead>Last Notified</TableHead>
-                <TableHead>Action</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {matches.map((match) => (
-                <TableRow key={match.id}>
-                  <TableCell>
-                    {match.profile ? 
-                      `${match.profile.first_name} ${match.profile.last_name}` : 
-                      "Anonymous User"
-                    }
-                  </TableCell>
-                  <TableCell>{match.course.title}</TableCell>
-                  <TableCell>{match.match_score}</TableCell>
-                  <TableCell>
-                    {match.notified_at ? 
-                      new Date(match.notified_at).toLocaleDateString() : 
-                      "Never"
-                    }
-                  </TableCell>
-                  <TableCell>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => handleNotify(match)}
-                      disabled={!!match.notified_at}
-                    >
-                      <Send className="h-4 w-4 mr-2" />
-                      Notify
-                    </Button>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+          <MatchesTable matches={matches} onNotify={handleNotify} />
         )}
       </CardContent>
     </Card>

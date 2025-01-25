@@ -4,10 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { WaitlistEntry } from "@/types/waitlist";
+import type { WaitlistEntry } from "@/types/waitlist";
 
 const TeacherWaitlist = () => {
-  const [courses, setCourses] = useState<Course[]>([]);
   const [waitlistEntries, setWaitlistEntries] = useState<WaitlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
@@ -21,29 +20,14 @@ const TeacherWaitlist = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // First get all courses for the instructor
-      const { data: courses, error: coursesError } = await supabase
-        .from('courses')
-        .select('*')
-        .eq('instructor_id', user.id);
-
-      if (coursesError) throw coursesError;
-      setCourses(courses);
-
-      if (!courses.length) {
-        setLoading(false);
-        return;
-      }
-
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
           *,
           course:courses(title),
-          profile:profiles!inner(first_name, last_name)
+          profile:profiles(first_name, last_name)
         `)
-        .eq('status', 'waiting')
-        .in('course_id', courses.map(c => c.id));
+        .eq('status', 'waiting');
 
       if (error) throw error;
 
@@ -56,6 +40,32 @@ const TeacherWaitlist = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleNotify = async (entry: WaitlistEntry) => {
+    try {
+      const { error } = await supabase
+        .from('waitlist_entries')
+        .update({
+          notification_sent_at: new Date().toISOString()
+        })
+        .eq('id', entry.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Student has been notified",
+      });
+
+      fetchWaitlistEntries();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   };
 
