@@ -50,6 +50,7 @@ export default {
       },
       fontFamily: {
         sans: ["DM Sans", "sans-serif"],
+        display: ["Oi", "cursive"],
       },
       animation: {
         "fade-up": "fadeUp 0.5s ease-out forwards",
