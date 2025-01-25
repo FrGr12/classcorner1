@@ -2,6 +2,7 @@ import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import CourseForm from "@/components/teach/CourseForm";
 import CourseMatches from "@/components/teach/crm/CourseMatches";
+import Communications from "@/components/teach/crm/Communications";
 import EngagementMetrics from "@/components/teach/analytics/EngagementMetrics";
 import PerformanceMetrics from "@/components/teach/analytics/PerformanceMetrics";
 
@@ -14,6 +15,14 @@ const Teach = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <EngagementMetrics />
             <PerformanceMetrics />
+          </div>
+
+          <div>
+            <h2 className="heading-md mb-4">Communications</h2>
+            <p className="text-neutral-600 mb-8">
+              Manage your communications with students.
+            </p>
+            <Communications />
           </div>
 
           <div>

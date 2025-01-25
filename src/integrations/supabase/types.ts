@@ -66,6 +66,50 @@ export type Database = {
           },
         ]
       }
+      communications: {
+        Row: {
+          course_id: number | null
+          id: number
+          instructor_id: string
+          message_content: string
+          message_type: string
+          read_at: string | null
+          sent_at: string
+          status: string | null
+          student_id: string
+        }
+        Insert: {
+          course_id?: number | null
+          id?: number
+          instructor_id: string
+          message_content: string
+          message_type: string
+          read_at?: string | null
+          sent_at?: string
+          status?: string | null
+          student_id: string
+        }
+        Update: {
+          course_id?: number | null
+          id?: number
+          instructor_id?: string
+          message_content?: string
+          message_type?: string
+          read_at?: string | null
+          sent_at?: string
+          status?: string | null
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_discounts: {
         Row: {
           code: string | null
