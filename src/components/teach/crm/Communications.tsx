@@ -20,11 +20,11 @@ type Communication = {
   sent_at: string;
   read_at: string | null;
   status: string;
-  profile?: {
+  profile: {
     first_name: string | null;
     last_name: string | null;
   };
-  course?: {
+  course: {
     title: string;
   };
 };
@@ -47,7 +47,7 @@ const Communications = () => {
         .from('communications')
         .select(`
           *,
-          profile:profiles(first_name, last_name),
+          profile:profiles!communications_student_id_fkey(first_name, last_name),
           course:courses(title)
         `)
         .eq('instructor_id', user.id)

@@ -5,6 +5,7 @@ import CourseMatches from "@/components/teach/crm/CourseMatches";
 import Communications from "@/components/teach/crm/Communications";
 import EngagementMetrics from "@/components/teach/analytics/EngagementMetrics";
 import PerformanceMetrics from "@/components/teach/analytics/PerformanceMetrics";
+import MatchInsights from "@/components/teach/crm/MatchInsights";
 
 const Teach = () => {
   return (
@@ -15,6 +16,14 @@ const Teach = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <EngagementMetrics />
             <PerformanceMetrics />
+          </div>
+
+          <div>
+            <h2 className="heading-md mb-4">Course Match Insights</h2>
+            <p className="text-neutral-600 mb-8">
+              View and manage potential participants based on interests and location.
+            </p>
+            <MatchInsights />
           </div>
 
           <div>
