@@ -19,9 +19,10 @@ type Message = {
 
 interface MessagesTableProps {
   messages: Message[];
+  onSendMessage: (studentId: string, courseId: number, content: string) => Promise<void>;
 }
 
-const MessagesTable = ({ messages }: MessagesTableProps) => {
+const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
   return (
     <Table>
       <TableHeader>
