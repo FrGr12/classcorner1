@@ -50,11 +50,12 @@ const Payment = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-2xl mx-auto">
           <Button
-            variant="ghost"
-            className="mb-4"
+            variant="outline"
+            size="lg"
+            className="mb-6 gap-2 text-base hover:bg-neutral-100"
             onClick={handleGoBack}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-5 w-5" />
             Back to booking details
           </Button>
 
@@ -128,16 +129,21 @@ const Payment = () => {
                     </div>
                   </div>
                   
-                  <div className="flex gap-4">
+                  <div className="flex gap-4 pt-4">
                     <Button 
                       type="button" 
-                      variant="outline" 
-                      className="w-full"
+                      variant="outline"
+                      size="lg"
+                      className="w-full text-base"
                       onClick={handleGoBack}
                     >
                       Back
                     </Button>
-                    <Button type="submit" className="w-full">
+                    <Button 
+                      type="submit"
+                      size="lg"
+                      className="w-full text-base"
+                    >
                       Pay Now
                     </Button>
                   </div>

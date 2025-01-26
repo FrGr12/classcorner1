@@ -39,11 +39,12 @@ const BookingConfirmation = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-2xl mx-auto">
           <Button
-            variant="ghost"
-            className="mb-4"
+            variant="outline"
+            size="lg"
+            className="mb-6 gap-2 text-base hover:bg-neutral-100"
             onClick={handleGoBack}
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-5 w-5" />
             Back to class details
           </Button>
 
@@ -80,17 +81,19 @@ const BookingConfirmation = () => {
                 <span className="text-xl font-semibold">${classItem.price}</span>
               </div>
             </CardContent>
-            <CardFooter className="flex gap-4">
+            <CardFooter className="flex gap-4 pt-6">
               <Button 
                 variant="outline" 
+                size="lg"
                 onClick={handleGoBack}
-                className="w-full"
+                className="w-full text-base"
               >
                 Cancel
               </Button>
               <Button 
                 onClick={handleProceedToPayment} 
-                className="w-full"
+                size="lg"
+                className="w-full text-base"
               >
                 Proceed to Payment
               </Button>
