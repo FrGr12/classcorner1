@@ -4,7 +4,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Home } from "lucide-react";
 import { format } from "date-fns";
 
 const BookingSuccess = () => {
@@ -17,7 +17,6 @@ const BookingSuccess = () => {
     return null;
   }
 
-  // Handle the case where date might be an array
   const formatClassDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
       return format(date[0], "MMMM d, yyyy");
@@ -63,10 +62,18 @@ const BookingSuccess = () => {
               </div>
             </CardContent>
             <CardFooter className="flex gap-4">
-              <Button onClick={() => navigate("/")} variant="outline" className="w-full">
+              <Button 
+                onClick={() => navigate("/")} 
+                className="w-full"
+              >
+                <Home className="h-4 w-4 mr-2" />
                 Return Home
               </Button>
-              <Button onClick={() => window.print()} variant="secondary" className="w-full">
+              <Button 
+                onClick={() => window.print()} 
+                variant="outline" 
+                className="w-full"
+              >
                 Print Receipt
               </Button>
             </CardFooter>

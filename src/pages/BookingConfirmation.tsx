@@ -6,6 +6,7 @@ import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
+import { ArrowLeft } from "lucide-react";
 
 const BookingConfirmation = () => {
   const location = useLocation();
@@ -21,7 +22,10 @@ const BookingConfirmation = () => {
     navigate("/payment", { state: { classItem } });
   };
 
-  // Handle the case where date might be an array
+  const handleGoBack = () => {
+    navigate(`/class/${classItem.category}/${classItem.id}`);
+  };
+
   const formatClassDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
       return format(date[0], "MMMM d, yyyy");
@@ -34,6 +38,15 @@ const BookingConfirmation = () => {
       <Navigation />
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-2xl mx-auto">
+          <Button
+            variant="ghost"
+            className="mb-4"
+            onClick={handleGoBack}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to class details
+          </Button>
+
           <h1 className="text-3xl font-bold mb-8">Booking Confirmation</h1>
           
           <Card>
@@ -67,8 +80,18 @@ const BookingConfirmation = () => {
                 <span className="text-xl font-semibold">${classItem.price}</span>
               </div>
             </CardContent>
-            <CardFooter>
-              <Button onClick={handleProceedToPayment} className="w-full">
+            <CardFooter className="flex gap-4">
+              <Button 
+                variant="outline" 
+                onClick={handleGoBack}
+                className="w-full"
+              >
+                Cancel
+              </Button>
+              <Button 
+                onClick={handleProceedToPayment} 
+                className="w-full"
+              >
                 Proceed to Payment
               </Button>
             </CardFooter>

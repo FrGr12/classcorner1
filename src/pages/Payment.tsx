@@ -8,6 +8,7 @@ import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
+import { ArrowLeft } from "lucide-react";
 
 interface PaymentFormData {
   cardNumber: string;
@@ -28,14 +29,16 @@ const Payment = () => {
     return null;
   }
 
+  const handleGoBack = () => {
+    navigate(-1);
+  };
+
   const onSubmit = (data: PaymentFormData) => {
-    // Mockup of payment processing
     toast({
       title: "Processing payment...",
       duration: 2000,
     });
 
-    // Simulate payment processing
     setTimeout(() => {
       navigate("/booking-success", { state: { classItem } });
     }, 2000);
@@ -46,6 +49,15 @@ const Payment = () => {
       <Navigation />
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="max-w-2xl mx-auto">
+          <Button
+            variant="ghost"
+            className="mb-4"
+            onClick={handleGoBack}
+          >
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to booking details
+          </Button>
+
           <h1 className="text-3xl font-bold mb-8">Payment Details</h1>
           
           <Card>
@@ -116,9 +128,19 @@ const Payment = () => {
                     </div>
                   </div>
                   
-                  <Button type="submit" className="w-full">
-                    Pay Now
-                  </Button>
+                  <div className="flex gap-4">
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={handleGoBack}
+                    >
+                      Back
+                    </Button>
+                    <Button type="submit" className="w-full">
+                      Pay Now
+                    </Button>
+                  </div>
                 </form>
               </Form>
             </CardContent>
