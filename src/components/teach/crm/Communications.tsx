@@ -47,7 +47,7 @@ const Communications = () => {
         .from('communications')
         .select(`
           *,
-          profile:profiles!communications_student_id_fkey(first_name, last_name),
+          profile:profiles!communications_student_id_fkey_profiles(first_name, last_name),
           course:courses(title)
         `)
         .eq('instructor_id', user.id)
@@ -64,6 +64,39 @@ const Communications = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('communications')
+        .insert({
+          instructor_id: user.id,
+          student_id: studentId,
+          course_id: courseId,
+          message_type: 'notification',
+          message_content: content,
+          status: 'sent'
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Message sent successfully",
+      });
+
+      fetchMessages();
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to send message",
+      });
     }
   };
 
@@ -92,7 +125,7 @@ const Communications = () => {
             No communications found. Messages with your students will appear here.
           </p>
         ) : (
-          <MessagesTable messages={messages} />
+          <MessagesTable messages={messages} onSendMessage={handleSendMessage} />
         )}
       </CardContent>
     </Card>
