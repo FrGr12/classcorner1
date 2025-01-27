@@ -1,5 +1,5 @@
 @import '@fontsource/dm-sans';
-@import url('https://fonts.googleapis.com/css2?family=Oi&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -29,11 +29,11 @@
   }
 
   .heading-xl {
-    @apply text-4xl md:text-5xl lg:text-6xl font-medium tracking-tight font-display;
+    @apply text-4xl md:text-5xl lg:text-6xl font-normal tracking-tight font-display;
   }
 
   .heading-lg {
-    @apply text-3xl md:text-4xl font-medium tracking-tight font-display;
+    @apply text-3xl md:text-4xl font-normal tracking-tight font-display;
   }
 
   .button-primary {

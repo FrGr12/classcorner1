@@ -55,13 +55,12 @@ const Navigation = () => {
             </Button>
           )}
           <Link to="/" className="flex items-center">
-            <span className="text-sm sm:text-base font-display font-light text-neutral-800">ClassCorner</span>
+            <span className="text-sm sm:text-base font-display text-neutral-800">classcorner</span>
           </Link>
         </div>
         
         <IntegratedSearch />
 
-        {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center gap-6 ml-auto">
           <Link 
             to="/about" 
