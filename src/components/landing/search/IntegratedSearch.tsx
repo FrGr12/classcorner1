@@ -33,7 +33,7 @@ const IntegratedSearch = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl">
+    <div className="w-full max-w-2xl ml-4">
       {/* Mobile View */}
       <div className="md:hidden w-full">
         <Sheet open={isOpen} onOpenChange={setIsOpen}>
