@@ -136,7 +136,7 @@ const ClassCard = ({
             )}
           </div>
         </div>
-        <DateButtons dates={dates} />
+        <DateButtons dates={dates} price={price} />
       </div>
     </Card>
   );
