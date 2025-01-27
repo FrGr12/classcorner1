@@ -58,15 +58,18 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
             </CarouselItem>
           ))}
         </CarouselContent>
+
         {images.length > 1 && (
           <>
             <CarouselPrevious 
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
+              variant="outline"
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 border-none" 
             />
             <CarouselNext 
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200" 
+              variant="outline"
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 border-none" 
             />
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2 z-10">
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2">
               {images.map((_, index) => (
                 <button
                   key={index}
