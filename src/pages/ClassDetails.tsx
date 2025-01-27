@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { MapPin, Mail, Phone } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";

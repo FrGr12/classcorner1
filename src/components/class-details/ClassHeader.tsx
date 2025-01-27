@@ -1,9 +1,9 @@
 import { Clock, MapPin, Users, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ClassType } from "@/types/class";
+import { ClassItem } from "@/types/class";
 
 interface ClassHeaderProps {
-  classItem: ClassType;
+  classItem: ClassItem;
   onBooking: () => void;
 }
 

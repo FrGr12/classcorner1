@@ -2,10 +2,10 @@ import { Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import DateButtons from "@/components/landing/class-card/DateButtons";
-import { ClassType } from "@/types/class";
+import { ClassItem } from "@/types/class";
 
 interface ClassDatesProps {
-  classItem: ClassType;
+  classItem: ClassItem;
 }
 
 const ClassDates = ({ classItem }: ClassDatesProps) => {
