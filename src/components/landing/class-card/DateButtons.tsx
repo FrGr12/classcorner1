@@ -1,12 +1,13 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 
-interface DateButtonsProps {
+export interface DateButtonsProps {
   dates: Date[];
   price: number;
+  maxParticipants?: number;
 }
 
-const DateButtons = ({ dates }: DateButtonsProps) => {
+const DateButtons = ({ dates, price }: DateButtonsProps) => {
   const visibleDates = dates.slice(0, 3);
   const hasMoreDates = dates.length > 3;
 
