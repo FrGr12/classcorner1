@@ -66,6 +66,39 @@ export type Database = {
           },
         ]
       }
+      category_criteria: {
+        Row: {
+          category: Database["public"]["Enums"]["cross_functional_category"]
+          created_at: string | null
+          created_by: string | null
+          id: number
+          keyword: string | null
+          threshold_value: number | null
+          time_window: unknown | null
+          updated_at: string | null
+        }
+        Insert: {
+          category: Database["public"]["Enums"]["cross_functional_category"]
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          keyword?: string | null
+          threshold_value?: number | null
+          time_window?: unknown | null
+          updated_at?: string | null
+        }
+        Update: {
+          category?: Database["public"]["Enums"]["cross_functional_category"]
+          created_at?: string | null
+          created_by?: string | null
+          id?: number
+          keyword?: string | null
+          threshold_value?: number | null
+          time_window?: unknown | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       communications: {
         Row: {
           course_id: number | null
@@ -120,6 +153,44 @@ export type Database = {
             columns: ["student_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      course_category_assignments: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          category: Database["public"]["Enums"]["cross_functional_category"]
+          course_id: number | null
+          expires_at: string | null
+          id: number
+          is_manual: boolean | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          category: Database["public"]["Enums"]["cross_functional_category"]
+          course_id?: number | null
+          expires_at?: string | null
+          id?: number
+          is_manual?: boolean | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          category?: Database["public"]["Enums"]["cross_functional_category"]
+          course_id?: number | null
+          expires_at?: string | null
+          id?: number
+          is_manual?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_category_assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
             referencedColumns: ["id"]
           },
         ]
@@ -537,10 +608,23 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      cleanup_expired_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
     }
     Enums: {
       course_status: "draft" | "published" | "archived"
+      cross_functional_category:
+        | "recommended"
+        | "recently_added"
+        | "popular_nearby"
+        | "top_rated"
+        | "last_minute_deal"
+        | "seasonal_special"
+        | "beginner_friendly"
+        | "advanced_course"
+        | "family_friendly"
       notification_preference: "email" | "in_app" | "both" | "none"
       user_type: "student" | "teacher"
     }
