@@ -6,7 +6,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 bg-primary rounded-full"></div>
-              <span className="text-xl font-semibold">ClassCorner</span>
+              <span className="text-base sm:text-xl font-display text-neutral-800">classcorner</span>
             </div>
             <p className="text-neutral-600 text-sm">
               Connect with Local Craft Classes

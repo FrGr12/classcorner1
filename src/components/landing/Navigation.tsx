@@ -55,7 +55,7 @@ const Navigation = () => {
             </Button>
           )}
           <Link to="/" className="flex items-center">
-            <span className="text-sm sm:text-base font-display text-neutral-800">classcorner</span>
+            <span className="text-base sm:text-xl font-display text-neutral-800">classcorner</span>
           </Link>
         </div>
         
