@@ -4,7 +4,6 @@ import {
   CarouselContent,
   CarouselItem,
   CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -34,15 +33,28 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
     });
   }, [api]);
 
-  if (!images || images.length === 0) {
-    return <PlaceholderImage />;
-  }
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    
+    // If clicked on the right third of the image
+    if (x > width * 0.7) {
+      e.stopPropagation(); // Prevent navigation
+      api?.scrollNext();
+    }
+  };
+
+  // Use placeholder images if no images provided
+  const displayImages = images && images.length > 0 
+    ? images 
+    : Array(3).fill(null);
 
   return (
-    <div className="relative group">
+    <div className="relative group" onClick={handleClick}>
       <Carousel className="w-full h-full" setApi={setApi}>
         <CarouselContent>
-          {images.map((image, index) => (
+          {displayImages.map((image, index) => (
             <CarouselItem key={index}>
               <div className="relative aspect-[4/3] overflow-hidden">
                 {image ? (
@@ -59,23 +71,21 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
           ))}
         </CarouselContent>
 
-        {images.length > 1 && (
+        {displayImages.length > 1 && (
           <>
-            <CarouselPrevious 
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
-                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
-                         transition-opacity duration-200 border-none z-20" 
-            />
             <CarouselNext 
               className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
                          bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
                          transition-opacity duration-200 border-none z-20" 
             />
             <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
-              {images.map((_, index) => (
+              {displayImages.map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => api?.scrollTo(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    api?.scrollTo(index);
+                  }}
                   className={cn(
                     "w-2.5 h-2.5 rounded-full transition-all duration-200",
                     current === index
