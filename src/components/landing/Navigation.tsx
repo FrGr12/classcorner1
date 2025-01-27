@@ -4,6 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ const Navigation = () => {
 
   const handleAuthClick = () => {
     navigate("/auth");
+  };
+
+  const handleBack = () => {
+    navigate(-1);
   };
 
   const handleLogout = async () => {
@@ -35,11 +40,21 @@ const Navigation = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
-      <div className="bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-full px-4 py-2.5 flex flex-col md:flex-row items-center gap-4">
-        <Link to="/" className="flex items-center gap-1.5 min-w-fit">
-          <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-          <span className="text-xs sm:text-sm font-medium text-neutral-800 md:inline">ClassCorner</span>
-        </Link>
+      <div className="bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-lg px-4 py-2.5 flex flex-col md:flex-row items-center gap-4">
+        <div className="flex items-center gap-4 min-w-fit">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8"
+            onClick={handleBack}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <Link to="/" className="flex items-center gap-1.5">
+            <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
+            <span className="text-xs sm:text-sm font-medium text-neutral-800 md:inline">ClassCorner</span>
+          </Link>
+        </div>
         
         <IntegratedSearch />
 
