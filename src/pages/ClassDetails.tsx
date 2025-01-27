@@ -1,19 +1,18 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Clock, Users, Star } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Users, Star, Calendar, Mail } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
 import { mockClasses } from "@/data/mockClasses";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import ImageCarousel from "@/components/landing/class-card/ImageCarousel";
 import DateButtons from "@/components/landing/class-card/DateButtons";
+import SaveButton from "@/components/landing/class-card/SaveButton";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
 
-  // Find the class in the mock data
   const classItem = category && mockClasses[category]?.find(c => c.id === Number(id));
 
   if (!classItem) {
@@ -46,10 +45,11 @@ const ClassDetails = () => {
             images={classItem.images} 
             title={classItem.title}
           />
+          <SaveButton />
         </div>
       </div>
 
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10 pb-24">
         {/* Quick Summary Card */}
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
@@ -59,7 +59,7 @@ const ClassDetails = () => {
                 <p className="text-neutral-600">{classItem.category}</p>
               </div>
               
-              <div className="flex items-center gap-4 text-sm text-neutral-600">
+              <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-600">
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
                   <span>2 hours</span>
@@ -104,121 +104,110 @@ const ClassDetails = () => {
           </div>
         </div>
 
-        {/* Detailed Information Tabs */}
-        <Tabs defaultValue="overview" className="space-y-8">
-          <TabsList className="w-full justify-start bg-transparent border-b rounded-none h-auto p-0 space-x-8">
-            <TabsTrigger 
-              value="overview"
-              className="pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-            >
-              Overview
-            </TabsTrigger>
-            <TabsTrigger 
-              value="details"
-              className="pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-            >
-              Class Details
-            </TabsTrigger>
-            <TabsTrigger 
-              value="location"
-              className="pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-            >
-              Location
-            </TabsTrigger>
-            <TabsTrigger 
-              value="instructor"
-              className="pb-4 rounded-none border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-transparent"
-            >
-              Instructor
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="overview" className="space-y-8">
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">About This Class</h2>
+        {/* Main Content */}
+        <div className="space-y-12">
+          {/* About This Class */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">About This Class</h2>
+            <div className="prose prose-neutral max-w-none">
               <p className="text-neutral-600 leading-relaxed">
                 Join {classItem.instructor} for an immersive {classItem.title.toLowerCase()} experience. 
                 This hands-on class is perfect for {classItem.level.toLowerCase()} learners looking to develop their skills
                 in a supportive environment.
               </p>
             </div>
+          </section>
 
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">What You'll Learn</h2>
-              <ul className="space-y-2 text-neutral-600">
-                <li className="flex items-start gap-2">
-                  • Understanding basic techniques and principles
-                </li>
-                <li className="flex items-start gap-2">
-                  • Hands-on practice with expert guidance
-                </li>
-                <li className="flex items-start gap-2">
-                  • Tips and tricks from an experienced instructor
-                </li>
-              </ul>
-            </div>
-          </TabsContent>
+          {/* What You'll Learn */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">What You'll Learn</h2>
+            <ul className="space-y-4 text-neutral-600">
+              <li className="flex items-start gap-2">
+                • Understanding basic techniques and principles
+              </li>
+              <li className="flex items-start gap-2">
+                • Hands-on practice with expert guidance
+              </li>
+              <li className="flex items-start gap-2">
+                • Tips and tricks from an experienced instructor
+              </li>
+            </ul>
+          </section>
 
-          <TabsContent value="details" className="space-y-8">
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">What to Bring</h2>
-              <ul className="space-y-2 text-neutral-600">
-                <li className="flex items-start gap-2">
-                  • Comfortable clothing suitable for crafting
-                </li>
-                <li className="flex items-start gap-2">
-                  • Note-taking materials (optional)
-                </li>
-              </ul>
-            </div>
+          {/* What to Bring */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">What to Bring</h2>
+            <ul className="space-y-4 text-neutral-600">
+              <li className="flex items-start gap-2">
+                • Comfortable clothing suitable for crafting
+              </li>
+              <li className="flex items-start gap-2">
+                • Note-taking materials (optional)
+              </li>
+            </ul>
+          </section>
 
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">Class Policies</h2>
-              <div className="space-y-4 text-neutral-600">
-                <p>
-                  <strong>Cancellation Policy:</strong> Full refund up to 48 hours before the class
-                </p>
-                <p>
-                  <strong>Group Bookings:</strong> Available for 6 or more participants
-                </p>
+          {/* Location */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">Location</h2>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 text-neutral-600">
+                <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
+                <div>
+                  <p className="font-medium">{classItem.city} Studio</p>
+                  <p>123 Creative Street</p>
+                  <p>{classItem.city}, Sweden</p>
+                  <p className="mt-2 text-sm">Free street parking available</p>
+                  <p className="text-sm">5 min walk from Central Station</p>
+                </div>
+              </div>
+              <div className="aspect-video bg-neutral-100 rounded-lg mt-6">
+                {/* Map will be implemented here */}
               </div>
             </div>
-          </TabsContent>
+          </section>
 
-          <TabsContent value="location" className="space-y-8">
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">Location Details</h2>
+          {/* About the Instructor */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">About the Instructor</h2>
+            <div className="flex items-start gap-6">
+              <div className="w-24 h-24 bg-neutral-100 rounded-full flex-shrink-0" />
               <div className="space-y-4">
-                <div className="flex items-start gap-2 text-neutral-600">
-                  <MapPin className="h-5 w-5 mt-1" />
-                  <div>
-                    <p className="font-medium">{classItem.city} Studio</p>
-                    <p>123 Creative Street</p>
-                    <p>{classItem.city}, Sweden</p>
-                  </div>
+                <div>
+                  <h3 className="text-xl font-medium">{classItem.instructor}</h3>
+                  <p className="text-neutral-600">Expert Craftsperson</p>
                 </div>
-                <div className="aspect-video bg-neutral-100 rounded-lg">
-                  {/* Map will be implemented here */}
-                </div>
+                <p className="text-neutral-600">
+                  An experienced instructor with over 10 years of teaching experience, passionate about sharing creative skills
+                  and helping students discover their artistic potential.
+                </p>
+                <Button variant="outline" className="gap-2">
+                  <Mail className="h-4 w-4" />
+                  Contact Instructor
+                </Button>
               </div>
             </div>
-          </TabsContent>
+          </section>
 
-          <TabsContent value="instructor" className="space-y-8">
-            <div className="glass-panel rounded-xl p-6">
-              <h2 className="text-xl font-semibold mb-4">About the Instructor</h2>
-              <div className="flex items-start gap-6">
-                <div className="w-24 h-24 bg-neutral-100 rounded-full" />
-                <div className="space-y-2">
-                  <h3 className="font-medium">{classItem.instructor}</h3>
-                  <p className="text-neutral-600">
-                    An experienced instructor with a passion for teaching and sharing creative skills.
-                  </p>
-                </div>
+          {/* Class Policies */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">Class Policies</h2>
+            <div className="space-y-4 text-neutral-600">
+              <div>
+                <h3 className="font-medium text-primary mb-2">Cancellation Policy</h3>
+                <p>Full refund up to 48 hours before the class. No refunds within 48 hours of the class start time.</p>
+              </div>
+              <div>
+                <h3 className="font-medium text-primary mb-2">Group Bookings</h3>
+                <p>Available for 6 or more participants. Contact the instructor for special rates and arrangements.</p>
+              </div>
+              <div>
+                <h3 className="font-medium text-primary mb-2">Private Sessions</h3>
+                <p>One-on-one instruction available upon request. Contact for pricing and availability.</p>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </section>
+        </div>
       </main>
 
       <Footer />

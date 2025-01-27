@@ -9,6 +9,7 @@ export interface ClassItem {
   category?: string;
   date: Date | Date[];
   city: string;
+  maxParticipants?: number;
   waitlist_enabled?: boolean;
   max_waitlist_size?: number;
   groupBookingsEnabled?: boolean;
