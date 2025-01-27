@@ -16,8 +16,8 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
   const navigate = useNavigate();
   const location = useLocation();
   const isDetailsPage = location.pathname.includes('/class/');
-  const visibleDates = dates.slice(0, 3);
-  const hasMoreDates = dates.length > 3;
+  const visibleDates = dates.slice(0, 2);
+  const hasMoreDates = dates.length > 2;
 
   const handleDateClick = (date: Date) => {
     if (classId && category) {
@@ -83,17 +83,17 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
     );
   }
 
-  // Original landing page date buttons
+  // Landing page date buttons
   return (
-    <div className="mt-2">
-      <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
-      <div className="flex flex-wrap gap-2">
+    <div className="mt-4">
+      <p className="text-sm font-medium text-neutral-700 mb-3">Available dates to book:</p>
+      <div className="flex items-center gap-3">
         {visibleDates.map((date, index) => (
           <Button
             key={index}
             variant={isSelected(date) ? "default" : "outline"}
             size="sm"
-            className="text-xs"
+            className="text-xs whitespace-nowrap"
             onClick={(e) => {
               e.stopPropagation();
               handleDateClick(date);
@@ -106,13 +106,13 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
           <Button
             variant="outline"
             size="sm"
-            className="text-xs"
+            className="text-xs whitespace-nowrap"
             onClick={(e) => {
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
             }}
           >
-            +{dates.length - 3} more dates
+            See more dates
           </Button>
         )}
       </div>
