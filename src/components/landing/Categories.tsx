@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
 import { 
@@ -14,8 +14,18 @@ import {
   Pencil, 
   Scissors, 
   FileText,
-  Flower2
+  Flower2,
+  Sparkles,
+  Clock,
+  MapPin,
+  Trophy,
+  Timer,
+  Snowflake,
+  GraduationCap,
+  BookOpen,
+  Users
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const categories = [
   { name: "Pottery", count: "95+ Classes", icon: Amphora },
@@ -33,8 +43,56 @@ const categories = [
   { name: "Flower & Plants", count: "70+ Classes", icon: Flower2 },
 ];
 
+const crossFunctionalIcons = {
+  recommended: Sparkles,
+  recently_added: Clock,
+  popular_nearby: MapPin,
+  top_rated: Trophy,
+  last_minute_deal: Timer,
+  seasonal_special: Snowflake,
+  beginner_friendly: GraduationCap,
+  advanced_course: BookOpen,
+  family_friendly: Users
+};
+
 const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [crossFunctionalCategories, setCrossFunctionalCategories] = useState<{ name: string, count: string }[]>([]);
+
+  useEffect(() => {
+    const fetchCrossFunctionalCategories = async () => {
+      const { data, error } = await supabase
+        .from('course_category_assignments')
+        .select(`
+          category,
+          courses!inner(*)
+        `)
+        .eq('courses.status', 'published');
+
+      if (error) {
+        console.error('Error fetching cross-functional categories:', error);
+        return;
+      }
+
+      // Group and count courses by category
+      const categoryCounts = data.reduce((acc: { [key: string]: number }, curr) => {
+        const category = curr.category;
+        acc[category] = (acc[category] || 0) + 1;
+        return acc;
+      }, {});
+
+      // Format categories for display
+      const formattedCategories = Object.entries(categoryCounts).map(([category, count]) => ({
+        name: category.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '),
+        count: `${count} Classes`,
+        icon: crossFunctionalIcons[category as keyof typeof crossFunctionalIcons]
+      }));
+
+      setCrossFunctionalCategories(formattedCategories);
+    };
+
+    fetchCrossFunctionalCategories();
+  }, []);
 
   const handleCategorySelect = (category: string) => {
     setSelectedCategories((prev) => {
@@ -46,12 +104,17 @@ const Categories = () => {
     });
   };
 
+  const allCategories = [
+    ...crossFunctionalCategories,
+    ...categories
+  ];
+
   return (
     <section className="pt-24 sm:pt-28 bg-neutral-100">
       <div className="container-padding">
         <div className="mt-8 text-neutral-600">
           <CategoryPills
-            categories={categories}
+            categories={allCategories}
             selectedCategories={selectedCategories}
             onCategorySelect={handleCategorySelect}
           />

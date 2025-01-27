@@ -15,6 +15,7 @@ interface CategoryPillsProps {
 
 const getCategoryColor = (name: string): { bg: string, hover: string } => {
   const colors = {
+    // Regular categories
     "Pottery": { bg: "bg-[#F97316]", hover: "hover:bg-[#EA580C]" },
     "Cooking": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
     "Baking": { bg: "bg-[#D946EF]", hover: "hover:bg-[#C026D3]" },
@@ -28,6 +29,16 @@ const getCategoryColor = (name: string): { bg: string, hover: string } => {
     "Textile Craft": { bg: "bg-[#14B8A6]", hover: "hover:bg-[#0D9488]" },
     "Paper Craft": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
     "Flower & Plants": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
+    // Cross-functional categories
+    "Recommended": { bg: "bg-[#9333EA]", hover: "hover:bg-[#7E22CE]" },
+    "Recently Added": { bg: "bg-[#2DD4BF]", hover: "hover:bg-[#14B8A6]" },
+    "Popular Nearby": { bg: "bg-[#F97316]", hover: "hover:bg-[#EA580C]" },
+    "Top Rated": { bg: "bg-[#EAB308]", hover: "hover:bg-[#CA8A04]" },
+    "Last Minute Deal": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
+    "Seasonal Special": { bg: "bg-[#06B6D4]", hover: "hover:bg-[#0891B2]" },
+    "Beginner Friendly": { bg: "bg-[#22C55E]", hover: "hover:bg-[#16A34A]" },
+    "Advanced Course": { bg: "bg-[#6366F1]", hover: "hover:bg-[#4F46E5]" },
+    "Family Friendly": { bg: "bg-[#F43F5E]", hover: "hover:bg-[#E11D48]" },
   };
   return colors[name as keyof typeof colors] || { bg: "bg-neutral-600", hover: "hover:bg-neutral-700" };
 };
