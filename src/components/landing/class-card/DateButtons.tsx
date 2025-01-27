@@ -39,7 +39,10 @@ const DateButtons = ({ dates, price, classId, category, selectedDate }: DateButt
             variant={isSelected(date) ? "default" : "outline"}
             size="sm"
             className="text-xs"
-            onClick={() => handleDateClick(date)}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDateClick(date);
+            }}
           >
             {format(new Date(date), 'EEE, d MMM')}
           </Button>
@@ -49,7 +52,10 @@ const DateButtons = ({ dates, price, classId, category, selectedDate }: DateButt
             variant="outline"
             size="sm"
             className="text-xs"
-            onClick={() => classId && category && navigate(`/class/${category}/${classId}`)}
+            onClick={(e) => {
+              e.stopPropagation();
+              classId && category && navigate(`/class/${category}/${classId}`);
+            }}
           >
             +{dates.length - 3} more dates
           </Button>

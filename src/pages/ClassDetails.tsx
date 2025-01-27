@@ -24,11 +24,20 @@ const ClassDetails = () => {
   }
 
   const handleBooking = () => {
+    if (!selectedDate) {
+      // Scroll to dates section if no date is selected
+      const datesSection = document.querySelector('#dates-section');
+      if (datesSection) {
+        datesSection.scrollIntoView({ behavior: 'smooth' });
+      }
+      return;
+    }
+
     navigate("/booking-confirmation", { 
       state: { 
         classItem: {
           ...classItem,
-          date: selectedDate || (Array.isArray(classItem.date) ? classItem.date[0] : classItem.date)
+          date: selectedDate
         } 
       } 
     });
@@ -75,10 +84,12 @@ const ClassDetails = () => {
         {/* Quick Summary Card */}
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
-          <ClassDates 
-            classItem={classItem} 
-            selectedDate={selectedDate}
-          />
+          <div id="dates-section">
+            <ClassDates 
+              classItem={classItem} 
+              selectedDate={selectedDate}
+            />
+          </div>
         </div>
 
         {/* Main Content */}

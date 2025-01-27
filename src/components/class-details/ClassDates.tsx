@@ -3,13 +3,17 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import DateButtons from "@/components/landing/class-card/DateButtons";
 import { ClassItem } from "@/types/class";
+import { format } from "date-fns";
 
 interface ClassDatesProps {
   classItem: ClassItem;
   selectedDate?: Date;
+  onDateSelect?: (date: Date) => void;
 }
 
-const ClassDates = ({ classItem, selectedDate }: ClassDatesProps) => {
+const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) => {
+  const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
+  
   return (
     <>
       <Separator className="my-6" />
@@ -21,10 +25,25 @@ const ClassDates = ({ classItem, selectedDate }: ClassDatesProps) => {
             View full calendar
           </Button>
         </div>
+        
+        {selectedDate && (
+          <div className="p-4 bg-neutral-50 rounded-lg">
+            <h4 className="font-medium mb-2">Selected Date:</h4>
+            <p className="text-neutral-600">
+              {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}
+            </p>
+            <p className="text-sm text-neutral-500 mt-1">
+              Class duration: 2 hours
+            </p>
+          </div>
+        )}
+        
         <DateButtons 
-          dates={Array.isArray(classItem.date) ? classItem.date : [classItem.date]}
+          dates={dates}
           price={classItem.price}
           selectedDate={selectedDate}
+          classId={classItem.id}
+          category={classItem.category}
         />
       </div>
     </>
