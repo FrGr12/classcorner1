@@ -50,9 +50,8 @@ const Navigation = () => {
           >
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <Link to="/" className="flex items-center gap-1.5">
-            <div className="w-2.5 h-2.5 bg-primary rounded-full"></div>
-            <span className="text-xs sm:text-sm font-medium text-neutral-800 md:inline">ClassCorner</span>
+          <Link to="/" className="flex items-center">
+            <span className="text-sm sm:text-base font-display text-neutral-800">ClassCorner</span>
           </Link>
         </div>
         
