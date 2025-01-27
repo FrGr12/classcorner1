@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, MapPin, Clock, Users, Star, Calendar, Mail } from "lucide-react";
+import { ArrowLeft, MapPin, Clock, Users, Star, Calendar, Mail, Phone } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { Button } from "@/components/ui/button";
@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import ImageCarousel from "@/components/landing/class-card/ImageCarousel";
 import DateButtons from "@/components/landing/class-card/DateButtons";
 import SaveButton from "@/components/landing/class-card/SaveButton";
+import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
@@ -23,6 +24,28 @@ const ClassDetails = () => {
   const handleBooking = () => {
     navigate("/booking-confirmation", { state: { classItem } });
   };
+
+  // Mock testimonials data
+  const testimonials = [
+    {
+      name: "Sarah Johnson",
+      date: "March 15, 2024",
+      rating: 5,
+      comment: "Amazing class! The instructor was very knowledgeable and patient. I learned so much and created a beautiful piece.",
+    },
+    {
+      name: "Michael Chen",
+      date: "March 10, 2024",
+      rating: 4,
+      comment: "Great introduction to pottery. The small class size meant we got lots of individual attention.",
+    },
+    {
+      name: "Emma Wilson",
+      date: "March 5, 2024",
+      rating: 5,
+      comment: "Exceeded my expectations! The studio is well-equipped and the atmosphere is very welcoming.",
+    },
+  ];
 
   return (
     <div className="min-h-screen bg-neutral-50">
@@ -84,22 +107,43 @@ const ClassDetails = () => {
                 <p className="text-2xl font-bold">${classItem.price}</p>
                 <p className="text-sm text-neutral-600">per person</p>
               </div>
-              <Button 
-                size="lg"
-                className="w-full md:w-auto"
-                onClick={handleBooking}
-              >
-                Book Now
-              </Button>
+              <div className="flex gap-2">
+                <Button 
+                  size="lg"
+                  className="w-full md:w-auto"
+                  onClick={handleBooking}
+                >
+                  Book Now
+                </Button>
+                <Button 
+                  size="lg"
+                  variant="outline"
+                  className="w-full md:w-auto"
+                  onClick={() => {
+                    // Handle private booking request
+                    console.log('Private booking requested');
+                  }}
+                >
+                  Request Private Class
+                </Button>
+              </div>
             </div>
           </div>
 
           <Separator className="my-6" />
 
           <div className="space-y-4">
-            <h3 className="font-medium">Available Dates</h3>
+            <div className="flex items-center justify-between">
+              <h3 className="font-medium">Available Dates</h3>
+              <Button variant="ghost" size="sm" className="text-accent-purple">
+                <Calendar className="w-4 h-4 mr-2" />
+                View full calendar
+              </Button>
+            </div>
             <DateButtons 
-              dates={Array.isArray(classItem.date) ? classItem.date : [classItem.date]} 
+              dates={Array.isArray(classItem.date) ? classItem.date : [classItem.date]}
+              price={classItem.price}
+              maxParticipants={classItem.maxParticipants}
             />
           </div>
         </div>
@@ -181,11 +225,27 @@ const ClassDetails = () => {
                   An experienced instructor with over 10 years of teaching experience, passionate about sharing creative skills
                   and helping students discover their artistic potential.
                 </p>
-                <Button variant="outline" className="gap-2">
-                  <Mail className="h-4 w-4" />
-                  Contact Instructor
-                </Button>
+                <div className="flex gap-2">
+                  <Button variant="outline" className="gap-2">
+                    <Mail className="h-4 w-4" />
+                    Email
+                  </Button>
+                  <Button variant="outline" className="gap-2">
+                    <Phone className="h-4 w-4" />
+                    Call
+                  </Button>
+                </div>
               </div>
+            </div>
+          </section>
+
+          {/* Testimonials */}
+          <section className="glass-panel rounded-xl p-8">
+            <h2 className="text-2xl font-bold mb-6">What Students Say</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {testimonials.map((testimonial, index) => (
+                <TestimonialCard key={index} {...testimonial} />
+              ))}
             </div>
           </section>
 
