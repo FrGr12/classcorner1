@@ -7,7 +7,11 @@ export const bakingClasses: ClassItem[] = [
     instructor: "Emma Baker",
     price: 89,
     rating: 4.8,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     date: new Date('2024-04-15'),
     city: "Stockholm",
@@ -19,7 +23,11 @@ export const bakingClasses: ClassItem[] = [
     instructor: "Pierre Laurent",
     price: 99,
     rating: 4.9,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Intermediate",
     date: new Date('2024-04-20'),
     city: "Malmö",
@@ -31,7 +39,11 @@ export const bakingClasses: ClassItem[] = [
     instructor: "Sofia Andersson",
     price: 95,
     rating: 4.7,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     date: new Date('2024-04-25'),
     city: "Göteborg",
@@ -43,7 +55,11 @@ export const bakingClasses: ClassItem[] = [
     instructor: "Marie Dubois",
     price: 129,
     rating: 4.9,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Advanced",
     date: new Date('2024-05-01'),
     city: "Stockholm",

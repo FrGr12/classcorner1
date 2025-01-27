@@ -7,7 +7,11 @@ export const paperClasses: ClassItem[] = [
     instructor: "Yuki Paper",
     price: 49,
     rating: 4.8,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     date: new Date('2024-04-24'),
     city: "Stockholm"
@@ -18,7 +22,11 @@ export const paperClasses: ClassItem[] = [
     instructor: "Anna Craft",
     price: 59,
     rating: 4.7,
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Intermediate",
     date: new Date('2024-05-01'),
     city: "Uppsala"

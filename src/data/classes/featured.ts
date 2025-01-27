@@ -7,7 +7,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Jane Smith", 
     price: 89, 
     rating: 4.9, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     category: "Ceramics",
     date: new Date('2024-04-15'),
@@ -19,7 +23,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Robert Ross", 
     price: 99, 
     rating: 4.9, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Advanced",
     category: "Painting",
     date: new Date('2024-04-20'),
@@ -31,7 +39,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Marco Rossi", 
     price: 79, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     category: "Cooking",
     date: new Date('2024-04-25'),
@@ -43,7 +55,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Sarah Lee", 
     price: 149, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Intermediate",
     category: "Photography",
     date: new Date('2024-04-30'),
@@ -55,7 +71,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "John Wood", 
     price: 129, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Beginner",
     category: "Woodworking",
     date: new Date('2024-05-05'),
@@ -67,7 +87,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Emma Silver", 
     price: 99, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Intermediate",
     category: "Jewelry",
     date: new Date('2024-05-10'),
@@ -79,7 +103,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Tom Wilson", 
     price: 159, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Advanced",
     category: "Ceramics",
     date: new Date('2024-05-15'),
@@ -91,7 +119,11 @@ export const featuredClasses: ClassItem[] = [
     instructor: "Maria Chen", 
     price: 89, 
     rating: 4.8, 
-    images: [],
+    images: [
+      "https://images.unsplash.com/photo-1488590528505-98d2b5aba04b",
+      "https://images.unsplash.com/photo-1531297484001-80022131f5a1",
+      "https://images.unsplash.com/photo-1460925895917-afdab827c52f"
+    ],
     level: "Intermediate",
     category: "Painting",
     date: new Date('2024-05-20'),
