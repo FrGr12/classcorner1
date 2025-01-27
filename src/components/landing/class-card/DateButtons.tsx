@@ -85,7 +85,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
 
   // Landing page date buttons
   return (
-    <div className="mt-3 mb-4">
+    <div className="mt-2 mb-4 px-4">
       <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
       <div className="flex items-center gap-2">
         {visibleDates.map((date, index) => (
