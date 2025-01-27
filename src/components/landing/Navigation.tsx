@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
@@ -8,8 +8,10 @@ import { ArrowLeft } from "lucide-react";
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const isHomePage = location.pathname === "/";
 
   const handleAuthClick = () => {
     navigate("/auth");
@@ -42,16 +44,18 @@ const Navigation = () => {
     <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
       <div className="bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-lg px-4 py-2.5 flex flex-col md:flex-row items-center gap-4">
         <div className="flex items-center gap-4 min-w-fit">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-8 w-8"
-            onClick={handleBack}
-          >
-            <ArrowLeft className="h-4 w-4" />
-          </Button>
+          {!isHomePage && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-8 w-8"
+              onClick={handleBack}
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+          )}
           <Link to="/" className="flex items-center">
-            <span className="text-sm sm:text-base font-display text-neutral-800">ClassCorner</span>
+            <span className="text-sm sm:text-base font-display font-light text-neutral-800">ClassCorner</span>
           </Link>
         </div>
         
