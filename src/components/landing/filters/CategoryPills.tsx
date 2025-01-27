@@ -13,6 +13,25 @@ interface CategoryPillsProps {
   onCategorySelect: (category: string) => void;
 }
 
+const getCategoryColor = (name: string): { bg: string, hover: string } => {
+  const colors = {
+    "Pottery": { bg: "bg-[#F97316]", hover: "hover:bg-[#EA580C]" },
+    "Cooking": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
+    "Baking": { bg: "bg-[#D946EF]", hover: "hover:bg-[#C026D3]" },
+    "Painting & Art": { bg: "bg-[#0EA5E9]", hover: "hover:bg-[#0284C7]" },
+    "Candle Making": { bg: "bg-[#F43F5E]", hover: "hover:bg-[#E11D48]" },
+    "Jewellery & Metal": { bg: "bg-[#10B981]", hover: "hover:bg-[#059669]" },
+    "Cocktail & Wine": { bg: "bg-[#6366F1]", hover: "hover:bg-[#4F46E5]" },
+    "Photography": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
+    "Music & Dance": { bg: "bg-[#F59E0B]", hover: "hover:bg-[#D97706]" },
+    "Wood Craft": { bg: "bg-[#84CC16]", hover: "hover:bg-[#65A30D]" },
+    "Textile Craft": { bg: "bg-[#14B8A6]", hover: "hover:bg-[#0D9488]" },
+    "Paper Craft": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
+    "Flower & Plants": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
+  };
+  return colors[name as keyof typeof colors] || { bg: "bg-neutral-600", hover: "hover:bg-neutral-700" };
+};
+
 const CategoryPills = ({
   categories,
   selectedCategories,
@@ -23,19 +42,23 @@ const CategoryPills = ({
       <div className="flex gap-3 pb-4 overflow-x-auto no-scrollbar">
         {categories.map((category) => {
           const Icon = category.icon;
+          const colors = getCategoryColor(category.name);
           return (
             <button
               key={category.name}
               onClick={() => onCategorySelect(category.name)}
               className={cn(
-                "flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl transition-all duration-300 ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
+                "flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl transition-all duration-300",
+                "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
+                "shadow-lg hover:shadow-xl",
                 selectedCategories.includes(category.name)
-                  ? "bg-accent-purple text-white shadow-lg"
-                  : "bg-white text-neutral-600 hover:bg-neutral-50 shadow-sm hover:shadow-md"
+                  ? `${colors.bg} text-white`
+                  : `bg-white text-neutral-800 ${colors.hover}`,
+                "group"
               )}
             >
-              <Icon className="w-6 h-6 transition-transform duration-300 ease-in-out transform group-hover:scale-110" />
-              <span className="text-xs font-medium">{category.name}</span>
+              <Icon className="w-5 h-5 transition-transform duration-300 ease-in-out transform group-hover:scale-110" />
+              <span className="text-xs font-display tracking-wide">{category.name}</span>
             </button>
           );
         })}
