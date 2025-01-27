@@ -5,6 +5,8 @@ import ImageCarousel from "./class-card/ImageCarousel";
 import SaveButton from "./class-card/SaveButton";
 import CategoryBadge from "./class-card/CategoryBadge";
 import DateButtons from "./class-card/DateButtons";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 interface ClassCardProps {
   id?: number;
@@ -57,6 +59,33 @@ const ClassCard = ({
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
+  const [crossFunctionalCategories, setCrossFunctionalCategories] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchCrossFunctionalCategories = async () => {
+      if (!id) return;
+      
+      const { data, error } = await supabase
+        .from('course_category_assignments')
+        .select('category')
+        .eq('course_id', id);
+
+      if (error) {
+        console.error('Error fetching cross-functional categories:', error);
+        return;
+      }
+
+      const categories = data.map(d => 
+        d.category.split('_')
+          .map((word: string) => word.charAt(0).toUpperCase() + word.slice(1))
+          .join(' ')
+      );
+      
+      setCrossFunctionalCategories(categories);
+    };
+
+    fetchCrossFunctionalCategories();
+  }, [id]);
 
   const determineCategory = (title: string, providedCategory?: string): string => {
     if (providedCategory && validCategories.includes(providedCategory)) {
@@ -103,6 +132,15 @@ const ClassCard = ({
         <SaveButton />
         <div className="absolute bottom-3 left-3 flex flex-wrap gap-2">
           <CategoryBadge category={displayCategory} />
+          {crossFunctionalCategories.map((cat, index) => (
+            <Badge 
+              key={index}
+              variant="secondary" 
+              className="bg-white/90 text-primary border-none font-display text-xs font-light tracking-wide"
+            >
+              {cat}
+            </Badge>
+          ))}
           {groupBookingsEnabled && (
             <Badge variant="secondary" className="bg-blue-100 text-blue-800">
               Group Bookings

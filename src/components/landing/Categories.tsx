@@ -57,7 +57,7 @@ const crossFunctionalIcons = {
 
 const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
-  const [crossFunctionalCategories, setCrossFunctionalCategories] = useState<{ name: string, count: string }[]>([]);
+  const [crossFunctionalCategories, setCrossFunctionalCategories] = useState<{ name: string, count: string, icon: any }[]>([]);
 
   useEffect(() => {
     const fetchCrossFunctionalCategories = async () => {
