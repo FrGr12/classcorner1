@@ -60,18 +60,22 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
         </CarouselContent>
         {images.length > 1 && (
           <>
-            <CarouselPrevious className="hidden group-hover:flex left-2" />
-            <CarouselNext className="hidden group-hover:flex right-2" />
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1">
+            <CarouselPrevious 
+              className="opacity-0 group-hover:opacity-100 transition-opacity absolute left-2 bg-white/80 hover:bg-white" 
+            />
+            <CarouselNext 
+              className="opacity-0 group-hover:opacity-100 transition-opacity absolute right-2 bg-white/80 hover:bg-white" 
+            />
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-10">
               {images.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => api?.scrollTo(index)}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-all",
+                    "w-1.5 h-1.5 rounded-full transition-all",
                     current === index
-                      ? "bg-white scale-100"
-                      : "bg-white/50 scale-75 hover:scale-90 hover:bg-white/75"
+                      ? "bg-white scale-125"
+                      : "bg-white/70 hover:bg-white/90"
                   )}
                   aria-label={`Go to image ${index + 1}`}
                 />
