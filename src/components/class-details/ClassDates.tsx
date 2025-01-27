@@ -6,9 +6,10 @@ import { ClassItem } from "@/types/class";
 
 interface ClassDatesProps {
   classItem: ClassItem;
+  selectedDate?: Date;
 }
 
-const ClassDates = ({ classItem }: ClassDatesProps) => {
+const ClassDates = ({ classItem, selectedDate }: ClassDatesProps) => {
   return (
     <>
       <Separator className="my-6" />
@@ -23,6 +24,7 @@ const ClassDates = ({ classItem }: ClassDatesProps) => {
         <DateButtons 
           dates={Array.isArray(classItem.date) ? classItem.date : [classItem.date]}
           price={classItem.price}
+          selectedDate={selectedDate}
         />
       </div>
     </>

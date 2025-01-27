@@ -8,9 +8,10 @@ export interface DateButtonsProps {
   maxParticipants?: number;
   classId?: number;
   category?: string;
+  selectedDate?: Date;
 }
 
-const DateButtons = ({ dates, price, classId, category }: DateButtonsProps) => {
+const DateButtons = ({ dates, price, classId, category, selectedDate }: DateButtonsProps) => {
   const navigate = useNavigate();
   const visibleDates = dates.slice(0, 3);
   const hasMoreDates = dates.length > 3;
@@ -23,6 +24,11 @@ const DateButtons = ({ dates, price, classId, category }: DateButtonsProps) => {
     }
   };
 
+  const isSelected = (date: Date) => {
+    if (!selectedDate) return false;
+    return format(new Date(date), 'yyyy-MM-dd') === format(new Date(selectedDate), 'yyyy-MM-dd');
+  };
+
   return (
     <div className="mt-2">
       <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
@@ -30,7 +36,7 @@ const DateButtons = ({ dates, price, classId, category }: DateButtonsProps) => {
         {visibleDates.map((date, index) => (
           <Button
             key={index}
-            variant="outline"
+            variant={isSelected(date) ? "default" : "outline"}
             size="sm"
             className="text-xs"
             onClick={() => handleDateClick(date)}

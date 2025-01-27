@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { MapPin, Mail, Phone } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
@@ -13,6 +13,8 @@ import ClassDates from "@/components/class-details/ClassDates";
 const ClassDetails = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const selectedDate = location.state?.selectedDate;
 
   const classItem = category && mockClasses[category]?.find(c => c.id === Number(id));
 
@@ -22,7 +24,14 @@ const ClassDetails = () => {
   }
 
   const handleBooking = () => {
-    navigate("/booking-confirmation", { state: { classItem } });
+    navigate("/booking-confirmation", { 
+      state: { 
+        classItem: {
+          ...classItem,
+          date: selectedDate || (Array.isArray(classItem.date) ? classItem.date[0] : classItem.date)
+        } 
+      } 
+    });
   };
 
   // Mock testimonials data
@@ -66,7 +75,10 @@ const ClassDetails = () => {
         {/* Quick Summary Card */}
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
-          <ClassDates classItem={classItem} />
+          <ClassDates 
+            classItem={classItem} 
+            selectedDate={selectedDate}
+          />
         </div>
 
         {/* Main Content */}
