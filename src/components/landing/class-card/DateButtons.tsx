@@ -34,7 +34,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
 
   if (isDetailsPage) {
     return (
-      <div className="space-y-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {visibleDates.map((date, index) => (
           <div 
             key={index}
@@ -62,7 +62,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
                   handleDateClick(date);
                 }}
               >
-                Välj
+                Book Now
               </Button>
             </div>
           </div>
