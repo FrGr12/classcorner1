@@ -1,15 +1,27 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 export interface DateButtonsProps {
   dates: Date[];
   price: number;
   maxParticipants?: number;
+  classId?: number;
+  category?: string;
 }
 
-const DateButtons = ({ dates, price }: DateButtonsProps) => {
+const DateButtons = ({ dates, price, classId, category }: DateButtonsProps) => {
+  const navigate = useNavigate();
   const visibleDates = dates.slice(0, 3);
   const hasMoreDates = dates.length > 3;
+
+  const handleDateClick = (date: Date) => {
+    if (classId && category) {
+      navigate(`/class/${category}/${classId}`, { 
+        state: { selectedDate: date }
+      });
+    }
+  };
 
   return (
     <div className="mt-2">
@@ -21,6 +33,7 @@ const DateButtons = ({ dates, price }: DateButtonsProps) => {
             variant="outline"
             size="sm"
             className="text-xs"
+            onClick={() => handleDateClick(date)}
           >
             {format(new Date(date), 'EEE, d MMM')}
           </Button>
@@ -30,6 +43,7 @@ const DateButtons = ({ dates, price }: DateButtonsProps) => {
             variant="outline"
             size="sm"
             className="text-xs"
+            onClick={() => classId && category && navigate(`/class/${category}/${classId}`)}
           >
             +{dates.length - 3} more dates
           </Button>
