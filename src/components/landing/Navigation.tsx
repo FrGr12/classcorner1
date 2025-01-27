@@ -65,20 +65,20 @@ const Navigation = () => {
         <div className="hidden md:flex items-center gap-6 ml-auto">
           <Link 
             to="/about" 
-            className="text-sm text-neutral-600 hover:text-primary transition-colors"
+            className="text-xs text-primary hover:text-primary/80 transition-colors"
           >
             About
           </Link>
           <Link 
             to="/teach" 
-            className="text-sm text-neutral-600 hover:text-primary transition-colors"
+            className="text-xs text-primary hover:text-primary/80 transition-colors"
           >
             Start teaching
           </Link>
           <Button
             onClick={handleAuthClick}
             variant="ghost"
-            className="text-sm"
+            className="text-xs"
             disabled={loading}
           >
             Sign in
