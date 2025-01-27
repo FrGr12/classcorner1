@@ -62,20 +62,22 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
         {images.length > 1 && (
           <>
             <CarouselPrevious 
-              variant="outline"
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 border-none" 
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                         transition-opacity duration-200 border-none z-20" 
             />
             <CarouselNext 
-              variant="outline"
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-200 border-none" 
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                         transition-opacity duration-200 border-none z-20" 
             />
-            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-2">
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
               {images.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => api?.scrollTo(index)}
                   className={cn(
-                    "w-2 h-2 rounded-full transition-all duration-200",
+                    "w-2.5 h-2.5 rounded-full transition-all duration-200",
                     current === index
                       ? "bg-white scale-110"
                       : "bg-white/60 hover:bg-white/80"
