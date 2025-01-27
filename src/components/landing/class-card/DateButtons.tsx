@@ -76,7 +76,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
               classId && category && navigate(`/class/${category}/${classId}`);
             }}
           >
-            +{dates.length - 3} more dates
+            +{dates.length - 2} more dates
           </Button>
         )}
       </div>
@@ -85,8 +85,8 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
 
   // Landing page date buttons
   return (
-    <div className="mt-4">
-      <p className="text-sm font-medium text-neutral-700 mb-3">Available dates to book:</p>
+    <div className="mt-2">
+      <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
       <div className="flex items-center gap-3">
         {visibleDates.map((date, index) => (
           <Button

@@ -10,7 +10,11 @@ const mockClasses: Record<string, ClassItem[]> = {
       rating: 4.8,
       images: [],
       level: "Beginner",
-      date: new Date("2024-02-15"),
+      date: [
+        new Date("2024-02-15"),
+        new Date("2024-02-22"),
+        new Date("2024-02-29")
+      ],
       city: "London",
       category: "Pottery"
     },
@@ -22,7 +26,11 @@ const mockClasses: Record<string, ClassItem[]> = {
       rating: 4.9,
       images: [],
       level: "Intermediate",
-      date: [new Date("2024-02-20"), new Date("2024-02-27")],
+      date: [
+        new Date("2024-02-20"), 
+        new Date("2024-02-27"),
+        new Date("2024-03-05")
+      ],
       city: "Manchester",
       category: "Pottery"
     }
@@ -48,7 +56,11 @@ const mockClasses: Record<string, ClassItem[]> = {
       rating: 4.6,
       images: [],
       level: "Intermediate",
-      date: [new Date("2024-02-22"), new Date("2024-03-01")],
+      date: [
+        new Date("2024-02-22"),
+        new Date("2024-03-01"),
+        new Date("2024-03-08")
+      ],
       city: "Leeds",
       category: "Cooking"
     }
