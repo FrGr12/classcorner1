@@ -11,26 +11,29 @@ const DateButtons = ({ dates }: DateButtonsProps) => {
   const hasMoreDates = dates.length > 3;
 
   return (
-    <div className="flex flex-wrap gap-2 mt-2">
-      {visibleDates.map((date, index) => (
-        <Button
-          key={index}
-          variant="outline"
-          size="sm"
-          className="text-xs"
-        >
-          {format(new Date(date), 'EEE, d MMM')}
-        </Button>
-      ))}
-      {hasMoreDates && (
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-xs"
-        >
-          +{dates.length - 3} more dates
-        </Button>
-      )}
+    <div className="mt-2">
+      <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
+      <div className="flex flex-wrap gap-2">
+        {visibleDates.map((date, index) => (
+          <Button
+            key={index}
+            variant="outline"
+            size="sm"
+            className="text-xs"
+          >
+            {format(new Date(date), 'EEE, d MMM')}
+          </Button>
+        ))}
+        {hasMoreDates && (
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-xs"
+          >
+            +{dates.length - 3} more dates
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
