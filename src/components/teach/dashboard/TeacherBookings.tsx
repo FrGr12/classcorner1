@@ -37,12 +37,7 @@ const TeacherBookings = () => {
           *,
           courses:course_id(id, title),
           course_sessions:session_id(id, start_time),
-          student:student_id(
-            id,
-            first_name,
-            last_name,
-            email
-          )
+          profiles:student_id(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -80,9 +75,9 @@ const TeacherBookings = () => {
           start_time: booking.course_sessions?.start_time
         },
         student: {
-          first_name: booking.student?.first_name || '',
-          last_name: booking.student?.last_name || '',
-          email: booking.student?.email || ''
+          first_name: booking.profiles?.first_name || '',
+          last_name: booking.profiles?.last_name || '',
+          email: booking.profiles?.email || ''
         }
       }));
 
