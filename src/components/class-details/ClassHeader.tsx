@@ -44,7 +44,7 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         <div className="flex gap-2">
           <Button 
             size="lg"
-            className="w-full md:w-auto"
+            className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90"
             onClick={onBooking}
           >
             Book Now
@@ -52,7 +52,7 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
           <Button 
             size="lg"
             variant="outline"
-            className="w-full md:w-auto"
+            className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10"
             onClick={() => {
               console.log('Private booking requested');
             }}
