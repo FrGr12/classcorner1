@@ -1,23 +1,11 @@
-import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -25,244 +13,174 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Users, MessageSquare, Filter } from "lucide-react";
-import { format } from "date-fns";
-
-interface Participant {
-  id: string;
-  first_name: string;
-  last_name: string;
-  email: string;
-  status: string;
-  course_title: string;
-  last_interaction: string;
-  booking_status: string;
-}
+import { useToast } from "@/components/ui/use-toast";
+import { Loader2, Send } from "lucide-react";
 
 const TeacherCRM = () => {
-  const [participants, setParticipants] = useState<Participant[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
+  const [selectedSegment, setSelectedSegment] = useState<string>("all");
+  const [messageContent, setMessageContent] = useState("");
 
-  useEffect(() => {
-    fetchParticipants();
-  }, [filter]);
-
-  const fetchParticipants = async () => {
-    try {
-      setLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      let query = supabase
-        .from('bookings')
+  const { data: contacts, isLoading } = useQuery({
+    queryKey: ["contacts"],
+    queryFn: async () => {
+      const { data: bookings, error } = await supabase
+        .from("bookings")
         .select(`
-          id,
-          student_id,
-          status,
-          created_at,
-          courses (
-            title
-          ),
-          profiles!bookings_student_id_fkey (
+          *,
+          student:profiles!bookings_student_id_fkey(
+            id,
             first_name,
             last_name,
             email
+          ),
+          course:courses(
+            title
           )
         `)
-        .eq('courses.instructor_id', user.id);
+        .order("created_at", { ascending: false });
 
-      if (filter === "active") {
-        query = query.eq('status', 'confirmed');
-      } else if (filter === "waitlist") {
-        query = query.eq('status', 'waitlist');
-      } else if (filter === "past") {
-        query = query.eq('status', 'completed');
-      }
+      if (error) throw error;
+      return bookings;
+    },
+  });
 
-      const { data, error } = await query;
+  const sendMessage = async () => {
+    try {
+      const { error } = await supabase.from("communications").insert({
+        message_content: messageContent,
+        message_type: "bulk",
+        // Add other necessary fields
+      });
 
       if (error) throw error;
 
-      const formattedParticipants = data.map((booking: any) => ({
-        id: booking.student_id,
-        first_name: booking.profiles?.first_name || 'Unknown',
-        last_name: booking.profiles?.last_name || 'User',
-        email: booking.profiles?.email || '',
-        status: booking.status,
-        course_title: booking.courses?.title || '',
-        last_interaction: booking.created_at,
-        booking_status: booking.status,
-      }));
-
-      setParticipants(formattedParticipants);
-    } catch (error: any) {
       toast({
-        title: "Error fetching participants",
-        description: error.message,
-        variant: "destructive",
+        title: "Message sent successfully",
+        description: "Your message has been sent to the selected participants.",
       });
-    } finally {
-      setLoading(false);
+      setMessageContent("");
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error sending message",
+        description: "Please try again later.",
+      });
     }
   };
 
-  const handleMessageParticipant = async (participantId: string) => {
-    // Implementation for messaging functionality
-    toast({
-      title: "Message sent",
-      description: "Your message has been sent successfully.",
-    });
-  };
-
-  const filteredParticipants = participants.filter(participant =>
-    participant.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    participant.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    participant.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Customer Management</h1>
-        <p className="text-muted-foreground">
-          Manage your participants and track their engagement
-        </p>
-      </div>
+      <h1 className="text-2xl font-bold">CRM & Messaging</h1>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Participants</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{participants.length}</div>
-            <p className="text-xs text-muted-foreground">
-              Across all courses
-            </p>
-          </CardContent>
-        </Card>
+      <Tabs defaultValue="contacts" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="contacts">Contact List</TabsTrigger>
+          <TabsTrigger value="messaging">Messaging</TabsTrigger>
+        </TabsList>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Bookings</CardTitle>
-            <Filter className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {participants.filter(p => p.status === 'confirmed').length}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Currently enrolled
-            </p>
-          </CardContent>
-        </Card>
+        <TabsContent value="contacts" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Contact Segmentation</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Select
+                value={selectedSegment}
+                onValueChange={setSelectedSegment}
+              >
+                <SelectTrigger className="w-[200px]">
+                  <SelectValue placeholder="Select segment" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Contacts</SelectItem>
+                  <SelectItem value="active">Active Students</SelectItem>
+                  <SelectItem value="past">Past Students</SelectItem>
+                  <SelectItem value="waitlist">Waitlist</SelectItem>
+                </SelectContent>
+              </Select>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Waitlist</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {participants.filter(p => p.status === 'waitlist').length}
-            </div>
-            <p className="text-xs text-muted-foreground">
-              Waiting for spots
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="flex-1">
-          <Input
-            placeholder="Search participants..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-        <Select value={filter} onValueChange={setFilter}>
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Participants</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="waitlist">Waitlist</SelectItem>
-            <SelectItem value="past">Past Attendees</SelectItem>
-          </SelectContent>
-        </Select>
-      </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Participants</CardTitle>
-          <CardDescription>
-            Manage and communicate with your class participants
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Course</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Interaction</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center">
-                    Loading participants...
-                  </TableCell>
-                </TableRow>
-              ) : filteredParticipants.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center">
-                    No participants found
-                  </TableCell>
-                </TableRow>
+          <Card>
+            <CardHeader>
+              <CardTitle>Contacts</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                </div>
               ) : (
-                filteredParticipants.map((participant) => (
-                  <TableRow key={participant.id}>
-                    <TableCell>
-                      {participant.first_name} {participant.last_name}
-                    </TableCell>
-                    <TableCell>{participant.email}</TableCell>
-                    <TableCell>{participant.course_title}</TableCell>
-                    <TableCell>
-                      <Badge variant={participant.booking_status === 'confirmed' ? 'default' : 'secondary'}>
-                        {participant.booking_status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                      {format(new Date(participant.last_interaction), 'MMM d, yyyy')}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleMessageParticipant(participant.id)}
-                      >
-                        Message
+                <div className="space-y-4">
+                  {contacts?.map((booking) => (
+                    <div
+                      key={booking.id}
+                      className="flex items-center justify-between p-4 border rounded-lg"
+                    >
+                      <div>
+                        <p className="font-medium">
+                          {booking.student?.first_name} {booking.student?.last_name}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {booking.course?.title}
+                        </p>
+                      </div>
+                      <Button variant="outline" size="sm">
+                        View Details
                       </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                    </div>
+                  ))}
+                </div>
               )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="messaging" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Send Message</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <label className="text-sm font-medium">To:</label>
+                  <Select defaultValue="all">
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select recipients" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all">All Students</SelectItem>
+                      <SelectItem value="active">Active Students</SelectItem>
+                      <SelectItem value="waitlist">Waitlist</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium">Message:</label>
+                  <Textarea
+                    value={messageContent}
+                    onChange={(e) => setMessageContent(e.target.value)}
+                    placeholder="Type your message here..."
+                    className="min-h-[200px]"
+                  />
+                </div>
+
+                <Button
+                  onClick={sendMessage}
+                  disabled={!messageContent}
+                  className="w-full"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Message
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

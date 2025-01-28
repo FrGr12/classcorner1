@@ -4,15 +4,14 @@ import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
   UserCircle,
-  Users,
-  Calendar,
+  MessageSquare,
+  ClipboardList,
   BookOpen,
   BarChart,
-  MessageSquare,
   Star,
   Tag,
   Menu,
-  ClipboardList,
+  PlusCircle,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -25,6 +24,11 @@ const DashboardSidebar = () => {
       title: "Dashboard Overview",
       href: "/dashboard",
       icon: LayoutDashboard,
+    },
+    {
+      title: "Create Class",
+      href: "/dashboard/create-class",
+      icon: PlusCircle,
     },
     {
       title: "Profile Management",

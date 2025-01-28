@@ -3,11 +3,14 @@ import { SidebarProvider } from "@/contexts/SidebarContext";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import CourseForm from "@/components/teach/CourseForm";
-import PerformanceMetrics from "@/components/teach/analytics/PerformanceMetrics";
-import EngagementMetrics from "@/components/teach/analytics/EngagementMetrics";
-import MatchInsights from "@/components/teach/crm/MatchInsights";
-import Communications from "@/components/teach/crm/Communications";
-import CourseMatches from "@/components/teach/crm/CourseMatches";
+import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
+import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
+import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
+import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
+import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
+import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
+import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 
 const Dashboard = () => {
   return (
@@ -18,29 +21,15 @@ const Dashboard = () => {
           <DashboardHeader />
           <main className="p-6">
             <Routes>
-              <Route
-                path="/"
-                element={
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <EngagementMetrics />
-                      <PerformanceMetrics />
-                    </div>
-                    <MatchInsights />
-                    <Communications />
-                    <CourseMatches />
-                  </div>
-                }
-              />
-              <Route path="/create-course" element={<CourseForm />} />
-              <Route path="/analytics" element={
-                <div className="space-y-8">
-                  <PerformanceMetrics />
-                  <EngagementMetrics />
-                </div>
-              } />
-              <Route path="/communications" element={<Communications />} />
-              <Route path="/matches" element={<CourseMatches />} />
+              <Route path="/" element={<TeacherOverview />} />
+              <Route path="/create-class" element={<CourseForm />} />
+              <Route path="/profile" element={<TeacherProfile />} />
+              <Route path="/crm" element={<TeacherCRM />} />
+              <Route path="/bookings" element={<TeacherBookings />} />
+              <Route path="/classes" element={<TeacherClasses />} />
+              <Route path="/analytics" element={<TeacherAnalytics />} />
+              <Route path="/reviews" element={<TeacherReviews />} />
+              <Route path="/promotions" element={<TeacherPromotions />} />
             </Routes>
           </main>
         </div>
