@@ -32,17 +32,10 @@ const TeacherBookings = () => {
       let query = supabase
         .from('bookings')
         .select(`
-          id,
-          booking_type,
-          status,
-          group_size,
-          total_price,
-          payment_status,
-          created_at,
-          updated_at,
+          *,
           course:courses(id, title),
           session:course_sessions(id, start_time),
-          student:profiles!student_id(id, first_name, last_name, email)
+          student:profiles(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -56,6 +49,8 @@ const TeacherBookings = () => {
 
       if (error) throw error;
       
+      if (!data) return;
+
       // Transform the data to match the Booking type
       const transformedBookings: Booking[] = data.map(booking => ({
         id: booking.id,
