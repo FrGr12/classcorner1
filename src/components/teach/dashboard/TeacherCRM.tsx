@@ -22,7 +22,6 @@ type BookingWithDetails = {
     id: string;
     first_name: string | null;
     last_name: string | null;
-    email: string | null;
   } | null;
   course: {
     title: string | null;
@@ -56,7 +55,7 @@ const TeacherCRM = () => {
         const studentIds = data.map(booking => booking.student_id).filter(Boolean);
         const { data: profiles, error: profilesError } = await supabase
           .from("profiles")
-          .select("id, first_name, last_name, email")
+          .select("id, first_name, last_name")
           .in("id", studentIds);
 
         if (profilesError) throw profilesError;
