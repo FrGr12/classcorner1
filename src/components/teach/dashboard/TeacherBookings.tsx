@@ -42,7 +42,6 @@ const TeacherBookings = () => {
           updated_at,
           course:courses(id, title),
           session:course_sessions(id, start_time),
-          student_id,
           student:profiles!student_id(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
@@ -59,10 +58,17 @@ const TeacherBookings = () => {
       
       // Transform the data to match the Booking type
       const transformedBookings: Booking[] = data.map(booking => ({
-        ...booking,
+        id: booking.id,
         course_id: booking.course.id,
         session_id: booking.session.id,
-        student_id: booking.student_id,
+        student_id: booking.student.id,
+        booking_type: booking.booking_type,
+        status: booking.status,
+        group_size: booking.group_size,
+        total_price: booking.total_price,
+        payment_status: booking.payment_status,
+        created_at: booking.created_at,
+        updated_at: booking.updated_at,
         course: {
           title: booking.course.title
         },
