@@ -73,44 +73,50 @@ const TeacherDashboard = () => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      {/* Sidebar */}
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Overlay for mobile */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out ${
+        className={`fixed inset-0 z-20 bg-black/80 lg:hidden ${
+          isOpen ? "block" : "hidden"
+        }`}
+        onClick={toggle}
+      />
+      
+      {/* Sidebar */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
-        } md:relative md:translate-x-0`}
+        }`}
       >
-        <div className="flex h-full flex-col">
-          <div className="flex items-center justify-between p-4">
-            <h2 className="text-xl font-bold">Teacher Dashboard</h2>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden"
-              onClick={toggle}
-            >
-              <Menu className="h-6 w-6" />
-            </Button>
-          </div>
-          <Separator />
-          <nav className="flex-1 space-y-1 p-2">
-            {navigation.map((item) => (
-              <Button
-                key={item.name}
-                variant={activeSection === item.href ? "default" : "ghost"}
-                className="w-full justify-start"
-                onClick={() => setActiveSection(item.href)}
-              >
-                <item.icon className="mr-3 h-5 w-5" />
-                {item.name}
-              </Button>
-            ))}
-          </nav>
+        <div className="flex h-16 items-center justify-between px-4 border-b">
+          <h2 className="text-xl font-semibold">Teacher Dashboard</h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={toggle}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
         </div>
-      </div>
+        
+        <nav className="space-y-1 p-4">
+          {navigation.map((item) => (
+            <Button
+              key={item.name}
+              variant={activeSection === item.href ? "default" : "ghost"}
+              className="w-full justify-start gap-3"
+              onClick={() => setActiveSection(item.href)}
+            >
+              <item.icon className="h-5 w-5" />
+              <span>{item.name}</span>
+            </Button>
+          ))}
+        </nav>
+      </aside>
 
       {/* Main content */}
-      <div className="flex-1 overflow-auto">
+      <main className="flex-1 overflow-auto">
         <div className="min-h-screen p-8">
           <div className="mx-auto max-w-7xl">
             <div className="md:hidden">
@@ -126,7 +132,7 @@ const TeacherDashboard = () => {
             {renderContent()}
           </div>
         </div>
-      </div>
+      </main>
     </div>
   );
 };

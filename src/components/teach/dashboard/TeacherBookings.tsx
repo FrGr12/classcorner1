@@ -37,7 +37,12 @@ const TeacherBookings = () => {
           *,
           courses:course_id(id, title),
           course_sessions:session_id(id, start_time),
-          student:student_id(id, profiles:id(first_name, last_name))
+          student:student_id(
+            id,
+            first_name,
+            last_name,
+            email
+          )
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -51,7 +56,10 @@ const TeacherBookings = () => {
 
       if (error) throw error;
       
-      if (!data) return;
+      if (!data) {
+        setBookings([]);
+        return;
+      }
 
       const transformedBookings: Booking[] = data.map(booking => ({
         id: booking.id,
@@ -66,15 +74,15 @@ const TeacherBookings = () => {
         created_at: booking.created_at,
         updated_at: booking.updated_at,
         course: {
-          title: booking.courses.title
+          title: booking.courses?.title || 'Unknown Course'
         },
         session: {
-          start_time: booking.course_sessions.start_time
+          start_time: booking.course_sessions?.start_time
         },
         student: {
-          first_name: booking.student.profiles.first_name,
-          last_name: booking.student.profiles.last_name,
-          email: booking.student_id
+          first_name: booking.student?.first_name || '',
+          last_name: booking.student?.last_name || '',
+          email: booking.student?.email || ''
         }
       }));
 
