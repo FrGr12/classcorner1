@@ -13,12 +13,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { useSidebar } from "@/contexts/SidebarContext";
+import { useSidebarContext } from "@/contexts/SidebarContext";
 
 const UserDashboardSidebar = () => {
   const location = useLocation();
   const { toast } = useToast();
-  const { isOpen, toggle } = useSidebar();
+  const { isOpen, toggle } = useSidebarContext();
 
   const handleLogout = async () => {
     try {
