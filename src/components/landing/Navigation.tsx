@@ -61,7 +61,7 @@ const Navigation = () => {
         
         <IntegratedSearch />
 
-        <div className="hidden md:flex items-center gap-6 ml-auto">
+        <div className="hidden md:flex items-center gap-4 ml-auto">
           <Link 
             to="/about" 
             className="text-xs text-primary hover:text-primary/80 transition-colors"
