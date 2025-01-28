@@ -105,23 +105,25 @@ const ClassCard = ({
           displayCategory={displayCategory}
         />
       </div>
-      <ClassDetails 
-        title={title}
-        instructor={instructor}
-        city={city}
-        rating={rating}
-        price={price}
-        groupBookingsEnabled={groupBookingsEnabled}
-        privateBookingsEnabled={privateBookingsEnabled}
-        basePriceGroup={basePriceGroup}
-        basePricePrivate={basePricePrivate}
-      />
-      <DateButtons 
-        dates={dates} 
-        price={price} 
-        classId={id}
-        category={displayCategory}
-      />
+      <div className="space-y-1.5 pt-3 pb-2 px-3">
+        <ClassDetails 
+          title={title}
+          instructor={instructor}
+          city={city}
+          rating={rating}
+          price={price}
+          groupBookingsEnabled={groupBookingsEnabled}
+          privateBookingsEnabled={privateBookingsEnabled}
+          basePriceGroup={basePriceGroup}
+          basePricePrivate={basePricePrivate}
+        />
+        <DateButtons 
+          dates={dates} 
+          price={price} 
+          classId={id}
+          category={displayCategory}
+        />
+      </div>
     </Card>
   );
 };

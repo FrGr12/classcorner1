@@ -83,17 +83,15 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
     );
   }
 
-  // Landing page date buttons
   return (
-    <div className="mt-1 mb-3 px-2">
-      <p className="text-sm font-medium text-neutral-700 mb-1">Available dates to book:</p>
+    <div className="mt-0.5">
       <div className="flex items-center gap-1">
         {visibleDates.map((date, index) => (
           <Button
             key={index}
             variant={isSelected(date) ? "default" : "outline"}
             size="sm"
-            className="text-xs whitespace-nowrap"
+            className="text-xs whitespace-nowrap py-1"
             onClick={(e) => {
               e.stopPropagation();
               handleDateClick(date);
@@ -106,7 +104,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
           <Button
             variant="outline"
             size="sm"
-            className="text-xs whitespace-nowrap"
+            className="text-xs whitespace-nowrap py-1"
             onClick={(e) => {
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
