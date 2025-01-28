@@ -102,7 +102,6 @@ const ClassCard = ({
         <ImageCarousel images={images} title={title} />
         <SaveButton />
         <CategoryBadges 
-          id={id}
           displayCategory={displayCategory}
         />
       </div>
