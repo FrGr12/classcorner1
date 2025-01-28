@@ -104,8 +104,6 @@ const ClassCard = ({
         <CategoryBadges 
           id={id}
           displayCategory={displayCategory}
-          groupBookingsEnabled={groupBookingsEnabled}
-          privateBookingsEnabled={privateBookingsEnabled}
         />
       </div>
       <ClassDetails 
