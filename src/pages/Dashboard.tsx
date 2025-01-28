@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { SidebarProvider } from "@/components/ui/sidebar.tsx";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const Dashboard = () => {
   const navigate = useNavigate();

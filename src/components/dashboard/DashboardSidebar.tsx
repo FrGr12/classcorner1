@@ -9,7 +9,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar.tsx";
+} from "@/components/ui/sidebar";
 import {
   Bell,
   BookOpen,
