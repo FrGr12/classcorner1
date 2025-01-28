@@ -42,7 +42,8 @@ const TeacherBookings = () => {
           updated_at,
           course:courses(id, title),
           session:course_sessions(id, start_time),
-          student:profiles(id, first_name, last_name, email)
+          student_id,
+          student:profiles!student_id(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -61,7 +62,7 @@ const TeacherBookings = () => {
         ...booking,
         course_id: booking.course.id,
         session_id: booking.session.id,
-        student_id: booking.student.id,
+        student_id: booking.student_id,
         course: {
           title: booking.course.title
         },
