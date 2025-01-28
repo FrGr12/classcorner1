@@ -1,74 +1,93 @@
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
-  SidebarGroupLabel,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-} from "@/components/ui/sidebar";
-import {
-  Bell,
-  BookOpen,
-  Calendar,
-  Heart,
-  Home,
-  MessageCircle,
-  Settings,
-  Star,
+  LayoutDashboard,
+  PlusCircle,
+  BarChart,
+  MessageSquare,
+  Users,
+  Menu,
 } from "lucide-react";
-
-const menuItems = [
-  { icon: Home, label: "Overview", href: "/dashboard" },
-  { icon: MessageCircle, label: "Messages", href: "/dashboard/messages" },
-  { icon: Calendar, label: "Bookings", href: "/dashboard/bookings" },
-  { icon: Bell, label: "Notifications", href: "/dashboard/notifications" },
-  { icon: Heart, label: "Interests", href: "/dashboard/interests" },
-  { icon: BookOpen, label: "Saved Classes", href: "/dashboard/saved" },
-  { icon: Star, label: "Reviews", href: "/dashboard/reviews" },
-  { icon: Settings, label: "Settings", href: "/dashboard/settings" },
-];
+import { useSidebarContext } from "@/contexts/SidebarContext";
 
 const DashboardSidebar = () => {
   const location = useLocation();
+  const { isOpen, toggle } = useSidebarContext();
+
+  const links = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Create Course",
+      href: "/dashboard/create-course",
+      icon: PlusCircle,
+    },
+    {
+      title: "Analytics",
+      href: "/dashboard/analytics",
+      icon: BarChart,
+    },
+    {
+      title: "Communications",
+      href: "/dashboard/communications",
+      icon: MessageSquare,
+    },
+    {
+      title: "Course Matches",
+      href: "/dashboard/matches",
+      icon: Users,
+    },
+  ];
 
   return (
-    <Sidebar>
-      <SidebarContent>
-        <div className="flex items-center px-6 py-4">
-          <Link to="/" className="flex items-center">
-            <span className="text-xl font-display">classcorner</span>
-          </Link>
+    <>
+      <div
+        className={cn(
+          "fixed inset-0 z-20 bg-black/80 lg:hidden",
+          isOpen ? "block" : "hidden"
+        )}
+        onClick={toggle}
+      />
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex h-16 items-center justify-between px-4 border-b">
+          <h2 className="text-xl font-semibold">Teacher Dashboard</h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={toggle}
+          >
+            <Menu className="h-6 w-6" />
+          </Button>
         </div>
-        <SidebarGroup>
-          <SidebarGroupLabel>Dashboard</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {menuItems.map((item) => (
-                <SidebarMenuItem key={item.href}>
-                  <SidebarMenuButton
-                    asChild
-                    className={cn(
-                      "w-full",
-                      location.pathname === item.href &&
-                        "bg-accent-purple/10 text-accent-purple"
-                    )}
-                  >
-                    <Link to={item.href} className="flex items-center gap-3">
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-      </SidebarContent>
-    </Sidebar>
+        <nav className="space-y-1 p-4">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                location.pathname === link.href
+                  ? "bg-primary text-primary-foreground"
+                  : "text-gray-700 hover:bg-gray-100"
+              )}
+            >
+              <link.icon className="h-5 w-5" />
+              <span>{link.title}</span>
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 

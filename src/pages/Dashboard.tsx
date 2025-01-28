@@ -1,24 +1,15 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { Routes, Route } from "react-router-dom";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import CourseForm from "@/components/teach/CourseForm";
+import PerformanceMetrics from "@/components/teach/analytics/PerformanceMetrics";
+import EngagementMetrics from "@/components/teach/analytics/EngagementMetrics";
+import MatchInsights from "@/components/teach/crm/MatchInsights";
+import Communications from "@/components/teach/crm/Communications";
+import CourseMatches from "@/components/teach/crm/CourseMatches";
 
 const Dashboard = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-      }
-    };
-
-    checkAuth();
-  }, [navigate]);
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
@@ -26,7 +17,31 @@ const Dashboard = () => {
         <div className="flex-1">
           <DashboardHeader />
           <main className="p-6">
-            <h1 className="text-2xl font-bold mb-6">Welcome to Your Dashboard</h1>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <EngagementMetrics />
+                      <PerformanceMetrics />
+                    </div>
+                    <MatchInsights />
+                    <Communications />
+                    <CourseMatches />
+                  </div>
+                }
+              />
+              <Route path="/create-course" element={<CourseForm />} />
+              <Route path="/analytics" element={
+                <div className="space-y-8">
+                  <PerformanceMetrics />
+                  <EngagementMetrics />
+                </div>
+              } />
+              <Route path="/communications" element={<Communications />} />
+              <Route path="/matches" element={<CourseMatches />} />
+            </Routes>
           </main>
         </div>
       </div>
