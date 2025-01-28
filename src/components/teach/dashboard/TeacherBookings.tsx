@@ -32,10 +32,17 @@ const TeacherBookings = () => {
       let query = supabase
         .from('bookings')
         .select(`
-          *,
-          course:courses(title),
-          session:course_sessions(start_time),
-          student:profiles(first_name, last_name, email)
+          id,
+          booking_type,
+          status,
+          group_size,
+          total_price,
+          payment_status,
+          created_at,
+          updated_at,
+          course:courses(id, title),
+          session:course_sessions(id, start_time),
+          student:profiles!bookings_student_id_fkey(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -48,7 +55,27 @@ const TeacherBookings = () => {
       const { data, error } = await query;
 
       if (error) throw error;
-      setBookings(data as Booking[]);
+      
+      // Transform the data to match the Booking type
+      const transformedBookings: Booking[] = data.map(booking => ({
+        ...booking,
+        course_id: booking.course.id,
+        session_id: booking.session.id,
+        student_id: booking.student.id,
+        course: {
+          title: booking.course.title
+        },
+        session: {
+          start_time: booking.session.start_time
+        },
+        student: {
+          first_name: booking.student.first_name,
+          last_name: booking.student.last_name,
+          email: booking.student.email
+        }
+      }));
+
+      setBookings(transformedBookings);
     } catch (error: any) {
       toast({
         title: "Error fetching bookings",
