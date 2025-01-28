@@ -33,9 +33,9 @@ const TeacherBookings = () => {
         .from('bookings')
         .select(`
           *,
-          course:courses!inner(id, title),
-          session:course_sessions!inner(id, start_time),
-          student:profiles!inner(id, first_name, last_name, email)
+          courses!inner(id, title),
+          course_sessions!inner(id, start_time),
+          profiles!inner(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -65,15 +65,15 @@ const TeacherBookings = () => {
         created_at: booking.created_at,
         updated_at: booking.updated_at,
         course: {
-          title: booking.course.title
+          title: booking.courses.title
         },
         session: {
-          start_time: booking.session.start_time
+          start_time: booking.course_sessions.start_time
         },
         student: {
-          first_name: booking.student.first_name,
-          last_name: booking.student.last_name,
-          email: booking.student.email
+          first_name: booking.profiles.first_name,
+          last_name: booking.profiles.last_name,
+          email: booking.profiles.email
         }
       }));
 
