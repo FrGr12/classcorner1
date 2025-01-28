@@ -37,12 +37,7 @@ const TeacherBookings = () => {
           *,
           courses:course_id(id, title),
           course_sessions:session_id(id, start_time),
-          student:student_id(
-            profiles:id(
-              first_name,
-              last_name
-            )
-          )
+          student:student_id(id, profiles:id(first_name, last_name))
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -85,6 +80,7 @@ const TeacherBookings = () => {
 
       setBookings(transformedBookings);
     } catch (error: any) {
+      console.error('Fetch bookings error:', error);
       toast({
         title: "Error fetching bookings",
         description: error.message,
