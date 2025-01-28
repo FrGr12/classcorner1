@@ -16,6 +16,19 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { Loader2, Send } from "lucide-react";
 
+type BookingWithDetails = {
+  id: number;
+  student: {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+  } | null;
+  course: {
+    title: string | null;
+  } | null;
+};
+
 const TeacherCRM = () => {
   const { toast } = useToast();
   const [selectedSegment, setSelectedSegment] = useState<string>("all");
@@ -25,10 +38,10 @@ const TeacherCRM = () => {
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
     queryFn: async () => {
-      const { data: bookings, error } = await supabase
+      const { data, error } = await supabase
         .from("bookings")
         .select(`
-          *,
+          id,
           student:profiles!bookings_student_id_fkey(
             id,
             first_name,
@@ -42,7 +55,7 @@ const TeacherCRM = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return bookings;
+      return data as BookingWithDetails[];
     },
   });
 
@@ -54,8 +67,7 @@ const TeacherCRM = () => {
       const recipientIds = contacts
         ?.filter(booking => {
           if (selectedRecipients === "all") return true;
-          if (selectedRecipients === "active") return booking.status === "confirmed";
-          if (selectedRecipients === "waitlist") return booking.status === "waitlist";
+          if (selectedRecipients === "active") return booking.student?.id;
           return false;
         })
         .map(booking => booking.student?.id)
