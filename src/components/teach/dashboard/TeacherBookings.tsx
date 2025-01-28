@@ -33,9 +33,9 @@ const TeacherBookings = () => {
         .from('bookings')
         .select(`
           *,
-          course:courses(id, title),
-          session:course_sessions(id, start_time),
-          student:profiles(id, first_name, last_name, email)
+          course:courses!inner(id, title),
+          session:course_sessions!inner(id, start_time),
+          student:profiles!inner(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -54,9 +54,9 @@ const TeacherBookings = () => {
       // Transform the data to match the Booking type
       const transformedBookings: Booking[] = data.map(booking => ({
         id: booking.id,
-        course_id: booking.course.id,
-        session_id: booking.session.id,
-        student_id: booking.student.id,
+        course_id: booking.course_id,
+        session_id: booking.session_id,
+        student_id: booking.student_id,
         booking_type: booking.booking_type,
         status: booking.status,
         group_size: booking.group_size,
