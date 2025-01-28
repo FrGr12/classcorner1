@@ -63,7 +63,7 @@ const ClassGrid = ({ category }: ClassGridProps) => {
           </p>
           <Button 
             onClick={handleLoadMore}
-            className="bg-primary hover:bg-primary/90 flex items-center gap-2"
+            className="bg-accent-purple hover:bg-accent-purple/90 text-white flex items-center gap-2"
           >
             View More Classes
             <ChevronDown className="h-4 w-4" />
