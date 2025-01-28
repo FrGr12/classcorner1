@@ -73,8 +73,10 @@ const ClassDetails = () => {
 
         <div className="space-y-12">
           <AboutClass classItem={classItem} />
-          <LearningSection />
-          <PreparationInfo />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <LearningSection />
+            <PreparationInfo />
+          </div>
           <LocationInfo classItem={classItem} />
           <InstructorInfo classItem={classItem} />
           <TestimonialSection />
