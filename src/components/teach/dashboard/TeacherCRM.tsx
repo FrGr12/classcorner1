@@ -29,7 +29,7 @@ const TeacherCRM = () => {
         .from("bookings")
         .select(`
           *,
-          student:profiles(
+          student:profiles!bookings_student_id_fkey(
             id,
             first_name,
             last_name,
@@ -38,7 +38,8 @@ const TeacherCRM = () => {
           course:courses(
             title
           )
-        `);
+        `)
+        .order("created_at", { ascending: false });
 
       if (error) throw error;
       return bookings;
@@ -47,11 +48,9 @@ const TeacherCRM = () => {
 
   const sendMessage = async () => {
     try {
-      // Get current user (instructor) ID
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      // Get recipient IDs based on selection
       const recipientIds = contacts
         ?.filter(booking => {
           if (selectedRecipients === "all") return true;
@@ -66,7 +65,6 @@ const TeacherCRM = () => {
         throw new Error("No recipients selected");
       }
 
-      // Insert a message for each recipient
       const { error } = await supabase.from("communications").insert(
         recipientIds.map(studentId => ({
           instructor_id: user.id,
