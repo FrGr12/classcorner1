@@ -9,6 +9,7 @@ import Payment from "@/pages/Payment";
 import BookingSuccess from "@/pages/BookingSuccess";
 import Auth from "@/pages/Auth";
 import Onboarding from "@/pages/Onboarding";
+import Dashboard from "@/pages/Dashboard";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <Route path="/booking-success" element={<BookingSuccess />} />
         <Route path="/auth" element={<Auth />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />
       </Routes>
     </Router>
   );
