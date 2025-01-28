@@ -33,9 +33,9 @@ const TeacherBookings = () => {
         .from('bookings')
         .select(`
           *,
-          courses!inner(id, title),
-          course_sessions!inner(id, start_time),
-          profiles!inner(id, first_name, last_name, email)
+          courses!bookings_course_id_fkey(id, title),
+          course_sessions!bookings_session_id_fkey(id, start_time),
+          profiles!bookings_student_id_fkey(id, first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
