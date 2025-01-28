@@ -42,12 +42,7 @@ const TeacherCRM = () => {
         .from("bookings")
         .select(`
           id,
-          student:profiles(
-            id,
-            first_name,
-            last_name,
-            email
-          ),
+          student_id,
           course:courses(
             title
           )
@@ -55,7 +50,28 @@ const TeacherCRM = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data as BookingWithDetails[];
+
+      // Now fetch the profiles for these bookings
+      if (data) {
+        const studentIds = data.map(booking => booking.student_id).filter(Boolean);
+        const { data: profiles, error: profilesError } = await supabase
+          .from("profiles")
+          .select("id, first_name, last_name, email")
+          .in("id", studentIds);
+
+        if (profilesError) throw profilesError;
+
+        // Combine the data
+        const bookingsWithProfiles: BookingWithDetails[] = data.map(booking => ({
+          id: booking.id,
+          student: profiles?.find(profile => profile.id === booking.student_id) || null,
+          course: booking.course
+        }));
+
+        return bookingsWithProfiles;
+      }
+
+      return [];
     },
   });
 
