@@ -5,7 +5,6 @@ import SaveButton from "./class-card/SaveButton";
 import DateButtons from "./class-card/DateButtons";
 import CategoryBadges from "./class-card/CategoryBadges";
 import ClassDetails from "./class-card/ClassDetails";
-import { Badge } from "@/components/ui/badge";
 
 interface ClassCardProps {
   id?: number;
@@ -40,24 +39,6 @@ const validCategories = [
   "Flower & Plants"
 ];
 
-const determineCategory = (title: string, category?: string): string => {
-  // If a valid category is provided, use it
-  if (category && validCategories.includes(category)) {
-    return category;
-  }
-
-  // Otherwise, try to determine category from title
-  const titleLower = title.toLowerCase();
-  for (const validCategory of validCategories) {
-    if (titleLower.includes(validCategory.toLowerCase())) {
-      return validCategory;
-    }
-  }
-
-  // Default to first category if no match found
-  return validCategories[0];
-};
-
 const ClassCard = ({
   id,
   title,
@@ -76,52 +57,71 @@ const ClassCard = ({
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
-  const displayCategory = determineCategory(title, category);
+
+  const determineCategory = (title: string, providedCategory?: string): string => {
+    if (providedCategory && validCategories.includes(providedCategory)) {
+      return providedCategory;
+    }
+    
+    const titleLower = title.toLowerCase();
+    
+    if (titleLower.includes('pottery') || titleLower.includes('ceramic')) return 'Pottery';
+    if (titleLower.includes('cook')) return 'Cooking';
+    if (titleLower.includes('bake') || titleLower.includes('pastry')) return 'Baking';
+    if (titleLower.includes('paint') || titleLower.includes('art')) return 'Painting & Art';
+    if (titleLower.includes('cocktail') || titleLower.includes('wine')) return 'Cocktail & Wine';
+    if (titleLower.includes('photo')) return 'Photography';
+    if (titleLower.includes('music') || titleLower.includes('dance')) return 'Music & Dance';
+    if (titleLower.includes('candle')) return 'Candle Making';
+    if (titleLower.includes('wood')) return 'Wood Craft';
+    if (titleLower.includes('jewel') || titleLower.includes('metal')) return 'Jewellery & Metal';
+    if (titleLower.includes('textile') || titleLower.includes('fabric')) return 'Textile Craft';
+    if (titleLower.includes('paper')) return 'Paper Craft';
+    if (titleLower.includes('flower') || titleLower.includes('plant')) return 'Flower & Plants';
+    
+    return 'Pottery';
+  };
 
   const handleCardClick = () => {
     if (id) {
+      const displayCategory = determineCategory(title, category);
       navigate(`/class/${displayCategory}/${id}`);
     } else {
       console.warn('No ID provided for class card:', title);
     }
   };
 
+  const displayCategory = determineCategory(title, category);
+
   return (
     <Card 
-      className="overflow-hidden group cursor-pointer hover:bg-neutral-50 transition-colors duration-200 rounded-2xl"
+      className="overflow-hidden group cursor-pointer hover:bg-neutral-50 transition-colors duration-200"
       onClick={handleCardClick}
     >
       <div className="relative aspect-[4/3] overflow-hidden">
-        {rating >= 4.5 && (
-          <Badge 
-            className="absolute top-3 left-3 z-20 bg-white/90 text-primary px-3 py-1.5 
-                     font-medium text-sm rounded-full shadow-sm"
-          >
-            Guest Favorite
-          </Badge>
-        )}
         <ImageCarousel images={images} title={title} />
         <SaveButton />
-      </div>
-      <div className="p-4 space-y-3">
-        <ClassDetails 
-          title={title}
-          instructor={instructor}
-          city={city}
-          rating={rating}
-          price={price}
-          groupBookingsEnabled={groupBookingsEnabled}
-          privateBookingsEnabled={privateBookingsEnabled}
-          basePriceGroup={basePriceGroup}
-          basePricePrivate={basePricePrivate}
-        />
-        <DateButtons 
-          dates={dates} 
-          price={price} 
-          classId={id}
-          category={displayCategory}
+        <CategoryBadges 
+          displayCategory={displayCategory}
         />
       </div>
+      <ClassDetails 
+        title={title}
+        instructor={instructor}
+        city={city}
+        rating={rating}
+        price={price}
+        groupBookingsEnabled={groupBookingsEnabled}
+        privateBookingsEnabled={privateBookingsEnabled}
+        basePriceGroup={basePriceGroup}
+        basePricePrivate={basePricePrivate}
+      />
+      <DateButtons 
+        dates={dates} 
+        price={price} 
+        classId={id}
+        category={displayCategory}
+      />
     </Card>
   );
 };
