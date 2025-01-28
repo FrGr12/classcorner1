@@ -18,6 +18,7 @@ export type Database = {
           id: number
           payment_status: string | null
           session_id: number | null
+          special_requests: string | null
           status: string | null
           student_id: string | null
           total_price: number | null
@@ -31,6 +32,7 @@ export type Database = {
           id?: number
           payment_status?: string | null
           session_id?: number | null
+          special_requests?: string | null
           status?: string | null
           student_id?: string | null
           total_price?: number | null
@@ -44,6 +46,7 @@ export type Database = {
           id?: number
           payment_status?: string | null
           session_id?: number | null
+          special_requests?: string | null
           status?: string | null
           student_id?: string | null
           total_price?: number | null

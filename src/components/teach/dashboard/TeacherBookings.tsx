@@ -12,12 +12,14 @@ import {
 import type { Booking } from "@/types/booking";
 import BookingsTable from "./bookings/BookingsTable";
 import BookingsFilter from "./bookings/BookingsFilter";
+import RescheduleDialog from "./bookings/RescheduleDialog";
 
 const TeacherBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -54,7 +56,6 @@ const TeacherBookings = () => {
       
       if (!data) return;
 
-      // Transform the data to match the Booking type
       const transformedBookings: Booking[] = data.map(booking => ({
         id: booking.id,
         course_id: booking.course_id,
@@ -76,7 +77,7 @@ const TeacherBookings = () => {
         student: {
           first_name: booking.student.first_name,
           last_name: booking.student.last_name,
-          email: booking.student_id // Using student_id as email since profiles table doesn't store email
+          email: booking.student_id
         }
       }));
 
@@ -92,20 +93,57 @@ const TeacherBookings = () => {
     }
   };
 
-  const handleMessage = async (booking: Booking) => {
-    // TODO: Implement messaging functionality
-    toast({
-      title: "Coming soon",
-      description: "Messaging functionality will be implemented soon",
-    });
+  const handleUpdateBookingStatus = async (bookingId: number, status: string) => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ status })
+        .eq('id', bookingId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: `Booking ${status} successfully`,
+      });
+
+      fetchBookings();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const handleReschedule = async (booking: Booking) => {
-    // TODO: Implement rescheduling functionality
-    toast({
-      title: "Coming soon",
-      description: "Rescheduling functionality will be implemented soon",
-    });
+    setSelectedBooking(booking);
+  };
+
+  const handleRescheduleConfirm = async (bookingId: number, sessionId: number) => {
+    try {
+      const { error } = await supabase
+        .from('bookings')
+        .update({ session_id: sessionId })
+        .eq('id', bookingId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Booking rescheduled successfully",
+      });
+
+      setSelectedBooking(null);
+      fetchBookings();
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const filteredBookings = bookings.filter(booking =>
@@ -144,9 +182,16 @@ const TeacherBookings = () => {
       <CardContent>
         <BookingsTable
           bookings={filteredBookings}
-          onMessage={handleMessage}
+          onStatusUpdate={handleUpdateBookingStatus}
           onReschedule={handleReschedule}
         />
+        {selectedBooking && (
+          <RescheduleDialog
+            booking={selectedBooking}
+            onClose={() => setSelectedBooking(null)}
+            onConfirm={handleRescheduleConfirm}
+          />
+        )}
       </CardContent>
     </Card>
   );

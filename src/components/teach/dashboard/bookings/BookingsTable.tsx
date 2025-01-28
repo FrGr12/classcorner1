@@ -1,5 +1,5 @@
 import { format } from "date-fns";
-import { MessageSquare, Calendar } from "lucide-react";
+import { MessageSquare, Calendar, CheckSquare, XSquare } from "lucide-react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,11 +7,11 @@ import type { Booking } from "@/types/booking";
 
 interface BookingsTableProps {
   bookings: Booking[];
-  onMessage: (booking: Booking) => void;
+  onStatusUpdate: (bookingId: number, status: string) => Promise<void>;
   onReschedule: (booking: Booking) => void;
 }
 
-const BookingsTable = ({ bookings, onMessage, onReschedule }: BookingsTableProps) => {
+const BookingsTable = ({ bookings, onStatusUpdate, onReschedule }: BookingsTableProps) => {
   const getStatusBadge = (status: string) => {
     const variants: { [key: string]: "default" | "secondary" | "destructive" } = {
       confirmed: "default",
@@ -57,15 +57,28 @@ const BookingsTable = ({ bookings, onMessage, onReschedule }: BookingsTableProps
             </TableCell>
             <TableCell>
               <div className="flex gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="flex items-center gap-1"
-                  onClick={() => onMessage(booking)}
-                >
-                  <MessageSquare className="h-4 w-4" />
-                  Message
-                </Button>
+                {booking.status === 'pending' && (
+                  <>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1"
+                      onClick={() => onStatusUpdate(booking.id, 'confirmed')}
+                    >
+                      <CheckSquare className="h-4 w-4" />
+                      Approve
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="flex items-center gap-1"
+                      onClick={() => onStatusUpdate(booking.id, 'cancelled')}
+                    >
+                      <XSquare className="h-4 w-4" />
+                      Decline
+                    </Button>
+                  </>
+                )}
                 <Button
                   variant="outline"
                   size="sm"
