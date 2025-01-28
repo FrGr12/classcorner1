@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { Routes, Route } from "react-router-dom";
 import UserDashboardSidebar from "@/components/user-dashboard/UserDashboardSidebar";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserMessages from "@/components/user-dashboard/UserMessages";
@@ -13,18 +11,6 @@ import UserReviews from "@/components/user-dashboard/UserReviews";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 
 const UserDashboard = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        navigate("/auth");
-      }
-    };
-    checkAuth();
-  }, [navigate]);
-
   return (
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
