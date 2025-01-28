@@ -1,12 +1,46 @@
 import * as React from "react";
 import { cn } from "@/lib/utils";
 
+const SidebarContext = React.createContext<{
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}>({
+  isOpen: true,
+  setIsOpen: () => null,
+});
+
+export function useSidebar() {
+  const context = React.useContext(SidebarContext);
+  if (!context) {
+    throw new Error("useSidebar must be used within a SidebarProvider");
+  }
+  return context;
+}
+
+interface SidebarProviderProps {
+  children: React.ReactNode;
+}
+
+export function SidebarProvider({ children }: SidebarProviderProps) {
+  const [isOpen, setIsOpen] = React.useState(true);
+  return (
+    <SidebarContext.Provider value={{ isOpen, setIsOpen }}>
+      {children}
+    </SidebarContext.Provider>
+  );
+}
+
 interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function Sidebar({ className, children, ...props }: SidebarProps) {
+  const { isOpen } = useSidebar();
   return (
     <div
-      className={cn("w-64 border-r border-border bg-background", className)}
+      className={cn(
+        isOpen ? "w-64" : "w-20",
+        "border-r border-border bg-background transition-all duration-300",
+        className
+      )}
       {...props}
     >
       {children}
@@ -121,12 +155,4 @@ export function SidebarMenuButton({
       {...props}
     />
   );
-}
-
-interface SidebarProviderProps {
-  children: React.ReactNode;
-}
-
-export function SidebarProvider({ children }: SidebarProviderProps) {
-  return <>{children}</>;
 }
