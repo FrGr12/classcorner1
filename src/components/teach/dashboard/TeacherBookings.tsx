@@ -14,6 +14,34 @@ import BookingsTable from "./bookings/BookingsTable";
 import BookingsFilter from "./bookings/BookingsFilter";
 import RescheduleDialog from "./bookings/RescheduleDialog";
 
+interface BookingWithRelations {
+  id: number;
+  course_id: number;
+  session_id: number;
+  student_id: string;
+  booking_type: string;
+  status: string;
+  group_size: number;
+  total_price: number;
+  payment_status: string;
+  created_at: string;
+  updated_at: string;
+  courses: {
+    id: number;
+    title: string;
+  } | null;
+  course_sessions: {
+    id: number;
+    start_time: string;
+  } | null;
+  profiles: {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    email: string | null;
+  } | null;
+}
+
 const TeacherBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
@@ -56,7 +84,7 @@ const TeacherBookings = () => {
         return;
       }
 
-      const transformedBookings: Booking[] = data.map(booking => ({
+      const transformedBookings: Booking[] = (data as BookingWithRelations[]).map(booking => ({
         id: booking.id,
         course_id: booking.course_id,
         session_id: booking.session_id,
@@ -72,7 +100,7 @@ const TeacherBookings = () => {
           title: booking.courses?.title || 'Unknown Course'
         },
         session: {
-          start_time: booking.course_sessions?.start_time
+          start_time: booking.course_sessions?.start_time || ''
         },
         student: {
           first_name: booking.profiles?.first_name || '',
