@@ -56,7 +56,7 @@ const TeacherWaitlist = () => {
         .eq('status', 'waiting');
 
       if (error) throw error;
-      setWaitlistEntries(data);
+      setWaitlistEntries(data || []);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -147,8 +147,8 @@ const TeacherWaitlist = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              </TableBody>
-            </TableHeader>
+              ))}
+            </TableBody>
           </Table>
         )}
       </CardContent>
