@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar.tsx";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ const Dashboard = () => {
           <DashboardHeader />
           <main className="p-6">
             <h1 className="text-2xl font-bold mb-6">Welcome to Your Dashboard</h1>
-            {/* Dashboard content will be added here */}
           </main>
         </div>
       </div>
