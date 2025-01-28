@@ -2,19 +2,22 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   LayoutDashboard,
+  UserCircle,
   Users,
   Calendar,
-  MessageSquare,
+  BookOpen,
   ChartBar,
+  MessageSquare,
   Star,
   Tag,
-  Settings,
+  Bell,
   Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 import TeacherOverview from "./dashboard/TeacherOverview";
+import TeacherProfile from "./dashboard/TeacherProfile";
 import TeacherCRM from "./dashboard/TeacherCRM";
 import TeacherBookings from "./dashboard/TeacherBookings";
 import TeacherClasses from "./dashboard/TeacherClasses";
@@ -22,17 +25,19 @@ import TeacherAnalytics from "./dashboard/TeacherAnalytics";
 import TeacherMessages from "./dashboard/TeacherMessages";
 import TeacherReviews from "./dashboard/TeacherReviews";
 import TeacherPromotions from "./dashboard/TeacherPromotions";
+import TeacherWaitlist from "./dashboard/TeacherWaitlist";
 
 const navigation = [
   { name: "Overview", href: "overview", icon: LayoutDashboard },
+  { name: "Profile", href: "profile", icon: UserCircle },
   { name: "CRM", href: "crm", icon: Users },
   { name: "Bookings", href: "bookings", icon: Calendar },
-  { name: "Classes", href: "classes", icon: Calendar },
+  { name: "Classes", href: "classes", icon: BookOpen },
   { name: "Analytics", href: "analytics", icon: ChartBar },
   { name: "Messages", href: "messages", icon: MessageSquare },
   { name: "Reviews", href: "reviews", icon: Star },
   { name: "Promotions", href: "promotions", icon: Tag },
-  { name: "Settings", href: "settings", icon: Settings },
+  { name: "Waitlist", href: "waitlist", icon: Bell },
 ];
 
 const TeacherDashboard = () => {
@@ -44,6 +49,8 @@ const TeacherDashboard = () => {
     switch (activeSection) {
       case "overview":
         return <TeacherOverview />;
+      case "profile":
+        return <TeacherProfile />;
       case "crm":
         return <TeacherCRM />;
       case "bookings":
@@ -58,6 +65,8 @@ const TeacherDashboard = () => {
         return <TeacherReviews />;
       case "promotions":
         return <TeacherPromotions />;
+      case "waitlist":
+        return <TeacherWaitlist />;
       default:
         return <TeacherOverview />;
     }
