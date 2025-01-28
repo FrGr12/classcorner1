@@ -20,6 +20,7 @@ const TeacherCRM = () => {
   const { toast } = useToast();
   const [selectedSegment, setSelectedSegment] = useState<string>("all");
   const [messageContent, setMessageContent] = useState("");
+  const [selectedRecipients, setSelectedRecipients] = useState<string>("all");
 
   const { data: contacts, isLoading } = useQuery({
     queryKey: ["contacts"],
@@ -28,7 +29,7 @@ const TeacherCRM = () => {
         .from("bookings")
         .select(`
           *,
-          student:profiles!bookings_student_id_fkey(
+          student:profiles(
             id,
             first_name,
             last_name,
@@ -37,8 +38,7 @@ const TeacherCRM = () => {
           course:courses(
             title
           )
-        `)
-        .order("created_at", { ascending: false });
+        `);
 
       if (error) throw error;
       return bookings;
@@ -47,11 +47,35 @@ const TeacherCRM = () => {
 
   const sendMessage = async () => {
     try {
-      const { error } = await supabase.from("communications").insert({
-        message_content: messageContent,
-        message_type: "bulk",
-        // Add other necessary fields
-      });
+      // Get current user (instructor) ID
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not authenticated");
+
+      // Get recipient IDs based on selection
+      const recipientIds = contacts
+        ?.filter(booking => {
+          if (selectedRecipients === "all") return true;
+          if (selectedRecipients === "active") return booking.status === "confirmed";
+          if (selectedRecipients === "waitlist") return booking.status === "waitlist";
+          return false;
+        })
+        .map(booking => booking.student?.id)
+        .filter((id): id is string => id !== undefined);
+
+      if (!recipientIds?.length) {
+        throw new Error("No recipients selected");
+      }
+
+      // Insert a message for each recipient
+      const { error } = await supabase.from("communications").insert(
+        recipientIds.map(studentId => ({
+          instructor_id: user.id,
+          student_id: studentId,
+          message_content: messageContent,
+          message_type: "bulk",
+          status: "sent"
+        }))
+      );
 
       if (error) throw error;
 
@@ -61,6 +85,7 @@ const TeacherCRM = () => {
       });
       setMessageContent("");
     } catch (error) {
+      console.error("Error sending message:", error);
       toast({
         variant: "destructive",
         title: "Error sending message",
@@ -146,7 +171,10 @@ const TeacherCRM = () => {
               <div className="space-y-4">
                 <div>
                   <label className="text-sm font-medium">To:</label>
-                  <Select defaultValue="all">
+                  <Select
+                    value={selectedRecipients}
+                    onValueChange={setSelectedRecipients}
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Select recipients" />
                     </SelectTrigger>
