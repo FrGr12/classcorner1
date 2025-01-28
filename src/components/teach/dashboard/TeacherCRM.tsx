@@ -42,7 +42,7 @@ const TeacherCRM = () => {
         .from("bookings")
         .select(`
           id,
-          student:profiles!bookings_student_id_fkey(
+          student:profiles(
             id,
             first_name,
             last_name,
