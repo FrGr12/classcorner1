@@ -1,4 +1,3 @@
-import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -8,7 +7,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface BookingsFilterProps {
+export interface BookingsFilterProps {
   filter: string;
   searchTerm: string;
   onFilterChange: (value: string) => void;
@@ -22,24 +21,23 @@ const BookingsFilter = ({
   onSearchChange,
 }: BookingsFilterProps) => {
   return (
-    <div className="flex gap-4">
-      <div className="relative">
-        <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+    <div className="flex flex-col gap-4 sm:flex-row sm:items-center mb-6">
+      <div className="flex-1">
         <Input
           placeholder="Search bookings..."
           value={searchTerm}
           onChange={(e) => onSearchChange(e.target.value)}
-          className="pl-8 w-[200px]"
         />
       </div>
       <Select value={filter} onValueChange={onFilterChange}>
         <SelectTrigger className="w-[180px]">
-          <SelectValue placeholder="Filter bookings" />
+          <SelectValue placeholder="Filter by status" />
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="all">All Bookings</SelectItem>
-          <SelectItem value="upcoming">Upcoming</SelectItem>
-          <SelectItem value="past">Past</SelectItem>
+          <SelectItem value="confirmed">Confirmed</SelectItem>
+          <SelectItem value="pending">Pending</SelectItem>
+          <SelectItem value="cancelled">Cancelled</SelectItem>
         </SelectContent>
       </Select>
     </div>

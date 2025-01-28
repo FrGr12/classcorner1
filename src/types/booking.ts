@@ -17,11 +17,6 @@ export interface Booking {
     start_time: string;
   };
   student: {
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
-  profiles: {
     id: string;
     first_name: string | null;
     last_name: string | null;

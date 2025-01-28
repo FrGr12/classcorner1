@@ -19,6 +19,8 @@ const TeacherBookings = () => {
   const [loading, setLoading] = useState(true);
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -39,14 +41,25 @@ const TeacherBookings = () => {
           profiles!bookings_student_id_fkey(
             id,
             first_name,
-            last_name
+            last_name,
+            email
           )
         `)
         .eq('courses.instructor_id', user.id);
 
       if (error) throw error;
 
-      setBookings(data as Booking[]);
+      const formattedBookings: Booking[] = data.map((booking: any) => ({
+        ...booking,
+        student: {
+          id: booking.profiles?.id,
+          first_name: booking.profiles?.first_name,
+          last_name: booking.profiles?.last_name,
+          email: booking.profiles?.email
+        }
+      }));
+
+      setBookings(formattedBookings);
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -82,11 +95,6 @@ const TeacherBookings = () => {
     }
   };
 
-  const handleReschedule = (booking: Booking) => {
-    setSelectedBooking(booking);
-    setIsRescheduleOpen(true);
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -112,20 +120,30 @@ const TeacherBookings = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <BookingsFilter />
+          <BookingsFilter
+            filter={filter}
+            searchTerm={searchTerm}
+            onFilterChange={setFilter}
+            onSearchChange={setSearchTerm}
+          />
           <BookingsTable
             bookings={bookings}
             onStatusUpdate={handleStatusUpdate}
-            onReschedule={handleReschedule}
+            onReschedule={(booking) => {
+              setSelectedBooking(booking);
+              setIsRescheduleOpen(true);
+            }}
           />
         </CardContent>
       </Card>
 
-      <RescheduleDialog
-        booking={selectedBooking}
-        open={isRescheduleOpen}
-        onOpenChange={setIsRescheduleOpen}
-      />
+      {selectedBooking && (
+        <RescheduleDialog
+          booking={selectedBooking}
+          isOpen={isRescheduleOpen}
+          onOpenChange={setIsRescheduleOpen}
+        />
+      )}
     </div>
   );
 };
