@@ -13,9 +13,11 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MapPin, Upload } from "lucide-react";
+import ImageUpload from "../ImageUpload";
 
 const TeacherProfile = () => {
   const [profile, setProfile] = useState<any>(null);
+  const [images, setImages] = useState<File[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -49,14 +51,27 @@ const TeacherProfile = () => {
 
   const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Implementation for profile update
-    toast({
-      title: "Profile updated successfully",
-    });
-  };
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Implementation for avatar upload
+      const { error } = await supabase
+        .from('profiles')
+        .update(profile)
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Profile updated successfully",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error updating profile",
+        description: error.message,
+      });
+    }
   };
 
   if (loading) {
@@ -82,7 +97,15 @@ const TeacherProfile = () => {
             <div className="space-y-2">
               <Label>Profile Photo</Label>
               <div className="flex items-center gap-4">
-                <div className="h-20 w-20 rounded-full bg-gray-200"></div>
+                <div className="h-20 w-20 rounded-full bg-gray-200">
+                  {profile?.avatar_url && (
+                    <img
+                      src={profile.avatar_url}
+                      alt="Profile"
+                      className="h-full w-full rounded-full object-cover"
+                    />
+                  )}
+                </div>
                 <Button variant="outline">
                   <Upload className="mr-2 h-4 w-4" />
                   Upload Photo
@@ -123,9 +146,9 @@ const TeacherProfile = () => {
 
         <Card>
           <CardHeader>
-            <CardTitle>Location & Contact</CardTitle>
+            <CardTitle>Location & Gallery</CardTitle>
             <CardDescription>
-              Manage your teaching locations and contact information
+              Manage your teaching locations and showcase your work
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -140,13 +163,8 @@ const TeacherProfile = () => {
             </div>
 
             <div className="space-y-2">
-              <Label>Phone Number</Label>
-              <Input
-                type="tel"
-                value={profile?.phone || ""}
-                onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
-                placeholder="Enter your phone number"
-              />
+              <Label>Gallery</Label>
+              <ImageUpload images={images} setImages={setImages} />
             </div>
           </CardContent>
         </Card>

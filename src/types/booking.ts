@@ -21,4 +21,10 @@ export interface Booking {
     last_name: string;
     email: string;
   };
+  profiles: {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    email?: string;
+  };
 }

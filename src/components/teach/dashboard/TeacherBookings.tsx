@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -9,120 +8,57 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import type { Booking } from "@/types/booking";
 import BookingsTable from "./bookings/BookingsTable";
 import BookingsFilter from "./bookings/BookingsFilter";
 import RescheduleDialog from "./bookings/RescheduleDialog";
-
-interface BookingWithRelations {
-  id: number;
-  course_id: number;
-  session_id: number;
-  student_id: string;
-  booking_type: string;
-  status: string;
-  group_size: number;
-  total_price: number;
-  payment_status: string;
-  created_at: string;
-  updated_at: string;
-  courses: {
-    id: number;
-    title: string;
-  } | null;
-  course_sessions: {
-    id: number;
-    start_time: string;
-  } | null;
-  profiles: {
-    id: string;
-    first_name: string | null;
-    last_name: string | null;
-    email: string | null;
-  } | null;
-}
+import type { Booking } from "@/types/booking";
+import { Loader2 } from "lucide-react";
 
 const TeacherBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const [searchTerm, setSearchTerm] = useState("");
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
     fetchBookings();
-  }, [filter]);
+  }, []);
 
   const fetchBookings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      let query = supabase
+      const { data, error } = await supabase
         .from('bookings')
         .select(`
           *,
-          courses:course_id(id, title),
-          course_sessions:session_id(id, start_time),
-          profiles:student_id(id, first_name, last_name, email)
+          course:courses(title),
+          session:course_sessions(start_time),
+          profiles!bookings_student_id_fkey(
+            id,
+            first_name,
+            last_name
+          )
         `)
         .eq('courses.instructor_id', user.id);
 
-      if (filter === "upcoming") {
-        query = query.gt('course_sessions.start_time', new Date().toISOString());
-      } else if (filter === "past") {
-        query = query.lt('course_sessions.start_time', new Date().toISOString());
-      }
-
-      const { data, error } = await query;
-
       if (error) throw error;
-      
-      if (!data) {
-        setBookings([]);
-        return;
-      }
 
-      const transformedBookings: Booking[] = (data as BookingWithRelations[]).map(booking => ({
-        id: booking.id,
-        course_id: booking.course_id,
-        session_id: booking.session_id,
-        student_id: booking.student_id,
-        booking_type: booking.booking_type,
-        status: booking.status,
-        group_size: booking.group_size,
-        total_price: booking.total_price,
-        payment_status: booking.payment_status,
-        created_at: booking.created_at,
-        updated_at: booking.updated_at,
-        course: {
-          title: booking.courses?.title || 'Unknown Course'
-        },
-        session: {
-          start_time: booking.course_sessions?.start_time || ''
-        },
-        student: {
-          first_name: booking.profiles?.first_name || '',
-          last_name: booking.profiles?.last_name || '',
-          email: booking.profiles?.email || ''
-        }
-      }));
-
-      setBookings(transformedBookings);
+      setBookings(data as Booking[]);
     } catch (error: any) {
-      console.error('Fetch bookings error:', error);
       toast({
+        variant: "destructive",
         title: "Error fetching bookings",
         description: error.message,
-        variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateBookingStatus = async (bookingId: number, status: string) => {
+  const handleStatusUpdate = async (bookingId: number, status: string) => {
     try {
       const { error } = await supabase
         .from('bookings')
@@ -132,55 +68,24 @@ const TeacherBookings = () => {
       if (error) throw error;
 
       toast({
-        title: "Success",
-        description: `Booking ${status} successfully`,
+        title: "Booking status updated",
+        description: `Booking has been ${status}`,
       });
 
       fetchBookings();
     } catch (error: any) {
       toast({
-        title: "Error",
-        description: error.message,
         variant: "destructive",
+        title: "Error updating booking",
+        description: error.message,
       });
     }
   };
 
-  const handleReschedule = async (booking: Booking) => {
+  const handleReschedule = (booking: Booking) => {
     setSelectedBooking(booking);
+    setIsRescheduleOpen(true);
   };
-
-  const handleRescheduleConfirm = async (bookingId: number, sessionId: number) => {
-    try {
-      const { error } = await supabase
-        .from('bookings')
-        .update({ session_id: sessionId })
-        .eq('id', bookingId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Booking rescheduled successfully",
-      });
-
-      setSelectedBooking(null);
-      fetchBookings();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const filteredBookings = bookings.filter(booking =>
-    booking.student &&
-    (booking.student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    booking.student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    booking.course.title.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
 
   if (loading) {
     return (
@@ -191,38 +96,37 @@ const TeacherBookings = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Bookings</CardTitle>
-            <CardDescription>
-              Manage your class bookings and participants
-            </CardDescription>
-          </div>
-          <BookingsFilter
-            filter={filter}
-            searchTerm={searchTerm}
-            onFilterChange={setFilter}
-            onSearchChange={setSearchTerm}
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold mb-2">Bookings</h1>
+        <p className="text-muted-foreground">
+          Manage your class bookings and participant requests
+        </p>
+      </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Booking Management</CardTitle>
+          <CardDescription>
+            View and manage your class bookings
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <BookingsFilter />
+          <BookingsTable
+            bookings={bookings}
+            onStatusUpdate={handleStatusUpdate}
+            onReschedule={handleReschedule}
           />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <BookingsTable
-          bookings={filteredBookings}
-          onStatusUpdate={handleUpdateBookingStatus}
-          onReschedule={handleReschedule}
-        />
-        {selectedBooking && (
-          <RescheduleDialog
-            booking={selectedBooking}
-            onClose={() => setSelectedBooking(null)}
-            onConfirm={handleRescheduleConfirm}
-          />
-        )}
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+
+      <RescheduleDialog
+        booking={selectedBooking}
+        open={isRescheduleOpen}
+        onOpenChange={setIsRescheduleOpen}
+      />
+    </div>
   );
 };
 
