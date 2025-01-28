@@ -1,74 +1,46 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, Calendar, Bell, Search } from "lucide-react";
+import { Card } from "@/components/ui/card";
+import { MessageSquare, Calendar, Bell } from "lucide-react";
 
 const UserDashboardOverview = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Welcome Back!</h1>
+    <div className="mb-8">
+      <h1 className="text-2xl font-bold mb-6">Welcome back!</h1>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unread Messages</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">3</div>
-          </CardContent>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <MessageSquare className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-neutral-600">Unread Messages</p>
+              <p className="text-2xl font-bold">3</p>
+            </div>
+          </div>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Upcoming Classes</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">2</div>
-          </CardContent>
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Calendar className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-neutral-600">Upcoming Classes</p>
+              <p className="text-2xl font-bold">2</p>
+            </div>
+          </div>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">New Notifications</CardTitle>
-            <Bell className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">5</div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Course Matches</CardTitle>
-            <Search className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">8</div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Messages</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              No recent messages to display.
-            </p>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Upcoming Classes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              No upcoming classes scheduled.
-            </p>
-          </CardContent>
+        <Card className="p-6">
+          <div className="flex items-center gap-4">
+            <div className="p-3 bg-primary/10 rounded-lg">
+              <Bell className="w-6 h-6 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-neutral-600">New Notifications</p>
+              <p className="text-2xl font-bold">5</p>
+            </div>
+          </div>
         </Card>
       </div>
     </div>

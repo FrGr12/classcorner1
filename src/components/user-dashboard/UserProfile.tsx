@@ -1,20 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { User } from "lucide-react";
 
 const UserProfile = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Profile & Preferences</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            Profile settings will be implemented here.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Profile</h2>
+        <User className="w-5 h-5 text-neutral-400" />
+      </div>
+      <div className="space-y-4">
+        <p className="text-sm text-neutral-600">Update your profile</p>
+      </div>
+    </Card>
   );
 };
 

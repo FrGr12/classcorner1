@@ -1,20 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { BookOpen } from "lucide-react";
 
 const UserMatches = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Course Matches</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Recommended Classes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No course matches to display.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Course Matches</h2>
+        <BookOpen className="w-5 h-5 text-neutral-400" />
+      </div>
+      <div className="space-y-4">
+        <p className="text-sm text-neutral-600">No matches yet</p>
+      </div>
+    </Card>
   );
 };
 

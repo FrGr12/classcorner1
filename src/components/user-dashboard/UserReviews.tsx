@@ -1,20 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Star } from "lucide-react";
 
 const UserReviews = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Your Reviews</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Class Reviews</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No reviews to display.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Your Reviews</h2>
+        <Star className="w-5 h-5 text-neutral-400" />
+      </div>
+      <div className="space-y-4">
+        <p className="text-sm text-neutral-600">No reviews yet</p>
+      </div>
+    </Card>
   );
 };
 

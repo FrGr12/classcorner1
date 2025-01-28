@@ -1,20 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { Bell } from "lucide-react";
 
 const UserNotifications = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Notifications</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Recent Notifications</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No notifications to display.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Notifications</h2>
+        <Bell className="w-5 h-5 text-neutral-400" />
+      </div>
+      <div className="space-y-4">
+        <p className="text-sm text-neutral-600">No notifications yet</p>
+      </div>
+    </Card>
   );
 };
 

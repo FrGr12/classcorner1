@@ -1,20 +1,17 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
+import { MessageSquare } from "lucide-react";
 
 const UserMessages = () => {
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Messages</h1>
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Messages</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-muted-foreground">
-            No messages to display.
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="p-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold">Messages</h2>
+        <MessageSquare className="w-5 h-5 text-neutral-400" />
+      </div>
+      <div className="space-y-4">
+        <p className="text-sm text-neutral-600">No messages yet</p>
+      </div>
+    </Card>
   );
 };
 

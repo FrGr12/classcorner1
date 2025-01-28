@@ -1,7 +1,6 @@
 import { useEffect } from "react";
-import { useNavigate, Routes, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import UserDashboardSidebar from "@/components/user-dashboard/UserDashboardSidebar";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserMessages from "@/components/user-dashboard/UserMessages";
@@ -11,6 +10,7 @@ import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
 import UserReviews from "@/components/user-dashboard/UserReviews";
+import { SidebarProvider } from "@/components/ui/sidebar";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
@@ -22,29 +22,29 @@ const UserDashboard = () => {
         navigate("/auth");
       }
     };
-
     checkAuth();
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex bg-neutral-50">
-      <UserDashboardSidebar />
-      <div className="flex-1">
-        <DashboardHeader />
-        <main className="p-6">
-          <Routes>
-            <Route index element={<UserDashboardOverview />} />
-            <Route path="messages" element={<UserMessages />} />
-            <Route path="bookings" element={<UserBookings />} />
-            <Route path="notifications" element={<UserNotifications />} />
-            <Route path="matches" element={<UserMatches />} />
-            <Route path="saved" element={<UserSavedClasses />} />
-            <Route path="profile" element={<UserProfile />} />
-            <Route path="reviews" element={<UserReviews />} />
-          </Routes>
-        </main>
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full">
+        <UserDashboardSidebar />
+        <div className="flex-1">
+          <main className="p-6">
+            <UserDashboardOverview />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <UserMessages />
+              <UserBookings />
+              <UserNotifications />
+              <UserMatches />
+              <UserSavedClasses />
+              <UserProfile />
+              <UserReviews />
+            </div>
+          </main>
+        </div>
       </div>
-    </div>
+    </SidebarProvider>
   );
 };
 
