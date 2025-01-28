@@ -3,11 +3,16 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
-  PlusCircle,
+  UserCircle,
+  Users,
+  Calendar,
+  BookOpen,
   BarChart,
   MessageSquare,
-  Users,
+  Star,
+  Tag,
   Menu,
+  ClipboardList,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -17,29 +22,44 @@ const DashboardSidebar = () => {
 
   const links = [
     {
-      title: "Dashboard",
+      title: "Dashboard Overview",
       href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      title: "Create Course",
-      href: "/dashboard/create-course",
-      icon: PlusCircle,
+      title: "Profile Management",
+      href: "/dashboard/profile",
+      icon: UserCircle,
     },
     {
-      title: "Analytics",
+      title: "CRM & Messaging",
+      href: "/dashboard/crm",
+      icon: MessageSquare,
+    },
+    {
+      title: "Booking & Waitlist",
+      href: "/dashboard/bookings",
+      icon: ClipboardList,
+    },
+    {
+      title: "Class & Schedule",
+      href: "/dashboard/classes",
+      icon: BookOpen,
+    },
+    {
+      title: "Analytics & Insights",
       href: "/dashboard/analytics",
       icon: BarChart,
     },
     {
-      title: "Communications",
-      href: "/dashboard/communications",
-      icon: MessageSquare,
+      title: "Reviews & Testimonials",
+      href: "/dashboard/reviews",
+      icon: Star,
     },
     {
-      title: "Course Matches",
-      href: "/dashboard/matches",
-      icon: Users,
+      title: "Promotional Tools",
+      href: "/dashboard/promotions",
+      icon: Tag,
     },
   ];
 
