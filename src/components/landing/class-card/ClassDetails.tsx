@@ -16,10 +16,6 @@ const ClassDetails = ({
   city,
   rating,
   price,
-  groupBookingsEnabled,
-  privateBookingsEnabled,
-  basePriceGroup,
-  basePricePrivate,
 }: ClassDetailsProps) => {
   return (
     <div className="p-4">
@@ -32,16 +28,7 @@ const ClassDetails = ({
           <span className="text-yellow-400">★</span>
           <span className="text-sm font-medium">{rating}</span>
         </div>
-        <div className="text-right">
-          <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
-          {(groupBookingsEnabled || privateBookingsEnabled) && (
-            <p className="text-sm text-neutral-600">
-              {groupBookingsEnabled && `From $${basePriceGroup}/person (group)`}
-              {groupBookingsEnabled && privateBookingsEnabled && ' · '}
-              {privateBookingsEnabled && `Private $${basePricePrivate}`}
-            </p>
-          )}
-        </div>
+        <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
       </div>
     </div>
   );
