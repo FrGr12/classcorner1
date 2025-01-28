@@ -40,6 +40,24 @@ const validCategories = [
   "Flower & Plants"
 ];
 
+const determineCategory = (title: string, category?: string): string => {
+  // If a valid category is provided, use it
+  if (category && validCategories.includes(category)) {
+    return category;
+  }
+
+  // Otherwise, try to determine category from title
+  const titleLower = title.toLowerCase();
+  for (const validCategory of validCategories) {
+    if (titleLower.includes(validCategory.toLowerCase())) {
+      return validCategory;
+    }
+  }
+
+  // Default to first category if no match found
+  return validCategories[0];
+};
+
 const ClassCard = ({
   id,
   title,
