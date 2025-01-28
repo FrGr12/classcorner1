@@ -52,7 +52,7 @@ const TeacherBookings = () => {
           *,
           course:courses(title),
           session:course_sessions(start_time),
-          student:profiles(first_name, last_name, email)
+          student:profiles!bookings_student_id_fkey(first_name, last_name, email)
         `)
         .eq('courses.instructor_id', user.id);
 
