@@ -35,7 +35,7 @@ const TeacherBookings = () => {
           *,
           courses:course_id(id, title),
           course_sessions:session_id(id, start_time),
-          student:student_id(id, first_name, last_name)
+          profiles:student_id(first_name, last_name)
         `)
         .eq('courses.instructor_id', user.id);
 
@@ -71,8 +71,8 @@ const TeacherBookings = () => {
           start_time: booking.course_sessions.start_time
         },
         student: {
-          first_name: booking.student.first_name,
-          last_name: booking.student.last_name,
+          first_name: booking.profiles.first_name,
+          last_name: booking.profiles.last_name,
           email: booking.student_id // Using student_id as email since profiles table doesn't store email
         }
       }));
