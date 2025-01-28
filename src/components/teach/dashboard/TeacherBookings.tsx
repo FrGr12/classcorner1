@@ -26,31 +26,15 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Loader2, MessageSquare, Calendar } from "lucide-react";
-
-interface Booking {
-  id: number;
-  created_at: string;
-  status: string;
-  payment_status: string;
-  total_price: number;
-  course: {
-    title: string;
-  };
-  session: {
-    start_time: string;
-  };
-  student: {
-    first_name: string;
-    last_name: string;
-    email: string;
-  };
-}
+import { Input } from "@/components/ui/input";
+import { Loader2, MessageSquare, Calendar, Search } from "lucide-react";
+import type { Booking } from "@/types/booking";
 
 const TeacherBookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("upcoming");
+  const [filter, setFilter] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -126,10 +110,17 @@ const TeacherBookings = () => {
     return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
+  const filteredBookings = bookings.filter(booking =>
+    booking.student &&
+    (booking.student.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    booking.student.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    booking.course.title.toLowerCase().includes(searchTerm.toLowerCase()))
+  );
+
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
   }
@@ -144,20 +135,31 @@ const TeacherBookings = () => {
               Manage your class bookings and participants
             </CardDescription>
           </div>
-          <Select value={filter} onValueChange={setFilter}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter bookings" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">All Bookings</SelectItem>
-              <SelectItem value="upcoming">Upcoming</SelectItem>
-              <SelectItem value="past">Past</SelectItem>
-            </SelectContent>
-          </Select>
+          <div className="flex gap-4">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search bookings..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="pl-8 w-[200px]"
+              />
+            </div>
+            <Select value={filter} onValueChange={setFilter}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Filter bookings" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Bookings</SelectItem>
+                <SelectItem value="upcoming">Upcoming</SelectItem>
+                <SelectItem value="past">Past</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
       </CardHeader>
       <CardContent>
-        {bookings.length === 0 ? (
+        {filteredBookings.length === 0 ? (
           <p className="text-center text-muted-foreground py-8">
             No bookings found for the selected filter.
           </p>
@@ -174,7 +176,7 @@ const TeacherBookings = () => {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {bookings.map((booking) => (
+              {filteredBookings.map((booking) => (
                 <TableRow key={booking.id}>
                   <TableCell>
                     {booking.student.first_name} {booking.student.last_name}
