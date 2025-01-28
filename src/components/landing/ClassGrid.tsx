@@ -3,14 +3,15 @@ import ClassCard from "./ClassCard";
 import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 interface ClassGridProps {
   category: string | null;
 }
 
 const ClassGrid = ({ category }: ClassGridProps) => {
-  const [showAll, setShowAll] = useState(false);
-  const ITEMS_PER_PAGE = 24;
+  const [displayCount, setDisplayCount] = useState(12);
+  const ITEMS_PER_PAGE = 12;
 
   // Filter classes based on category
   const filteredClasses = category 
@@ -24,7 +25,12 @@ const ClassGrid = ({ category }: ClassGridProps) => {
     return new Date(dateA).getTime() - new Date(dateB).getTime();
   });
 
-  const displayedClasses = showAll ? sortedClasses : sortedClasses.slice(0, ITEMS_PER_PAGE);
+  const displayedClasses = sortedClasses.slice(0, displayCount);
+  const hasMoreClasses = sortedClasses.length > displayCount;
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + ITEMS_PER_PAGE);
+  };
 
   return (
     <div className="space-y-8">
@@ -42,20 +48,25 @@ const ClassGrid = ({ category }: ClassGridProps) => {
             date={classItem.date}
             city={classItem.city}
             category={classItem.category}
+            groupBookingsEnabled={classItem.groupBookingsEnabled}
+            privateBookingsEnabled={classItem.privateBookingsEnabled}
+            basePriceGroup={classItem.basePriceGroup}
+            basePricePrivate={classItem.basePricePrivate}
           />
         ))}
       </div>
 
-      {sortedClasses.length > ITEMS_PER_PAGE && !showAll && (
+      {hasMoreClasses && (
         <div className="flex flex-col items-center space-y-4 mt-8">
           <p className="text-lg text-gray-700 font-medium">
             Continue exploring amazing classes
           </p>
           <Button 
-            onClick={() => setShowAll(true)}
-            className="bg-primary hover:bg-primary/90"
+            onClick={handleLoadMore}
+            className="bg-primary hover:bg-primary/90 flex items-center gap-2"
           >
-            Show more
+            View More Classes
+            <ChevronDown className="h-4 w-4" />
           </Button>
         </div>
       )}
