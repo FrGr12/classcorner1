@@ -18,18 +18,18 @@ const ClassDetails = ({
   price,
 }: ClassDetailsProps) => {
   return (
-    <div className="py-2 px-4">
-      <div className="flex items-start justify-between mb-1">
-        <h3 className="text-lg font-medium line-clamp-1">{title}</h3>
-      </div>
-      <p className="text-sm text-neutral-600 mb-1">by {instructor} · {city}</p>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1">
-          <span className="text-yellow-400">★</span>
-          <span className="text-sm font-medium">{rating}</span>
+    <div className="p-3">
+      <div className="flex items-start justify-between gap-1">
+        <div className="flex-1">
+          <h3 className="font-medium text-[15px] leading-5 line-clamp-1">{title}</h3>
+          <p className="text-[14px] text-neutral-600 mt-0.5">by {instructor} · {city}</p>
         </div>
-        <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
+        <div className="flex items-center gap-1 shrink-0">
+          <span className="text-yellow-400">★</span>
+          <span className="text-[14px] font-medium">{rating}</span>
+        </div>
       </div>
+      <p className="text-[14px] font-medium mt-1">${price} <span className="text-neutral-600 font-normal">/ class</span></p>
     </div>
   );
 };
