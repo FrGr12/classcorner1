@@ -18,20 +18,17 @@ const ClassDetails = ({
   price,
 }: ClassDetailsProps) => {
   return (
-    <div className="space-y-2">
-      <div className="space-y-1">
-        <p className="text-sm text-neutral-600">{city}</p>
+    <div className="p-4">
+      <div className="flex items-start justify-between mb-1">
         <h3 className="text-lg font-medium line-clamp-1">{title}</h3>
-        <p className="text-sm text-neutral-600">by {instructor}</p>
       </div>
+      <p className="text-sm text-neutral-600 mb-1">by {instructor} · {city}</p>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-1">
           <span className="text-yellow-400">★</span>
-          <span className="text-sm font-medium">{rating.toFixed(1)}</span>
+          <span className="text-sm font-medium">{rating}</span>
         </div>
-        <p className="font-medium">
-          ${price} <span className="text-sm text-neutral-600">/ class</span>
-        </p>
+        <p className="font-medium">${price} <span className="text-sm text-neutral-600">/ class</span></p>
       </div>
     </div>
   );

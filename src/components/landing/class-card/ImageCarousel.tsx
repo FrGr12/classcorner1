@@ -3,6 +3,7 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -23,7 +24,9 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
-    if (!api) return;
+    if (!api) {
+      return;
+    }
 
     api.on("select", () => {
       setCurrent(api.selectedScrollSnap());
@@ -35,12 +38,14 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
     const x = e.clientX - rect.left;
     const width = rect.width;
     
+    // If clicked on the right third of the image
     if (x > width * 0.7) {
-      e.stopPropagation();
+      e.stopPropagation(); // Prevent navigation
       api?.scrollNext();
     }
   };
 
+  // Use placeholder images if no images provided
   const displayImages = images && images.length > 0 
     ? images 
     : Array(3).fill(null);
@@ -56,7 +61,7 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
                   <img
                     src={image}
                     alt={`${title} - Image ${index + 1}`}
-                    className="object-cover w-full h-full transition-transform duration-300 group-hover:scale-105"
+                    className="object-cover w-full h-full"
                   />
                 ) : (
                   <PlaceholderImage />
@@ -67,24 +72,31 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
         </CarouselContent>
 
         {displayImages.length > 1 && (
-          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
-            {displayImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  api?.scrollTo(index);
-                }}
-                className={cn(
-                  "w-1.5 h-1.5 rounded-full transition-all duration-200",
-                  current === index
-                    ? "bg-white scale-110"
-                    : "bg-white/60 hover:bg-white/80"
-                )}
-                aria-label={`Go to image ${index + 1}`}
-              />
-            ))}
-          </div>
+          <>
+            <CarouselNext 
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                         transition-opacity duration-200 border-none z-20" 
+            />
+            <div className="absolute bottom-2 left-0 right-0 flex justify-center gap-1.5 z-20">
+              {displayImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    api?.scrollTo(index);
+                  }}
+                  className={cn(
+                    "w-2.5 h-2.5 rounded-full transition-all duration-200",
+                    current === index
+                      ? "bg-white scale-110"
+                      : "bg-white/60 hover:bg-white/80"
+                  )}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
+          </>
         )}
       </Carousel>
     </div>
