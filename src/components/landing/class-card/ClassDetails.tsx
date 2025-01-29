@@ -18,7 +18,7 @@ const ClassDetails = ({
   price,
 }: ClassDetailsProps) => {
   return (
-    <div className="p-4">
+    <div className="py-2 px-4">
       <div className="flex items-start justify-between mb-1">
         <h3 className="text-lg font-medium line-clamp-1">{title}</h3>
       </div>
