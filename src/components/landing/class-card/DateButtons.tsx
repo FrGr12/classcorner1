@@ -85,7 +85,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
 
   // Landing page date buttons - Single line layout
   return (
-    <div className="p-4">
+    <div className="py-2 px-4">
       <p className="text-sm font-medium text-neutral-700 mb-2">Available dates to book:</p>
       <div className="grid grid-cols-3 gap-2 px-1">
         {visibleDates.map((date, index) => (
@@ -104,9 +104,9 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
         ))}
         {hasMoreDates && (
           <Button
-            variant="secondary"
+            variant="outline"
             size="sm"
-            className="text-xs w-full"
+            className="text-xs w-full bg-white hover:bg-neutral-50"
             onClick={(e) => {
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
