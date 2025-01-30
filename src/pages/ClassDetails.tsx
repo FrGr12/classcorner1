@@ -13,6 +13,7 @@ import LocationInfo from "@/components/class-details/LocationInfo";
 import InstructorInfo from "@/components/class-details/InstructorInfo";
 import TestimonialSection from "@/components/class-details/TestimonialSection";
 import PolicyInfo from "@/components/class-details/PolicyInfo";
+import PhotoGallery from "@/components/class-details/PhotoGallery";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
@@ -77,6 +78,7 @@ const ClassDetails = () => {
             <LearningSection />
             <PreparationInfo />
           </div>
+          <PhotoGallery images={classItem.images} title={classItem.title} />
           <LocationInfo classItem={classItem} />
           <InstructorInfo classItem={classItem} />
           <TestimonialSection />
