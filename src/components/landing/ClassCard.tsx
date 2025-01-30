@@ -21,6 +21,7 @@ interface ClassCardProps {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
+  maxParticipants?: number;
 }
 
 const validCategories = [
@@ -54,6 +55,7 @@ const ClassCard = ({
   privateBookingsEnabled,
   basePriceGroup,
   basePricePrivate,
+  maxParticipants,
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
@@ -121,6 +123,7 @@ const ClassCard = ({
         price={price} 
         classId={id}
         category={displayCategory}
+        maxParticipants={maxParticipants}
       />
     </Card>
   );

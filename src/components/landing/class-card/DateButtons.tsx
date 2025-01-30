@@ -12,7 +12,7 @@ export interface DateButtonsProps {
   selectedDate?: Date;
 }
 
-const DateButtons = ({ dates, price, classId, category, selectedDate }: DateButtonsProps) => {
+const DateButtons = ({ dates, price, classId, category, selectedDate, maxParticipants = 10 }: DateButtonsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDetailsPage = location.pathname.includes('/class/');
@@ -49,7 +49,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate }: DateButt
                   {format(new Date(date), 'HH:mm')}–{format(new Date(date).setHours(new Date(date).getHours() + 2), 'HH:mm')}
                 </div>
                 <div className="text-sm text-neutral-600">
-                  {maxParticipants ? `${maxParticipants} platser kvar` : '10 platser kvar'}
+                  {maxParticipants} platser kvar
                 </div>
                 <div className="text-sm font-medium">
                   {price} kr/person
