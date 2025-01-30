@@ -20,8 +20,8 @@ const LocationInfo = ({ classItem }: LocationInfoProps) => {
             <p className="text-sm">5 min walk from Central Station</p>
           </div>
         </div>
-        <div className="aspect-video bg-neutral-100 rounded-lg mt-6">
-          {/* Map will be implemented here */}
+        <div className="w-1/2 mx-auto">
+          <div className="aspect-video bg-neutral-100 rounded-lg mt-6" />
         </div>
       </div>
     </section>
