@@ -6,7 +6,7 @@ import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
-import { ArrowLeft, Clock, MapPin, Users, Star } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 const BookingConfirmation = () => {
   const location = useLocation();
@@ -48,54 +48,11 @@ const BookingConfirmation = () => {
             Back to class details
           </Button>
 
-          <div className="glass-panel rounded-xl p-6 md:p-8 mb-8">
-            <div className="space-y-4">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">{classItem.title}</h1>
-                <p className="text-neutral-600">{classItem.category}</p>
-              </div>
-              
-              <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-600">
-                <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  <span>2 hours</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <MapPin className="h-4 w-4" />
-                  <span>{classItem.city}</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
-                  <span>Max {classItem.maxParticipants} people</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Star className="h-4 w-4 fill-accent-purple text-accent-purple" />
-                  <span>{classItem.rating}</span>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-between pt-4">
-                <div>
-                  <p className="text-sm font-medium text-neutral-600">Instructor</p>
-                  <p className="text-base">{classItem.instructor}</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-neutral-600">Location</p>
-                  <p className="text-base">{classItem.city} Studio</p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-neutral-600">Date & Time</p>
-                  <p className="text-base">{formatClassDate(classItem.date)}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <h2 className="text-3xl font-bold mb-8">Booking Confirmation</h2>
+          <h1 className="text-3xl font-bold mb-8">Booking Confirmation</h1>
           
           <Card>
             <CardHeader>
-              <CardTitle>Booking Details</CardTitle>
+              <CardTitle>Class Details</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
@@ -114,9 +71,7 @@ const BookingConfirmation = () => {
               </div>
               <div>
                 <h3 className="font-medium">Location</h3>
-                <p className="text-neutral-600">{classItem.city} Studio</p>
-                <p className="text-neutral-600">123 Creative Street</p>
-                <p className="text-neutral-600">{classItem.city}, Sweden</p>
+                <p className="text-neutral-600">{classItem.city}</p>
               </div>
               
               <Separator />
