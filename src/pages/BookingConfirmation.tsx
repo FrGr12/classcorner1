@@ -26,12 +26,20 @@ const BookingConfirmation = () => {
     navigate(`/class/${classItem.category}/${classItem.id}`);
   };
 
-  const formatClassDate = (date: Date | Date[]) => {
+  const formatClassDateTime = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
-      return format(date[0], "MMMM d, yyyy");
+      return {
+        date: format(date[0], "MMMM d, yyyy"),
+        time: format(date[0], "h:mm a")
+      };
     }
-    return format(date, "MMMM d, yyyy");
+    return {
+      date: format(date, "MMMM d, yyyy"),
+      time: format(date, "h:mm a")
+    };
   };
+
+  const dateTime = formatClassDateTime(classItem.date);
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -64,9 +72,9 @@ const BookingConfirmation = () => {
                 <p className="text-neutral-600">{classItem.instructor}</p>
               </div>
               <div>
-                <h3 className="font-medium">Date</h3>
+                <h3 className="font-medium">Date & Time</h3>
                 <p className="text-neutral-600">
-                  {formatClassDate(classItem.date)}
+                  {dateTime.date} at {dateTime.time}
                 </p>
               </div>
               <div>
