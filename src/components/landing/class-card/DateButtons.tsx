@@ -20,7 +20,20 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
   const hasMoreDates = dates.length > 2;
 
   const handleDateClick = (date: Date) => {
-    if (classId && category) {
+    if (isDetailsPage) {
+      navigate("/booking-confirmation", {
+        state: {
+          classItem: {
+            ...location.state?.classItem,
+            date: date,
+            id: classId,
+            category: category,
+            price: price,
+            maxParticipants: maxParticipants
+          }
+        }
+      });
+    } else if (classId && category) {
       navigate(`/class/${category}/${classId}`, { 
         state: { selectedDate: date }
       });
@@ -49,10 +62,10 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
                   {format(new Date(date), 'HH:mm')}–{format(new Date(date).setHours(new Date(date).getHours() + 2), 'HH:mm')}
                 </div>
                 <div className="text-sm text-neutral-600">
-                  {maxParticipants} platser kvar
+                  {maxParticipants} spots left
                 </div>
                 <div className="text-sm font-medium">
-                  {price} kr/person
+                  ${price} per person
                 </div>
               </div>
               <Button
