@@ -24,7 +24,7 @@ const PerformanceMetrics = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: performanceData, error } = await supabase
+      const { data: courses } = await supabase
         .from('courses')
         .select(`
           id,
@@ -36,9 +36,9 @@ const PerformanceMetrics = () => {
         .eq('instructor_id', user.id)
         .eq('status', 'published');
 
-      if (error) throw error;
+      if (!courses) return;
 
-      const formattedData = performanceData.map(course => {
+      const formattedData = courses.map(course => {
         const reviews = course.course_reviews || [];
         const totalRating = reviews.reduce((sum, review) => sum + (review.rating || 0), 0);
         const averageRating = reviews.length > 0 ? totalRating / reviews.length : 0;

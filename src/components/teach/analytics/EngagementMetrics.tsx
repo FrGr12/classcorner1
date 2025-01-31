@@ -24,7 +24,7 @@ const EngagementMetrics = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data: engagementData, error } = await supabase
+      const { data: courses } = await supabase
         .from('courses')
         .select(`
           id,
@@ -35,9 +35,9 @@ const EngagementMetrics = () => {
         .eq('instructor_id', user.id)
         .eq('status', 'published');
 
-      if (error) throw error;
+      if (!courses) return;
 
-      const formattedData = engagementData.map(course => ({
+      const formattedData = courses.map(course => ({
         course_title: course.title,
         total_bookings: course.bookings?.length || 0,
         waitlist_count: course.waitlist_entries?.length || 0
