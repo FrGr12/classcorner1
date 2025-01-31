@@ -5,13 +5,12 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MessagesTable from "../crm/MessagesTable";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 const TeacherMessages = () => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
 
   useEffect(() => {
     fetchMessages();
@@ -20,7 +19,10 @@ const TeacherMessages = () => {
   const fetchMessages = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        toast.error("Please sign in to view messages");
+        return;
+      }
 
       const { data, error } = await supabase
         .from('communications')
@@ -35,11 +37,8 @@ const TeacherMessages = () => {
       if (error) throw error;
       setMessages(data);
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to fetch messages",
-      });
+      console.error("Error fetching messages:", error);
+      toast.error(error.message || "Failed to fetch messages");
     } finally {
       setLoading(false);
     }
@@ -48,7 +47,10 @@ const TeacherMessages = () => {
   const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        toast.error("Please sign in to send messages");
+        return;
+      }
 
       const { error } = await supabase
         .from('communications')
@@ -63,18 +65,11 @@ const TeacherMessages = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Success",
-        description: "Message sent successfully",
-      });
-
+      toast.success("Message sent successfully");
       fetchMessages();
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to send message",
-      });
+      console.error("Error sending message:", error);
+      toast.error(error.message || "Failed to send message");
     }
   };
 

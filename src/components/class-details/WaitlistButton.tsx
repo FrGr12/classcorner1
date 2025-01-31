@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Loader2 } from "lucide-react";
 
@@ -21,7 +21,6 @@ interface WaitlistButtonProps {
 const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButtonProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleJoinWaitlist = async () => {
     try {
@@ -29,11 +28,7 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
       
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please sign in to join the waitlist",
-          variant: "destructive",
-        });
+        toast.error("Please sign in to join the waitlist");
         return;
       }
 
@@ -47,17 +42,11 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
 
       if (error) throw error;
 
-      toast({
-        title: "Success!",
-        description: "You've been added to the waitlist. We'll notify you when a spot becomes available.",
-      });
+      toast.success("You've been added to the waitlist. We'll notify you when a spot becomes available.");
       setIsDialogOpen(false);
     } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to join waitlist",
-        variant: "destructive",
-      });
+      console.error("Error joining waitlist:", error);
+      toast.error(error.message || "Failed to join waitlist");
     } finally {
       setIsLoading(false);
     }
