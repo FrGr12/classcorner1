@@ -31,11 +31,11 @@ const Auth = () => {
           providers={["google"]}
         />
 
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center space-y-2">
           <Button
             variant="link"
             className="text-sm text-neutral-600"
-            onClick={() => navigate("/auth/reset-password")}
+            onClick={() => navigate("/password-reset")}
           >
             Forgot your password?
           </Button>
