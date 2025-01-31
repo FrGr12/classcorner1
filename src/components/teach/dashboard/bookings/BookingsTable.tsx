@@ -33,7 +33,7 @@ const BookingsTable = ({ bookings, onStatusUpdate, onReschedule }: BookingsTable
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Student</TableHead>
+          <TableHead>Student ID</TableHead>
           <TableHead>Class</TableHead>
           <TableHead>Date</TableHead>
           <TableHead>Status</TableHead>
@@ -44,9 +44,7 @@ const BookingsTable = ({ bookings, onStatusUpdate, onReschedule }: BookingsTable
       <TableBody>
         {bookings.map((booking) => (
           <TableRow key={booking.id}>
-            <TableCell>
-              {booking.student.first_name} {booking.student.last_name}
-            </TableCell>
+            <TableCell>{booking.student_id}</TableCell>
             <TableCell>{booking.course.title}</TableCell>
             <TableCell>
               {format(new Date(booking.session.start_time), "PPp")}
