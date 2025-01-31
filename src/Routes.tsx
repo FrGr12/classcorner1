@@ -28,6 +28,7 @@ import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
 import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
 import TeacherPremium from "@/components/teach/dashboard/TeacherPremium";
+import TeacherLearningHub from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
 import CreateClass from "@/components/teach/CreateClass";
 
 // Import user dashboard components
@@ -101,6 +102,7 @@ export const router = createBrowserRouter([
       { path: "waitlist", element: <TeacherWaitlist /> },
       { path: "payments", element: <PaymentHistory /> },
       { path: "premium", element: <TeacherPremium /> },
+      { path: "learning-hub", element: <TeacherLearningHub /> },
     ],
   },
   {

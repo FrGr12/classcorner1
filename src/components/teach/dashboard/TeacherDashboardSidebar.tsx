@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -14,6 +13,7 @@ import {
   Menu,
   Wallet,
   Crown,
+  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
@@ -35,11 +35,11 @@ const TeacherDashboardSidebar = () => {
     { icon: Bell, label: "Waitlist", path: "/teach/waitlist" },
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
     { icon: Crown, label: "Premium Features", path: "/teach/premium" },
+    { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
   ];
 
   return (
     <>
-      {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 z-20 bg-black/80 lg:hidden ${
           isOpen ? "block" : "hidden"
@@ -47,7 +47,6 @@ const TeacherDashboardSidebar = () => {
         onClick={toggle}
       />
       
-      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
