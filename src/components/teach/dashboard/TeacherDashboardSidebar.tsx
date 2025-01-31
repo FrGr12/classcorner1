@@ -13,6 +13,7 @@ import {
   Bell,
   Menu,
   Wallet,
+  Crown,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
@@ -33,6 +34,7 @@ const TeacherDashboardSidebar = () => {
     { icon: Tag, label: "Promotions", path: "/teach/promotions" },
     { icon: Bell, label: "Waitlist", path: "/teach/waitlist" },
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
+    { icon: Crown, label: "Premium Features", path: "/teach/premium" },
   ];
 
   return (

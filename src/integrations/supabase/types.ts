@@ -160,6 +160,44 @@ export type Database = {
           },
         ]
       }
+      course_boosts: {
+        Row: {
+          boost_type: string | null
+          course_id: number | null
+          created_at: string | null
+          end_time: string | null
+          id: number
+          start_time: string | null
+          status: string | null
+        }
+        Insert: {
+          boost_type?: string | null
+          course_id?: number | null
+          created_at?: string | null
+          end_time?: string | null
+          id?: number
+          start_time?: string | null
+          status?: string | null
+        }
+        Update: {
+          boost_type?: string | null
+          course_id?: number | null
+          created_at?: string | null
+          end_time?: string | null
+          id?: number
+          start_time?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_boosts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       course_category_assignments: {
         Row: {
           assigned_at: string | null
@@ -518,6 +556,42 @@ export type Database = {
           phone?: string | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
+        }
+        Relationships: []
+      }
+      teacher_premium_features: {
+        Row: {
+          created_at: string | null
+          features: Json | null
+          id: number
+          is_active: boolean | null
+          subscription_end: string | null
+          subscription_start: string | null
+          subscription_type: string | null
+          teacher_id: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          features?: Json | null
+          id?: number
+          is_active?: boolean | null
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          teacher_id?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          features?: Json | null
+          id?: number
+          is_active?: boolean | null
+          subscription_end?: string | null
+          subscription_start?: string | null
+          subscription_type?: string | null
+          teacher_id?: string | null
+          updated_at?: string | null
         }
         Relationships: []
       }
