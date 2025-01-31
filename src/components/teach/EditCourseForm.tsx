@@ -72,6 +72,8 @@ const EditCourseForm = () => {
   useEffect(() => {
     const fetchCourse = async () => {
       try {
+        if (!id) return;
+        
         const { data: course, error } = await supabase
           .from("courses")
           .select(`
@@ -83,7 +85,7 @@ const EditCourseForm = () => {
               image_path
             )
           `)
-          .eq("id", id)
+          .eq("id", Number(id))
           .single();
 
         if (error) throw error;
@@ -106,7 +108,7 @@ const EditCourseForm = () => {
             basePricePrivate: course.base_price_private?.toString(),
             minGroupSize: course.min_group_size?.toString(),
             maxGroupSize: course.max_group_size?.toString(),
-            paymentTiming: course.payment_timing || "instant",
+            paymentTiming: (course.payment_timing as "instant" | "post_course") || "instant",
           });
 
           if (course.course_sessions) {
