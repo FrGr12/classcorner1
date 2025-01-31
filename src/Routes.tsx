@@ -50,7 +50,7 @@ export const router = createBrowserRouter([
     element: <UserDashboard />,
   },
   {
-    path: "/teacher/dashboard",
+    path: "/teacher/dashboard/*",
     element: <TeacherDashboard />,
   },
   {
