@@ -1,95 +1,117 @@
 import { Link, useLocation } from "react-router-dom";
-import { 
-  MessageSquare, 
-  Calendar, 
-  Bell, 
-  Heart, 
-  Star, 
-  User,
-  BookOpen,
-  LogOut,
-  Menu
-} from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import {
+  LayoutDashboard,
+  MessageSquare,
+  CalendarDays,
+  Bell,
+  Users,
+  Bookmark,
+  UserCircle,
+  Star,
+  Settings,
+  Menu,
+} from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
 const UserDashboardSidebar = () => {
   const location = useLocation();
-  const { toast } = useToast();
   const { isOpen, toggle } = useSidebarContext();
 
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut();
-      toast({
-        title: "Logged out successfully"
-      });
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error logging out",
-        description: error.message
-      });
-    }
-  };
-
-  const menuItems = [
-    { icon: MessageSquare, label: "Messages", path: "/dashboard/messages" },
-    { icon: Calendar, label: "Bookings", path: "/dashboard/bookings" },
-    { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
-    { icon: BookOpen, label: "Matches", path: "/dashboard/matches" },
-    { icon: Heart, label: "Saved Classes", path: "/dashboard/saved" },
-    { icon: User, label: "Profile", path: "/dashboard/profile" },
-    { icon: Star, label: "Reviews", path: "/dashboard/reviews" },
+  const links = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutDashboard,
+    },
+    {
+      title: "Messages",
+      href: "/dashboard/messages",
+      icon: MessageSquare,
+    },
+    {
+      title: "Bookings",
+      href: "/dashboard/bookings",
+      icon: CalendarDays,
+    },
+    {
+      title: "Notifications",
+      href: "/dashboard/notifications",
+      icon: Bell,
+    },
+    {
+      title: "Matches",
+      href: "/dashboard/matches",
+      icon: Users,
+    },
+    {
+      title: "Saved Classes",
+      href: "/dashboard/saved",
+      icon: Bookmark,
+    },
+    {
+      title: "Profile",
+      href: "/dashboard/profile",
+      icon: UserCircle,
+    },
+    {
+      title: "Preferences",
+      href: "/dashboard/preferences",
+      icon: Settings,
+    },
+    {
+      title: "Reviews",
+      href: "/dashboard/reviews",
+      icon: Star,
+    },
   ];
 
   return (
-    <aside className={`${isOpen ? 'w-64' : 'w-20'} bg-white border-r border-neutral-200 h-screen sticky top-0 transition-all duration-300`}>
-      <div className="p-4">
-        <div className="flex items-center justify-between mb-8">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-primary rounded-full"></div>
-            {isOpen && <span className="text-xl font-semibold">classcorner</span>}
-          </Link>
-          <Button variant="ghost" size="icon" onClick={toggle} className="lg:hidden">
-            <Menu className="h-5 w-5" />
-          </Button>
-        </div>
-
-        <nav className="space-y-2">
-          {menuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = location.pathname === item.path;
-            return (
-              <Link
-                key={item.path}
-                to={item.path}
-                className={`flex items-center gap-3 px-4 py-2 rounded-lg transition-colors
-                  ${isActive 
-                    ? 'bg-primary text-white' 
-                    : 'text-neutral-600 hover:bg-neutral-100'}`}
-              >
-                <Icon className="w-5 h-5" />
-                {isOpen && <span>{item.label}</span>}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <Button 
-            variant="ghost" 
-            className="w-full justify-start gap-3" 
-            onClick={handleLogout}
+    <>
+      <div
+        className={cn(
+          "fixed inset-0 z-20 bg-black/80 lg:hidden",
+          isOpen ? "block" : "hidden"
+        )}
+        onClick={toggle}
+      />
+      <aside
+        className={cn(
+          "fixed inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto",
+          isOpen ? "translate-x-0" : "-translate-x-full"
+        )}
+      >
+        <div className="flex h-16 items-center justify-between px-4 border-b">
+          <h2 className="text-xl font-semibold">Dashboard</h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={toggle}
           >
-            <LogOut className="w-5 h-5" />
-            {isOpen && <span>Log Out</span>}
+            <Menu className="h-6 w-6" />
           </Button>
         </div>
-      </div>
-    </aside>
+        <nav className="space-y-1 p-4">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={cn(
+                "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
+                location.pathname === link.href
+                  ? "bg-primary text-primary-foreground"
+                  : "text-gray-700 hover:bg-gray-100"
+              )}
+            >
+              <link.icon className="h-5 w-5" />
+              <span>{link.title}</span>
+            </Link>
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 
