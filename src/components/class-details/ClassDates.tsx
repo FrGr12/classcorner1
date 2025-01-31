@@ -4,6 +4,9 @@ import { Separator } from "@/components/ui/separator";
 import DateButtons from "@/components/landing/class-card/DateButtons";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -12,7 +15,45 @@ interface ClassDatesProps {
 }
 
 const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) => {
+  const navigate = useNavigate();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
+
+  const handleBooking = async (date: Date) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        toast.error("Please log in to book a class");
+        navigate("/auth", { state: { returnTo: window.location.pathname } });
+        return;
+      }
+
+      // Get the session ID for the selected date
+      const { data: session, error: sessionError } = await supabase
+        .from('course_sessions')
+        .select('id')
+        .eq('course_id', classItem.id)
+        .eq('start_time', date.toISOString())
+        .single();
+
+      if (sessionError || !session) {
+        toast.error("Session not found");
+        return;
+      }
+
+      navigate("/booking-confirmation", { 
+        state: { 
+          classItem: {
+            ...classItem,
+            date: date,
+            sessionId: session.id
+          }
+        }
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to process booking");
+    }
+  };
   
   return (
     <>
@@ -33,7 +74,7 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
               {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}
             </p>
             <p className="text-sm text-neutral-500 mt-1">
-              Class duration: 2 hours
+              Class duration: {classItem.duration || '2 hours'}
             </p>
           </div>
         )}
@@ -44,6 +85,7 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
           selectedDate={selectedDate}
           classId={classItem.id}
           category={classItem.category}
+          onDateSelect={handleBooking}
         />
       </div>
     </>

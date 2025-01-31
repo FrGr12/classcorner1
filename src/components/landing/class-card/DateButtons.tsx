@@ -10,29 +10,28 @@ export interface DateButtonsProps {
   classId?: number;
   category?: string;
   selectedDate?: Date;
+  onDateSelect?: (date: Date) => void;
 }
 
-const DateButtons = ({ dates, price, classId, category, selectedDate, maxParticipants = 10 }: DateButtonsProps) => {
+const DateButtons = ({ 
+  dates, 
+  price, 
+  classId, 
+  category, 
+  selectedDate, 
+  maxParticipants = 10,
+  onDateSelect 
+}: DateButtonsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isDetailsPage = location.pathname.includes('/class/');
   const visibleDates = dates.slice(0, 2);
   const hasMoreDates = dates.length > 2;
 
-  const handleDateClick = (date: Date) => {
-    if (isDetailsPage) {
-      navigate("/booking-confirmation", {
-        state: {
-          classItem: {
-            ...location.state?.classItem,
-            date: date,
-            id: classId,
-            category: category,
-            price: price,
-            maxParticipants: maxParticipants
-          }
-        }
-      });
+  const handleDateClick = (date: Date, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDateSelect) {
+      onDateSelect(date);
     } else if (classId && category) {
       navigate(`/class/${category}/${classId}`, { 
         state: { selectedDate: date }
@@ -70,10 +69,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDateClick(date);
-                }}
+                onClick={(e) => handleDateClick(date, e)}
               >
                 Book Now
               </Button>
@@ -105,10 +101,7 @@ const DateButtons = ({ dates, price, classId, category, selectedDate, maxPartici
             variant="outline"
             size="sm"
             className="text-xs w-full bg-white hover:bg-neutral-50 border-neutral-200"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDateClick(date);
-            }}
+            onClick={(e) => handleDateClick(date, e)}
           >
             {format(new Date(date), 'EEE, d MMM')}
           </Button>

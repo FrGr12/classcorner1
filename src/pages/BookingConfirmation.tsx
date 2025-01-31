@@ -7,19 +7,35 @@ import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
 import { ArrowLeft, Clock, MapPin, Users, Star } from "lucide-react";
+import { createBooking } from "@/services/bookingService";
+import { toast } from "sonner";
 
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const classItem = location.state?.classItem as ClassItem;
+  const classItem = location.state?.classItem as (ClassItem & { sessionId?: number });
 
   if (!classItem) {
     navigate("/");
     return null;
   }
 
-  const handleProceedToPayment = () => {
-    navigate("/payment", { state: { classItem } });
+  const handleProceedToPayment = async () => {
+    try {
+      if (!classItem.sessionId) {
+        throw new Error("Session ID is required");
+      }
+
+      const booking = await createBooking(classItem, classItem.sessionId);
+      navigate("/payment", { 
+        state: { 
+          classItem,
+          bookingId: booking.id
+        }
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create booking");
+    }
   };
 
   const handleGoBack = () => {
@@ -68,7 +84,7 @@ const BookingConfirmation = () => {
               <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-600">
                 <div className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
-                  <span>2 hours</span>
+                  <span>{classItem.duration || '2 hours'}</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <MapPin className="h-4 w-4" />
