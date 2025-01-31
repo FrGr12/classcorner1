@@ -523,6 +523,130 @@ export type Database = {
         }
         Relationships: []
       }
+      marketing_campaigns: {
+        Row: {
+          campaign_type: string
+          content: string | null
+          course_id: number | null
+          created_at: string
+          generated_assets: Json | null
+          id: number
+          instructor_id: string
+          performance_metrics: Json | null
+          scheduled_at: string | null
+          sent_at: string | null
+          status: string
+        }
+        Insert: {
+          campaign_type: string
+          content?: string | null
+          course_id?: number | null
+          created_at?: string
+          generated_assets?: Json | null
+          id?: number
+          instructor_id: string
+          performance_metrics?: Json | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status: string
+        }
+        Update: {
+          campaign_type?: string
+          content?: string | null
+          course_id?: number | null
+          created_at?: string
+          generated_assets?: Json | null
+          id?: number
+          instructor_id?: string
+          performance_metrics?: Json | null
+          scheduled_at?: string | null
+          sent_at?: string | null
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "marketing_campaigns_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_logs: {
+        Row: {
+          booking_id: number | null
+          content: string | null
+          error: string | null
+          id: number
+          notification_type: string
+          sent_at: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          booking_id?: number | null
+          content?: string | null
+          error?: string | null
+          id?: number
+          notification_type: string
+          sent_at?: string
+          status: string
+          user_id: string
+        }
+        Update: {
+          booking_id?: number | null
+          content?: string | null
+          error?: string | null
+          id?: number
+          notification_type?: string
+          sent_at?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_logs_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      notification_settings: {
+        Row: {
+          created_at: string
+          email_reminders: boolean | null
+          id: number
+          phone_number: string | null
+          reminder_hours: number[] | null
+          sms_reminders: boolean | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email_reminders?: boolean | null
+          id?: number
+          phone_number?: string | null
+          reminder_hours?: number[] | null
+          sms_reminders?: boolean | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          email_reminders?: boolean | null
+          id?: number
+          phone_number?: string | null
+          reminder_hours?: number[] | null
+          sms_reminders?: boolean | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
