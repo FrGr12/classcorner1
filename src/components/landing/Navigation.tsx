@@ -4,7 +4,13 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ChevronDown, BookOpen, Users, School } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -68,12 +74,36 @@ const Navigation = () => {
           >
             About
           </Link>
-          <Link 
-            to="/teach" 
-            className="text-xs text-primary hover:text-primary/80 transition-colors"
-          >
-            Start teaching
-          </Link>
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="sm" className="text-xs">
+                For Teachers
+                <ChevronDown className="ml-1 h-3 w-3" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem asChild>
+                <Link to="/teach" className="flex items-center">
+                  <School className="mr-2 h-4 w-4" />
+                  <span>Start Teaching</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/resources" className="flex items-center">
+                  <BookOpen className="mr-2 h-4 w-4" />
+                  <span>Resources</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link to="/community" className="flex items-center">
+                  <Users className="mr-2 h-4 w-4" />
+                  <span>Community</span>
+                </Link>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+
           <Button
             onClick={handleAuthClick}
             variant="ghost"
