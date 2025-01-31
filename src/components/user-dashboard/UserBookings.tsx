@@ -50,16 +50,17 @@ const UserBookings = () => {
           item.course &&
           typeof item.course === 'object' &&
           typeof item.course.title === 'string' &&
-          typeof item.course.location === 'string' &&
-          (!item.session || (
-            typeof item.session === 'object' &&
-            (item.session.start_time === null || typeof item.session.start_time === 'string')
-          ))
+          typeof item.course.location === 'string'
         );
       };
 
       if (Array.isArray(data)) {
-        const validBookings = data.filter(isValidBooking);
+        const validBookings = data
+          .filter(isValidBooking)
+          .map(booking => ({
+            ...booking,
+            session: booking.session && !('error' in booking.session) ? booking.session : null
+          }));
         setBookings(validBookings);
       }
     } catch (error: any) {
