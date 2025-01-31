@@ -3,14 +3,17 @@ import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
-import Teach from "@/pages/Teach";
-import TeacherDashboard from "@/pages/TeacherDashboard";
+import Payment from "@/pages/Payment";
+import PaymentFailed from "@/pages/PaymentFailed";
+import BookingSuccess from "@/pages/BookingSuccess";
 import UserDashboard from "@/pages/UserDashboard";
-import EmailVerification from "@/pages/EmailVerification";
-import EditCourse from "@/pages/EditCourse";
-import PasswordReset from "@/pages/PasswordReset";
+import TeacherDashboard from "@/pages/TeacherDashboard";
+import Teach from "@/pages/Teach";
+import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
+import EmailVerification from "@/pages/EmailVerification";
+import PasswordReset from "@/pages/PasswordReset";
 
 export const router = createBrowserRouter([
   {
@@ -23,10 +26,6 @@ export const router = createBrowserRouter([
     element: <Auth />,
   },
   {
-    path: "/auth/reset-password",
-    element: <PasswordReset />,
-  },
-  {
     path: "/browse",
     element: <Browse />,
   },
@@ -35,27 +34,43 @@ export const router = createBrowserRouter([
     element: <ClassDetails />,
   },
   {
-    path: "/teach/new",
-    element: <Teach />,
+    path: "/payment",
+    element: <Payment />,
   },
   {
-    path: "/teach/edit/:id",
-    element: <EditCourse />,
+    path: "/payment/failed",
+    element: <PaymentFailed />,
   },
   {
-    path: "/teach/dashboard",
-    element: <TeacherDashboard />,
+    path: "/booking/success",
+    element: <BookingSuccess />,
   },
   {
     path: "/dashboard",
     element: <UserDashboard />,
   },
   {
-    path: "/verify",
-    element: <EmailVerification />,
+    path: "/teacher/dashboard",
+    element: <TeacherDashboard />,
+  },
+  {
+    path: "/teach",
+    element: <Teach />,
+  },
+  {
+    path: "/about",
+    element: <About />,
   },
   {
     path: "*",
     element: <NotFound />,
+  },
+  {
+    path: "/verify",
+    element: <EmailVerification />,
+  },
+  {
+    path: "/reset-password",
+    element: <PasswordReset />,
   },
 ]);

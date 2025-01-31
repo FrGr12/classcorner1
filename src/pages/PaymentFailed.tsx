@@ -1,80 +1,72 @@
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircle, ArrowLeft } from "lucide-react";
-import Navigation from "@/components/landing/Navigation";
-import Footer from "@/components/landing/Footer";
-import { ClassItem } from "@/types/class";
+import { XCircle, RefreshCcw, ArrowLeft } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 const PaymentFailed = () => {
   const navigate = useNavigate();
-  const location = useLocation();
-  const error = location.state?.error as string;
-  const classItem = location.state?.classItem as ClassItem;
+  const [searchParams] = useSearchParams();
+  const { toast } = useToast();
+  const errorMessage = searchParams.get("error") || "An error occurred during payment processing";
+  const courseId = searchParams.get("courseId");
+  const sessionId = searchParams.get("sessionId");
 
   const handleRetry = () => {
-    if (classItem) {
-      navigate("/payment", { state: { classItem } });
+    if (courseId && sessionId) {
+      navigate(`/payment?courseId=${courseId}&sessionId=${sessionId}`);
     } else {
-      navigate("/browse");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Missing course or session information",
+      });
     }
   };
 
-  const handleContact = () => {
-    window.location.href = "mailto:support@classcorner.com";
+  const handleBack = () => {
+    navigate(-1);
   };
 
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <Navigation />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="max-w-2xl mx-auto">
-          <Button
-            variant="outline"
-            size="lg"
-            className="mb-6 gap-2 text-base hover:bg-neutral-100"
-            onClick={() => navigate(-1)}
-          >
-            <ArrowLeft className="h-5 w-5" />
-            Back
-          </Button>
+    <div className="min-h-screen bg-neutral-50 pt-24">
+      <div className="container-padding max-w-2xl mx-auto">
+        <div className="glass-panel rounded-2xl p-8 text-center space-y-6">
+          <div className="flex justify-center">
+            <XCircle className="h-16 w-16 text-red-500" />
+          </div>
+          
+          <h1 className="text-2xl font-semibold text-neutral-800">
+            Payment Failed
+          </h1>
+          
+          <p className="text-neutral-600">
+            {errorMessage}
+          </p>
 
-          <Card className="w-full">
-            <CardHeader className="text-center">
-              <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
-                <AlertCircle className="w-6 h-6 text-red-600" />
-              </div>
-              <CardTitle className="text-2xl text-red-600">Payment Failed</CardTitle>
-              <CardDescription className="mt-2">
-                {error || "We couldn't process your payment. Please try again or contact support if the problem persists."}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Button
-                onClick={handleRetry}
-                className="w-full"
-              >
-                Try Payment Again
-              </Button>
-              <Button
-                variant="outline"
-                onClick={handleContact}
-                className="w-full"
-              >
-                Contact Support
-              </Button>
-              <Button
-                variant="link"
-                onClick={() => navigate("/browse")}
-                className="w-full"
-              >
-                Return to Browse Classes
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <Button
+              onClick={handleRetry}
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white flex items-center gap-2"
+            >
+              <RefreshCcw className="h-4 w-4" />
+              Try Again
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={handleBack}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Go Back
+            </Button>
+          </div>
+
+          <p className="text-sm text-neutral-500 pt-4">
+            If you continue to experience issues, please contact our support team.
+          </p>
         </div>
-      </main>
-      <Footer />
+      </div>
     </div>
   );
 };
