@@ -30,7 +30,7 @@ const TeacherAnalytics = () => {
             .eq('instructor_id', user.id)
         );
       
-      const uniqueStudents = new Set(studentsData?.map(b => b.student_id));
+      const uniqueStudents = new Set((studentsData || []).map(b => b.student_id));
 
       // Fetch average rating
       const { data: ratingsData } = await supabase
@@ -43,8 +43,8 @@ const TeacherAnalytics = () => {
             .eq('instructor_id', user.id)
         );
       
-      const avgRating = ratingsData?.length 
-        ? ratingsData.reduce((sum, review) => sum + (review.rating || 0), 0) / ratingsData.length
+      const avgRating = (ratingsData || []).length 
+        ? (ratingsData || []).reduce((sum, review) => sum + (review.rating || 0), 0) / ratingsData.length
         : 0;
 
       // Fetch active courses
@@ -84,8 +84,8 @@ const TeacherAnalytics = () => {
         .gte('created_at', firstDayLastMonth.toISOString())
         .lt('created_at', firstDayThisMonth.toISOString());
 
-      const currentMonthTotal = currentMonthRevenue?.reduce((sum, booking) => sum + Number(booking.total_price), 0) || 0;
-      const lastMonthTotal = lastMonthRevenue?.reduce((sum, booking) => sum + Number(booking.total_price), 0) || 0;
+      const currentMonthTotal = (currentMonthRevenue || []).reduce((sum, booking) => sum + Number(booking.total_price), 0);
+      const lastMonthTotal = (lastMonthRevenue || []).reduce((sum, booking) => sum + Number(booking.total_price), 0);
       
       const growthRate = lastMonthTotal === 0 
         ? 100 
@@ -94,7 +94,7 @@ const TeacherAnalytics = () => {
       setAnalyticsData({
         totalStudents: uniqueStudents.size,
         averageRating: Number(avgRating.toFixed(1)),
-        activeCourses: coursesData?.length || 0,
+        activeCourses: (coursesData || []).length,
         revenueGrowth: Number(growthRate.toFixed(1))
       });
     };
