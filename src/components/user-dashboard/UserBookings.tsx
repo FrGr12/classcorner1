@@ -56,9 +56,14 @@ const UserBookings = () => {
           typeof booking.status === 'string' &&
           typeof booking.payment_status === 'string' &&
           booking.session &&
+          typeof booking.session === 'object' &&
           !('error' in booking.session) && // Check that session is not an error object
+          'start_time' in booking.session && // Verify start_time exists
           typeof booking.session.start_time === 'string' &&
           booking.course &&
+          typeof booking.course === 'object' &&
+          'title' in booking.course &&
+          'location' in booking.course &&
           typeof booking.course.title === 'string' &&
           typeof booking.course.location === 'string'
         );
