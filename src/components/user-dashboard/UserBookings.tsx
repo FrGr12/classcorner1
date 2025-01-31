@@ -47,7 +47,6 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      // Type guard to ensure data matches Booking type
       const isValidBooking = (item: unknown): item is Booking => {
         if (!item || typeof item !== 'object') return false;
         
@@ -59,17 +58,14 @@ const UserBookings = () => {
           typeof booking.payment_status === 'string' &&
           booking.course &&
           typeof booking.course === 'object' &&
-          !Array.isArray(booking.course) &&
           typeof booking.course.title === 'string' &&
           typeof booking.course.location === 'string' &&
-          booking.session &&
-          typeof booking.session === 'object' &&
-          !Array.isArray(booking.session) &&
-          typeof booking.session.start_time === 'string'
+          (booking.session === null ||
+            (typeof booking.session === 'object' &&
+             typeof booking.session.start_time === 'string'))
         );
       };
 
-      // Filter and transform valid bookings
       if (Array.isArray(data)) {
         const validBookings = data.filter(isValidBooking);
         setBookings(validBookings);
@@ -138,7 +134,9 @@ const UserBookings = () => {
                     {booking.course.title}
                   </TableCell>
                   <TableCell>
-                    {format(new Date(booking.session.start_time), "PPp")}
+                    {booking.session?.start_time ? 
+                      format(new Date(booking.session.start_time), "PPp") :
+                      "No date set"}
                   </TableCell>
                   <TableCell>{booking.course.location}</TableCell>
                   <TableCell>{getStatusBadge(booking.status)}</TableCell>
