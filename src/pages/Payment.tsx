@@ -9,6 +9,15 @@ import { ClassItem } from "@/types/class";
 import { useForm } from "react-hook-form";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+
+const paymentSchema = z.object({
+  cardNumber: z.string().min(16, "Card number must be 16 digits").max(16),
+  expiryDate: z.string().regex(/^(0[1-9]|1[0-2])\/([0-9]{2})$/, "Must be in MM/YY format"),
+  cvv: z.string().min(3, "CVV must be 3 digits").max(4),
+  name: z.string().min(1, "Name is required"),
+});
 
 interface PaymentFormData {
   cardNumber: string;
@@ -22,7 +31,16 @@ const Payment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const classItem = location.state?.classItem as ClassItem;
-  const form = useForm<PaymentFormData>();
+
+  const form = useForm<PaymentFormData>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: {
+      cardNumber: "",
+      expiryDate: "",
+      cvv: "",
+      name: "",
+    },
+  });
 
   if (!classItem) {
     navigate("/");
@@ -33,15 +51,31 @@ const Payment = () => {
     navigate(-1);
   };
 
-  const onSubmit = (data: PaymentFormData) => {
-    toast({
-      title: "Processing payment...",
-      duration: 2000,
-    });
+  const onSubmit = async (data: PaymentFormData) => {
+    try {
+      toast({
+        title: "Processing payment...",
+        duration: 2000,
+      });
 
-    setTimeout(() => {
-      navigate("/booking-success", { state: { classItem } });
-    }, 2000);
+      // Simulate payment processing
+      const success = Math.random() > 0.5; // Simulate 50% success rate for testing
+
+      if (!success) {
+        throw new Error("Payment declined by issuer");
+      }
+
+      // If payment successful
+      setTimeout(() => {
+        navigate("/booking-success", { state: { classItem } });
+      }, 2000);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "Payment processing failed";
+      navigate("/payment-failed", { 
+        state: { error: errorMessage, classItem },
+        replace: true 
+      });
+    }
   };
 
   return (
@@ -75,7 +109,11 @@ const Payment = () => {
                       <FormItem>
                         <FormLabel>Card Number</FormLabel>
                         <FormControl>
-                          <Input placeholder="1234 5678 9012 3456" {...field} />
+                          <Input 
+                            placeholder="1234 5678 9012 3456" 
+                            {...field}
+                            maxLength={16}
+                          />
                         </FormControl>
                       </FormItem>
                     )}
@@ -89,7 +127,18 @@ const Payment = () => {
                         <FormItem>
                           <FormLabel>Expiry Date</FormLabel>
                           <FormControl>
-                            <Input placeholder="MM/YY" {...field} />
+                            <Input 
+                              placeholder="MM/YY" 
+                              {...field}
+                              maxLength={5}
+                              onChange={(e) => {
+                                let value = e.target.value;
+                                if (value.length === 2 && !value.includes('/')) {
+                                  value += '/';
+                                }
+                                field.onChange(value);
+                              }}
+                            />
                           </FormControl>
                         </FormItem>
                       )}
@@ -102,7 +151,12 @@ const Payment = () => {
                         <FormItem>
                           <FormLabel>CVV</FormLabel>
                           <FormControl>
-                            <Input placeholder="123" {...field} />
+                            <Input 
+                              placeholder="123" 
+                              {...field}
+                              maxLength={4}
+                              type="password"
+                            />
                           </FormControl>
                         </FormItem>
                       )}
