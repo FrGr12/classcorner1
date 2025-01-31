@@ -52,31 +52,33 @@ const UserBookings = () => {
         if (!item || typeof item !== 'object') return false;
         
         const booking = item as any;
-        
-        try {
-          return (
-            typeof booking.id === 'number' &&
-            typeof booking.booking_type === 'string' &&
-            typeof booking.status === 'string' &&
-            typeof booking.payment_status === 'string' &&
-            booking.session &&
-            typeof booking.session === 'object' &&
-            !Array.isArray(booking.session) &&
-            typeof booking.session.start_time === 'string' &&
-            booking.course &&
-            typeof booking.course === 'object' &&
-            !Array.isArray(booking.course) &&
-            typeof booking.course.title === 'string' &&
-            typeof booking.course.location === 'string'
-          );
-        } catch {
-          return false;
-        }
+        return (
+          typeof booking.id === 'number' &&
+          typeof booking.booking_type === 'string' &&
+          typeof booking.status === 'string' &&
+          typeof booking.payment_status === 'string' &&
+          booking.course &&
+          typeof booking.course === 'object' &&
+          !Array.isArray(booking.course) &&
+          typeof booking.course.title === 'string' &&
+          typeof booking.course.location === 'string' &&
+          booking.session &&
+          typeof booking.session === 'object' &&
+          !Array.isArray(booking.session) &&
+          typeof booking.session.start_time === 'string'
+        );
       };
 
-      // Filter and set only valid bookings
+      // Filter and transform valid bookings
       if (Array.isArray(data)) {
-        const validBookings = data.filter(isValidBooking);
+        const validBookings = data
+          .filter((item): item is Booking => {
+            try {
+              return isValidBooking(item);
+            } catch {
+              return false;
+            }
+          });
         setBookings(validBookings);
       }
     } catch (error: any) {
