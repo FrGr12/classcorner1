@@ -47,7 +47,7 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      setBookings(data);
+      setBookings(data as Booking[]);
     } catch (error: any) {
       toast({
         variant: "destructive",

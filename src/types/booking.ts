@@ -12,14 +12,9 @@ export interface Booking {
   updated_at: string;
   course: {
     title: string;
+    location: string;
   };
   session: {
     start_time: string;
-  };
-  student: {
-    id: string;
-    first_name: string | null;
-    last_name: string | null;
-    email?: string;
   };
 }
