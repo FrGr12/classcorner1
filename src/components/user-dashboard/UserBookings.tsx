@@ -56,6 +56,7 @@ const UserBookings = () => {
           typeof booking.status === 'string' &&
           typeof booking.payment_status === 'string' &&
           booking.session &&
+          !('error' in booking.session) && // Check that session is not an error object
           typeof booking.session.start_time === 'string' &&
           booking.course &&
           typeof booking.course.title === 'string' &&
