@@ -60,7 +60,7 @@ const UserBookings = () => {
           typeof booking.course === 'object' &&
           typeof booking.course.title === 'string' &&
           typeof booking.course.location === 'string' &&
-          (booking.session === null ||
+          (!booking.session || 
             (typeof booking.session === 'object' &&
              typeof booking.session.start_time === 'string'))
         );

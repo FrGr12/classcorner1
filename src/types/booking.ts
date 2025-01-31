@@ -21,5 +21,5 @@ export interface Booking {
   };
   session: {
     start_time: string;
-  } | null;
+  } | null | undefined;
 }
