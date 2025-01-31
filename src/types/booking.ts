@@ -19,7 +19,7 @@ export interface Booking {
     title: string;
     location: string;
   };
-  session: {
+  session?: {
     start_time: string;
-  } | null | undefined;
+  } | null;
 }

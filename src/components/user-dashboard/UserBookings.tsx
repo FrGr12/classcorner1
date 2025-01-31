@@ -62,6 +62,7 @@ const UserBookings = () => {
           typeof booking.course.location === 'string' &&
           (!booking.session || 
             (typeof booking.session === 'object' &&
+             booking.session !== null &&
              typeof booking.session.start_time === 'string'))
         );
       };
