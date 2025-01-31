@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -23,6 +24,36 @@ import {
 import { AlertCircle } from "lucide-react";
 
 const TeacherPromotions = () => {
+  const handleCreatePromotion = async () => {
+    try {
+      // Implement create promotion logic here
+      toast.success("Promotion created successfully!");
+    } catch (error) {
+      console.error("Error creating promotion:", error);
+      toast.error("Failed to create promotion. Please try again.");
+    }
+  };
+
+  const handleEditPromotion = async () => {
+    try {
+      // Implement edit promotion logic here
+      toast.success("Promotion updated successfully!");
+    } catch (error) {
+      console.error("Error updating promotion:", error);
+      toast.error("Failed to update promotion. Please try again.");
+    }
+  };
+
+  const handleDiscountTypeChange = (value: string) => {
+    try {
+      // Implement discount type change logic here
+      toast.success("Discount type updated");
+    } catch (error) {
+      console.error("Error updating discount type:", error);
+      toast.error("Failed to update discount type");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -40,7 +71,7 @@ const TeacherPromotions = () => {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={handleCreatePromotion}>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
@@ -55,7 +86,7 @@ const TeacherPromotions = () => {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label>Discount Type</Label>
-                <Select>
+                <Select onValueChange={handleDiscountTypeChange}>
                   <SelectTrigger>
                     <SelectValue placeholder="Select discount type" />
                   </SelectTrigger>
@@ -95,7 +126,7 @@ const TeacherPromotions = () => {
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
-                      <AlertDialogAction>Continue</AlertDialogAction>
+                      <AlertDialogAction onClick={handleEditPromotion}>Continue</AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
