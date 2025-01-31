@@ -20,6 +20,6 @@ export interface Booking {
     location: string;
   };
   session?: {
-    start_time: string;
+    start_time: string | null;
   } | null;
 }
