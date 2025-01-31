@@ -10,6 +10,7 @@ import BookingConfirmation from "@/pages/BookingConfirmation";
 import Payment from "@/pages/Payment";
 import BookingSuccess from "@/pages/BookingSuccess";
 import PasswordReset from "@/pages/PasswordReset";
+import PaymentFailed from "@/pages/PaymentFailed";
 import { Toaster } from "@/components/ui/toaster";
 
 export const Routes = () => {
@@ -27,6 +28,7 @@ export const Routes = () => {
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/booking-success" element={<BookingSuccess />} />
+        <Route path="/payment-failed" element={<PaymentFailed />} />
       </RouterRoutes>
       <Toaster />
     </>
