@@ -47,13 +47,19 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      // Type guard to ensure session data is valid
-      const validBookings = data?.filter((booking: any) => 
-        booking.session && 
-        typeof booking.session.start_time === 'string'
-      ) as Booking[];
+      // Improved type guard to ensure data matches Booking type
+      const validBookings = data?.filter((booking: any): booking is Booking => {
+        return (
+          booking &&
+          booking.session &&
+          typeof booking.session.start_time === 'string' &&
+          booking.course &&
+          typeof booking.course.title === 'string' &&
+          typeof booking.course.location === 'string'
+        );
+      }) || [];
 
-      setBookings(validBookings || []);
+      setBookings(validBookings);
     } catch (error: any) {
       toast({
         variant: "destructive",
