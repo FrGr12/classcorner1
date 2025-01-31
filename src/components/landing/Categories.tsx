@@ -110,7 +110,7 @@ const Categories = () => {
   ];
 
   return (
-    <section className="pt-24 sm:pt-28 bg-neutral-100 w-full">
+    <section className="pt-12 sm:pt-16 bg-neutral-100 w-full">
       <div className="px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="mt-8 text-neutral-600">
           <CategoryPills
