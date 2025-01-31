@@ -49,39 +49,42 @@ const UserBookings = () => {
 
       // Type guard to ensure data matches Booking type
       const isValidBooking = (booking: any): booking is Booking => {
-        return (
-          booking &&
-          typeof booking.id === 'number' &&
-          typeof booking.booking_type === 'string' &&
-          typeof booking.status === 'string' &&
-          typeof booking.payment_status === 'string' &&
-          booking.session &&
-          typeof booking.session === 'object' &&
-          !Array.isArray(booking.session) && // Ensure session is not an array
-          'start_time' in booking.session && // Verify start_time exists
-          typeof booking.session.start_time === 'string' &&
-          booking.course &&
-          typeof booking.course === 'object' &&
-          !Array.isArray(booking.course) && // Ensure course is not an array
-          'title' in booking.course &&
-          'location' in booking.course &&
-          typeof booking.course.title === 'string' &&
-          typeof booking.course.location === 'string'
-        );
+        try {
+          return (
+            booking &&
+            typeof booking.id === 'number' &&
+            typeof booking.booking_type === 'string' &&
+            typeof booking.status === 'string' &&
+            typeof booking.payment_status === 'string' &&
+            booking.session &&
+            typeof booking.session === 'object' &&
+            !Array.isArray(booking.session) &&
+            'start_time' in booking.session &&
+            typeof booking.session.start_time === 'string' &&
+            booking.course &&
+            typeof booking.course === 'object' &&
+            !Array.isArray(booking.course) &&
+            'title' in booking.course &&
+            'location' in booking.course &&
+            typeof booking.course.title === 'string' &&
+            typeof booking.course.location === 'string'
+          );
+        } catch {
+          return false;
+        }
       };
 
       // Filter and set only valid bookings
-      const validBookings = Array.isArray(data) 
-        ? data.filter((booking): booking is Booking => {
-            try {
-              return isValidBooking(booking);
-            } catch {
-              return false;
-            }
-          })
-        : [];
-      
-      setBookings(validBookings);
+      if (Array.isArray(data)) {
+        const validBookings = data.filter((item): item is Booking => {
+          try {
+            return isValidBooking(item);
+          } catch {
+            return false;
+          }
+        });
+        setBookings(validBookings);
+      }
     } catch (error: any) {
       toast({
         variant: "destructive",
