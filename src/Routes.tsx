@@ -28,6 +28,16 @@ import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
 import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
 
+// Import user dashboard components
+import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
+import UserMessages from "@/components/user-dashboard/UserMessages";
+import UserBookings from "@/components/user-dashboard/UserBookings";
+import UserNotifications from "@/components/user-dashboard/UserNotifications";
+import UserMatches from "@/components/user-dashboard/UserMatches";
+import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
+import UserProfile from "@/components/user-dashboard/UserProfile";
+import UserReviews from "@/components/user-dashboard/UserReviews";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -59,8 +69,18 @@ export const router = createBrowserRouter([
     element: <BookingSuccess />,
   },
   {
-    path: "/dashboard",
+    path: "/dashboard/*",
     element: <UserDashboard />,
+    children: [
+      { path: "", element: <UserDashboardOverview /> },
+      { path: "messages", element: <UserMessages /> },
+      { path: "bookings", element: <UserBookings /> },
+      { path: "notifications", element: <UserNotifications /> },
+      { path: "matches", element: <UserMatches /> },
+      { path: "saved", element: <UserSavedClasses /> },
+      { path: "profile", element: <UserProfile /> },
+      { path: "reviews", element: <UserReviews /> },
+    ],
   },
   {
     path: "/teach/*",
