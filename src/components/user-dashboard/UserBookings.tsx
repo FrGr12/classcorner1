@@ -47,8 +47,8 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      // Improved type guard to ensure data matches Booking type
-      const validBookings = data?.filter((booking: any): booking is Booking => {
+      // Type guard to ensure data matches Booking type
+      const isValidBooking = (booking: any): booking is Booking => {
         return (
           booking &&
           booking.session &&
@@ -58,8 +58,10 @@ const UserBookings = () => {
           typeof booking.course.title === 'string' &&
           typeof booking.course.location === 'string'
         );
-      }) || [];
+      };
 
+      // Filter and set only valid bookings
+      const validBookings = (data || []).filter(isValidBooking);
       setBookings(validBookings);
     } catch (error: any) {
       toast({
