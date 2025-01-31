@@ -15,6 +15,19 @@ import ErrorPage from "@/pages/ErrorPage";
 import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 
+// Import teacher dashboard components
+import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
+import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
+import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
+import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
+import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
+import TeacherMessages from "@/components/teach/dashboard/TeacherMessages";
+import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
+import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
+import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
+import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
+
 export const router = createBrowserRouter([
   {
     path: "/",
