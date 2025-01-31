@@ -115,9 +115,18 @@ const Auth = () => {
               user_type: userType,
             }}
           />
+          <div className="mt-4 text-center">
+            <Button
+              variant="link"
+              onClick={() => navigate("/auth/reset-password")}
+              className="text-sm text-gray-600 hover:text-gray-900"
+            >
+              Forgot your password?
+            </Button>
+          </div>
           <Button
             variant="link"
-            className="w-full mt-4"
+            className="w-full mt-2"
             onClick={() => setUserType(null)}
           >
             ← Choose a different role

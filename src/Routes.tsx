@@ -9,6 +9,7 @@ import ClassDetails from "@/pages/ClassDetails";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 import Payment from "@/pages/Payment";
 import BookingSuccess from "@/pages/BookingSuccess";
+import PasswordReset from "@/pages/PasswordReset";
 import { Toaster } from "@/components/ui/toaster";
 
 export const Routes = () => {
@@ -17,6 +18,7 @@ export const Routes = () => {
       <RouterRoutes>
         <Route path="/" element={<Index />} />
         <Route path="/auth" element={<Auth />} />
+        <Route path="/auth/reset-password" element={<PasswordReset />} />
         <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/user-dashboard/*" element={<UserDashboard />} />
         <Route path="/about" element={<About />} />
