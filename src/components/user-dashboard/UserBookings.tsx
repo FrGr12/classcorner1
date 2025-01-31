@@ -48,10 +48,13 @@ const UserBookings = () => {
       if (error) throw error;
 
       // Type guard to ensure data matches Booking type
-      const isValidBooking = (booking: any): booking is Booking => {
+      const isValidBooking = (item: unknown): item is Booking => {
+        if (!item || typeof item !== 'object') return false;
+        
+        const booking = item as any;
+        
         try {
           return (
-            booking &&
             typeof booking.id === 'number' &&
             typeof booking.booking_type === 'string' &&
             typeof booking.status === 'string' &&
@@ -59,13 +62,10 @@ const UserBookings = () => {
             booking.session &&
             typeof booking.session === 'object' &&
             !Array.isArray(booking.session) &&
-            'start_time' in booking.session &&
             typeof booking.session.start_time === 'string' &&
             booking.course &&
             typeof booking.course === 'object' &&
             !Array.isArray(booking.course) &&
-            'title' in booking.course &&
-            'location' in booking.course &&
             typeof booking.course.title === 'string' &&
             typeof booking.course.location === 'string'
           );
@@ -76,13 +76,7 @@ const UserBookings = () => {
 
       // Filter and set only valid bookings
       if (Array.isArray(data)) {
-        const validBookings = data.filter((item): item is Booking => {
-          try {
-            return isValidBooking(item);
-          } catch {
-            return false;
-          }
-        });
+        const validBookings = data.filter(isValidBooking);
         setBookings(validBookings);
       }
     } catch (error: any) {
