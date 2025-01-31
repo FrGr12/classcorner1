@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
-import { Calendar, Loader2 } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -10,15 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import LoadingState from "./LoadingState";
+import BookingsTable from "./BookingsTable";
 import type { Booking } from "@/types/booking";
 
 const UserBookings = () => {
@@ -59,11 +51,7 @@ const UserBookings = () => {
           booking.course &&
           typeof booking.course === 'object' &&
           typeof booking.course.title === 'string' &&
-          typeof booking.course.location === 'string' &&
-          (!booking.session || 
-            (typeof booking.session === 'object' &&
-             booking.session !== null &&
-             typeof booking.session.start_time === 'string'))
+          typeof booking.course.location === 'string'
         );
       };
 
@@ -82,23 +70,8 @@ const UserBookings = () => {
     }
   };
 
-  const getStatusBadge = (status: string) => {
-    const variants: { [key: string]: "default" | "secondary" | "destructive" } = {
-      confirmed: "default",
-      pending: "secondary",
-      cancelled: "destructive",
-    };
-    return <Badge variant={variants[status] || "default"}>{status}</Badge>;
-  };
-
   if (loading) {
-    return (
-      <Card className="p-6">
-        <div className="flex items-center justify-center">
-          <Loader2 className="h-6 w-6 animate-spin" />
-        </div>
-      </Card>
-    );
+    return <LoadingState />;
   }
 
   return (
@@ -113,42 +86,7 @@ const UserBookings = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {bookings.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">
-            You haven't made any bookings yet.
-          </p>
-        ) : (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Class</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Location</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Payment</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {bookings.map((booking) => (
-                <TableRow key={booking.id}>
-                  <TableCell className="font-medium">
-                    {booking.course.title}
-                  </TableCell>
-                  <TableCell>
-                    {booking.session?.start_time ? 
-                      format(new Date(booking.session.start_time), "PPp") :
-                      "No date set"}
-                  </TableCell>
-                  <TableCell>{booking.course.location}</TableCell>
-                  <TableCell>{getStatusBadge(booking.status)}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{booking.payment_status}</Badge>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        )}
+        <BookingsTable bookings={bookings} />
       </CardContent>
     </Card>
   );
