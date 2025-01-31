@@ -39,19 +39,22 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      const isValidBooking = (item: unknown): item is Booking => {
-        if (!item || typeof item !== 'object') return false;
-        
-        const booking = item as any;
+      const isValidBooking = (item: any): item is Booking => {
         return (
-          typeof booking.id === 'number' &&
-          typeof booking.booking_type === 'string' &&
-          typeof booking.status === 'string' &&
-          typeof booking.payment_status === 'string' &&
-          booking.course &&
-          typeof booking.course === 'object' &&
-          typeof booking.course.title === 'string' &&
-          typeof booking.course.location === 'string'
+          typeof item === 'object' &&
+          item !== null &&
+          typeof item.id === 'number' &&
+          typeof item.booking_type === 'string' &&
+          typeof item.status === 'string' &&
+          typeof item.payment_status === 'string' &&
+          item.course &&
+          typeof item.course === 'object' &&
+          typeof item.course.title === 'string' &&
+          typeof item.course.location === 'string' &&
+          (!item.session || (
+            typeof item.session === 'object' &&
+            (item.session.start_time === null || typeof item.session.start_time === 'string')
+          ))
         );
       };
 
