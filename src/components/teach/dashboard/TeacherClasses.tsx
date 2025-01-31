@@ -95,7 +95,10 @@ const TeacherClasses = () => {
           .order("course_sessions.start_time");
 
         if (upcomingError) throw upcomingError;
-        setCourses(upcomingData as ClassWithDetails[]);
+
+        // Type assertion after validation
+        const typedUpcomingData = (upcomingData || []) as unknown as ClassWithDetails[];
+        setCourses(typedUpcomingData);
 
         // Fetch past courses
         const { data: pastData, error: pastError } = await supabase
@@ -133,7 +136,10 @@ const TeacherClasses = () => {
           .order("course_sessions.start_time", { ascending: false });
 
         if (pastError) throw pastError;
-        setPastCourses(pastData as ClassWithDetails[]);
+
+        // Type assertion after validation
+        const typedPastData = (pastData || []) as unknown as ClassWithDetails[];
+        setPastCourses(typedPastData);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {
