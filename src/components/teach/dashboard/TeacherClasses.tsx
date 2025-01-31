@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Pencil, Users, Clock, MapPin } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,6 +20,7 @@ interface ClassWithDetails {
   id: number;
   title: string;
   location: string;
+  category: string;
   course_sessions: {
     start_time: string;
   }[];
@@ -33,14 +34,14 @@ interface ClassWithDetails {
       first_name: string;
       last_name: string;
       phone: string;
-    };
+    } | null;
   }[];
   waitlist_entries: {
     id: number;
     user: {
       first_name: string;
       last_name: string;
-    };
+    } | null;
   }[];
 }
 
@@ -62,7 +63,10 @@ const TeacherClasses = () => {
         const { data: upcomingData, error: upcomingError } = await supabase
           .from("courses")
           .select(`
-            *,
+            id,
+            title,
+            location,
+            category,
             course_sessions (
               start_time
             ),
@@ -91,13 +95,16 @@ const TeacherClasses = () => {
           .order("course_sessions.start_time");
 
         if (upcomingError) throw upcomingError;
-        setCourses(upcomingData || []);
+        setCourses(upcomingData as ClassWithDetails[]);
 
         // Fetch past courses
         const { data: pastData, error: pastError } = await supabase
           .from("courses")
           .select(`
-            *,
+            id,
+            title,
+            location,
+            category,
             course_sessions (
               start_time
             ),
@@ -112,6 +119,13 @@ const TeacherClasses = () => {
                 last_name,
                 phone
               )
+            ),
+            waitlist_entries (
+              id,
+              user:profiles!waitlist_entries_user_id_fkey (
+                first_name,
+                last_name
+              )
             )
           `)
           .eq("instructor_id", user.id)
@@ -119,7 +133,7 @@ const TeacherClasses = () => {
           .order("course_sessions.start_time", { ascending: false });
 
         if (pastError) throw pastError;
-        setPastCourses(pastData || []);
+        setPastCourses(pastData as ClassWithDetails[]);
       } catch (error) {
         console.error("Error fetching courses:", error);
       } finally {
@@ -166,7 +180,10 @@ const TeacherClasses = () => {
                 {course.bookings?.map((booking) => (
                   <div key={booking.id} className="flex items-center justify-between gap-2 text-sm">
                     <span>
-                      {booking.student.first_name} {booking.student.last_name}
+                      {booking.student ? 
+                        `${booking.student.first_name} ${booking.student.last_name}` :
+                        'Unknown Student'
+                      }
                     </span>
                     <Badge 
                       variant={booking.payment_status === 'paid' ? 'default' : 'destructive'}
@@ -185,7 +202,10 @@ const TeacherClasses = () => {
                   </Badge>
                   {course.waitlist_entries.map((entry) => (
                     <div key={entry.id} className="text-sm">
-                      {entry.user.first_name} {entry.user.last_name}
+                      {entry.user ? 
+                        `${entry.user.first_name} ${entry.user.last_name}` :
+                        'Unknown User'
+                      }
                     </div>
                   ))}
                 </div>
