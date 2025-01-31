@@ -1,115 +1,118 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { CheckCircle2, XCircle, Loader2 } from "lucide-react";
 
 const EmailVerification = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [verificationStatus, setVerificationStatus] = useState<"loading" | "success" | "error">("loading");
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
-    const verifyEmail = async () => {
-      try {
-        const token = searchParams.get("token");
-        const email = searchParams.get("email");
-        const type = searchParams.get("type");
-
-        if (type !== "signup" && type !== "recovery") {
-          throw new Error("Invalid verification type");
-        }
-
-        if (!token) {
-          throw new Error("No verification token found");
-        }
-
-        if (!email) {
-          throw new Error("No email found");
-        }
-
-        const { error } = await supabase.auth.verifyOtp({
-          email,
-          token,
-          type: "signup"
-        });
-
-        if (error) throw error;
-
-        setVerificationStatus("success");
-        toast({
-          title: "Email verified successfully",
-          description: "You can now log in to your account",
-        });
-
-        // Redirect to login after a short delay
-        setTimeout(() => {
-          navigate("/auth");
-        }, 3000);
-
-      } catch (error: any) {
-        console.error("Verification error:", error);
-        setVerificationStatus("error");
-        toast({
-          variant: "destructive",
-          title: "Verification failed",
-          description: error.message,
-        });
-      }
-    };
-
     verifyEmail();
-  }, [searchParams, navigate, toast]);
+  }, []);
+
+  const verifyEmail = async () => {
+    try {
+      const token = searchParams.get("token");
+      const email = searchParams.get("email");
+      const type = searchParams.get("type");
+
+      if (type !== "signup" && type !== "recovery") {
+        throw new Error("Invalid verification type");
+      }
+
+      if (!token) {
+        throw new Error("No verification token found");
+      }
+
+      if (!email) {
+        throw new Error("No email found");
+      }
+
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token,
+        type: "signup"
+      });
+
+      if (error) throw error;
+
+      setVerificationStatus("success");
+      toast({
+        title: "Email verified successfully",
+        description: "You can now sign in to your account",
+      });
+
+      // Redirect to login after a short delay
+      setTimeout(() => {
+        navigate("/auth");
+      }, 3000);
+    } catch (error: any) {
+      console.error("Verification error:", error);
+      setVerificationStatus("error");
+      setErrorMessage(error.message || "Failed to verify email");
+      toast({
+        variant: "destructive",
+        title: "Verification failed",
+        description: error.message || "Failed to verify email",
+      });
+    }
+  };
+
+  const handleRetry = () => {
+    setVerificationStatus("loading");
+    verifyEmail();
+  };
+
+  const handleContactSupport = () => {
+    window.location.href = "mailto:support@classcorner.com";
+  };
 
   return (
-    <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="mx-auto mb-4 w-12 h-12 rounded-full bg-neutral-100 flex items-center justify-center">
-            {verificationStatus === "loading" && (
-              <Loader2 className="w-6 h-6 text-neutral-600 animate-spin" />
-            )}
-            {verificationStatus === "success" && (
-              <CheckCircle2 className="w-6 h-6 text-green-600" />
-            )}
-            {verificationStatus === "error" && (
-              <XCircle className="w-6 h-6 text-red-600" />
-            )}
+    <div className="min-h-screen flex items-center justify-center bg-neutral-50">
+      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-sm">
+        {verificationStatus === "loading" && (
+          <div className="text-center">
+            <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Verifying your email</h2>
+            <p className="text-neutral-600">Please wait while we verify your email address...</p>
           </div>
-          <CardTitle>
-            {verificationStatus === "loading" && "Verifying Email"}
-            {verificationStatus === "success" && "Email Verified"}
-            {verificationStatus === "error" && "Verification Failed"}
-          </CardTitle>
-          <CardDescription className="mt-2">
-            {verificationStatus === "loading" && "Please wait while we verify your email address..."}
-            {verificationStatus === "success" && "Your email has been verified successfully. You will be redirected to login."}
-            {verificationStatus === "error" && "We couldn't verify your email. The link may have expired or is invalid."}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {verificationStatus === "error" && (
-            <>
-              <Button
-                onClick={() => navigate("/auth")}
-                className="w-full"
-              >
-                Return to Login
+        )}
+
+        {verificationStatus === "success" && (
+          <div className="text-center">
+            <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Email Verified!</h2>
+            <p className="text-neutral-600 mb-4">
+              Your email has been successfully verified. You will be redirected to the login page shortly.
+            </p>
+            <Button onClick={() => navigate("/auth")} className="w-full">
+              Go to Login
+            </Button>
+          </div>
+        )}
+
+        {verificationStatus === "error" && (
+          <div className="text-center">
+            <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2">Verification Failed</h2>
+            <p className="text-neutral-600 mb-4">{errorMessage}</p>
+            <div className="space-y-3">
+              <Button onClick={handleRetry} variant="outline" className="w-full">
+                Try Again
               </Button>
-              <Button
-                variant="outline"
-                onClick={() => window.location.href = "mailto:support@classcorner.com"}
-                className="w-full"
-              >
+              <Button onClick={handleContactSupport} variant="secondary" className="w-full">
                 Contact Support
               </Button>
-            </>
-          )}
-        </CardContent>
-      </Card>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
