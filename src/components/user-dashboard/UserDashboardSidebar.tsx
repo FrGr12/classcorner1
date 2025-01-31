@@ -36,13 +36,13 @@ const UserDashboardSidebar = () => {
   };
 
   const menuItems = [
-    { icon: MessageSquare, label: "Messages", path: "/user-dashboard/messages" },
-    { icon: Calendar, label: "Bookings", path: "/user-dashboard/bookings" },
-    { icon: Bell, label: "Notifications", path: "/user-dashboard/notifications" },
-    { icon: BookOpen, label: "Matches", path: "/user-dashboard/matches" },
-    { icon: Heart, label: "Saved Classes", path: "/user-dashboard/saved" },
-    { icon: User, label: "Profile", path: "/user-dashboard/profile" },
-    { icon: Star, label: "Reviews", path: "/user-dashboard/reviews" },
+    { icon: MessageSquare, label: "Messages", path: "/dashboard/messages" },
+    { icon: Calendar, label: "Bookings", path: "/dashboard/bookings" },
+    { icon: Bell, label: "Notifications", path: "/dashboard/notifications" },
+    { icon: BookOpen, label: "Matches", path: "/dashboard/matches" },
+    { icon: Heart, label: "Saved Classes", path: "/dashboard/saved" },
+    { icon: User, label: "Profile", path: "/dashboard/profile" },
+    { icon: Star, label: "Reviews", path: "/dashboard/reviews" },
   ];
 
   return (
