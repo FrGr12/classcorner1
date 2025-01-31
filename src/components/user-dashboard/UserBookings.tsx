@@ -47,7 +47,13 @@ const UserBookings = () => {
 
       if (error) throw error;
 
-      setBookings(data as Booking[]);
+      // Type guard to ensure session data is valid
+      const validBookings = data?.filter((booking: any) => 
+        booking.session && 
+        typeof booking.session.start_time === 'string'
+      ) as Booking[];
+
+      setBookings(validBookings || []);
     } catch (error: any) {
       toast({
         variant: "destructive",

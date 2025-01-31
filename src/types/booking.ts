@@ -10,6 +10,7 @@ export interface Booking {
   payment_status: string;
   created_at: string;
   updated_at: string;
+  special_requests?: string;
   cancellation_reason?: string;
   cancellation_date?: string;
   original_session_id?: number;
