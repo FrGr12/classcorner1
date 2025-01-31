@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
@@ -21,7 +21,6 @@ const TeacherBookings = () => {
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [filter, setFilter] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
-  const { toast } = useToast();
 
   useEffect(() => {
     fetchBookings();
@@ -30,7 +29,10 @@ const TeacherBookings = () => {
   const fetchBookings = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        toast.error("Please sign in to view bookings");
+        return;
+      }
 
       const { data, error } = await supabase
         .from('bookings')
@@ -60,12 +62,10 @@ const TeacherBookings = () => {
       }));
 
       setBookings(formattedBookings);
+      toast.success("Bookings loaded successfully");
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error fetching bookings",
-        description: error.message,
-      });
+      console.error("Error fetching bookings:", error);
+      toast.error(error.message || "Failed to fetch bookings");
     } finally {
       setLoading(false);
     }
@@ -73,6 +73,7 @@ const TeacherBookings = () => {
 
   const handleStatusUpdate = async (bookingId: number, status: string) => {
     try {
+      toast.loading("Updating booking status...");
       const { error } = await supabase
         .from('bookings')
         .update({ status })
@@ -80,18 +81,11 @@ const TeacherBookings = () => {
 
       if (error) throw error;
 
-      toast({
-        title: "Booking status updated",
-        description: `Booking has been ${status}`,
-      });
-
+      toast.success(`Booking ${status} successfully`);
       fetchBookings();
     } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error updating booking",
-        description: error.message,
-      });
+      console.error("Error updating booking:", error);
+      toast.error(error.message || "Failed to update booking");
     }
   };
 

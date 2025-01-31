@@ -78,6 +78,7 @@ const CourseForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
+      toast.loading("Creating your course...");
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -123,7 +124,10 @@ const CourseForm = () => {
           .from("course-images")
           .upload(filePath, file);
 
-        if (uploadError) throw uploadError;
+        if (uploadError) {
+          toast.error(`Failed to upload image ${i + 1}`);
+          throw uploadError;
+        }
 
         const { error: imageError } = await supabase
           .from("course_images")
@@ -149,7 +153,10 @@ const CourseForm = () => {
             recurrence_count: session.recurrenceCount,
           });
 
-        if (sessionError) throw sessionError;
+        if (sessionError) {
+          toast.error("Failed to create some sessions");
+          throw sessionError;
+        }
       }
 
       toast.success("Course created successfully!");

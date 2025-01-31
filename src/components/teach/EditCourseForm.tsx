@@ -73,6 +73,7 @@ const EditCourseForm = () => {
     const fetchCourse = async () => {
       try {
         if (!id) return;
+        toast.loading("Loading course details...");
         
         const { data: course, error } = await supabase
           .from("courses")
@@ -101,14 +102,14 @@ const EditCourseForm = () => {
             learningObjectives: course.learning_objectives || "",
             materialsIncluded: course.materials_included || "",
             setupInstructions: course.setup_instructions || "",
-            duration: "2 hours", // You might want to add this to your database
+            duration: course.duration || "",
             groupBookingsEnabled: course.group_bookings_enabled || false,
             privateBookingsEnabled: course.private_bookings_enabled || false,
             basePriceGroup: course.base_price_group?.toString(),
             basePricePrivate: course.base_price_private?.toString(),
             minGroupSize: course.min_group_size?.toString(),
             maxGroupSize: course.max_group_size?.toString(),
-            paymentTiming: (course.payment_timing as "instant" | "post_course") || "instant",
+            paymentTiming: course.payment_timing || "instant",
           });
 
           if (course.course_sessions) {
@@ -120,6 +121,7 @@ const EditCourseForm = () => {
               recurrenceCount: session.recurrence_count,
             })));
           }
+          toast.success("Course loaded successfully");
         }
       } catch (error) {
         console.error("Error fetching course:", error);
@@ -137,6 +139,7 @@ const EditCourseForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
+      toast.loading("Updating your course...");
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -179,7 +182,10 @@ const EditCourseForm = () => {
             .from("course-images")
             .upload(filePath, file);
 
-          if (uploadError) throw uploadError;
+          if (uploadError) {
+            toast.error(`Failed to upload image ${i + 1}`);
+            throw uploadError;
+          }
 
           const { error: imageError } = await supabase
             .from("course_images")
@@ -210,10 +216,13 @@ const EditCourseForm = () => {
             is_recurring: session.isRecurring,
             recurrence_pattern: session.recurrencePattern,
             recurrence_end_date: session.recurrenceEndDate?.toISOString(),
-            recurrence_count: session.recurrenceCount,
+            recurrence_count: session.recurrence_count,
           });
 
-        if (sessionError) throw sessionError;
+        if (sessionError) {
+          toast.error("Failed to update some sessions");
+          throw sessionError;
+        }
       }
 
       toast.success("Course updated successfully!");
