@@ -52,6 +52,7 @@ const UserBookings = () => {
         return (
           booking &&
           booking.session &&
+          booking.session.start_time &&
           typeof booking.session.start_time === 'string' &&
           booking.course &&
           typeof booking.course.title === 'string' &&
