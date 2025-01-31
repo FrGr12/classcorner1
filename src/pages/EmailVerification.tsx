@@ -16,6 +16,7 @@ const EmailVerification = () => {
     const verifyEmail = async () => {
       try {
         const token = searchParams.get("token");
+        const email = searchParams.get("email");
         const type = searchParams.get("type");
 
         if (type !== "signup" && type !== "recovery") {
@@ -26,7 +27,12 @@ const EmailVerification = () => {
           throw new Error("No verification token found");
         }
 
+        if (!email) {
+          throw new Error("No email found");
+        }
+
         const { error } = await supabase.auth.verifyOtp({
+          email,
           token,
           type: "signup"
         });
