@@ -162,7 +162,7 @@ const EditCourseForm = () => {
           max_group_size: values.maxGroupSize ? Number(values.maxGroupSize) : null,
           payment_timing: values.paymentTiming,
         })
-        .eq('id', id);
+        .eq('id', Number(id));
 
       if (courseError) throw courseError;
 
@@ -182,7 +182,7 @@ const EditCourseForm = () => {
           const { error: imageError } = await supabase
             .from("course_images")
             .insert({
-              course_id: id,
+              course_id: Number(id),
               image_path: filePath,
               display_order: i,
             });
@@ -195,7 +195,7 @@ const EditCourseForm = () => {
       const { error: deleteSessionsError } = await supabase
         .from("course_sessions")
         .delete()
-        .eq("course_id", id);
+        .eq("course_id", Number(id));
 
       if (deleteSessionsError) throw deleteSessionsError;
 
@@ -203,7 +203,7 @@ const EditCourseForm = () => {
         const { error: sessionError } = await supabase
           .from("course_sessions")
           .insert({
-            course_id: id,
+            course_id: Number(id),
             start_time: session.start.toISOString(),
             is_recurring: session.isRecurring,
             recurrence_pattern: session.recurrencePattern,
