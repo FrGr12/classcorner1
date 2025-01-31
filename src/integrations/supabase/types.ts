@@ -559,7 +559,10 @@ export type Database = {
           course_id: number | null
           created_at: string
           id: number
+          last_notification_sent_at: string | null
           notification_sent_at: string | null
+          notification_sent_count: number | null
+          notification_status: string | null
           session_id: number | null
           status: string | null
           user_id: string | null
@@ -568,7 +571,10 @@ export type Database = {
           course_id?: number | null
           created_at?: string
           id?: number
+          last_notification_sent_at?: string | null
           notification_sent_at?: string | null
+          notification_sent_count?: number | null
+          notification_status?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null
@@ -577,7 +583,10 @@ export type Database = {
           course_id?: number | null
           created_at?: string
           id?: number
+          last_notification_sent_at?: string | null
           notification_sent_at?: string | null
+          notification_sent_count?: number | null
+          notification_status?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null
