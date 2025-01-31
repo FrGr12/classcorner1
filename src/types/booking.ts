@@ -10,6 +10,10 @@ export interface Booking {
   payment_status: string;
   created_at: string;
   updated_at: string;
+  cancellation_reason?: string;
+  cancellation_date?: string;
+  original_session_id?: number;
+  rescheduled_at?: string;
   course: {
     title: string;
     location: string;

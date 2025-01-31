@@ -12,11 +12,15 @@ export type Database = {
       bookings: {
         Row: {
           booking_type: string | null
+          cancellation_date: string | null
+          cancellation_reason: string | null
           course_id: number | null
           created_at: string
           group_size: number | null
           id: number
+          original_session_id: number | null
           payment_status: string | null
+          rescheduled_at: string | null
           session_id: number | null
           special_requests: string | null
           status: string | null
@@ -26,11 +30,15 @@ export type Database = {
         }
         Insert: {
           booking_type?: string | null
+          cancellation_date?: string | null
+          cancellation_reason?: string | null
           course_id?: number | null
           created_at?: string
           group_size?: number | null
           id?: number
+          original_session_id?: number | null
           payment_status?: string | null
+          rescheduled_at?: string | null
           session_id?: number | null
           special_requests?: string | null
           status?: string | null
@@ -40,11 +48,15 @@ export type Database = {
         }
         Update: {
           booking_type?: string | null
+          cancellation_date?: string | null
+          cancellation_reason?: string | null
           course_id?: number | null
           created_at?: string
           group_size?: number | null
           id?: number
+          original_session_id?: number | null
           payment_status?: string | null
+          rescheduled_at?: string | null
           session_id?: number | null
           special_requests?: string | null
           status?: string | null
@@ -58,6 +70,13 @@ export type Database = {
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_original_session_id_fkey"
+            columns: ["original_session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
             referencedColumns: ["id"]
           },
           {
