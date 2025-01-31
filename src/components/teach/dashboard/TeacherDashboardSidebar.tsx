@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
@@ -16,33 +17,35 @@ import {
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
-const navigation = [
-  { name: "Overview", href: "/teach", icon: LayoutDashboard },
-  { name: "Profile", href: "/teach/profile", icon: UserCircle },
-  { name: "CRM", href: "/teach/crm", icon: Users },
-  { name: "Bookings", href: "/teach/bookings", icon: Calendar },
-  { name: "Classes", href: "/teach/classes", icon: BookOpen },
-  { name: "Analytics", href: "/teach/analytics", icon: ChartBar },
-  { name: "Messages", href: "/teach/messages", icon: MessageSquare },
-  { name: "Reviews", href: "/teach/reviews", icon: Star },
-  { name: "Promotions", href: "/teach/promotions", icon: Tag },
-  { name: "Waitlist", href: "/teach/waitlist", icon: Bell },
-  { name: "Payments", href: "/teach/payments", icon: Wallet },
-];
-
 const TeacherDashboardSidebar = () => {
   const { isOpen, toggle } = useSidebarContext();
   const location = useLocation();
 
+  const menuItems = [
+    { icon: LayoutDashboard, label: "Overview", path: "/teach" },
+    { icon: UserCircle, label: "Profile", path: "/teach/profile" },
+    { icon: Users, label: "CRM", path: "/teach/crm" },
+    { icon: Calendar, label: "Bookings", path: "/teach/bookings" },
+    { icon: BookOpen, label: "Classes", path: "/teach/classes" },
+    { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
+    { icon: MessageSquare, label: "Messages", path: "/teach/messages" },
+    { icon: Star, label: "Reviews", path: "/teach/reviews" },
+    { icon: Tag, label: "Promotions", path: "/teach/promotions" },
+    { icon: Bell, label: "Waitlist", path: "/teach/waitlist" },
+    { icon: Wallet, label: "Payments", path: "/teach/payments" },
+  ];
+
   return (
     <>
+      {/* Overlay for mobile */}
       <div
         className={`fixed inset-0 z-20 bg-black/80 lg:hidden ${
           isOpen ? "block" : "hidden"
         }`}
         onClick={toggle}
       />
-
+      
+      {/* Sidebar */}
       <aside
         className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
           isOpen ? "translate-x-0" : "-translate-x-full"
@@ -59,20 +62,18 @@ const TeacherDashboardSidebar = () => {
             <Menu className="h-6 w-6" />
           </Button>
         </div>
-
+        
         <nav className="space-y-1 p-4">
-          {navigation.map((item) => (
-            <Button
-              key={item.name}
-              variant={location.pathname === item.href ? "default" : "ghost"}
-              className="w-full justify-start gap-3"
-              asChild
-            >
-              <Link to={item.href}>
+          {menuItems.map((item) => (
+            <Link key={item.path} to={item.path}>
+              <Button
+                variant={location.pathname === item.path ? "default" : "ghost"}
+                className="w-full justify-start gap-3"
+              >
                 <item.icon className="h-5 w-5" />
-                <span>{item.name}</span>
-              </Link>
-            </Button>
+                <span>{item.label}</span>
+              </Button>
+            </Link>
           ))}
         </nav>
       </aside>

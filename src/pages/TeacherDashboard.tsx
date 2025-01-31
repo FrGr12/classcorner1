@@ -1,34 +1,19 @@
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import Navigation from "@/components/landing/Navigation";
-import Footer from "@/components/landing/Footer";
-import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
+import { Outlet } from "react-router-dom";
+import TeacherDashboardSidebar from "@/components/teach/dashboard/TeacherDashboardSidebar";
+import { SidebarProvider } from "@/contexts/SidebarContext";
 
 const TeacherDashboard = () => {
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    checkUser();
-  }, []);
-
-  const checkUser = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) {
-      navigate("/auth");
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-neutral-100">
-      <Navigation />
-      <main className="container mx-auto px-4 py-8">
-        <div className="space-y-8">
-          <TeacherBookings />
+    <SidebarProvider>
+      <div className="flex min-h-screen">
+        <TeacherDashboardSidebar />
+        <div className="flex-1 bg-gray-50">
+          <main className="p-6">
+            <Outlet />
+          </main>
         </div>
-      </main>
-      <Footer />
-    </div>
+      </div>
+    </SidebarProvider>
   );
 };
 
