@@ -5,8 +5,8 @@ export interface Booking {
   student_id: string;
   booking_type: string;
   status: string;
-  group_size: number;
-  total_price: number;
+  group_size?: number;
+  total_price?: number;
   payment_status: string;
   created_at: string;
   updated_at: string;

@@ -71,14 +71,7 @@ const UserBookings = () => {
 
       // Filter and transform valid bookings
       if (Array.isArray(data)) {
-        const validBookings = data
-          .filter((item): item is Booking => {
-            try {
-              return isValidBooking(item);
-            } catch {
-              return false;
-            }
-          });
+        const validBookings = data.filter(isValidBooking);
         setBookings(validBookings);
       }
     } catch (error: any) {
