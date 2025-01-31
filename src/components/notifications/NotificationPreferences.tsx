@@ -45,13 +45,22 @@ const NotificationPreferences = () => {
 
       if (error && error.code !== "PGRST116") throw error;
 
-      setSettings(data || {
+      // Transform the database response to match our interface
+      const transformedSettings: NotificationSettings = data ? {
+        id: user.id,
+        email_reminders: data.email_reminders ?? true,
+        sms_reminders: data.sms_reminders ?? false,
+        phone_number: data.phone_number ?? null,
+        reminder_hours: data.reminder_hours ?? [24, 2]
+      } : {
         id: user.id,
         email_reminders: true,
         sms_reminders: false,
         phone_number: null,
         reminder_hours: [24, 2]
-      });
+      };
+
+      setSettings(transformedSettings);
     } catch (error: any) {
       toast({
         variant: "destructive",
