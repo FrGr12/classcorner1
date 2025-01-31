@@ -1,20 +1,24 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Star, Rocket, Target, DollarSign, ChartBar, Badge } from "lucide-react";
+import { Star, Rocket, Target, ChartBar, Badge, Megaphone } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 interface PremiumFeature {
   icon: React.ElementType;
   title: string;
   description: string;
   isActive: boolean;
+  actionLabel?: string;
+  action?: () => void;
 }
 
 const TeacherPremium = () => {
   const [isPremium, setIsPremium] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     checkPremiumStatus();
@@ -41,42 +45,69 @@ const TeacherPremium = () => {
     }
   };
 
+  const handleFeatureAction = (feature: string) => {
+    switch (feature) {
+      case "promotions":
+        navigate("/teach/promotions");
+        break;
+      case "boost":
+        if (!isPremium) {
+          toast.error("Please upgrade to premium to use instant boosts");
+          return;
+        }
+        navigate("/teach/promotions");
+        break;
+      default:
+        if (!isPremium) {
+          toast.error("This feature requires a premium subscription");
+        }
+    }
+  };
+
   const premiumFeatures: PremiumFeature[] = [
     {
-      icon: Rocket,
+      icon: Megaphone,
       title: "Sponsored Listings",
-      description: "Appear at the top of search & category pages",
-      isActive: isPremium
+      description: "Get featured at the top of search results and category pages",
+      isActive: isPremium,
+      actionLabel: "Manage Listings",
+      action: () => handleFeatureAction("sponsored")
     },
     {
       icon: Star,
       title: "Featured Teacher Badge",
-      description: "Highlight your profile with a premium badge",
+      description: "Stand out with a premium badge on your profile and listings",
       isActive: isPremium
     },
     {
       icon: ChartBar,
       title: "Priority Matchmaking",
-      description: "Get recommended first in AI-driven suggestions",
+      description: "Get recommended first in student matches and suggestions",
       isActive: isPremium
     },
     {
       icon: Target,
       title: "Retargeting Ads",
-      description: "Advertise to users who viewed but didn't book",
-      isActive: isPremium
-    },
-    {
-      icon: DollarSign,
-      title: "Discount & Bundle Deals",
-      description: "Create promotional pricing strategies",
-      isActive: isPremium
+      description: "Re-engage with students who viewed your classes",
+      isActive: isPremium,
+      actionLabel: "View Analytics",
+      action: () => handleFeatureAction("retargeting")
     },
     {
       icon: Badge,
+      title: "Promotional Tools",
+      description: "Create discounts, bundles, and special offers",
+      isActive: isPremium,
+      actionLabel: "Manage Promotions",
+      action: () => handleFeatureAction("promotions")
+    },
+    {
+      icon: Rocket,
       title: "Instant Boosts",
-      description: "One-time promotions to increase visibility",
-      isActive: isPremium
+      description: "Temporary visibility boost for your classes",
+      isActive: isPremium,
+      actionLabel: "Use Boost",
+      action: () => handleFeatureAction("boost")
     }
   ];
 
@@ -98,7 +129,11 @@ const TeacherPremium = () => {
           </p>
         </div>
         {!isPremium && (
-          <Button size="lg" className="bg-gradient-to-r from-purple-500 to-pink-500 text-white">
+          <Button 
+            size="lg" 
+            className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:from-purple-600 hover:to-pink-600"
+            onClick={() => toast.success("Upgrade flow will be implemented here")}
+          >
             Upgrade to Premium
           </Button>
         )}
@@ -106,18 +141,23 @@ const TeacherPremium = () => {
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {premiumFeatures.map((feature, index) => (
-          <Card key={index} className={`${!feature.isActive ? 'opacity-50' : ''}`}>
+          <Card key={index} className={`${!feature.isActive ? 'opacity-50' : ''} transition-all hover:shadow-md`}>
             <CardHeader>
               <div className="flex items-center space-x-2">
                 <feature.icon className={`h-5 w-5 ${feature.isActive ? 'text-primary' : 'text-muted-foreground'}`} />
                 <CardTitle className="text-lg">{feature.title}</CardTitle>
               </div>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <CardDescription>{feature.description}</CardDescription>
-              {!isPremium && (
-                <Button variant="outline" className="mt-4 w-full" disabled>
-                  Locked
+              {feature.actionLabel && (
+                <Button 
+                  variant={feature.isActive ? "default" : "outline"} 
+                  className="w-full"
+                  onClick={feature.action}
+                  disabled={!feature.isActive}
+                >
+                  {feature.actionLabel}
                 </Button>
               )}
             </CardContent>
@@ -132,7 +172,7 @@ const TeacherPremium = () => {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
-              You have access to all premium features. Manage your subscription settings and view usage statistics here.
+              You have access to all premium features. Use the buttons above to manage individual features.
             </p>
           </CardContent>
         </Card>
