@@ -51,8 +51,11 @@ const UserBookings = () => {
       const isValidBooking = (booking: any): booking is Booking => {
         return (
           booking &&
+          typeof booking.id === 'number' &&
+          typeof booking.booking_type === 'string' &&
+          typeof booking.status === 'string' &&
+          typeof booking.payment_status === 'string' &&
           booking.session &&
-          booking.session.start_time &&
           typeof booking.session.start_time === 'string' &&
           booking.course &&
           typeof booking.course.title === 'string' &&
@@ -61,7 +64,7 @@ const UserBookings = () => {
       };
 
       // Filter and set only valid bookings
-      const validBookings = (data || []).filter(isValidBooking);
+      const validBookings = Array.isArray(data) ? data.filter(isValidBooking) : [];
       setBookings(validBookings);
     } catch (error: any) {
       toast({
