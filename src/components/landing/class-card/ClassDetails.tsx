@@ -1,3 +1,6 @@
+import { Star } from "lucide-react";
+import PriceDisplay from "./PriceDisplay";
+
 interface ClassDetailsProps {
   title: string;
   instructor: string;
@@ -16,6 +19,10 @@ const ClassDetails = ({
   city,
   rating,
   price,
+  groupBookingsEnabled,
+  privateBookingsEnabled,
+  basePriceGroup,
+  basePricePrivate,
 }: ClassDetailsProps) => {
   return (
     <div className="p-3">
@@ -25,11 +32,17 @@ const ClassDetails = ({
           <p className="text-[14px] text-neutral-600 mt-0.5">by {instructor} · {city}</p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
-          <span className="text-yellow-400">★</span>
+          <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
           <span className="text-[14px] font-medium">{rating}</span>
         </div>
       </div>
-      <p className="text-[14px] font-medium mt-1">${price} <span className="text-neutral-600 font-normal">/ class</span></p>
+      <PriceDisplay 
+        price={price}
+        groupBookingsEnabled={groupBookingsEnabled}
+        privateBookingsEnabled={privateBookingsEnabled}
+        basePriceGroup={basePriceGroup}
+        basePricePrivate={basePricePrivate}
+      />
     </div>
   );
 };

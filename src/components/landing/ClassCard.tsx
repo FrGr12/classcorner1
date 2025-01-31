@@ -25,19 +25,9 @@ interface ClassCardProps {
 }
 
 const validCategories = [
-  "Pottery",
-  "Cooking",
-  "Baking",
-  "Painting & Art",
-  "Candle Making",
-  "Jewellery & Metal",
-  "Cocktail & Wine",
-  "Photography",
-  "Music & Dance",
-  "Wood Craft",
-  "Textile Craft",
-  "Paper Craft",
-  "Flower & Plants"
+  "Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making",
+  "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance",
+  "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"
 ];
 
 const ClassCard = ({
@@ -66,21 +56,12 @@ const ClassCard = ({
     }
     
     const titleLower = title.toLowerCase();
-    
-    if (titleLower.includes('pottery') || titleLower.includes('ceramic')) return 'Pottery';
-    if (titleLower.includes('cook')) return 'Cooking';
-    if (titleLower.includes('bake') || titleLower.includes('pastry')) return 'Baking';
-    if (titleLower.includes('paint') || titleLower.includes('art')) return 'Painting & Art';
-    if (titleLower.includes('cocktail') || titleLower.includes('wine')) return 'Cocktail & Wine';
-    if (titleLower.includes('photo')) return 'Photography';
-    if (titleLower.includes('music') || titleLower.includes('dance')) return 'Music & Dance';
-    if (titleLower.includes('candle')) return 'Candle Making';
-    if (titleLower.includes('wood')) return 'Wood Craft';
-    if (titleLower.includes('jewel') || titleLower.includes('metal')) return 'Jewellery & Metal';
-    if (titleLower.includes('textile') || titleLower.includes('fabric')) return 'Textile Craft';
-    if (titleLower.includes('paper')) return 'Paper Craft';
-    if (titleLower.includes('flower') || titleLower.includes('plant')) return 'Flower & Plants';
-    
+    for (const category of validCategories) {
+      const categoryLower = category.toLowerCase();
+      if (titleLower.includes(categoryLower.split(' ')[0])) {
+        return category;
+      }
+    }
     return 'Pottery';
   };
 
@@ -103,9 +84,7 @@ const ClassCard = ({
       <div className="relative">
         <ImageCarousel images={images} title={title} />
         <SaveButton />
-        <CategoryBadges 
-          displayCategory={displayCategory}
-        />
+        <CategoryBadges displayCategory={displayCategory} />
       </div>
       <ClassDetails 
         title={title}
