@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -22,6 +22,11 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [hasNotification, setHasNotification] = useState(false);
+  const [expiryTime, setExpiryTime] = useState<string | null>(null);
+
+  useEffect(() => {
+    checkWaitlistStatus();
+  }, [courseId]);
 
   const checkWaitlistStatus = async () => {
     try {
@@ -36,8 +41,12 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
         .eq('status', 'waiting')
         .single();
 
-      if (data && data.notification_sent_at && !data.notification_expires_at) {
+      if (data && data.notification_sent_at && !data.last_notification_sent_at) {
         setHasNotification(true);
+        // Set expiry time 3 hours from notification_sent_at
+        const notificationTime = new Date(data.notification_sent_at);
+        const expiryTime = new Date(notificationTime.getTime() + (3 * 60 * 60 * 1000));
+        setExpiryTime(expiryTime.toISOString());
       }
     } catch (error) {
       console.error("Error checking waitlist status:", error);
@@ -88,7 +97,8 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
       const { error: updateError } = await supabase
         .from('waitlist_entries')
         .update({
-          status: 'accepted'
+          status: 'accepted',
+          last_notification_sent_at: new Date().toISOString()
         })
         .eq('course_id', courseId)
         .eq('user_id', user.id)
@@ -133,7 +143,8 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
       const { error } = await supabase
         .from('waitlist_entries')
         .update({
-          status: 'declined'
+          status: 'declined',
+          last_notification_sent_at: new Date().toISOString()
         })
         .eq('course_id', courseId)
         .eq('user_id', user.id)
@@ -157,9 +168,14 @@ const WaitlistButton = ({ courseId, sessionId, isWaitlistEnabled }: WaitlistButt
     <>
       {hasNotification ? (
         <div className="space-y-4">
-          <p className="text-sm font-medium text-green-600">
-            A spot is available! You have 3 hours to accept.
-          </p>
+          <div className="text-sm font-medium">
+            <p className="text-green-600">A spot is available!</p>
+            {expiryTime && (
+              <p className="text-gray-600">
+                Expires {new Date(expiryTime).toLocaleString()}
+              </p>
+            )}
+          </div>
           <div className="flex gap-2">
             <Button
               variant="default"

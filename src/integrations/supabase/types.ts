@@ -780,36 +780,42 @@ export type Database = {
           created_at: string
           id: number
           last_notification_sent_at: string | null
+          notification_expires_at: string | null
           notification_sent_at: string | null
           notification_sent_count: number | null
           notification_status: string | null
           session_id: number | null
           status: string | null
           user_id: string | null
+          waitlist_position: number | null
         }
         Insert: {
           course_id?: number | null
           created_at?: string
           id?: number
           last_notification_sent_at?: string | null
+          notification_expires_at?: string | null
           notification_sent_at?: string | null
           notification_sent_count?: number | null
           notification_status?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null
+          waitlist_position?: number | null
         }
         Update: {
           course_id?: number | null
           created_at?: string
           id?: number
           last_notification_sent_at?: string | null
+          notification_expires_at?: string | null
           notification_sent_at?: string | null
           notification_sent_count?: number | null
           notification_status?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null
+          waitlist_position?: number | null
         }
         Relationships: [
           {
