@@ -1,34 +1,49 @@
-import { Routes as RouterRoutes, Route } from "react-router-dom";
+import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
-import About from "@/pages/About";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
-import BookingConfirmation from "@/pages/BookingConfirmation";
-import Payment from "@/pages/Payment";
-import BookingSuccess from "@/pages/BookingSuccess";
-import PasswordReset from "@/pages/PasswordReset";
-import PaymentFailed from "@/pages/PaymentFailed";
+import Teach from "@/pages/Teach";
+import TeacherDashboard from "@/pages/TeacherDashboard";
+import UserDashboard from "@/pages/UserDashboard";
 import EmailVerification from "@/pages/EmailVerification";
-import { Toaster } from "@/components/ui/toaster";
+import EditCourse from "@/pages/EditCourse";
 
-export const Routes = () => {
-  return (
-    <>
-      <RouterRoutes>
-        <Route path="/" element={<Index />} />
-        <Route path="/auth" element={<Auth />} />
-        <Route path="/auth/reset-password" element={<PasswordReset />} />
-        <Route path="/auth/verify" element={<EmailVerification />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/browse" element={<Browse />} />
-        <Route path="/class/:category/:id" element={<ClassDetails />} />
-        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-        <Route path="/payment" element={<Payment />} />
-        <Route path="/booking-success" element={<BookingSuccess />} />
-        <Route path="/payment-failed" element={<PaymentFailed />} />
-      </RouterRoutes>
-      <Toaster />
-    </>
-  );
-};
+export const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Index />,
+  },
+  {
+    path: "/auth",
+    element: <Auth />,
+  },
+  {
+    path: "/browse",
+    element: <Browse />,
+  },
+  {
+    path: "/class/:category/:id",
+    element: <ClassDetails />,
+  },
+  {
+    path: "/teach/new",
+    element: <Teach />,
+  },
+  {
+    path: "/teach/edit/:id",
+    element: <EditCourse />,
+  },
+  {
+    path: "/teach/dashboard",
+    element: <TeacherDashboard />,
+  },
+  {
+    path: "/dashboard",
+    element: <UserDashboard />,
+  },
+  {
+    path: "/verify",
+    element: <EmailVerification />,
+  },
+]);
