@@ -109,7 +109,7 @@ const EditCourseForm = () => {
             basePricePrivate: course.base_price_private?.toString(),
             minGroupSize: course.min_group_size?.toString(),
             maxGroupSize: course.max_group_size?.toString(),
-            paymentTiming: course.payment_timing || "instant",
+            paymentTiming: (course.payment_timing as "instant" | "post_course") || "instant",
           });
 
           if (course.course_sessions) {
@@ -159,6 +159,7 @@ const EditCourseForm = () => {
           learning_objectives: values.learningObjectives,
           materials_included: values.materialsIncluded,
           setup_instructions: values.setupInstructions,
+          duration: values.duration,
           group_bookings_enabled: values.groupBookingsEnabled,
           private_bookings_enabled: values.privateBookingsEnabled,
           base_price_group: values.basePriceGroup ? Number(values.basePriceGroup) : null,
@@ -216,7 +217,7 @@ const EditCourseForm = () => {
             is_recurring: session.isRecurring,
             recurrence_pattern: session.recurrencePattern,
             recurrence_end_date: session.recurrenceEndDate?.toISOString(),
-            recurrence_count: session.recurrence_count,
+            recurrence_count: session.recurrenceCount,
           });
 
         if (sessionError) {

@@ -408,6 +408,7 @@ export type Database = {
           category: string
           created_at: string
           description: string
+          duration: string | null
           group_bookings_enabled: boolean | null
           id: number
           instructor_id: string
@@ -434,6 +435,7 @@ export type Database = {
           category: string
           created_at?: string
           description: string
+          duration?: string | null
           group_bookings_enabled?: boolean | null
           id?: number
           instructor_id: string
@@ -460,6 +462,7 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string
+          duration?: string | null
           group_bookings_enabled?: boolean | null
           id?: number
           instructor_id?: string
