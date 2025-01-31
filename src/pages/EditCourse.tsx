@@ -23,10 +23,18 @@ const EditCourse = () => {
           return;
         }
 
+        // Convert string ID to number and validate
+        const courseId = Number(id);
+        if (isNaN(courseId)) {
+          toast.error("Invalid course ID");
+          navigate("/teach/dashboard");
+          return;
+        }
+
         const { data: course, error } = await supabase
           .from("courses")
           .select("instructor_id")
-          .eq("id", id)
+          .eq("id", courseId)
           .single();
 
         if (error) throw error;
@@ -53,7 +61,9 @@ const EditCourse = () => {
       }
     };
 
-    checkAccess();
+    if (id) {
+      checkAccess();
+    }
   }, [id, navigate]);
 
   if (isLoading) {
