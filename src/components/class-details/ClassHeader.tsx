@@ -1,6 +1,9 @@
-import { Clock, MapPin, Users, Star } from "lucide-react";
+import { Clock, MapPin, Users, Star, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
 
 interface ClassHeaderProps {
   classItem: ClassItem;
@@ -8,6 +11,26 @@ interface ClassHeaderProps {
 }
 
 const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
+  const navigate = useNavigate();
+  const [isInstructor, setIsInstructor] = useState(false);
+
+  useEffect(() => {
+    const checkInstructor = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data: course } = await supabase
+        .from("courses")
+        .select("instructor_id")
+        .eq("id", classItem.id)
+        .single();
+
+      setIsInstructor(course?.instructor_id === user.id);
+    };
+
+    checkInstructor();
+  }, [classItem.id]);
+
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4">
@@ -42,23 +65,37 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
           <p className="text-sm text-neutral-600">per person</p>
         </div>
         <div className="flex gap-2">
-          <Button 
-            size="lg"
-            className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90"
-            onClick={onBooking}
-          >
-            Book Now
-          </Button>
-          <Button 
-            size="lg"
-            variant="outline"
-            className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10"
-            onClick={() => {
-              console.log('Private booking requested');
-            }}
-          >
-            Request Private Class
-          </Button>
+          {isInstructor ? (
+            <Button 
+              size="lg"
+              variant="outline"
+              className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+              onClick={() => navigate(`/teach/edit/${classItem.id}`)}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Course
+            </Button>
+          ) : (
+            <>
+              <Button 
+                size="lg"
+                className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90"
+                onClick={onBooking}
+              >
+                Book Now
+              </Button>
+              <Button 
+                size="lg"
+                variant="outline"
+                className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+                onClick={() => {
+                  console.log('Private booking requested');
+                }}
+              >
+                Request Private Class
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </div>
