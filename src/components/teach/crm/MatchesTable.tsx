@@ -1,14 +1,16 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Send } from "lucide-react";
-import { CourseMatch } from "@/types/course-match";
+import { Loader2 } from "lucide-react";
+import type { CourseMatch } from "@/types/course-match";
 
 interface MatchesTableProps {
   matches: CourseMatch[];
-  onNotify: (match: CourseMatch) => void;
+  onNotify: (match: CourseMatch) => Promise<void>;
+  notifyingId: number | null;
 }
 
-const MatchesTable = ({ matches, onNotify }: MatchesTableProps) => {
+const MatchesTable = ({ matches, onNotify, notifyingId }: MatchesTableProps) => {
   return (
     <Table>
       <TableHeader>
@@ -16,7 +18,7 @@ const MatchesTable = ({ matches, onNotify }: MatchesTableProps) => {
           <TableHead>Student</TableHead>
           <TableHead>Course</TableHead>
           <TableHead>Match Score</TableHead>
-          <TableHead>Last Notified</TableHead>
+          <TableHead>Status</TableHead>
           <TableHead>Action</TableHead>
         </TableRow>
       </TableHeader>
@@ -29,23 +31,28 @@ const MatchesTable = ({ matches, onNotify }: MatchesTableProps) => {
                 "Anonymous User"
               }
             </TableCell>
-            <TableCell>{match.course.title}</TableCell>
-            <TableCell>{match.match_score}</TableCell>
+            <TableCell>{match.course?.title}</TableCell>
+            <TableCell>{match.match_score}%</TableCell>
             <TableCell>
-              {match.notified_at ? 
-                new Date(match.notified_at).toLocaleDateString() : 
-                "Never"
-              }
+              <Badge variant={match.notified_at ? "default" : "secondary"}>
+                {match.notified_at ? "Notified" : "Pending"}
+              </Badge>
             </TableCell>
             <TableCell>
               <Button
-                size="sm"
                 variant="outline"
+                size="sm"
                 onClick={() => onNotify(match)}
-                disabled={!!match.notified_at}
+                disabled={!!match.notified_at || notifyingId === match.id}
               >
-                <Send className="h-4 w-4 mr-2" />
-                Notify
+                {notifyingId === match.id ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Sending...
+                  </>
+                ) : (
+                  "Notify"
+                )}
               </Button>
             </TableCell>
           </TableRow>

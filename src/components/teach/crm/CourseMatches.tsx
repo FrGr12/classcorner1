@@ -15,6 +15,7 @@ import type { CourseMatch } from "@/types/course-match";
 const CourseMatches = () => {
   const [matches, setMatches] = useState<CourseMatch[]>([]);
   const [loading, setLoading] = useState(true);
+  const [notifying, setNotifying] = useState<number | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -23,8 +24,16 @@ const CourseMatches = () => {
 
   const fetchMatches = async () => {
     try {
+      setLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "User not authenticated",
+        });
+        return;
+      }
 
       const { data, error } = await supabase
         .from('course_matches')
@@ -36,7 +45,6 @@ const CourseMatches = () => {
         .order('match_score', { ascending: false });
 
       if (error) throw error;
-
       setMatches(data as CourseMatch[]);
     } catch (error: any) {
       toast({
@@ -51,6 +59,7 @@ const CourseMatches = () => {
 
   const handleNotify = async (match: CourseMatch) => {
     try {
+      setNotifying(match.id);
       const { error } = await supabase
         .from('course_matches')
         .update({ notified_at: new Date().toISOString() })
@@ -70,14 +79,26 @@ const CourseMatches = () => {
         title: "Error",
         description: error.message || "Failed to send notification",
       });
+    } finally {
+      setNotifying(null);
     }
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Course Matches</CardTitle>
+          <CardDescription>
+            View potential participants who match your courses based on their interests
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center p-8">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -95,7 +116,11 @@ const CourseMatches = () => {
             No matches found yet. Try adding more tags to your courses to attract interested students.
           </p>
         ) : (
-          <MatchesTable matches={matches} onNotify={handleNotify} />
+          <MatchesTable 
+            matches={matches} 
+            onNotify={handleNotify} 
+            notifyingId={notifying}
+          />
         )}
       </CardContent>
     </Card>

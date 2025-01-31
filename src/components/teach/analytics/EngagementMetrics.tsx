@@ -14,6 +14,7 @@ type EngagementData = {
 const EngagementMetrics = () => {
   const [data, setData] = useState<EngagementData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     fetchEngagementData();
@@ -21,10 +22,16 @@ const EngagementMetrics = () => {
 
   const fetchEngagementData = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      setLoading(true);
+      setError(null);
 
-      const { data: courses } = await supabase
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        setError("User not authenticated");
+        return;
+      }
+
+      const { data: courses, error: coursesError } = await supabase
         .from('courses')
         .select(`
           id,
@@ -35,16 +42,17 @@ const EngagementMetrics = () => {
         .eq('instructor_id', user.id)
         .eq('status', 'published');
 
-      if (!courses) return;
+      if (coursesError) throw coursesError;
 
-      const formattedData = courses.map(course => ({
+      const formattedData = courses?.map(course => ({
         course_title: course.title,
         total_bookings: course.bookings?.length || 0,
         waitlist_count: course.waitlist_entries?.length || 0
-      }));
+      })) || [];
 
       setData(formattedData);
-    } catch (error) {
+    } catch (error: any) {
+      setError(error.message);
       console.error('Error fetching engagement data:', error);
     } finally {
       setLoading(false);
@@ -53,9 +61,31 @@ const EngagementMetrics = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Course Engagement</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-[300px]">
+            <Loader2 className="h-8 w-8 animate-spin" />
+          </div>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (error) {
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>Course Engagement</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-center h-[300px] text-destructive">
+            {error}
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
