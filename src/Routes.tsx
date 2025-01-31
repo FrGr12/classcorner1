@@ -9,11 +9,14 @@ import UserDashboard from "@/pages/UserDashboard";
 import EmailVerification from "@/pages/EmailVerification";
 import EditCourse from "@/pages/EditCourse";
 import PasswordReset from "@/pages/PasswordReset";
+import NotFound from "@/pages/NotFound";
+import ErrorPage from "@/pages/ErrorPage";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
+    errorElement: <ErrorPage />,
   },
   {
     path: "/auth",
@@ -50,5 +53,9 @@ export const router = createBrowserRouter([
   {
     path: "/verify",
     element: <EmailVerification />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
