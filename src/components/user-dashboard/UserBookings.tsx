@@ -57,11 +57,12 @@ const UserBookings = () => {
           typeof booking.payment_status === 'string' &&
           booking.session &&
           typeof booking.session === 'object' &&
-          !('error' in booking.session) && // Check that session is not an error object
+          !Array.isArray(booking.session) && // Ensure session is not an array
           'start_time' in booking.session && // Verify start_time exists
           typeof booking.session.start_time === 'string' &&
           booking.course &&
           typeof booking.course === 'object' &&
+          !Array.isArray(booking.course) && // Ensure course is not an array
           'title' in booking.course &&
           'location' in booking.course &&
           typeof booking.course.title === 'string' &&
@@ -70,7 +71,16 @@ const UserBookings = () => {
       };
 
       // Filter and set only valid bookings
-      const validBookings = Array.isArray(data) ? data.filter(isValidBooking) : [];
+      const validBookings = Array.isArray(data) 
+        ? data.filter((booking): booking is Booking => {
+            try {
+              return isValidBooking(booking);
+            } catch {
+              return false;
+            }
+          })
+        : [];
+      
       setBookings(validBookings);
     } catch (error: any) {
       toast({
