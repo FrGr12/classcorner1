@@ -10,6 +10,8 @@ import UserDashboard from "@/pages/UserDashboard";
 import TeacherDashboard from "@/pages/TeacherDashboard";
 import Teach from "@/pages/Teach";
 import About from "@/pages/About";
+import Resources from "@/pages/Resources";
+import Community from "@/pages/Community";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
 import EmailVerification from "@/pages/EmailVerification";
@@ -108,6 +110,14 @@ export const router = createBrowserRouter([
   {
     path: "/about",
     element: <About />,
+  },
+  {
+    path: "/resources",
+    element: <Resources />,
+  },
+  {
+    path: "/community",
+    element: <Community />,
   },
   {
     path: "*",
