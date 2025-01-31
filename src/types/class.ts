@@ -16,6 +16,7 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
+  duration?: string; // Added duration property
 }
 
 export interface ClassData {

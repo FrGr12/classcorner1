@@ -92,7 +92,7 @@ const BookingConfirmation = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <Users className="h-4 w-4" />
-                  <span>Max {classItem.maxParticipants} people</span>
+                  <span>Max {classItem.maxParticipants || 10} people</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Star className="h-4 w-4 fill-accent-purple text-accent-purple" />
