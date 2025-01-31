@@ -8,6 +8,7 @@ import TeacherDashboard from "@/pages/TeacherDashboard";
 import UserDashboard from "@/pages/UserDashboard";
 import EmailVerification from "@/pages/EmailVerification";
 import EditCourse from "@/pages/EditCourse";
+import PasswordReset from "@/pages/PasswordReset";
 
 export const router = createBrowserRouter([
   {
@@ -17,6 +18,10 @@ export const router = createBrowserRouter([
   {
     path: "/auth",
     element: <Auth />,
+  },
+  {
+    path: "/auth/reset-password",
+    element: <PasswordReset />,
   },
   {
     path: "/browse",
