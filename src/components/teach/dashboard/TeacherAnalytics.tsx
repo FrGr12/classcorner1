@@ -18,37 +18,35 @@ const TeacherAnalytics = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // First get instructor's course IDs
+      const { data: coursesIds } = await supabase
+        .from('courses')
+        .select('id')
+        .eq('instructor_id', user.id);
+      
+      const courseIdList = (coursesIds || []).map(c => c.id);
+
       // Fetch total students (unique students from bookings)
       const { data: studentsData } = await supabase
         .from('bookings')
         .select('student_id')
         .eq('status', 'confirmed')
-        .in('course_id', 
-          supabase
-            .from('courses')
-            .select('id')
-            .eq('instructor_id', user.id)
-        );
+        .in('course_id', courseIdList);
       
       const uniqueStudents = new Set((studentsData || []).map(b => b.student_id));
 
       // Fetch average rating
       const { data: ratingsData } = await supabase
         .from('course_reviews')
-        .select('rating, course_id')
-        .in('course_id',
-          supabase
-            .from('courses')
-            .select('id')
-            .eq('instructor_id', user.id)
-        );
+        .select('rating')
+        .in('course_id', courseIdList);
       
       const avgRating = (ratingsData || []).length 
         ? (ratingsData || []).reduce((sum, review) => sum + (review.rating || 0), 0) / ratingsData.length
         : 0;
 
       // Fetch active courses
-      const { data: coursesData } = await supabase
+      const { data: activeCourses } = await supabase
         .from('courses')
         .select('id')
         .eq('instructor_id', user.id)
@@ -63,24 +61,14 @@ const TeacherAnalytics = () => {
         .from('bookings')
         .select('total_price')
         .eq('payment_status', 'paid')
-        .in('course_id',
-          supabase
-            .from('courses')
-            .select('id')
-            .eq('instructor_id', user.id)
-        )
+        .in('course_id', courseIdList)
         .gte('created_at', firstDayThisMonth.toISOString());
 
       const { data: lastMonthRevenue } = await supabase
         .from('bookings')
         .select('total_price')
         .eq('payment_status', 'paid')
-        .in('course_id',
-          supabase
-            .from('courses')
-            .select('id')
-            .eq('instructor_id', user.id)
-        )
+        .in('course_id', courseIdList)
         .gte('created_at', firstDayLastMonth.toISOString())
         .lt('created_at', firstDayThisMonth.toISOString());
 
@@ -94,7 +82,7 @@ const TeacherAnalytics = () => {
       setAnalyticsData({
         totalStudents: uniqueStudents.size,
         averageRating: Number(avgRating.toFixed(1)),
-        activeCourses: (coursesData || []).length,
+        activeCourses: (activeCourses || []).length,
         revenueGrowth: Number(growthRate.toFixed(1))
       });
     };
