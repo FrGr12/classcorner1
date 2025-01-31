@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import ResourceCard from "@/components/teach/dashboard/learning-hub/ResourceCard";
-import { resources } from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
+import { resources } from "@/components/teach/dashboard/learning-hub/resources";
 
 const Resources = () => {
   const [searchQuery, setSearchQuery] = useState("");
