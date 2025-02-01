@@ -29,7 +29,7 @@ interface Contact {
   first_name: string | null;
   last_name: string | null;
   avatar_url: string | null;
-  email: string;
+  email: string | null;
   phone: string | null;
   tags?: { name: string; color: string }[];
 }
