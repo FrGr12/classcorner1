@@ -11,15 +11,19 @@ export type Database = {
     Tables: {
       bookings: {
         Row: {
+          attendance_status: string | null
+          booking_source: string | null
           booking_type: string | null
           cancellation_date: string | null
           cancellation_reason: string | null
           course_id: number | null
           created_at: string
+          feedback_submitted: boolean | null
           group_size: number | null
           id: number
           original_session_id: number | null
           payment_status: string | null
+          payout_status: string | null
           rescheduled_at: string | null
           session_id: number | null
           special_requests: string | null
@@ -29,15 +33,19 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          attendance_status?: string | null
+          booking_source?: string | null
           booking_type?: string | null
           cancellation_date?: string | null
           cancellation_reason?: string | null
           course_id?: number | null
           created_at?: string
+          feedback_submitted?: boolean | null
           group_size?: number | null
           id?: number
           original_session_id?: number | null
           payment_status?: string | null
+          payout_status?: string | null
           rescheduled_at?: string | null
           session_id?: number | null
           special_requests?: string | null
@@ -47,15 +55,19 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          attendance_status?: string | null
+          booking_source?: string | null
           booking_type?: string | null
           cancellation_date?: string | null
           cancellation_reason?: string | null
           course_id?: number | null
           created_at?: string
+          feedback_submitted?: boolean | null
           group_size?: number | null
           id?: number
           original_session_id?: number | null
           payment_status?: string | null
+          payout_status?: string | null
           rescheduled_at?: string | null
           session_id?: number | null
           special_requests?: string | null
@@ -71,6 +83,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
           {
             foreignKeyName: "bookings_original_session_id_fkey"
@@ -164,6 +190,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "communications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "communications_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+          {
             foreignKeyName: "communications_instructor_id_fkey_profiles"
             columns: ["instructor_id"]
             isOneToOne: false
@@ -215,6 +255,20 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "course_boosts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_boosts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
         ]
       }
       course_category_assignments: {
@@ -252,6 +306,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_category_assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_category_assignments_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
         ]
       }
@@ -300,6 +368,20 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "course_discounts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_discounts_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
         ]
       }
       course_images: {
@@ -331,6 +413,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_images_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_images_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
         ]
       }
@@ -366,6 +462,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_matches_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_matches_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
           {
             foreignKeyName: "course_matches_profile_id_fkey"
@@ -415,6 +525,20 @@ export type Database = {
             referencedRelation: "courses"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "course_reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_reviews_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
         ]
       }
       course_sessions: {
@@ -455,6 +579,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_sessions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
         ]
       }
@@ -589,6 +727,20 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "courses"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "marketing_campaigns_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "marketing_campaigns_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
         ]
       }
@@ -826,6 +978,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "waitlist_entries_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "waitlist_entries_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+          {
             foreignKeyName: "waitlist_entries_profile_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
@@ -843,9 +1009,39 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      teacher_engagement_metrics: {
+        Row: {
+          attended_students: number | null
+          avg_rating: number | null
+          course_id: number | null
+          feedback_submitted: number | null
+          instructor_id: string | null
+          title: string | null
+          total_students: number | null
+        }
+        Relationships: []
+      }
+      teacher_revenue_insights: {
+        Row: {
+          avg_revenue_per_booking: number | null
+          booking_month: string | null
+          course_id: number | null
+          instructor_id: string | null
+          title: string | null
+          total_bookings: number | null
+          total_revenue: number | null
+          unique_students: number | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
+      calculate_class_utilization: {
+        Args: {
+          course_id: number
+        }
+        Returns: number
+      }
       cleanup_expired_categories: {
         Args: Record<PropertyKey, never>
         Returns: undefined

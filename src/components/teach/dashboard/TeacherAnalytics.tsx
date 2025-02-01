@@ -1,16 +1,21 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { TrendingUp, Users, Star, Calendar } from "lucide-react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { TrendingUp, Users, Star, Calendar, BookOpen, DollarSign } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import EngagementMetrics from "../analytics/EngagementMetrics";
 import PerformanceMetrics from "../analytics/PerformanceMetrics";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import RevenueMetrics from "../analytics/RevenueMetrics";
+import { DateRangePicker } from "../analytics/DateRangePicker";
 
 const TeacherAnalytics = () => {
   const [analyticsData, setAnalyticsData] = useState({
     totalStudents: 0,
     averageRating: 0,
     activeCourses: 0,
-    revenueGrowth: 0
+    totalRevenue: 0,
+    attendanceRate: 0,
+    waitlistCount: 0
   });
 
   useEffect(() => {
@@ -18,72 +23,42 @@ const TeacherAnalytics = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // First get instructor's course IDs
-      const { data: coursesIds } = await supabase
-        .from('courses')
-        .select('id')
-        .eq('instructor_id', user.id);
-      
-      const courseIdList = (coursesIds || []).map(c => c.id);
+      // Fetch engagement metrics
+      const { data: engagementData } = await supabase
+        .from('teacher_engagement_metrics')
+        .select('*')
+        .eq('instructor_id', user.id)
+        .single();
 
-      // Fetch total students (unique students from bookings)
-      const { data: studentsData } = await supabase
-        .from('bookings')
-        .select('student_id')
-        .eq('status', 'confirmed')
-        .in('course_id', courseIdList);
-      
-      const uniqueStudents = new Set((studentsData || []).map(b => b.student_id));
-
-      // Fetch average rating
-      const { data: ratingsData } = await supabase
-        .from('course_reviews')
-        .select('rating')
-        .in('course_id', courseIdList);
-      
-      const avgRating = (ratingsData || []).length 
-        ? (ratingsData || []).reduce((sum, review) => sum + (review.rating || 0), 0) / ratingsData.length
-        : 0;
+      // Fetch revenue insights
+      const { data: revenueData } = await supabase
+        .from('teacher_revenue_insights')
+        .select('*')
+        .eq('instructor_id', user.id)
+        .single();
 
       // Fetch active courses
-      const { data: activeCourses } = await supabase
+      const { data: coursesData } = await supabase
         .from('courses')
         .select('id')
         .eq('instructor_id', user.id)
         .eq('status', 'published');
 
-      // Calculate revenue growth (comparing current month to previous month)
-      const now = new Date();
-      const firstDayThisMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-      const firstDayLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-
-      const { data: currentMonthRevenue } = await supabase
-        .from('bookings')
-        .select('total_price')
-        .eq('payment_status', 'paid')
-        .in('course_id', courseIdList)
-        .gte('created_at', firstDayThisMonth.toISOString());
-
-      const { data: lastMonthRevenue } = await supabase
-        .from('bookings')
-        .select('total_price')
-        .eq('payment_status', 'paid')
-        .in('course_id', courseIdList)
-        .gte('created_at', firstDayLastMonth.toISOString())
-        .lt('created_at', firstDayThisMonth.toISOString());
-
-      const currentMonthTotal = (currentMonthRevenue || []).reduce((sum, booking) => sum + Number(booking.total_price), 0);
-      const lastMonthTotal = (lastMonthRevenue || []).reduce((sum, booking) => sum + Number(booking.total_price), 0);
-      
-      const growthRate = lastMonthTotal === 0 
-        ? 100 
-        : ((currentMonthTotal - lastMonthTotal) / lastMonthTotal) * 100;
+      // Fetch waitlist count
+      const { data: waitlistData } = await supabase
+        .from('waitlist_entries')
+        .select('id')
+        .in('course_id', (coursesData || []).map(c => c.id))
+        .eq('status', 'waiting');
 
       setAnalyticsData({
-        totalStudents: uniqueStudents.size,
-        averageRating: Number(avgRating.toFixed(1)),
-        activeCourses: (activeCourses || []).length,
-        revenueGrowth: Number(growthRate.toFixed(1))
+        totalStudents: engagementData?.total_students || 0,
+        averageRating: Number(engagementData?.avg_rating?.toFixed(1)) || 0,
+        activeCourses: (coursesData || []).length,
+        totalRevenue: Number(revenueData?.total_revenue?.toFixed(2)) || 0,
+        attendanceRate: engagementData ? 
+          ((engagementData.attended_students / engagementData.total_students) * 100) || 0 : 0,
+        waitlistCount: (waitlistData || []).length
       });
     };
 
@@ -92,12 +67,17 @@ const TeacherAnalytics = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Analytics Dashboard</h1>
-        <p className="text-muted-foreground">Track your course performance and student engagement</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold">Analytics Dashboard</h1>
+          <p className="text-muted-foreground">
+            Track your course performance and student engagement
+          </p>
+        </div>
+        <DateRangePicker />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Students</CardTitle>
@@ -106,7 +86,7 @@ const TeacherAnalytics = () => {
           <CardContent>
             <div className="text-2xl font-bold">{analyticsData.totalStudents}</div>
             <p className="text-xs text-muted-foreground">
-              Unique enrolled students
+              Enrolled in your courses
             </p>
           </CardContent>
         </Card>
@@ -119,7 +99,7 @@ const TeacherAnalytics = () => {
           <CardContent>
             <div className="text-2xl font-bold">{analyticsData.averageRating}</div>
             <p className="text-xs text-muted-foreground">
-              Overall course rating
+              Based on student feedback
             </p>
           </CardContent>
         </Card>
@@ -127,34 +107,72 @@ const TeacherAnalytics = () => {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Active Courses</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <BookOpen className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{analyticsData.activeCourses}</div>
             <p className="text-xs text-muted-foreground">
-              Published courses
+              Currently published
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue Growth</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
+            <DollarSign className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">${analyticsData.totalRevenue}</div>
+            <p className="text-xs text-muted-foreground">
+              Lifetime earnings
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Attendance Rate</CardTitle>
+            <Calendar className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{analyticsData.attendanceRate}%</div>
+            <p className="text-xs text-muted-foreground">
+              Average attendance
+            </p>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Waitlist Size</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{analyticsData.revenueGrowth}%</div>
+            <div className="text-2xl font-bold">{analyticsData.waitlistCount}</div>
             <p className="text-xs text-muted-foreground">
-              Compared to last month
+              Students waiting
             </p>
           </CardContent>
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <EngagementMetrics />
-        <PerformanceMetrics />
-      </div>
+      <Tabs defaultValue="engagement" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="engagement">Engagement</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue</TabsTrigger>
+        </TabsList>
+        <TabsContent value="engagement" className="space-y-4">
+          <EngagementMetrics />
+        </TabsContent>
+        <TabsContent value="performance" className="space-y-4">
+          <PerformanceMetrics />
+        </TabsContent>
+        <TabsContent value="revenue" className="space-y-4">
+          <RevenueMetrics />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
