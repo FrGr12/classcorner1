@@ -33,25 +33,21 @@ const InsightsSection = () => {
       // Get waitlist data
       const { data: waitlistData } = await supabase
         .from('waitlist_entries')
-        .select('course_id, courses(title), count')
         .select('course_id, courses(title)')
         .eq('status', 'waiting')
-        .count()
         .limit(5);
 
       // Get low performing courses
       const { data: lowPerforming } = await supabase
         .from('course_reviews')
-        .select('course_id, courses(title), avg_rating:rating')
-        .select('course_id, courses(title)')
+        .select('course_id, courses(title), rating')
         .lte('rating', 4.0)
         .limit(5);
 
       // Get search trends
       const { data: searchTrends } = await supabase
         .from('course_matches')
-        .select('course_id, courses(title), count')
-        .select('course_id, courses(title)')
+        .select('course_id, courses(title), match_score')
         .gt('match_score', 0)
         .order('match_score', { ascending: false })
         .limit(5);
