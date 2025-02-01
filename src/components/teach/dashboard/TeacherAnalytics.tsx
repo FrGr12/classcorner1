@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import EngagementMetrics from "../analytics/EngagementMetrics";
 import PerformanceMetrics from "../analytics/PerformanceMetrics";
 import RevenueMetrics from "../analytics/RevenueMetrics";
+import InsightsSection from "../analytics/InsightsSection";
 import { DateRangePicker } from "../analytics/DateRangePicker";
 
 const TeacherAnalytics = () => {
@@ -157,12 +158,16 @@ const TeacherAnalytics = () => {
         </Card>
       </div>
 
-      <Tabs defaultValue="engagement" className="space-y-4">
+      <Tabs defaultValue="insights" className="space-y-4">
         <TabsList>
+          <TabsTrigger value="insights">Insights</TabsTrigger>
           <TabsTrigger value="engagement">Engagement</TabsTrigger>
           <TabsTrigger value="performance">Performance</TabsTrigger>
           <TabsTrigger value="revenue">Revenue</TabsTrigger>
         </TabsList>
+        <TabsContent value="insights" className="space-y-4">
+          <InsightsSection />
+        </TabsContent>
         <TabsContent value="engagement" className="space-y-4">
           <EngagementMetrics />
         </TabsContent>
