@@ -1,21 +1,8 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Trophy, TrendingUp, Users, Link, AlertCircle, ArrowUp, MessageSquare } from "lucide-react";
+import { Trophy, TrendingUp, Users, Link, AlertCircle, ArrowUp, MessageSquare, Search } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-interface TopPerformer {
-  id: number;
-  title: string;
-  metric_value: number;
-  metric_type: string;
-}
-
-interface ActionableInsight {
-  type: 'optimization' | 'alert' | 'feedback';
-  title: string;
-  description: string;
-}
 
 const InsightsSection = () => {
   const { data: topPerformers, isLoading: loadingPerformers } = useQuery({
@@ -43,21 +30,36 @@ const InsightsSection = () => {
   const { data: insights } = useQuery({
     queryKey: ['actionableInsights'],
     queryFn: async () => {
+      // Get waitlist data
       const { data: waitlistData } = await supabase
         .from('waitlist_entries')
         .select('course_id, courses(title), count')
-        .group('course_id, courses(title)')
-        .having('count(*) > 5');
+        .select('course_id, courses(title)')
+        .eq('status', 'waiting')
+        .count()
+        .limit(5);
 
+      // Get low performing courses
       const { data: lowPerforming } = await supabase
         .from('course_reviews')
-        .select('course_id, courses(title), avg(rating)')
-        .group('course_id, courses(title)')
-        .having('avg(rating) < 4.0');
+        .select('course_id, courses(title), avg_rating:rating')
+        .select('course_id, courses(title)')
+        .lte('rating', 4.0)
+        .limit(5);
+
+      // Get search trends
+      const { data: searchTrends } = await supabase
+        .from('course_matches')
+        .select('course_id, courses(title), count')
+        .select('course_id, courses(title)')
+        .gt('match_score', 0)
+        .order('match_score', { ascending: false })
+        .limit(5);
 
       return {
         waitlist: waitlistData || [],
-        improvements: lowPerforming || []
+        improvements: lowPerforming || [],
+        trends: searchTrends || []
       };
     }
   });
@@ -153,6 +155,17 @@ const InsightsSection = () => {
               <AlertDescription>
                 {course.courses.title} is receiving lower ratings. Consider gathering detailed
                 feedback to identify areas for improvement.
+              </AlertDescription>
+            </Alert>
+          ))}
+
+          {insights?.trends?.map((course) => (
+            <Alert key={course.course_id} variant="default">
+              <Search className="h-4 w-4" />
+              <AlertTitle>Search Trend Insight</AlertTitle>
+              <AlertDescription>
+                {course.courses.title} is frequently appearing in search results and matches.
+                Consider optimizing your course description with relevant keywords.
               </AlertDescription>
             </Alert>
           ))}
