@@ -35,7 +35,11 @@ interface Message {
   };
 }
 
-const UnifiedInbox = () => {
+interface UnifiedInboxProps {
+  onThreadSelect?: (thread: { id: string; studentId: string }) => void;
+}
+
+const UnifiedInbox = ({ onThreadSelect }: UnifiedInboxProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -86,6 +90,13 @@ const UnifiedInbox = () => {
     return <Badge variant={variants[status] || "default"}>{status}</Badge>;
   };
 
+  const handleThreadSelect = (message: any) => {
+    onThreadSelect?.({
+      id: message.thread_id || message.id.toString(),
+      studentId: message.student_id
+    });
+  };
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -132,6 +143,7 @@ const UnifiedInbox = () => {
             <div
               key={message.id}
               className="flex items-start justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              onClick={() => handleThreadSelect(message)}
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2 mb-1">
