@@ -149,37 +149,52 @@ export type Database = {
       }
       communications: {
         Row: {
+          assigned_to: string | null
           course_id: number | null
           id: number
           instructor_id: string
+          last_activity_at: string | null
           message_content: string
           message_type: string
           read_at: string | null
+          response_time: unknown | null
           sent_at: string
           status: string | null
           student_id: string
+          template_used: boolean | null
+          thread_id: string | null
         }
         Insert: {
+          assigned_to?: string | null
           course_id?: number | null
           id?: number
           instructor_id: string
+          last_activity_at?: string | null
           message_content: string
           message_type: string
           read_at?: string | null
+          response_time?: unknown | null
           sent_at?: string
           status?: string | null
           student_id: string
+          template_used?: boolean | null
+          thread_id?: string | null
         }
         Update: {
+          assigned_to?: string | null
           course_id?: number | null
           id?: number
           instructor_id?: string
+          last_activity_at?: string | null
           message_content?: string
           message_type?: string
           read_at?: string | null
+          response_time?: unknown | null
           sent_at?: string
           status?: string | null
           student_id?: string
+          template_used?: boolean | null
+          thread_id?: string | null
         }
         Relationships: [
           {
@@ -218,6 +233,104 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      contact_notes: {
+        Row: {
+          contact_id: string | null
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          contact_id?: string | null
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Update: {
+          contact_id?: string | null
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_notes_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_tag_assignments: {
+        Row: {
+          assigned_at: string | null
+          assigned_by: string | null
+          contact_id: string | null
+          id: string
+          tag_id: string | null
+        }
+        Insert: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          contact_id?: string | null
+          id?: string
+          tag_id?: string | null
+        }
+        Update: {
+          assigned_at?: string | null
+          assigned_by?: string | null
+          contact_id?: string | null
+          id?: string
+          tag_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contact_tag_assignments_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contact_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "contact_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      contact_tags: {
+        Row: {
+          color: string | null
+          created_at: string | null
+          created_by: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
       }
       course_boosts: {
         Row: {
@@ -680,6 +793,53 @@ export type Database = {
         }
         Relationships: []
       }
+      follow_up_tasks: {
+        Row: {
+          assigned_to: string | null
+          contact_id: string | null
+          created_at: string | null
+          created_by: string | null
+          description: string | null
+          due_date: string | null
+          id: string
+          status: string | null
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          assigned_to?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          status?: string | null
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          assigned_to?: string | null
+          contact_id?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          description?: string | null
+          due_date?: string | null
+          id?: string
+          status?: string | null
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "follow_up_tasks_contact_id_fkey"
+            columns: ["contact_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_campaigns: {
         Row: {
           campaign_type: string
@@ -743,6 +903,36 @@ export type Database = {
             referencedColumns: ["course_id"]
           },
         ]
+      }
+      message_templates: {
+        Row: {
+          category: string | null
+          content: string
+          created_at: string | null
+          created_by: string | null
+          id: string
+          title: string
+          updated_at: string | null
+        }
+        Insert: {
+          category?: string | null
+          content: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          title: string
+          updated_at?: string | null
+        }
+        Update: {
+          category?: string | null
+          content?: string
+          created_at?: string | null
+          created_by?: string | null
+          id?: string
+          title?: string
+          updated_at?: string | null
+        }
+        Relationships: []
       }
       notification_logs: {
         Row: {
