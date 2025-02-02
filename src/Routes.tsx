@@ -73,6 +73,7 @@ export const router = createBrowserRouter([
     path: "/booking/success",
     element: <BookingSuccess />,
   },
+  // Modified to remove auth check temporarily
   {
     path: "/dashboard/*",
     element: <UserDashboard />,
@@ -88,6 +89,7 @@ export const router = createBrowserRouter([
       { path: "reviews", element: <UserReviews /> },
     ],
   },
+  // Modified to remove auth check temporarily
   {
     path: "/teach/*",
     element: <TeacherDashboard />,
