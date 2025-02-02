@@ -1,4 +1,5 @@
 import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -13,7 +14,9 @@ import {
   UserPlus, 
   Megaphone,
   BookOpen,
-  Expand
+  Edit,
+  Users,
+  MessageSquare
 } from "lucide-react";
 import ParticipantsTable from "./ParticipantsTable";
 import BookingRequestsTable from "./BookingRequestsTable";
@@ -27,6 +30,9 @@ interface ClassCardProps {
 const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
   const navigate = useNavigate();
   const participants = classItem.participants || [];
+  const occupancyRate = classItem.maxParticipants 
+    ? Math.round((participants.length / classItem.maxParticipants) * 100)
+    : 0;
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -60,7 +66,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Date & Time</p>
               <p className="font-medium">
-                {new Date(`${classItem.date} ${classItem.time}`).toLocaleString()}
+                {format(new Date(classItem.date), "PPp")}
               </p>
             </div>
             <div className="space-y-1">
@@ -74,7 +80,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Capacity</p>
               <p className="font-medium">
-                {classItem.currentParticipants}/{classItem.maxParticipants}
+                {participants.length}/{classItem.maxParticipants}
               </p>
             </div>
           </div>
@@ -82,26 +88,27 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           <div className="space-y-2">
             <div className="flex justify-between text-sm">
               <span>Class Capacity</span>
-              <span>
-                {Math.round(
-                  (classItem.currentParticipants / classItem.maxParticipants) * 100
-                )}
-                %
-              </span>
+              <span>{occupancyRate}%</span>
             </div>
-            <Progress
-              value={
-                (classItem.currentParticipants / classItem.maxParticipants) * 100
-              }
-            />
+            <Progress value={occupancyRate} />
           </div>
 
           <div className="space-y-4">
             <div className="border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium flex items-center gap-2">
-                <BookOpen className="h-4 w-4" />
-                Bookings & Requests
-              </h3>
+              <div className="flex items-center justify-between">
+                <h3 className="font-medium flex items-center gap-2">
+                  <BookOpen className="h-4 w-4" />
+                  Bookings & Requests
+                </h3>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/bookings`)}
+                >
+                  <Users className="h-4 w-4 mr-2" />
+                  View All
+                </Button>
+              </div>
               <div className="space-y-4">
                 <ParticipantsTable participants={participants} />
                 {classItem.bookingRequests?.length > 0 && (
@@ -111,9 +118,10 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
                   variant="outline" 
                   size="sm"
                   className="w-full"
-                  onClick={() => navigate(`/teach/classes/${classItem.id}/bookings`)}
+                  onClick={() => navigate(`/teach/messages/bulk/${classItem.id}`)}
                 >
-                  View All Bookings
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Message Participants
                 </Button>
               </div>
             </div>
@@ -132,22 +140,45 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
                 Promotion Tools
               </h3>
               <div className="grid grid-cols-2 gap-2">
-                <Button variant="outline" size="sm">Create Discount</Button>
-                <Button variant="outline" size="sm">Boost Visibility</Button>
-                <Button variant="outline" size="sm">Share Class</Button>
-                <Button variant="outline" size="sm">Add Extra Session</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/discounts/new`)}
+                >
+                  Create Discount
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/boost`)}
+                >
+                  Instant Boost
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/share`)}
+                >
+                  Share Class
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/sessions/new`)}
+                >
+                  Add Session
+                </Button>
               </div>
             </div>
 
-            <div className="border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium flex items-center gap-2">
-                <Expand className="h-4 w-4" />
-                Capacity
-              </h3>
-              <Button variant="outline" size="sm" className="w-full">
-                Increase Max Participants
-              </Button>
-            </div>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => navigate(`/teach/classes/${classItem.id}/edit`)}
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Class Details
+            </Button>
           </div>
 
           <Button
@@ -155,7 +186,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             className="w-full"
             onClick={() => navigate(`/teach/classes/${classItem.id}`)}
           >
-            Manage Class
+            Full Class Management
           </Button>
         </div>
       </CardContent>

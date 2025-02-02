@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -7,7 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, Clock, XCircle } from "lucide-react";
+import { CheckCircle2, Clock, XCircle, Search } from "lucide-react";
 
 interface Participant {
   id: number;
@@ -20,7 +22,9 @@ interface ParticipantsTableProps {
   participants: Participant[];
 }
 
-const ParticipantsTable = ({ participants }: ParticipantsTableProps) => {
+const ParticipantsTable = ({ participants = [] }: ParticipantsTableProps) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   if (!participants || participants.length === 0) {
     return (
       <div className="space-y-2">
@@ -29,6 +33,10 @@ const ParticipantsTable = ({ participants }: ParticipantsTableProps) => {
       </div>
     );
   }
+
+  const filteredParticipants = participants.filter(participant =>
+    participant.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -45,7 +53,18 @@ const ParticipantsTable = ({ participants }: ParticipantsTableProps) => {
 
   return (
     <div className="space-y-2">
-      <h4 className="font-medium">Participants</h4>
+      <div className="flex items-center justify-between">
+        <h4 className="font-medium">Participants</h4>
+        <div className="relative w-[200px]">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search participants..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+      </div>
       <Table>
         <TableHeader>
           <TableRow>
@@ -55,11 +74,13 @@ const ParticipantsTable = ({ participants }: ParticipantsTableProps) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {participants.map((participant) => (
+          {filteredParticipants.map((participant) => (
             <TableRow key={participant.id}>
               <TableCell>{participant.name}</TableCell>
               <TableCell>{getStatusBadge(participant.status)}</TableCell>
-              <TableCell>{participant.paymentStatus}</TableCell>
+              <TableCell>
+                <Badge variant="outline">{participant.paymentStatus}</Badge>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
