@@ -7,7 +7,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import UnifiedInbox from "../crm/UnifiedInbox";
 import Communications from "../crm/Communications";
 import ContactManagement from "../crm/ContactManagement";
 import MessageTemplates from "../crm/MessageTemplates";
@@ -29,19 +28,19 @@ const TeacherCRM = () => {
         </div>
       </div>
 
-      <Tabs defaultValue="inbox" className="space-y-4">
+      <Tabs defaultValue="messages" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="inbox">Unified Inbox</TabsTrigger>
+          <TabsTrigger value="messages">Messages</TabsTrigger>
           <TabsTrigger value="contacts">Contacts</TabsTrigger>
           <TabsTrigger value="templates">Message Templates</TabsTrigger>
           <TabsTrigger value="tasks">Tasks</TabsTrigger>
           <TabsTrigger value="analytics">Analytics</TabsTrigger>
         </TabsList>
 
-        <TabsContent value="inbox">
+        <TabsContent value="messages">
           <Card>
             <CardHeader>
-              <CardTitle>Unified Inbox</CardTitle>
+              <CardTitle>Messages</CardTitle>
               <CardDescription>
                 View and manage all your communications in one place
               </CardDescription>
@@ -53,10 +52,7 @@ const TeacherCRM = () => {
         </TabsContent>
 
         <TabsContent value="contacts">
-          <ContactManagement 
-            onContactSelect={setSelectedContactId}
-            onThreadSelect={setSelectedThreadId}
-          />
+          <ContactManagement />
         </TabsContent>
 
         <TabsContent value="templates">
