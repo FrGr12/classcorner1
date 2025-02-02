@@ -21,17 +21,37 @@ import {
 } from "@/components/ui/select";
 import { Search, Filter, PenSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 
 const Communications = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   const { data: messages, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("Not authenticated");
+      // First get the current user
+      const { data: { user }, error: authError } = await supabase.auth.getUser();
+      
+      if (authError) {
+        toast({
+          variant: "destructive",
+          title: "Authentication Error",
+          description: "Please sign in to view messages",
+        });
+        throw authError;
+      }
+
+      if (!user) {
+        toast({
+          variant: "destructive",
+          title: "Not Authenticated",
+          description: "Please sign in to view messages",
+        });
+        throw new Error("Not authenticated");
+      }
 
       const { data, error } = await supabase
         .from("communications")
@@ -46,27 +66,59 @@ const Communications = () => {
         .eq("instructor_id", user.id)
         .order("sent_at", { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to fetch messages",
+        });
+        throw error;
+      }
+
       return data;
+    },
+    retry: false,
+    onError: (error) => {
+      console.error("Error fetching messages:", error);
     },
   });
 
   const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) throw new Error("Not authenticated");
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please sign in to send messages",
+        });
+        return;
+      }
 
-    const { error } = await supabase
-      .from("communications")
-      .insert({
-        instructor_id: user.id,
-        student_id: studentId,
-        course_id: courseId,
-        message_type: "reply",
-        message_content: content,
-        status: "sent"
+      const { error } = await supabase
+        .from("communications")
+        .insert({
+          instructor_id: user.id,
+          student_id: studentId,
+          course_id: courseId,
+          message_type: "reply",
+          message_content: content,
+          status: "sent"
+        });
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Message sent successfully",
       });
-
-    if (error) throw error;
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: error.message || "Failed to send message",
+      });
+    }
   };
 
   return (
