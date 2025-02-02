@@ -10,7 +10,8 @@ import {
   Calendar,
   Download,
   Filter,
-  MoreHorizontal
+  MoreHorizontal,
+  LayoutGrid // Add this import for the Grid icon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -189,7 +190,7 @@ const TeacherClasses = () => {
             {viewMode === "grid" ? (
               <Calendar className="h-4 w-4" />
             ) : (
-              <Grid className="h-4 w-4" />
+              <LayoutGrid className="h-4 w-4" />
             )}
           </Button>
           <Button variant="outline" size="icon">
