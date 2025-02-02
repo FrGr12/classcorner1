@@ -56,7 +56,7 @@ const InstantBoost = ({ courseId }: InstantBoostProps) => {
       const { error: updateError } = await supabase
         .from('teacher_premium_features')
         .update({ 
-          boost_credits: supabase.sql`boost_credits - 1`
+          boost_credits: premiumFeatures.boost_credits - 1
         })
         .eq('teacher_id', (await supabase.auth.getUser()).data.user?.id);
 

@@ -23,16 +23,25 @@ const SocialShare = ({ courseId, category }: SocialShareProps) => {
         toast.success("Link copied to clipboard!");
       }
 
+      // Get current share count
+      const { data: currentCourse, error: fetchError } = await supabase
+        .from('courses')
+        .select('share_count')
+        .eq('id', courseId)
+        .single();
+
+      if (fetchError) throw fetchError;
+
       // Update share count in database
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from('courses')
         .update({ 
-          share_count: supabase.sql`share_count + 1`,
+          share_count: (currentCourse?.share_count || 0) + 1,
           last_shared_at: new Date().toISOString()
         })
         .eq('id', courseId);
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
     } catch (error) {
       console.error('Error sharing:', error);
