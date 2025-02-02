@@ -1,72 +1,65 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ResizablePanelGroup,
-  ResizablePanel,
   ResizableHandle,
+  ResizablePanel,
 } from "@/components/ui/resizable";
-import Communications from "../crm/Communications";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ContactManagement from "../crm/ContactManagement";
-import MessageTemplates from "../crm/MessageTemplates";
-import CRMAnalytics from "../crm/CRMAnalytics";
-import TaskManagement from "../crm/TaskManagement";
+import MessageThread from "../crm/MessageThread";
+import ContactProfileView from "../crm/ContactProfileView";
 
 const TeacherCRM = () => {
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">CRM & Communications</h1>
-          <p className="text-muted-foreground">
-            Manage your student communications and relationships
-          </p>
-        </div>
-      </div>
+    <div className="h-[calc(100vh-4rem)]">
+      <ResizablePanelGroup direction="horizontal">
+        {/* Left Panel - Contact List */}
+        <ResizablePanel defaultSize={25} minSize={20}>
+          <div className="h-full border-r">
+            <ScrollArea className="h-full">
+              <ContactManagement 
+                onContactSelect={setSelectedContactId}
+                selectedContactId={selectedContactId}
+              />
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
 
-      <Tabs defaultValue="messages" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
-          <TabsTrigger value="templates">Message Templates</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
+        <ResizableHandle />
 
-        <TabsContent value="messages">
-          <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
-            <ResizablePanel defaultSize={30}>
-              <div className="p-4">
-                <Communications />
-              </div>
-            </ResizablePanel>
-            <ResizableHandle withHandle />
-            <ResizablePanel defaultSize={70}>
-              <div className="p-4">
-                <ContactManagement />
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-        </TabsContent>
+        {/* Middle Panel - Message Threads */}
+        <ResizablePanel defaultSize={40}>
+          <div className="h-full border-r">
+            <ScrollArea className="h-full">
+              {selectedContactId && (
+                <MessageThread
+                  threadId={selectedThreadId || selectedContactId}
+                  studentId={selectedContactId}
+                />
+              )}
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
 
-        <TabsContent value="contacts">
-          <ContactManagement />
-        </TabsContent>
+        <ResizableHandle />
 
-        <TabsContent value="templates">
-          <MessageTemplates />
-        </TabsContent>
-
-        <TabsContent value="tasks">
-          <TaskManagement />
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <CRMAnalytics />
-        </TabsContent>
-      </Tabs>
+        {/* Right Panel - Contact Details */}
+        <ResizablePanel defaultSize={35}>
+          <div className="h-full">
+            <ScrollArea className="h-full">
+              {selectedContactId && (
+                <ContactProfileView
+                  contactId={selectedContactId}
+                  onClose={() => setSelectedContactId(null)}
+                />
+              )}
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
+      </ResizablePanelGroup>
     </div>
   );
 };
