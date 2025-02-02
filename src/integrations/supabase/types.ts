@@ -238,7 +238,6 @@ export type Database = {
           course_id: number | null
           id: number
           instructor_id: string
-          is_unread: boolean | null
           last_activity_at: string | null
           message_content: string
           message_type: string
@@ -257,7 +256,6 @@ export type Database = {
           course_id?: number | null
           id?: number
           instructor_id: string
-          is_unread?: boolean | null
           last_activity_at?: string | null
           message_content: string
           message_type: string
@@ -276,7 +274,6 @@ export type Database = {
           course_id?: number | null
           id?: number
           instructor_id?: string
-          is_unread?: boolean | null
           last_activity_at?: string | null
           message_content?: string
           message_type?: string
@@ -415,7 +412,6 @@ export type Database = {
           created_by: string | null
           id: string
           name: string
-          status_color: string | null
         }
         Insert: {
           color?: string | null
@@ -423,7 +419,6 @@ export type Database = {
           created_by?: string | null
           id?: string
           name: string
-          status_color?: string | null
         }
         Update: {
           color?: string | null
@@ -431,7 +426,6 @@ export type Database = {
           created_by?: string | null
           id?: string
           name?: string
-          status_color?: string | null
         }
         Relationships: []
       }
@@ -905,7 +899,6 @@ export type Database = {
           description: string | null
           due_date: string | null
           id: string
-          priority: string | null
           status: string | null
           title: string
           updated_at: string | null
@@ -918,7 +911,6 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
-          priority?: string | null
           status?: string | null
           title: string
           updated_at?: string | null
@@ -931,7 +923,6 @@ export type Database = {
           description?: string | null
           due_date?: string | null
           id?: string
-          priority?: string | null
           status?: string | null
           title?: string
           updated_at?: string | null
