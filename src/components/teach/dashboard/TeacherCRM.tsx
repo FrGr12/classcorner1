@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   ResizableHandle,
   ResizablePanel,
-  ResizableGroup,
+  ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import ContactManagement from "../crm/ContactManagement";
@@ -15,7 +15,7 @@ const TeacherCRM = () => {
 
   return (
     <div className="h-[calc(100vh-4rem)]">
-      <ResizableGroup direction="horizontal">
+      <ResizablePanelGroup direction="horizontal">
         {/* Left Panel - Contact List */}
         <ResizablePanel defaultSize={25} minSize={20}>
           <div className="h-full border-r">
@@ -59,7 +59,7 @@ const TeacherCRM = () => {
             </ScrollArea>
           </div>
         </ResizablePanel>
-      </ResizableGroup>
+      </ResizablePanelGroup>
     </div>
   );
 };
