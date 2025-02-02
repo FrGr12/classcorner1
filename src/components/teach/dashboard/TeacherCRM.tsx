@@ -1,102 +1,65 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import Communications from "../crm/Communications";
+  ResizableHandle,
+  ResizablePanel,
+  ResizableGroup,
+} from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import ContactManagement from "../crm/ContactManagement";
-import MessageTemplates from "../crm/MessageTemplates";
-import CRMAnalytics from "../crm/CRMAnalytics";
-import TaskManagement from "../crm/TaskManagement";
+import MessageThread from "../crm/MessageThread";
+import ContactProfileView from "../crm/ContactProfileView";
 
 const TeacherCRM = () => {
   const [selectedContactId, setSelectedContactId] = useState<string | null>(null);
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">CRM & Communications</h1>
-          <p className="text-muted-foreground">
-            Manage your student communications and relationships
-          </p>
-        </div>
-      </div>
+    <div className="h-[calc(100vh-4rem)]">
+      <ResizableGroup direction="horizontal">
+        {/* Left Panel - Contact List */}
+        <ResizablePanel defaultSize={25} minSize={20}>
+          <div className="h-full border-r">
+            <ScrollArea className="h-full">
+              <ContactManagement 
+                onContactSelect={setSelectedContactId}
+                selectedContactId={selectedContactId}
+              />
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
 
-      <Tabs defaultValue="messages" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="messages">Messages</TabsTrigger>
-          <TabsTrigger value="contacts">Contacts</TabsTrigger>
-          <TabsTrigger value="templates">Message Templates</TabsTrigger>
-          <TabsTrigger value="tasks">Tasks</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
+        <ResizableHandle />
 
-        <TabsContent value="messages">
-          <Card>
-            <CardHeader>
-              <CardTitle>Messages</CardTitle>
-              <CardDescription>
-                View and manage all your communications in one place
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Communications />
-            </CardContent>
-          </Card>
-        </TabsContent>
+        {/* Middle Panel - Message Threads */}
+        <ResizablePanel defaultSize={40}>
+          <div className="h-full border-r">
+            <ScrollArea className="h-full">
+              {selectedContactId && (
+                <MessageThread
+                  threadId={selectedThreadId || selectedContactId}
+                  studentId={selectedContactId}
+                />
+              )}
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
 
-        <TabsContent value="contacts">
-          <ContactManagement />
-        </TabsContent>
+        <ResizableHandle />
 
-        <TabsContent value="templates">
-          <Card>
-            <CardHeader>
-              <CardTitle>Message Templates</CardTitle>
-              <CardDescription>
-                Create and manage message templates for quick responses
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <MessageTemplates />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="tasks">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Management</CardTitle>
-              <CardDescription>
-                Manage follow-up tasks and assignments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TaskManagement />
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        <TabsContent value="analytics">
-          <Card>
-            <CardHeader>
-              <CardTitle>CRM Analytics</CardTitle>
-              <CardDescription>
-                View insights and metrics about your communications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <CRMAnalytics />
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+        {/* Right Panel - Contact Details */}
+        <ResizablePanel defaultSize={35}>
+          <div className="h-full">
+            <ScrollArea className="h-full">
+              {selectedContactId && (
+                <ContactProfileView
+                  contactId={selectedContactId}
+                  onClose={() => setSelectedContactId(null)}
+                />
+              )}
+            </ScrollArea>
+          </div>
+        </ResizablePanel>
+      </ResizableGroup>
     </div>
   );
 };
