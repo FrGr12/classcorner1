@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, PenSquare } from "lucide-react";
+import { Search, PenSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
@@ -77,6 +77,7 @@ const Communications = () => {
 
       return data;
     },
+    enabled: true, // The query will run automatically
     retry: false,
     meta: {
       onError: (error: Error) => {
