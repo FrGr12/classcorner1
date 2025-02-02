@@ -44,8 +44,8 @@ const TeacherClasses = () => {
     const matchesSearch =
       classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       classItem.city.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === "all" || classItem.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    // Remove the status filter since it's not part of the ClassItem type
+    return matchesSearch;
   });
 
   return (
