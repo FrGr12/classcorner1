@@ -20,13 +20,14 @@ interface ClassCardProps {
 
 const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
   const navigate = useNavigate();
+  const participants = classItem.participants || [];
 
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="flex flex-row items-start justify-between pb-2">
         <div>
           <CardTitle className="text-xl">{classItem.title}</CardTitle>
-          <p className="text-sm text-muted-foreground">{classItem.location}</p>
+          <p className="text-sm text-muted-foreground">{classItem.city}</p>
         </div>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -89,7 +90,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             />
           </div>
 
-          <ParticipantsTable participants={classItem.participants} />
+          <ParticipantsTable participants={participants} />
 
           {classItem.bookingRequests?.length > 0 && (
             <BookingRequestsTable requests={classItem.bookingRequests} />

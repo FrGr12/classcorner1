@@ -21,6 +21,15 @@ interface ParticipantsTableProps {
 }
 
 const ParticipantsTable = ({ participants }: ParticipantsTableProps) => {
+  if (!participants || participants.length === 0) {
+    return (
+      <div className="space-y-2">
+        <h4 className="font-medium">Participants</h4>
+        <p className="text-sm text-muted-foreground">No participants yet</p>
+      </div>
+    );
+  }
+
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "confirmed":
