@@ -11,7 +11,11 @@ import {
   Download,
   Filter,
   MoreHorizontal,
-  LayoutGrid // Add this import for the Grid icon
+  LayoutGrid,
+  CheckCircle2,
+  Clock,
+  XCircle,
+  AlertCircle
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -32,8 +36,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
-// Mock data for development
+// Extended mock data
 const mockClasses = [
   {
     id: 1,
@@ -46,20 +58,20 @@ const mockClasses = [
     waitlistCount: 3,
     status: 'upcoming',
     price: 75,
-    duration: "2 hours"
-  },
-  {
-    id: 2,
-    title: "Advanced Ceramics Workshop",
-    date: "2024-03-18",
-    time: "10:00",
-    location: "Art Studio 2",
-    maxParticipants: 8,
-    currentParticipants: 8,
-    waitlistCount: 5,
-    status: 'upcoming',
-    price: 120,
-    duration: "3 hours"
+    duration: "2 hours",
+    participants: [
+      { id: 1, name: "John Doe", status: "confirmed", paymentStatus: "paid" },
+      { id: 2, name: "Jane Smith", status: "confirmed", paymentStatus: "paid" },
+      { id: 3, name: "Mike Johnson", status: "pending", paymentStatus: "awaiting" },
+    ],
+    waitlist: [
+      { id: 4, name: "Sarah Wilson", position: 1 },
+      { id: 5, name: "Tom Brown", position: 2 },
+    ],
+    bookingRequests: [
+      { id: 6, name: "Alice Green", type: "group", size: 3, status: "pending" },
+      { id: 7, name: "Bob White", type: "private", status: "pending" },
+    ]
   },
   // Add more mock classes as needed
 ];
@@ -90,6 +102,19 @@ const TeacherClasses = () => {
         break;
       default:
         break;
+    }
+  };
+
+  const getStatusBadge = (status: string) => {
+    switch (status) {
+      case "confirmed":
+        return <Badge className="bg-green-500"><CheckCircle2 className="w-3 h-3 mr-1" /> Confirmed</Badge>;
+      case "pending":
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> Pending</Badge>;
+      case "cancelled":
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> Cancelled</Badge>;
+      default:
+        return <Badge variant="outline"><AlertCircle className="w-3 h-3 mr-1" /> {status}</Badge>;
     }
   };
 
@@ -203,12 +228,12 @@ const TeacherClasses = () => {
       </div>
 
       {/* Classes Grid */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-1 lg:grid-cols-2">
         {filteredClasses.map((classItem) => (
           <Card key={classItem.id} className="hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-start justify-between pb-2">
               <div>
-                <CardTitle className="text-lg">{classItem.title}</CardTitle>
+                <CardTitle className="text-xl">{classItem.title}</CardTitle>
                 <p className="text-sm text-muted-foreground">{classItem.location}</p>
               </div>
               <DropdownMenu>
@@ -231,40 +256,119 @@ const TeacherClasses = () => {
               </DropdownMenu>
             </CardHeader>
             <CardContent>
-              <div className="space-y-4">
-                <div className="flex justify-between text-sm">
-                  <span>Date & Time:</span>
-                  <span>{new Date(`${classItem.date} ${classItem.time}`).toLocaleString()}</span>
+              <div className="space-y-6">
+                {/* Class Details */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Date & Time</p>
+                    <p className="font-medium">{new Date(`${classItem.date} ${classItem.time}`).toLocaleString()}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Duration</p>
+                    <p className="font-medium">{classItem.duration}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Price</p>
+                    <p className="font-medium">${classItem.price}</p>
+                  </div>
+                  <div className="space-y-1">
+                    <p className="text-sm text-muted-foreground">Capacity</p>
+                    <p className="font-medium">{classItem.currentParticipants}/{classItem.maxParticipants}</p>
+                  </div>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span>Duration:</span>
-                  <span>{classItem.duration}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span>Price:</span>
-                  <span>${classItem.price}</span>
-                </div>
+
+                {/* Capacity Progress */}
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Participants:</span>
-                    <span>{classItem.currentParticipants}/{classItem.maxParticipants}</span>
+                    <span>Class Capacity</span>
+                    <span>{Math.round((classItem.currentParticipants / classItem.maxParticipants) * 100)}%</span>
                   </div>
                   <Progress 
                     value={(classItem.currentParticipants / classItem.maxParticipants) * 100} 
                   />
                 </div>
-                {classItem.waitlistCount > 0 && (
-                  <div className="flex items-center justify-between text-sm">
-                    <Badge variant="secondary" className="gap-1">
-                      <UserPlus className="h-3 w-3" />
-                      Waitlist: {classItem.waitlistCount}
-                    </Badge>
-                    <Button variant="link" className="text-xs p-0 h-auto">
-                      View List
-                    </Button>
+
+                {/* Participants Table */}
+                <div className="space-y-2">
+                  <h4 className="font-medium">Participants</h4>
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Name</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Payment</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {classItem.participants.map((participant) => (
+                        <TableRow key={participant.id}>
+                          <TableCell>{participant.name}</TableCell>
+                          <TableCell>{getStatusBadge(participant.status)}</TableCell>
+                          <TableCell>{participant.paymentStatus}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Booking Requests */}
+                {classItem.bookingRequests.length > 0 && (
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Booking Requests</h4>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Type</TableHead>
+                          <TableHead>Status</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {classItem.bookingRequests.map((request) => (
+                          <TableRow key={request.id}>
+                            <TableCell>{request.name}</TableCell>
+                            <TableCell>
+                              {request.type === 'group' ? `Group (${request.size})` : 'Private'}
+                            </TableCell>
+                            <TableCell>{getStatusBadge(request.status)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
                   </div>
                 )}
-                <div className="pt-4 flex gap-2">
+
+                {/* Waitlist */}
+                {classItem.waitlist.length > 0 && (
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium">Waitlist</h4>
+                      <Badge variant="secondary" className="gap-1">
+                        <UserPlus className="h-3 w-3" />
+                        {classItem.waitlist.length} people
+                      </Badge>
+                    </div>
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Position</TableHead>
+                          <TableHead>Name</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {classItem.waitlist.map((person) => (
+                          <TableRow key={person.id}>
+                            <TableCell>#{person.position}</TableCell>
+                            <TableCell>{person.name}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
+                <div className="flex gap-2">
                   <Button 
                     variant="default" 
                     className="flex-1"
