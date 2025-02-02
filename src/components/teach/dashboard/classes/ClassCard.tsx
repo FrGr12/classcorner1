@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
@@ -34,6 +34,12 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
     ? Math.round((participants.length / classItem.maxParticipants) * 100)
     : 0;
 
+  const formatDate = (date: string | Date) => {
+    if (!date) return "No date set";
+    const dateObj = typeof date === 'string' ? new Date(date) : date;
+    return isValid(dateObj) ? format(dateObj, "PPp") : "Invalid date";
+  };
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardHeader className="flex flex-row items-start justify-between pb-2">
@@ -66,12 +72,12 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Date & Time</p>
               <p className="font-medium">
-                {format(new Date(classItem.date), "PPp")}
+                {formatDate(classItem.date)}
               </p>
             </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Duration</p>
-              <p className="font-medium">{classItem.duration}</p>
+              <p className="font-medium">{classItem.duration || "Not set"}</p>
             </div>
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Price</p>
