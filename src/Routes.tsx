@@ -24,7 +24,6 @@ import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
 import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
-import TeacherMessages from "@/components/teach/dashboard/TeacherMessages";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
@@ -100,7 +99,6 @@ export const router = createBrowserRouter([
       { path: "classes", element: <TeacherClasses /> },
       { path: "new", element: <CreateClass /> },
       { path: "analytics", element: <TeacherAnalytics /> },
-      { path: "messages", element: <TeacherMessages /> },
       { path: "reviews", element: <TeacherReviews /> },
       { path: "promotions", element: <TeacherPromotions /> },
       { path: "waitlist", element: <TeacherWaitlist /> },
