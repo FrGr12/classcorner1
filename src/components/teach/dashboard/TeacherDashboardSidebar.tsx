@@ -1,82 +1,89 @@
-import { Link, useLocation } from "react-router-dom";
-import {
-  LayoutDashboard,
-  UserCircle,
-  Users,
-  Calendar,
-  BookOpen,
-  ChartBar,
-  Star,
-  Tag,
-  Bell,
-  Menu,
-  Wallet,
-  Crown,
+import { NavLink } from "react-router-dom";
+import { 
+  LayoutDashboard, 
   GraduationCap,
+  MessageSquare,
+  Users,
+  Settings,
+  BookOpen,
+  BadgeDollarSign,
+  Star
 } from "lucide-react";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { useSidebarContext } from "@/contexts/SidebarContext";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 const TeacherDashboardSidebar = () => {
-  const { isOpen, toggle } = useSidebarContext();
-  const location = useLocation();
-
-  const menuItems = [
-    { icon: LayoutDashboard, label: "Overview", path: "/teach" },
-    { icon: UserCircle, label: "Profile", path: "/teach/profile" },
-    { icon: Users, label: "Messages & People", path: "/teach/crm" },
-    { icon: Calendar, label: "Bookings", path: "/teach/bookings" },
-    { icon: BookOpen, label: "Classes", path: "/teach/classes" },
-    { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
-    { icon: Star, label: "Reviews", path: "/teach/reviews" },
-    { icon: Tag, label: "Promotions", path: "/teach/promotions" },
-    { icon: Bell, label: "Waitlist", path: "/teach/waitlist" },
-    { icon: Wallet, label: "Payments", path: "/teach/payments" },
-    { icon: Crown, label: "Premium Features", path: "/teach/premium" },
-    { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
+  const navigation = [
+    {
+      name: "Overview",
+      href: "/teach",
+      icon: LayoutDashboard
+    },
+    {
+      name: "Classes",
+      href: "/teach/classes",
+      icon: GraduationCap
+    },
+    {
+      name: "Messages",
+      href: "/teach/messages",
+      icon: MessageSquare
+    },
+    {
+      name: "CRM",
+      href: "/teach/crm",
+      icon: Users
+    },
+    {
+      name: "Reviews",
+      href: "/teach/reviews",
+      icon: Star
+    },
+    {
+      name: "Learning Hub",
+      href: "/teach/learning",
+      icon: BookOpen
+    },
+    {
+      name: "Premium",
+      href: "/teach/premium",
+      icon: BadgeDollarSign
+    },
+    {
+      name: "Settings",
+      href: "/teach/settings",
+      icon: Settings
+    }
   ];
 
   return (
-    <>
-      <div
-        className={`fixed inset-0 z-20 bg-black/80 lg:hidden ${
-          isOpen ? "block" : "hidden"
-        }`}
-        onClick={toggle}
-      />
-      
-      <aside
-        className={`fixed inset-y-0 left-0 z-30 w-64 transform bg-white shadow-lg transition-transform duration-300 ease-in-out lg:static lg:translate-x-0 ${
-          isOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex h-16 items-center justify-between px-4 border-b">
-          <h2 className="text-xl font-semibold">Teacher Dashboard</h2>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="lg:hidden"
-            onClick={toggle}
-          >
-            <Menu className="h-6 w-6" />
-          </Button>
-        </div>
-        
-        <nav className="space-y-1 p-4">
-          {menuItems.map((item) => (
-            <Link key={item.path} to={item.path}>
-              <Button
-                variant={location.pathname === item.path ? "default" : "ghost"}
-                className="w-full justify-start gap-3"
+    <ScrollArea className="w-64 border-r bg-white">
+      <div className="space-y-4 py-4">
+        <div className="px-3 py-2">
+          <h2 className="mb-2 px-4 text-lg font-semibold">Teacher Dashboard</h2>
+          <div className="space-y-1">
+            {navigation.map((item) => (
+              <NavLink
+                key={item.name}
+                to={item.href}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-all hover:text-accent-foreground",
+                    isActive 
+                      ? "bg-accent text-accent-foreground" 
+                      : "text-muted-foreground hover:bg-accent/50"
+                  )
+                }
               >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </Button>
-            </Link>
-          ))}
-        </nav>
-      </aside>
-    </>
+                <item.icon className="h-4 w-4" />
+                {item.name}
+              </NavLink>
+            ))}
+          </div>
+        </div>
+      </div>
+    </ScrollArea>
   );
 };
 
