@@ -2,12 +2,15 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Edit } from "lucide-react";
 import CreateDiscountDialog from "../discounts/CreateDiscountDialog";
+import SocialShare from "./SocialShare";
+import InstantBoost from "./InstantBoost";
 
 interface ClassActionsProps {
   classId: number;
+  category: string;
 }
 
-const ClassActions = ({ classId }: ClassActionsProps) => {
+const ClassActions = ({ classId, category }: ClassActionsProps) => {
   const navigate = useNavigate();
 
   return (
@@ -23,6 +26,10 @@ const ClassActions = ({ classId }: ClassActionsProps) => {
       </Button>
 
       <CreateDiscountDialog courseId={classId} />
+      
+      <InstantBoost courseId={classId} />
+      
+      <SocialShare courseId={classId} category={category} />
 
       <Button
         variant="outline"

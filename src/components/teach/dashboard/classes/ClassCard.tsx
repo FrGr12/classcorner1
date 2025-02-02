@@ -51,7 +51,10 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             <DiscountsList courseId={classItem.id} />
           </div>
 
-          <ClassActions classId={classItem.id} />
+          <ClassActions 
+            classId={classItem.id} 
+            category={classItem.category}
+          />
         </div>
       </CardContent>
     </Card>

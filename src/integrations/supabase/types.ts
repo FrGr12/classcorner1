@@ -823,6 +823,7 @@ export type Database = {
           group_bookings_enabled: boolean | null
           id: number
           instructor_id: string
+          last_shared_at: string | null
           learning_objectives: string | null
           location: string
           materials_included: string | null
@@ -834,6 +835,7 @@ export type Database = {
           price: number
           private_bookings_enabled: boolean | null
           setup_instructions: string | null
+          share_count: number | null
           status: Database["public"]["Enums"]["course_status"] | null
           tags: string[] | null
           title: string
@@ -850,6 +852,7 @@ export type Database = {
           group_bookings_enabled?: boolean | null
           id?: number
           instructor_id: string
+          last_shared_at?: string | null
           learning_objectives?: string | null
           location: string
           materials_included?: string | null
@@ -861,6 +864,7 @@ export type Database = {
           price: number
           private_bookings_enabled?: boolean | null
           setup_instructions?: string | null
+          share_count?: number | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
           title: string
@@ -877,6 +881,7 @@ export type Database = {
           group_bookings_enabled?: boolean | null
           id?: number
           instructor_id?: string
+          last_shared_at?: string | null
           learning_objectives?: string | null
           location?: string
           materials_included?: string | null
@@ -888,6 +893,7 @@ export type Database = {
           price?: number
           private_bookings_enabled?: boolean | null
           setup_instructions?: string | null
+          share_count?: number | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
           title?: string
@@ -1182,10 +1188,12 @@ export type Database = {
       }
       teacher_premium_features: {
         Row: {
+          boost_credits: number | null
           created_at: string | null
           features: Json | null
           id: number
           is_active: boolean | null
+          last_boost_reset: string | null
           subscription_end: string | null
           subscription_start: string | null
           subscription_type: string | null
@@ -1193,10 +1201,12 @@ export type Database = {
           updated_at: string | null
         }
         Insert: {
+          boost_credits?: number | null
           created_at?: string | null
           features?: Json | null
           id?: number
           is_active?: boolean | null
+          last_boost_reset?: string | null
           subscription_end?: string | null
           subscription_start?: string | null
           subscription_type?: string | null
@@ -1204,10 +1214,12 @@ export type Database = {
           updated_at?: string | null
         }
         Update: {
+          boost_credits?: number | null
           created_at?: string | null
           features?: Json | null
           id?: number
           is_active?: boolean | null
+          last_boost_reset?: string | null
           subscription_end?: string | null
           subscription_start?: string | null
           subscription_type?: string | null
