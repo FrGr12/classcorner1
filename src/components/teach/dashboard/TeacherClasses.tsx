@@ -37,10 +37,13 @@ const TeacherClasses = () => {
     }
   };
 
-  const filteredClasses = mockClasses.filter((classItem) => {
+  // Convert the mockClasses object into a flat array of all classes
+  const allClasses = Object.values(mockClasses).flat();
+
+  const filteredClasses = allClasses.filter((classItem) => {
     const matchesSearch =
       classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      classItem.location.toLowerCase().includes(searchTerm.toLowerCase());
+      classItem.city.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || classItem.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
