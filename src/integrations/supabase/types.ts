@@ -114,6 +114,90 @@ export type Database = {
           },
         ]
       }
+      bulk_message_campaigns: {
+        Row: {
+          created_at: string
+          id: string
+          instructor_id: string
+          message_content: string
+          recipient_filter: Json | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          instructor_id: string
+          message_content: string
+          recipient_filter?: Json | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          instructor_id?: string
+          message_content?: string
+          recipient_filter?: Json | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      bulk_message_recipients: {
+        Row: {
+          campaign_id: string
+          created_at: string
+          id: string
+          read_at: string | null
+          sent_at: string | null
+          status: string
+          student_id: string
+        }
+        Insert: {
+          campaign_id: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          student_id: string
+        }
+        Update: {
+          campaign_id?: string
+          created_at?: string
+          id?: string
+          read_at?: string | null
+          sent_at?: string | null
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bulk_message_recipients_campaign_id_fkey"
+            columns: ["campaign_id"]
+            isOneToOne: false
+            referencedRelation: "bulk_message_campaigns"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bulk_message_recipients_student_id_fkey"
+            columns: ["student_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       category_criteria: {
         Row: {
           category: Database["public"]["Enums"]["cross_functional_category"]
@@ -150,6 +234,7 @@ export type Database = {
       communications: {
         Row: {
           assigned_to: string | null
+          communication_context: string | null
           course_id: number | null
           id: number
           instructor_id: string
@@ -157,6 +242,7 @@ export type Database = {
           message_content: string
           message_type: string
           read_at: string | null
+          related_booking_id: number | null
           response_time: unknown | null
           sent_at: string
           status: string | null
@@ -166,6 +252,7 @@ export type Database = {
         }
         Insert: {
           assigned_to?: string | null
+          communication_context?: string | null
           course_id?: number | null
           id?: number
           instructor_id: string
@@ -173,6 +260,7 @@ export type Database = {
           message_content: string
           message_type: string
           read_at?: string | null
+          related_booking_id?: number | null
           response_time?: unknown | null
           sent_at?: string
           status?: string | null
@@ -182,6 +270,7 @@ export type Database = {
         }
         Update: {
           assigned_to?: string | null
+          communication_context?: string | null
           course_id?: number | null
           id?: number
           instructor_id?: string
@@ -189,6 +278,7 @@ export type Database = {
           message_content?: string
           message_type?: string
           read_at?: string | null
+          related_booking_id?: number | null
           response_time?: unknown | null
           sent_at?: string
           status?: string | null
@@ -223,6 +313,13 @@ export type Database = {
             columns: ["instructor_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communications_related_booking_id_fkey"
+            columns: ["related_booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
             referencedColumns: ["id"]
           },
           {
@@ -1012,36 +1109,63 @@ export type Database = {
         Row: {
           avatar_url: string | null
           bio: string | null
+          contact_frequency: string | null
           created_at: string
           email: string | null
           first_name: string | null
           id: string
+          interests: string[] | null
+          languages: string[] | null
+          last_contacted: string | null
           last_name: string | null
+          notes: string | null
           phone: string | null
+          preferred_contact_method: string | null
+          search_text: string | null
+          tags: string[] | null
+          timezone: string | null
           updated_at: string
           user_type: Database["public"]["Enums"]["user_type"]
         }
         Insert: {
           avatar_url?: string | null
           bio?: string | null
+          contact_frequency?: string | null
           created_at?: string
           email?: string | null
           first_name?: string | null
           id: string
+          interests?: string[] | null
+          languages?: string[] | null
+          last_contacted?: string | null
           last_name?: string | null
+          notes?: string | null
           phone?: string | null
+          preferred_contact_method?: string | null
+          search_text?: string | null
+          tags?: string[] | null
+          timezone?: string | null
           updated_at?: string
           user_type: Database["public"]["Enums"]["user_type"]
         }
         Update: {
           avatar_url?: string | null
           bio?: string | null
+          contact_frequency?: string | null
           created_at?: string
           email?: string | null
           first_name?: string | null
           id?: string
+          interests?: string[] | null
+          languages?: string[] | null
+          last_contacted?: string | null
           last_name?: string | null
+          notes?: string | null
           phone?: string | null
+          preferred_contact_method?: string | null
+          search_text?: string | null
+          tags?: string[] | null
+          timezone?: string | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
         }
