@@ -1,12 +1,10 @@
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  ResizablePanelGroup,
+  ResizablePanel,
+  ResizableHandle,
+} from "@/components/ui/resizable";
 import Communications from "../crm/Communications";
 import ContactManagement from "../crm/ContactManagement";
 import MessageTemplates from "../crm/MessageTemplates";
@@ -38,17 +36,19 @@ const TeacherCRM = () => {
         </TabsList>
 
         <TabsContent value="messages">
-          <Card>
-            <CardHeader>
-              <CardTitle>Messages</CardTitle>
-              <CardDescription>
-                View and manage all your communications in one place
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Communications />
-            </CardContent>
-          </Card>
+          <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
+            <ResizablePanel defaultSize={30}>
+              <div className="p-4">
+                <Communications />
+              </div>
+            </ResizablePanel>
+            <ResizableHandle withHandle />
+            <ResizablePanel defaultSize={70}>
+              <div className="p-4">
+                <ContactManagement />
+              </div>
+            </ResizablePanel>
+          </ResizablePanelGroup>
         </TabsContent>
 
         <TabsContent value="contacts">
@@ -56,45 +56,15 @@ const TeacherCRM = () => {
         </TabsContent>
 
         <TabsContent value="templates">
-          <Card>
-            <CardHeader>
-              <CardTitle>Message Templates</CardTitle>
-              <CardDescription>
-                Create and manage message templates for quick responses
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <MessageTemplates />
-            </CardContent>
-          </Card>
+          <MessageTemplates />
         </TabsContent>
 
         <TabsContent value="tasks">
-          <Card>
-            <CardHeader>
-              <CardTitle>Task Management</CardTitle>
-              <CardDescription>
-                Manage follow-up tasks and assignments
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <TaskManagement />
-            </CardContent>
-          </Card>
+          <TaskManagement />
         </TabsContent>
 
         <TabsContent value="analytics">
-          <Card>
-            <CardHeader>
-              <CardTitle>CRM Analytics</CardTitle>
-              <CardDescription>
-                View insights and metrics about your communications
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <CRMAnalytics />
-            </CardContent>
-          </Card>
+          <CRMAnalytics />
         </TabsContent>
       </Tabs>
     </div>

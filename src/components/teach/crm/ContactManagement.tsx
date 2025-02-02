@@ -18,7 +18,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Search, MessageSquare, Filter } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, MessageSquare, Filter, Mail, Phone } from "lucide-react";
 import ContactProfileView from "./ContactProfileView";
 import BulkMessageComposer from "./BulkMessageComposer";
 
@@ -40,8 +41,13 @@ const ContactManagement = () => {
           contact_tag_assignments(
             contact_tags(
               name,
-              color
+              color,
+              status_color
             )
+          ),
+          communications(
+            id,
+            is_unread
           )
         `)
         .textSearch('search_text', searchTerm)
@@ -83,31 +89,67 @@ const ContactManagement = () => {
         <CardContent>
           <ScrollArea className="h-[600px]">
             <div className="space-y-4">
-              {contacts?.map((contact) => (
-                <div
-                  key={contact.id}
-                  className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
-                  onClick={() => setSelectedContact(contact.id)}
-                >
-                  <div className="flex items-center gap-4">
-                    <Avatar>
-                      <AvatarImage src={contact.avatar_url || ""} />
-                      <AvatarFallback>
-                        {contact.first_name?.[0]}
-                        {contact.last_name?.[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <h3 className="font-medium">
-                        {contact.first_name} {contact.last_name}
-                      </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {contact.email}
-                      </p>
+              {contacts?.map((contact) => {
+                const unreadMessages = contact.communications?.filter(c => c.is_unread)?.length || 0;
+                const tags = contact.contact_tag_assignments?.map(ta => ta.contact_tags) || [];
+                
+                return (
+                  <div
+                    key={contact.id}
+                    className="flex items-center justify-between p-4 border rounded-lg hover:bg-muted/50 transition-colors cursor-pointer"
+                    onClick={() => setSelectedContact(contact.id)}
+                  >
+                    <div className="flex items-center gap-4">
+                      <Avatar className="h-12 w-12">
+                        <AvatarImage src={contact.avatar_url || ""} />
+                        <AvatarFallback className="bg-primary text-primary-foreground">
+                          {contact.first_name?.[0]}
+                          {contact.last_name?.[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="space-y-1">
+                        <h3 className="font-medium">
+                          {contact.first_name} {contact.last_name}
+                        </h3>
+                        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                          {contact.email && (
+                            <span className="flex items-center gap-1">
+                              <Mail className="h-4 w-4" />
+                              {contact.email}
+                            </span>
+                          )}
+                          {contact.phone && (
+                            <span className="flex items-center gap-1">
+                              <Phone className="h-4 w-4" />
+                              {contact.phone}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {tags.map((tag, idx) => (
+                            <Badge
+                              key={idx}
+                              variant="outline"
+                              style={{
+                                backgroundColor: `${tag.status_color}20` || '#f1f5f9',
+                                borderColor: tag.status_color || '#e2e8f0',
+                                color: tag.status_color || 'inherit'
+                              }}
+                            >
+                              {tag.name}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
                     </div>
+                    {unreadMessages > 0 && (
+                      <Badge variant="secondary" className="ml-auto">
+                        {unreadMessages} unread
+                      </Badge>
+                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </ScrollArea>
         </CardContent>
