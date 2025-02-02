@@ -11,7 +11,6 @@ import {
 import { 
   MoreHorizontal, 
   UserPlus, 
-  Camera, 
   Megaphone,
   BookOpen,
   Expand
@@ -56,7 +55,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
         </DropdownMenu>
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-1">
               <p className="text-sm text-muted-foreground">Date & Time</p>
@@ -97,23 +96,26 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             />
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4">
             <div className="border rounded-lg p-4 space-y-4">
               <h3 className="font-medium flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
-                Bookings & Participants
+                Bookings & Requests
               </h3>
-              <ParticipantsTable participants={participants} />
-              {classItem.bookingRequests?.length > 0 && (
-                <BookingRequestsTable requests={classItem.bookingRequests} />
-              )}
-              <Button 
-                variant="outline" 
-                className="w-full"
-                onClick={() => navigate(`/teach/classes/${classItem.id}/bookings`)}
-              >
-                View All Bookings
-              </Button>
+              <div className="space-y-4">
+                <ParticipantsTable participants={participants} />
+                {classItem.bookingRequests?.length > 0 && (
+                  <BookingRequestsTable requests={classItem.bookingRequests} />
+                )}
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="w-full"
+                  onClick={() => navigate(`/teach/classes/${classItem.id}/bookings`)}
+                >
+                  View All Bookings
+                </Button>
+              </div>
             </div>
 
             <div className="border rounded-lg p-4 space-y-4">
@@ -126,52 +128,35 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
 
             <div className="border rounded-lg p-4 space-y-4">
               <h3 className="font-medium flex items-center gap-2">
-                <Camera className="h-4 w-4" />
-                Instant Booths
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                <Button variant="outline" size="sm">Start Video Session</Button>
-                <Button variant="outline" size="sm">Create Virtual Room</Button>
-              </div>
-            </div>
-
-            <div className="border rounded-lg p-4 space-y-4">
-              <h3 className="font-medium flex items-center gap-2">
                 <Megaphone className="h-4 w-4" />
                 Promotion Tools
               </h3>
-              <div className="grid gap-2">
-                <Button variant="outline" size="sm">Create Discount Code</Button>
+              <div className="grid grid-cols-2 gap-2">
+                <Button variant="outline" size="sm">Create Discount</Button>
                 <Button variant="outline" size="sm">Boost Visibility</Button>
                 <Button variant="outline" size="sm">Share Class</Button>
+                <Button variant="outline" size="sm">Add Extra Session</Button>
               </div>
             </div>
 
             <div className="border rounded-lg p-4 space-y-4">
               <h3 className="font-medium flex items-center gap-2">
                 <Expand className="h-4 w-4" />
-                Capacity Management
+                Capacity
               </h3>
-              <div className="space-y-2">
-                <Button variant="outline" size="sm" className="w-full">
-                  Increase Max Participants
-                </Button>
-                <Button variant="outline" size="sm" className="w-full">
-                  Add Extra Session
-                </Button>
-              </div>
+              <Button variant="outline" size="sm" className="w-full">
+                Increase Max Participants
+              </Button>
             </div>
           </div>
 
-          <div className="flex gap-2">
-            <Button
-              variant="default"
-              className="flex-1"
-              onClick={() => navigate(`/teach/classes/${classItem.id}`)}
-            >
-              Manage Class
-            </Button>
-          </div>
+          <Button
+            variant="default"
+            className="w-full"
+            onClick={() => navigate(`/teach/classes/${classItem.id}`)}
+          >
+            Manage Class
+          </Button>
         </div>
       </CardContent>
     </Card>
