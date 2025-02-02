@@ -5,6 +5,7 @@ import CapacityIndicator from "./card/CapacityIndicator";
 import ParticipantsTable from "./ParticipantsTable";
 import WaitlistTable from "./WaitlistTable";
 import ClassActions from "./card/ClassActions";
+import DiscountsList from "./discounts/DiscountsList";
 
 interface ClassCardProps {
   classItem: any;
@@ -43,6 +44,11 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
             {classItem.waitlist?.length > 0 && (
               <WaitlistTable entries={classItem.waitlist} />
             )}
+          </div>
+
+          <div className="border rounded-lg p-4 space-y-4">
+            <h3 className="font-medium">Active Discounts</h3>
+            <DiscountsList courseId={classItem.id} />
           </div>
 
           <ClassActions classId={classItem.id} />

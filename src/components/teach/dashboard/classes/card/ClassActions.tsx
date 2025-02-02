@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Edit } from "lucide-react";
+import CreateDiscountDialog from "../discounts/CreateDiscountDialog";
 
 interface ClassActionsProps {
   classId: number;
@@ -20,6 +21,8 @@ const ClassActions = ({ classId }: ClassActionsProps) => {
         <MessageSquare className="h-4 w-4 mr-2" />
         Message Participants
       </Button>
+
+      <CreateDiscountDialog courseId={classId} />
 
       <Button
         variant="outline"
