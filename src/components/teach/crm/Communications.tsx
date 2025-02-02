@@ -78,9 +78,11 @@ const Communications = () => {
       return data;
     },
     retry: false,
-    onError: (error) => {
-      console.error("Error fetching messages:", error);
-    },
+    meta: {
+      onError: (error: Error) => {
+        console.error("Error fetching messages:", error);
+      }
+    }
   });
 
   const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
