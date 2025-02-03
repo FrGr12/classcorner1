@@ -7,21 +7,18 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Session } from "@/types/session";
+import { Form } from "@/components/ui/form";
 import ImageUpload from "./ImageUpload";
 import SessionsForm from "./SessionsForm";
 import BookingSettings from "./course-form/BookingSettings";
 import BasicInformation from "./course-form/BasicInformation";
 import CourseDetails from "./course-form/CourseDetails";
+import { Session } from "@/types/session";
+
+interface CourseFormProps {
+  courseId?: string;
+  mode?: 'create' | 'edit';
+}
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -50,7 +47,7 @@ const formSchema = z.object({
   paymentTiming: z.enum(["instant", "post_course"]).default("instant"),
 });
 
-const CourseForm = () => {
+const CourseForm = ({ courseId, mode = 'create' }: CourseFormProps) => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [images, setImages] = useState<File[]>([]);
@@ -78,7 +75,7 @@ const CourseForm = () => {
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
-      toast.loading("Creating your course...");
+      toast.loading(mode === 'create' ? "Creating your course..." : "Updating your course...");
 
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -86,84 +83,168 @@ const CourseForm = () => {
         return;
       }
 
-      const { data: course, error: courseError } = await supabase
-        .from("courses")
-        .insert({
-          title: values.title,
-          description: values.description,
-          price: Number(values.price),
-          location: values.location,
-          category: values.category,
-          max_participants: Number(values.maxParticipants),
-          instructor_id: user.id,
-          status: "draft",
-          learning_objectives: values.learningObjectives,
-          materials_included: values.materialsIncluded,
-          setup_instructions: values.setupInstructions,
-          duration: values.duration,
-          group_bookings_enabled: values.groupBookingsEnabled,
-          private_bookings_enabled: values.privateBookingsEnabled,
-          base_price_group: values.basePriceGroup ? Number(values.basePriceGroup) : null,
-          base_price_private: values.basePricePrivate ? Number(values.basePricePrivate) : null,
-          min_group_size: values.minGroupSize ? Number(values.minGroupSize) : null,
-          max_group_size: values.maxGroupSize ? Number(values.maxGroupSize) : null,
-          payment_timing: values.paymentTiming,
-        })
-        .select()
-        .single();
+      if (mode === 'create') {
+        const { data: course, error: courseError } = await supabase
+          .from("courses")
+          .insert({
+            title: values.title,
+            description: values.description,
+            price: Number(values.price),
+            location: values.location,
+            category: values.category,
+            max_participants: Number(values.maxParticipants),
+            instructor_id: user.id,
+            status: "draft",
+            learning_objectives: values.learningObjectives,
+            materials_included: values.materialsIncluded,
+            setup_instructions: values.setupInstructions,
+            duration: values.duration,
+            group_bookings_enabled: values.groupBookingsEnabled,
+            private_bookings_enabled: values.privateBookingsEnabled,
+            base_price_group: values.basePriceGroup ? Number(values.basePriceGroup) : null,
+            base_price_private: values.basePricePrivate ? Number(values.basePricePrivate) : null,
+            min_group_size: values.minGroupSize ? Number(values.minGroupSize) : null,
+            max_group_size: values.maxGroupSize ? Number(values.maxGroupSize) : null,
+            payment_timing: values.paymentTiming,
+          })
+          .select()
+          .single();
 
-      if (courseError) throw courseError;
+        if (courseError) throw courseError;
 
-      // Upload images
-      for (let i = 0; i < images.length; i++) {
-        const file = images[i];
-        const fileExt = file.name.split(".").pop();
-        const filePath = `${user.id}/${course.id}/${crypto.randomUUID()}.${fileExt}`;
+        // Upload images
+        for (let i = 0; i < images.length; i++) {
+          const file = images[i];
+          const fileExt = file.name.split(".").pop();
+          const filePath = `${user.id}/${course.id}/${crypto.randomUUID()}.${fileExt}`;
 
-        const { error: uploadError } = await supabase.storage
-          .from("course-images")
-          .upload(filePath, file);
+          const { error: uploadError } = await supabase.storage
+            .from("course-images")
+            .upload(filePath, file);
 
-        if (uploadError) {
-          toast.error(`Failed to upload image ${i + 1}`);
-          throw uploadError;
+          if (uploadError) {
+            toast.error(`Failed to upload image ${i + 1}`);
+            throw uploadError;
+          }
+
+          const { error: imageError } = await supabase
+            .from("course_images")
+            .insert({
+              course_id: course.id,
+              image_path: filePath,
+              display_order: i,
+            });
+
+          if (imageError) throw imageError;
         }
 
-        const { error: imageError } = await supabase
-          .from("course_images")
-          .insert({
-            course_id: course.id,
-            image_path: filePath,
-            display_order: i,
-          });
+        // Insert sessions
+        for (const session of sessions) {
+          const { error: sessionError } = await supabase
+            .from("course_sessions")
+            .insert({
+              course_id: course.id,
+              start_time: session.start.toISOString(),
+              is_recurring: session.isRecurring,
+              recurrence_pattern: session.recurrencePattern,
+              recurrence_end_date: session.recurrenceEndDate?.toISOString(),
+              recurrence_count: session.recurrenceCount,
+            });
 
-        if (imageError) throw imageError;
-      }
+          if (sessionError) {
+            toast.error("Failed to create some sessions");
+            throw sessionError;
+          }
+        }
 
-      // Insert sessions
-      for (const session of sessions) {
-        const { error: sessionError } = await supabase
+        toast.success("Course created successfully!");
+        navigate(`/class/${values.category}/${course.id}`);
+      } else {
+        const { error: courseError } = await supabase
+          .from("courses")
+          .update({
+            title: values.title,
+            description: values.description,
+            price: Number(values.price),
+            location: values.location,
+            category: values.category,
+            max_participants: Number(values.maxParticipants),
+            learning_objectives: values.learningObjectives,
+            materials_included: values.materialsIncluded,
+            setup_instructions: values.setupInstructions,
+            duration: values.duration,
+            group_bookings_enabled: values.groupBookingsEnabled,
+            private_bookings_enabled: values.privateBookingsEnabled,
+            base_price_group: values.basePriceGroup ? Number(values.basePriceGroup) : null,
+            base_price_private: values.basePricePrivate ? Number(values.basePricePrivate) : null,
+            min_group_size: values.minGroupSize ? Number(values.minGroupSize) : null,
+            max_group_size: values.maxGroupSize ? Number(values.maxGroupSize) : null,
+            payment_timing: values.paymentTiming,
+          })
+          .eq('id', Number(courseId));
+
+        if (courseError) throw courseError;
+
+        // Upload new images
+        if (images.length > 0) {
+          for (let i = 0; i < images.length; i++) {
+            const file = images[i];
+            const fileExt = file.name.split(".").pop();
+            const filePath = `${user.id}/${courseId}/${crypto.randomUUID()}.${fileExt}`;
+
+            const { error: uploadError } = await supabase.storage
+              .from("course-images")
+              .upload(filePath, file);
+
+            if (uploadError) {
+              toast.error(`Failed to upload image ${i + 1}`);
+              throw uploadError;
+            }
+
+            const { error: imageError } = await supabase
+              .from("course_images")
+              .insert({
+                course_id: Number(courseId),
+                image_path: filePath,
+                display_order: i,
+              });
+
+            if (imageError) throw imageError;
+          }
+        }
+
+        // Update sessions
+        const { error: deleteSessionsError } = await supabase
           .from("course_sessions")
-          .insert({
-            course_id: course.id,
-            start_time: session.start.toISOString(),
-            is_recurring: session.isRecurring,
-            recurrence_pattern: session.recurrencePattern,
-            recurrence_end_date: session.recurrenceEndDate?.toISOString(),
-            recurrence_count: session.recurrenceCount,
-          });
+          .delete()
+          .eq("course_id", Number(courseId));
 
-        if (sessionError) {
-          toast.error("Failed to create some sessions");
-          throw sessionError;
+        if (deleteSessionsError) throw deleteSessionsError;
+
+        for (const session of sessions) {
+          const { error: sessionError } = await supabase
+            .from("course_sessions")
+            .insert({
+              course_id: Number(courseId),
+              start_time: session.start.toISOString(),
+              is_recurring: session.isRecurring,
+              recurrence_pattern: session.recurrencePattern,
+              recurrence_end_date: session.recurrenceEndDate?.toISOString(),
+              recurrence_count: session.recurrenceCount,
+            });
+
+          if (sessionError) {
+            toast.error("Failed to update some sessions");
+            throw sessionError;
+          }
         }
-      }
 
-      toast.success("Course created successfully!");
-      navigate(`/class/${values.category}/${course.id}`);
+        toast.success("Course updated successfully!");
+        navigate(`/class/${values.category}/${courseId}`);
+      }
     } catch (error) {
-      console.error("Error creating course:", error);
-      toast.error("Failed to create course. Please try again.");
+      console.error("Error with course:", error);
+      toast.error(mode === 'create' ? "Failed to create course" : "Failed to update course");
     } finally {
       setIsLoading(false);
     }
@@ -259,10 +340,10 @@ const CourseForm = () => {
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating Course...
+              {mode === 'create' ? "Creating Course..." : "Updating Course..."}
             </>
           ) : (
-            "Create Course"
+            mode === 'create' ? "Create Course" : "Update Course"
           )}
         </Button>
       </form>
