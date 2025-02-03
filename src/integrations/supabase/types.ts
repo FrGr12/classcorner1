@@ -834,6 +834,7 @@ export type Database = {
           payment_timing: string | null
           price: number
           private_bookings_enabled: boolean | null
+          search_vector: unknown | null
           setup_instructions: string | null
           share_count: number | null
           status: Database["public"]["Enums"]["course_status"] | null
@@ -863,6 +864,7 @@ export type Database = {
           payment_timing?: string | null
           price: number
           private_bookings_enabled?: boolean | null
+          search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
           status?: Database["public"]["Enums"]["course_status"] | null
@@ -892,6 +894,7 @@ export type Database = {
           payment_timing?: string | null
           price?: number
           private_bookings_enabled?: boolean | null
+          search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
           status?: Database["public"]["Enums"]["course_status"] | null

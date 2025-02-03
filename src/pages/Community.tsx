@@ -1,104 +1,72 @@
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import Navigation from "@/components/landing/Navigation";
+import Footer from "@/components/landing/Footer";
+import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, MessageSquare, Calendar, Trophy } from "lucide-react";
+import { Users, MessageCircle, Calendar, Trophy } from "lucide-react";
 
 const Community = () => {
   return (
-    <div className="container mx-auto py-8">
-      <div className="space-y-6">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold">Community</h1>
-          <p className="text-muted-foreground">
-            Connect with fellow teachers and students, share experiences, and grow together.
-          </p>
+    <div className="min-h-screen bg-neutral-50">
+      <Navigation />
+      <main className="container mx-auto px-4 py-24">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <section>
+            <h1 className="text-4xl font-display font-semibold mb-6">Join Our Community</h1>
+            <p className="text-lg text-neutral-600">
+              Connect with fellow creators, share experiences, and grow together in our vibrant community.
+            </p>
+          </section>
+
+          <section className="grid sm:grid-cols-2 gap-6">
+            <Card className="p-6">
+              <div className="space-y-4">
+                <Users className="w-8 h-8 text-accent-purple" />
+                <h3 className="text-xl font-semibold">Community Forums</h3>
+                <p className="text-neutral-600">
+                  Join discussions, share tips, and connect with other creators in our community forums.
+                </p>
+                <Button className="w-full">
+                  <MessageCircle className="w-4 h-4 mr-2" />
+                  Join Discussion
+                </Button>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="space-y-4">
+                <Calendar className="w-8 h-8 text-accent-purple" />
+                <h3 className="text-xl font-semibold">Upcoming Events</h3>
+                <p className="text-neutral-600">
+                  Discover and participate in community events, workshops, and meetups.
+                </p>
+                <Button className="w-full">
+                  <Calendar className="w-4 h-4 mr-2" />
+                  View Events
+                </Button>
+              </div>
+            </Card>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-6">Featured Community Members</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="p-6">
+                  <div className="space-y-4">
+                    <Trophy className="w-6 h-6 text-accent-purple" />
+                    <h3 className="text-lg font-semibold">Featured Creator {i}</h3>
+                    <p className="text-sm text-neutral-600">
+                      Sharing knowledge and inspiring others through creative classes.
+                    </p>
+                    <Button variant="outline" className="w-full">View Profile</Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </section>
         </div>
-
-        <Tabs defaultValue="discussions" className="w-full">
-          <TabsList>
-            <TabsTrigger value="discussions">Discussions</TabsTrigger>
-            <TabsTrigger value="events">Events</TabsTrigger>
-            <TabsTrigger value="spotlight">Teacher Spotlight</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="discussions" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <MessageSquare className="h-5 w-5" />
-                    Discussion Forums
-                  </CardTitle>
-                  <CardDescription>
-                    Join conversations about teaching techniques, class management, and more.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Join Discussion</Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Users className="h-5 w-5" />
-                    Study Groups
-                  </CardTitle>
-                  <CardDescription>
-                    Form or join study groups with other teachers and students.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Find Groups</Button>
-                </CardContent>
-              </Card>
-
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Trophy className="h-5 w-5" />
-                    Success Stories
-                  </CardTitle>
-                  <CardDescription>
-                    Share and read inspiring stories from our community.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">Read Stories</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="events" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="h-5 w-5" />
-                    Upcoming Events
-                  </CardTitle>
-                  <CardDescription>
-                    Browse and join upcoming community events and workshops.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full">View Calendar</Button>
-                </CardContent>
-              </Card>
-            </div>
-          </TabsContent>
-
-          <TabsContent value="spotlight" className="mt-6">
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <h3 className="text-xl font-semibold mb-2">Coming Soon!</h3>
-              <p className="text-muted-foreground mb-4">
-                Teacher spotlight features will be available soon. Stay tuned to learn from and get inspired by our top instructors!
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };

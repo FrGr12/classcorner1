@@ -1,52 +1,69 @@
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
-import { Card } from "@/components/ui/card";
 
 const About = () => {
-  const team = [
-    { name: "Sarah Johnson", role: "Founder & CEO", image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c" },
-    { name: "Mike Chen", role: "Community Lead", image: "https://images.unsplash.com/photo-1605810230434-7631ac76ec81" },
-    { name: "Emma Davis", role: "Head of Operations", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04" },
-  ];
-
   return (
-    <div className="min-h-screen bg-neutral-100">
+    <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <main className="pt-32 pb-16 container-padding">
-        <div className="max-w-4xl mx-auto">
-          <h1 className="heading-lg mb-8">About ClassCorner</h1>
-          
-          <section className="mb-16">
-            <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
-            <p className="text-neutral-600 mb-4">
-              ClassCorner connects creative individuals with local craft classes, fostering a community
-              of hands-on learning and artistic expression. We believe in the power of in-person
-              instruction and the joy of creating something with your own hands.
-            </p>
-            <p className="text-neutral-600">
-              Our platform makes it easy for skilled artisans to share their craft with eager students,
-              while helping students discover and book classes in their area.
+      <main className="container mx-auto px-4 py-24">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <section>
+            <h1 className="text-4xl font-display font-semibold mb-6">About ClassCorner</h1>
+            <p className="text-lg text-neutral-600 leading-relaxed">
+              ClassCorner is a platform that connects passionate instructors with eager learners, 
+              making it easy to discover and book hands-on creative classes in your area.
             </p>
           </section>
-          
+
+          <section className="grid md:grid-cols-2 gap-8">
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Our Mission</h2>
+              <p className="text-neutral-600">
+                We believe in the power of hands-on learning and creative expression. 
+                Our mission is to make creative education accessible to everyone by 
+                connecting skilled artisans and instructors with students eager to learn.
+              </p>
+            </div>
+            <div>
+              <h2 className="text-2xl font-semibold mb-4">Our Vision</h2>
+              <p className="text-neutral-600">
+                We envision a world where everyone has the opportunity to explore their 
+                creativity, learn new skills, and connect with passionate instructors in 
+                their community.
+              </p>
+            </div>
+          </section>
+
           <section>
-            <h2 className="text-2xl font-semibold mb-8">Our Team</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {team.map((member) => (
-                <Card key={member.name} className="overflow-hidden">
-                  <div className="aspect-square">
-                    <img 
-                      src={member.image} 
-                      alt={member.name}
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold">{member.name}</h3>
-                    <p className="text-sm text-neutral-600">{member.role}</p>
-                  </div>
-                </Card>
-              ))}
+            <h2 className="text-2xl font-semibold mb-4">What We Offer</h2>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="p-6 bg-white rounded-lg shadow-sm">
+                <h3 className="text-xl font-semibold mb-2">For Students</h3>
+                <ul className="space-y-2 text-neutral-600">
+                  <li>• Discover unique creative classes</li>
+                  <li>• Learn from experienced instructors</li>
+                  <li>• Book classes easily</li>
+                  <li>• Join a creative community</li>
+                </ul>
+              </div>
+              <div className="p-6 bg-white rounded-lg shadow-sm">
+                <h3 className="text-xl font-semibold mb-2">For Teachers</h3>
+                <ul className="space-y-2 text-neutral-600">
+                  <li>• Share your expertise</li>
+                  <li>• Manage your classes</li>
+                  <li>• Build your student base</li>
+                  <li>• Earn teaching</li>
+                </ul>
+              </div>
+              <div className="p-6 bg-white rounded-lg shadow-sm">
+                <h3 className="text-xl font-semibold mb-2">Our Categories</h3>
+                <ul className="space-y-2 text-neutral-600">
+                  <li>• Arts & Crafts</li>
+                  <li>• Cooking & Baking</li>
+                  <li>• Photography</li>
+                  <li>• And many more!</li>
+                </ul>
+              </div>
             </div>
           </section>
         </div>

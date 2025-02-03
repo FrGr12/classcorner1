@@ -1,85 +1,81 @@
-import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
-import ResourceCard from "@/components/teach/dashboard/learning-hub/ResourceCard";
-import { resources } from "@/components/teach/dashboard/learning-hub/resources";
+import Navigation from "@/components/landing/Navigation";
+import Footer from "@/components/landing/Footer";
+import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { BookOpen, Download, ExternalLink } from "lucide-react";
 
 const Resources = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-
-  const filteredResources = resources.filter(
-    (resource) =>
-      resource.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      resource.description.toLowerCase().includes(searchQuery.toLowerCase())
-  );
-
   return (
-    <div className="container mx-auto py-8">
-      <div className="space-y-6">
-        <div className="flex flex-col gap-4">
-          <h1 className="text-3xl font-bold">Learning Resources</h1>
-          <p className="text-muted-foreground">
-            Discover guides, tutorials, and best practices to help you succeed.
-          </p>
+    <div className="min-h-screen bg-neutral-50">
+      <Navigation />
+      <main className="container mx-auto px-4 py-24">
+        <div className="max-w-4xl mx-auto space-y-12">
+          <section>
+            <h1 className="text-4xl font-display font-semibold mb-6">Teaching Resources</h1>
+            <p className="text-lg text-neutral-600">
+              Access our comprehensive collection of resources designed to help you succeed as an instructor on ClassCorner.
+            </p>
+          </section>
+
+          <section className="grid gap-6">
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">Getting Started Guide</h3>
+                  <p className="text-neutral-600">
+                    Learn everything you need to know about setting up your classes, managing bookings, 
+                    and growing your student base.
+                  </p>
+                  <Button variant="outline" className="mt-4">
+                    <Download className="w-4 h-4 mr-2" />
+                    Download PDF
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">Class Planning Templates</h3>
+                  <p className="text-neutral-600">
+                    Access our collection of templates to help you plan and structure your classes effectively.
+                  </p>
+                  <div className="flex flex-wrap gap-2 mt-4">
+                    <Button variant="outline">
+                      <Download className="w-4 h-4 mr-2" />
+                      Class Plan Template
+                    </Button>
+                    <Button variant="outline">
+                      <Download className="w-4 h-4 mr-2" />
+                      Materials List Template
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            <Card className="p-6">
+              <div className="flex items-start gap-4">
+                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold">Marketing Resources</h3>
+                  <p className="text-neutral-600">
+                    Get tips and tools to promote your classes and attract more students.
+                  </p>
+                  <Button variant="outline" className="mt-4">
+                    <ExternalLink className="w-4 h-4 mr-2" />
+                    Access Marketing Hub
+                  </Button>
+                </div>
+              </div>
+            </Card>
+          </section>
         </div>
-
-        <div className="relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search resources..."
-            className="pl-10"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList>
-            <TabsTrigger value="all">All Resources</TabsTrigger>
-            <TabsTrigger value="guides">Guides</TabsTrigger>
-            <TabsTrigger value="videos">Video Tutorials</TabsTrigger>
-            <TabsTrigger value="webinars">Live Webinars</TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="all" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredResources.map((resource) => (
-                <ResourceCard key={resource.title} resource={resource} />
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="guides" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredResources
-                .filter((r) => r.type === "guide")
-                .map((resource) => (
-                  <ResourceCard key={resource.title} resource={resource} />
-                ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="videos" className="mt-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {filteredResources
-                .filter((r) => r.type === "video")
-                .map((resource) => (
-                  <ResourceCard key={resource.title} resource={resource} />
-                ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="webinars" className="mt-6">
-            <div className="flex flex-col items-center justify-center py-12 text-center">
-              <h3 className="text-xl font-semibold mb-2">Coming Soon!</h3>
-              <p className="text-muted-foreground mb-4">
-                Live webinars and Q&A sessions with top instructors will be available soon.
-              </p>
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
+      </main>
+      <Footer />
     </div>
   );
 };
