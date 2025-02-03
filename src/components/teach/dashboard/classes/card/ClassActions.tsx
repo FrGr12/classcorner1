@@ -19,7 +19,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
         variant="outline" 
         size="sm"
         className="w-full"
-        onClick={() => navigate(`/teach/messages/bulk/${classId}`)}
+        onClick={() => navigate(`/teach/crm?courseId=${classId}`)}
       >
         <MessageSquare className="h-4 w-4 mr-2" />
         Message Participants
