@@ -7,14 +7,13 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Form } from "@/components/ui/form";
 import ImageUpload from "./ImageUpload";
-import SessionsForm from "./SessionsForm";
 import BookingSettings from "./course-form/BookingSettings";
 import BasicInformation from "./course-form/BasicInformation";
 import CourseDetails from "./course-form/CourseDetails";
+import FormWrapper from "./course-form/FormWrapper";
+import SessionManagement from "./course-form/SessionManagement";
 import { Session } from "@/types/session";
 
 interface CourseFormProps {
@@ -255,82 +254,37 @@ const CourseForm = ({ courseId, mode = 'create' }: CourseFormProps) => {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-        <Card>
-          <CardHeader>
-            <CardTitle>Basic Information</CardTitle>
-            <CardDescription>
-              Start with the fundamental details of your course
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BasicInformation form={form} />
-          </CardContent>
-        </Card>
+        <FormWrapper
+          title="Basic Information"
+          description="Start with the fundamental details of your course"
+        >
+          <BasicInformation form={form} />
+        </FormWrapper>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Session Management</CardTitle>
-            <CardDescription>
-              Configure your course sessions and capacity
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Standard Price (per person)</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="Enter price" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+        <FormWrapper
+          title="Session Management"
+          description="Configure your course sessions and capacity"
+        >
+          <SessionManagement 
+            form={form}
+            sessions={sessions}
+            setSessions={setSessions}
+          />
+        </FormWrapper>
 
-              <FormField
-                control={form.control}
-                name="maxParticipants"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Maximum Participants</FormLabel>
-                    <FormControl>
-                      <Input type="number" placeholder="Enter max participants" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <SessionsForm sessions={sessions} setSessions={setSessions} />
-          </CardContent>
-        </Card>
+        <FormWrapper
+          title="Booking Options"
+          description="Configure how students can book your course"
+        >
+          <BookingSettings form={form} />
+        </FormWrapper>
 
-        <Card>
-          <CardHeader>
-            <CardTitle>Booking Options</CardTitle>
-            <CardDescription>
-              Configure how students can book your course
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <BookingSettings form={form} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Course Details</CardTitle>
-            <CardDescription>
-              Provide detailed information about your course
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CourseDetails form={form} />
-          </CardContent>
-        </Card>
+        <FormWrapper
+          title="Course Details"
+          description="Provide detailed information about your course"
+        >
+          <CourseDetails form={form} />
+        </FormWrapper>
 
         <ImageUpload images={images} setImages={setImages} />
 
