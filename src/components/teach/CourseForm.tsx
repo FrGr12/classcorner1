@@ -243,6 +243,7 @@ const CourseForm = ({ courseId, mode = 'create' }: CourseFormProps) => {
         toast.success("Course updated successfully!");
         navigate(`/class/${values.category}/${courseId}`);
       }
+
     } catch (error) {
       console.error("Error with course:", error);
       toast.error(mode === 'create' ? "Failed to create course" : "Failed to update course");
