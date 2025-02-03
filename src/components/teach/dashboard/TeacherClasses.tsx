@@ -59,7 +59,7 @@ const TeacherClasses = () => {
             Manage your classes, bookings, and waitlists
           </p>
         </div>
-        <Button onClick={() => navigate("/teach/new")} className="gap-2">
+        <Button onClick={() => navigate("/teach/classes/new")} className="gap-2">
           <Plus className="h-4 w-4" />
           Add New Class
         </Button>
