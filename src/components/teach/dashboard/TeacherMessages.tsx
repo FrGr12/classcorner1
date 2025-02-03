@@ -1,16 +1,13 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import MessagesTable from "../crm/MessagesTable";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Loader2 } from "lucide-react";
 
 const TeacherMessages = () => {
-  const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [messages, setMessages] = useState([]);
 
   useEffect(() => {
     fetchMessages();
@@ -28,48 +25,19 @@ const TeacherMessages = () => {
         .from('communications')
         .select(`
           *,
-          profile:profiles!communications_student_id_fkey_profiles(first_name, last_name),
+          profile:profiles!communications_student_id_fkey(first_name, last_name),
           course:courses(title)
         `)
         .eq('instructor_id', user.id)
         .order('sent_at', { ascending: false });
 
       if (error) throw error;
-      setMessages(data);
+      setMessages(data || []);
     } catch (error: any) {
       console.error("Error fetching messages:", error);
       toast.error(error.message || "Failed to fetch messages");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error("Please sign in to send messages");
-        return;
-      }
-
-      const { error } = await supabase
-        .from('communications')
-        .insert({
-          instructor_id: user.id,
-          student_id: studentId,
-          course_id: courseId,
-          message_type: 'notification',
-          message_content: content,
-          status: 'sent'
-        });
-
-      if (error) throw error;
-
-      toast.success("Message sent successfully");
-      fetchMessages();
-    } catch (error: any) {
-      console.error("Error sending message:", error);
-      toast.error(error.message || "Failed to send message");
     }
   };
 
@@ -83,34 +51,59 @@ const TeacherMessages = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div>
         <h1 className="text-2xl font-bold">Messages</h1>
-        <Button>Compose Message</Button>
+        <p className="text-muted-foreground">
+          Manage your communications with students
+        </p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Communication Center</CardTitle>
+          <CardTitle>Inbox</CardTitle>
         </CardHeader>
         <CardContent>
-          <Tabs defaultValue="inbox">
+          <Tabs defaultValue="all">
             <TabsList>
-              <TabsTrigger value="inbox">Inbox</TabsTrigger>
+              <TabsTrigger value="all">All Messages</TabsTrigger>
+              <TabsTrigger value="unread">Unread</TabsTrigger>
               <TabsTrigger value="sent">Sent</TabsTrigger>
-              <TabsTrigger value="automated">Automated</TabsTrigger>
             </TabsList>
-            <TabsContent value="inbox" className="space-y-4">
-              <div className="flex gap-2">
-                <Input placeholder="Search messages..." className="max-w-sm" />
-                <Button variant="outline">Search</Button>
-              </div>
-              <MessagesTable messages={messages} onSendMessage={handleSendMessage} />
+            <TabsContent value="all" className="space-y-4">
+              {messages.length === 0 ? (
+                <p className="text-center text-muted-foreground py-8">
+                  No messages yet
+                </p>
+              ) : (
+                messages.map((message: any) => (
+                  <div key={message.id} className="border-b pb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div>
+                        <span className="font-semibold">
+                          {message.profile?.first_name} {message.profile?.last_name}
+                        </span>
+                        <span className="text-sm text-muted-foreground ml-2">
+                          {message.course?.title}
+                        </span>
+                      </div>
+                      <span className="text-sm text-muted-foreground">
+                        {new Date(message.sent_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-sm">{message.message_content}</p>
+                  </div>
+                ))
+              )}
+            </TabsContent>
+            <TabsContent value="unread">
+              <p className="text-center text-muted-foreground py-8">
+                No unread messages
+              </p>
             </TabsContent>
             <TabsContent value="sent">
-              <p className="text-neutral-600 py-8 text-center">No sent messages yet.</p>
-            </TabsContent>
-            <TabsContent value="automated">
-              <p className="text-neutral-600 py-8 text-center">No automated messages configured.</p>
+              <p className="text-center text-muted-foreground py-8">
+                No sent messages
+              </p>
             </TabsContent>
           </Tabs>
         </CardContent>
