@@ -14,6 +14,7 @@ interface ClassCardProps {
 
 const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
   const participants = classItem.participants || [];
+  const waitlistEntries = classItem.waitlist || [];
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -40,10 +41,18 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           />
 
           <div className="border rounded-lg p-4 space-y-4">
-            <ParticipantsTable participants={participants} />
-            {classItem.waitlist?.length > 0 && (
-              <WaitlistTable entries={classItem.waitlist} />
-            )}
+            <div>
+              <h3 className="font-medium mb-3">Participants & Waitlist</h3>
+              <ParticipantsTable participants={participants} />
+            </div>
+            
+            <div>
+              <h3 className="font-medium mb-3">Waitlist</h3>
+              <WaitlistTable 
+                entries={waitlistEntries} 
+                maxSize={classItem.max_waitlist_size}
+              />
+            </div>
           </div>
 
           <div className="border rounded-lg p-4 space-y-4">

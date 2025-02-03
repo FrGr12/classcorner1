@@ -10,18 +10,26 @@ import {
 } from "@/components/ui/table";
 import { Switch } from "@/components/ui/switch";
 import { UserPlus, ArrowUp } from "lucide-react";
+import { format } from "date-fns";
 
 interface WaitlistEntry {
   id: number;
-  name: string;
-  position: number;
+  user_id: string;
+  created_at: string;
+  status: string;
+  profile?: {
+    first_name: string;
+    last_name: string;
+  };
+  waitlist_position?: number;
 }
 
 interface WaitlistTableProps {
   entries: WaitlistEntry[];
+  maxSize?: number;
 }
 
-const WaitlistTable = ({ entries = [] }: WaitlistTableProps) => {
+const WaitlistTable = ({ entries = [], maxSize }: WaitlistTableProps) => {
   if (entries.length === 0) {
     return (
       <div className="text-sm text-muted-foreground">
@@ -37,6 +45,7 @@ const WaitlistTable = ({ entries = [] }: WaitlistTableProps) => {
           <Badge variant="secondary" className="gap-1">
             <UserPlus className="h-3 w-3" />
             {entries.length} {entries.length === 1 ? 'person' : 'people'}
+            {maxSize && ` / ${maxSize}`}
           </Badge>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <span>Auto-promote</span>
@@ -49,14 +58,23 @@ const WaitlistTable = ({ entries = [] }: WaitlistTableProps) => {
           <TableRow>
             <TableHead>Position</TableHead>
             <TableHead>Name</TableHead>
+            <TableHead>Joined</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {entries.map((person) => (
-            <TableRow key={person.id}>
-              <TableCell>#{person.position}</TableCell>
-              <TableCell>{person.name}</TableCell>
+          {entries.map((entry) => (
+            <TableRow key={entry.id}>
+              <TableCell>#{entry.waitlist_position || '-'}</TableCell>
+              <TableCell>
+                {entry.profile ? 
+                  `${entry.profile.first_name} ${entry.profile.last_name}` : 
+                  "Anonymous User"
+                }
+              </TableCell>
+              <TableCell>{format(new Date(entry.created_at), "MMM d, yyyy")}</TableCell>
+              <TableCell>{entry.status}</TableCell>
               <TableCell>
                 <Button size="sm" variant="ghost">
                   <ArrowUp className="h-4 w-4 mr-1" />
