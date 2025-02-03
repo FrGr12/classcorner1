@@ -29,10 +29,9 @@ const Communications = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  const { data: messages, isLoading } = useQuery({
+  const { data: messages, isLoading, error } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      // First get the current user
       const { data: { user }, error: authError } = await supabase.auth.getUser();
       
       if (authError) {
@@ -45,11 +44,7 @@ const Communications = () => {
       }
 
       if (!user) {
-        toast({
-          variant: "destructive",
-          title: "Not Authenticated",
-          description: "Please sign in to view messages",
-        });
+        navigate("/auth");
         throw new Error("Not authenticated");
       }
 
@@ -77,7 +72,6 @@ const Communications = () => {
 
       return data;
     },
-    retry: false,
     meta: {
       onError: (error: Error) => {
         console.error("Error fetching messages:", error);
@@ -122,6 +116,14 @@ const Communications = () => {
       });
     }
   };
+
+  if (error) {
+    return (
+      <div className="text-center py-8 text-red-500">
+        Error loading messages. Please try again.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
