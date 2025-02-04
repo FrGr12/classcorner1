@@ -39,7 +39,7 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "confirmed":
-        return <Badge className="bg-green-500"><CheckCircle2 className="w-3 h-3 mr-1" /> Confirmed</Badge>;
+        return <Badge variant="default"><CheckCircle2 className="w-3 h-3 mr-1" /> Confirmed</Badge>;
       case "pending":
         return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> Pending</Badge>;
       case "cancelled":
@@ -52,9 +52,9 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   const getPaymentBadge = (status: string) => {
     switch (status) {
       case "paid":
-        return <Badge variant="success">Paid</Badge>;
+        return <Badge variant="default">Paid</Badge>;
       case "pending":
-        return <Badge variant="warning">Pending</Badge>;
+        return <Badge variant="secondary">Pending</Badge>;
       case "unpaid":
         return <Badge variant="destructive">Unpaid</Badge>;
       default:
@@ -65,7 +65,7 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   const getAttendanceBadge = (status?: string) => {
     switch (status) {
       case "present":
-        return <Badge variant="success">Present</Badge>;
+        return <Badge variant="default">Present</Badge>;
       case "absent":
         return <Badge variant="destructive">Absent</Badge>;
       case "pending":

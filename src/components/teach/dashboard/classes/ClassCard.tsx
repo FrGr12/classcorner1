@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { useToast } from "sonner";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import ClassCardHeader from "./card/ClassCardHeader";
 import ClassDetails from "./card/ClassDetails";
@@ -42,9 +42,16 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
         .eq('course_id', classItem.id);
 
       if (error) throw error;
-      toast.success("Participant promoted from waitlist");
+      toast({
+        title: "Success",
+        description: "Participant promoted from waitlist",
+      });
     } catch (error) {
-      toast.error("Failed to promote participant");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to promote participant",
+      });
     }
   };
 
@@ -55,7 +62,6 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
         city={classItem.city}
         onAction={onAction}
         classId={classItem.id}
-        status={classItem.status}
       />
       
       <CardContent className="space-y-6">
@@ -71,7 +77,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">Class Capacity</span>
-              <Badge variant={occupancyRate >= 90 ? "destructive" : occupancyRate >= 70 ? "warning" : "success"}>
+              <Badge variant={occupancyRate >= 90 ? "destructive" : occupancyRate >= 70 ? "secondary" : "default"}>
                 {occupancyRate}%
               </Badge>
             </div>

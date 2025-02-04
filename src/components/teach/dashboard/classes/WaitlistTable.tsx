@@ -49,9 +49,9 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
       case 'waiting':
         return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" />Waiting</Badge>;
       case 'notified':
-        return <Badge variant="warning">Notified</Badge>;
+        return <Badge variant="secondary">Notified</Badge>;
       case 'promoted':
-        return <Badge variant="success">Promoted</Badge>;
+        return <Badge variant="default">Promoted</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
