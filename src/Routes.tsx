@@ -19,6 +19,15 @@ import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory
 
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
+import UserBookings from "@/components/user-dashboard/UserBookings";
+import UserNotifications from "@/components/user-dashboard/UserNotifications";
+import UserMessages from "@/components/user-dashboard/UserMessages";
+import UserMatches from "@/components/user-dashboard/UserMatches";
+import UserProfile from "@/components/user-dashboard/UserProfile";
+import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
+import UserReviews from "@/components/user-dashboard/UserReviews";
+import NotificationPreferences from "@/components/notifications/NotificationPreferences";
+import UserPreferences from "@/components/preferences/UserPreferences";
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +48,14 @@ export const router = createBrowserRouter([
     element: <UserDashboard />,
     children: [
       { path: "", element: <UserDashboardOverview /> },
+      { path: "bookings", element: <UserBookings /> },
+      { path: "notifications", element: <UserNotifications /> },
+      { path: "messages", element: <UserMessages /> },
+      { path: "matches", element: <UserMatches /> },
+      { path: "saved", element: <UserSavedClasses /> },
+      { path: "profile", element: <UserProfile /> },
+      { path: "preferences", element: <UserPreferences /> },
+      { path: "reviews", element: <UserReviews /> },
     ],
   },
   {

@@ -9,7 +9,7 @@ const UserDashboard = () => {
       <div className="min-h-screen flex w-full">
         <UserDashboardSidebar />
         <div className="flex-1 bg-gray-50">
-          <main className="p-6">
+          <main className="container mx-auto p-6">
             <Outlet />
           </main>
         </div>
