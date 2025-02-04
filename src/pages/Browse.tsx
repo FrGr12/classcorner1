@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -18,7 +17,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Slider } from "@/components/ui/slider";
-import UserPreferences from "@/components/preferences/UserPreferences";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -162,8 +160,8 @@ const Browse = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr]">
+          <div>
             <div className="mb-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Category Filter */}
@@ -234,10 +232,6 @@ const Browse = () => {
               category={selectedCategory === "all" ? null : selectedCategory} 
               sortBy={sortBy}
             />
-          </div>
-          
-          <div>
-            <UserPreferences />
           </div>
         </div>
       </main>

@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import UserDashboardSidebar from "@/components/user-dashboard/UserDashboardSidebar";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
@@ -8,6 +9,7 @@ import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
 import UserReviews from "@/components/user-dashboard/UserReviews";
+import UserPreferences from "@/components/preferences/UserPreferences";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 
 const UserDashboard = () => {
@@ -26,6 +28,7 @@ const UserDashboard = () => {
               <Route path="saved" element={<UserSavedClasses />} />
               <Route path="profile" element={<UserProfile />} />
               <Route path="reviews" element={<UserReviews />} />
+              <Route path="preferences" element={<UserPreferences />} />
             </Routes>
           </main>
         </div>
