@@ -96,13 +96,9 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
         .eq('course_id', classItem.id);
 
       if (error) throw error;
-      toast({
-        description: "Participant promoted from waitlist"
-      });
+      toast("Participant promoted from waitlist");
     } catch (error) {
-      toast({
-        description: "Failed to promote participant"
-      });
+      toast("Failed to promote participant");
     }
   };
 
@@ -179,3 +175,4 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
 };
 
 export default ClassCard;
+
