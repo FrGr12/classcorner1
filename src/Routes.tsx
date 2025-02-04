@@ -1,3 +1,4 @@
+
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -99,7 +100,13 @@ export const router = createBrowserRouter([
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "messages", element: <TeacherMessages /> },
-      { path: "bookings", element: <TeacherBookings /> },
+      { 
+        path: "bookings/*", 
+        element: <TeacherBookings />,
+        children: [
+          { path: "waitlist", element: <TeacherWaitlist /> }
+        ]
+      },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },

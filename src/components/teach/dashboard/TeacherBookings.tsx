@@ -1,4 +1,6 @@
+
 import { useState, useEffect } from "react";
+import { Outlet } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import {
@@ -138,6 +140,9 @@ const TeacherBookings = () => {
           onOpenChange={setIsRescheduleOpen}
         />
       )}
+
+      {/* Add Outlet for nested routes */}
+      <Outlet />
     </div>
   );
 };
