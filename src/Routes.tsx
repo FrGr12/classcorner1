@@ -93,7 +93,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/teach",
+    path: "/teach/*",
     element: <TeacherDashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
@@ -139,3 +139,4 @@ export const router = createBrowserRouter([
     element: <PasswordReset />,
   },
 ]);
+
