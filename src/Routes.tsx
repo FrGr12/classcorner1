@@ -8,6 +8,9 @@ import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 import Teach from "@/pages/Teach";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
+import Auth from "@/pages/Auth";
+import EmailVerification from "@/pages/EmailVerification";
+import PasswordReset from "@/pages/PasswordReset";
 
 // Import teacher dashboard components
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
@@ -32,6 +35,18 @@ export const router = createBrowserRouter([
     path: "/",
     element: <Index />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/auth",
+    element: <Auth />,
+  },
+  {
+    path: "/email-verification",
+    element: <EmailVerification />,
+  },
+  {
+    path: "/password-reset",
+    element: <PasswordReset />,
   },
   {
     path: "/browse",

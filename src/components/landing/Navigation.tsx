@@ -1,4 +1,5 @@
-import { useState } from "react";
+
+import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -17,7 +18,24 @@ const Navigation = () => {
   const location = useLocation();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<any>(null);
   const isHomePage = location.pathname === "/";
+
+  useEffect(() => {
+    // Set up initial session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const handleAuthClick = () => {
     navigate("/auth");
@@ -35,7 +53,8 @@ const Navigation = () => {
       toast({
         title: "Logged out successfully",
       });
-    } catch (error) {
+      navigate("/");
+    } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error logging out",
@@ -104,14 +123,34 @@ const Navigation = () => {
             </DropdownMenuContent>
           </DropdownMenu>
 
-          <Button
-            onClick={handleAuthClick}
-            variant="ghost"
-            className="text-xs"
-            disabled={loading}
-          >
-            Sign in
-          </Button>
+          {session ? (
+            <>
+              <Button
+                variant="ghost"
+                className="text-xs"
+                onClick={() => navigate("/dashboard")}
+              >
+                Dashboard
+              </Button>
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                className="text-xs"
+                disabled={loading}
+              >
+                Sign out
+              </Button>
+            </>
+          ) : (
+            <Button
+              onClick={handleAuthClick}
+              variant="ghost"
+              className="text-xs"
+              disabled={loading}
+            >
+              Sign in
+            </Button>
+          )}
         </div>
       </div>
     </nav>
