@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -127,12 +128,15 @@ const Browse = () => {
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="secondary" className="rounded-full gap-2">
-                  <SortIcon className="w-4 h-4" />
-                  Sort By
+                <Button 
+                  variant="outline" 
+                  className="rounded-full gap-2 bg-white hover:bg-white/90 border-0"
+                >
+                  <SortIcon className="w-4 h-4 text-primary" />
+                  <span className="text-primary">Sort By</span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuContent align="end" className="w-48 bg-white">
                 <DropdownMenuLabel>Sort Options</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {sortOptions.map((option) => {
@@ -141,10 +145,10 @@ const Browse = () => {
                     <DropdownMenuItem
                       key={option.value}
                       onClick={() => handleSortChange(option.value)}
-                      className="flex items-center gap-2"
+                      className="flex items-center gap-2 hover:bg-primary/5"
                     >
-                      <Icon className="w-4 h-4" />
-                      {option.label}
+                      <Icon className="w-4 h-4 text-primary" />
+                      <span className="text-primary">{option.label}</span>
                     </DropdownMenuItem>
                   );
                 })}
