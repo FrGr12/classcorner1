@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -130,25 +131,17 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           </div>
         </div>
 
-        <div className="flex gap-4 flex-wrap">
-          <div className="flex-1 min-w-[200px] bg-primary/5 p-4 rounded-lg shadow-sm">
+        <div className="flex gap-2 flex-wrap">
+          <div className="flex-1 bg-primary/5 p-3 rounded-lg shadow-sm">
             <ClassActions 
               classId={classItem.id} 
               category={classItem.category}
             />
           </div>
-          <div className="flex-1 min-w-[200px] bg-primary/5 p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium mb-3">Promotion Stats</h3>
-            <BoostStats courseId={classItem.id} />
-          </div>
-          <div className="flex-1 min-w-[200px] bg-primary/5 p-4 rounded-lg shadow-sm">
-            <h3 className="font-medium mb-3">Active Discounts</h3>
-            <DiscountsList courseId={classItem.id} />
-          </div>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-3">
-          <div className="space-y-4 md:col-span-2">
+        <div className="grid gap-6">
+          <div className="space-y-4">
             <div className="border rounded-lg p-4 shadow-sm">
               <h3 className="font-medium mb-3">Participants</h3>
               <ParticipantsTable 
@@ -164,6 +157,17 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
                 maxSize={classItem.max_waitlist_size}
                 onPromote={handlePromoteFromWaitlist}
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="border rounded-lg p-4 bg-primary/5 shadow-sm">
+                <h3 className="font-medium mb-3">Promotion Stats</h3>
+                <BoostStats courseId={classItem.id} />
+              </div>
+              <div className="border rounded-lg p-4 bg-primary/5 shadow-sm">
+                <h3 className="font-medium mb-3">Active Discounts</h3>
+                <DiscountsList courseId={classItem.id} />
+              </div>
             </div>
           </div>
         </div>

@@ -15,15 +15,14 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="space-y-4">
+    <div className="flex gap-2 flex-wrap items-center">
       <Button 
         variant="outline" 
         size="sm"
-        className="w-full"
         onClick={() => navigate(`/teach/crm?courseId=${classId}`)}
       >
         <MessageSquare className="h-4 w-4 mr-2" />
-        Message Participants
+        Message
       </Button>
 
       <CreateDiscountDialog courseId={classId} />
@@ -34,11 +33,11 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
 
       <Button
         variant="outline"
-        className="w-full"
+        size="sm"
         onClick={() => navigate(`/teach/classes/${classId}/edit`)}
       >
         <Edit className="h-4 w-4 mr-2" />
-        Edit Class Details
+        Edit
       </Button>
     </div>
   );
