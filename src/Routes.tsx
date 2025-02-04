@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
     element: <BookingSuccess />,
   },
   {
-    path: "/dashboard/*",
+    path: "/dashboard",
     element: <UserDashboard />,
     children: [
       { path: "", element: <UserDashboardOverview /> },
@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/teach/*",
+    path: "/teach",
     element: <TeacherDashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
@@ -121,15 +121,15 @@ export const router = createBrowserRouter([
     element: <Community />,
   },
   {
-    path: "*",
-    element: <NotFound />,
-  },
-  {
     path: "/verify",
     element: <EmailVerification />,
   },
   {
     path: "/reset-password",
     element: <PasswordReset />,
+  },
+  {
+    path: "*",
+    element: <NotFound />,
   },
 ]);
