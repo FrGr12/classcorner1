@@ -34,7 +34,8 @@ const TeacherDashboardSidebar = () => {
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
     { icon: Crown, label: "Premium Features", path: "/teach/premium" },
     { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
-    { icon: UserCircle, label: "Profile & Settings", path: "/teach/profile" },
+    { icon: UserCircle, label: "Profile", path: "/teach/profile" },
+    { icon: Settings, label: "Settings", path: "/teach/settings" }, // Add this line
   ];
 
   return (

@@ -1,4 +1,4 @@
-
+```typescript
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -31,6 +31,7 @@ import TeacherPremium from "@/components/teach/dashboard/TeacherPremium";
 import TeacherLearningHub from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
 import CreateClass from "@/components/teach/CreateClass";
 import EditClass from "@/components/teach/EditClass";
+import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
 
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
@@ -104,6 +105,7 @@ export const router = createBrowserRouter([
       { path: "payments", element: <PaymentHistory /> },
       { path: "premium", element: <TeacherPremium /> },
       { path: "learning-hub", element: <TeacherLearningHub /> },
+      { path: "settings", element: <TeacherSettings /> },
     ],
   },
   {
@@ -131,3 +133,4 @@ export const router = createBrowserRouter([
     element: <PasswordReset />,
   },
 ]);
+```
