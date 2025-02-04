@@ -125,35 +125,6 @@ const Browse = () => {
                 </SelectContent>
               </Select>
             </div>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button 
-                  variant="outline" 
-                  className="rounded-full gap-2 bg-white hover:bg-white/90 border-0"
-                >
-                  <SortIcon className="w-4 h-4 text-primary" />
-                  <span className="text-primary">Sort By</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48 bg-white">
-                <DropdownMenuLabel>Sort Options</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                {sortOptions.map((option) => {
-                  const Icon = option.icon;
-                  return (
-                    <DropdownMenuItem
-                      key={option.value}
-                      onClick={() => handleSortChange(option.value)}
-                      className="flex items-center gap-2 hover:bg-primary/5"
-                    >
-                      <Icon className="w-4 h-4 text-primary" />
-                      <span className="text-primary">{option.label}</span>
-                    </DropdownMenuItem>
-                  );
-                })}
-              </DropdownMenuContent>
-            </DropdownMenu>
             
             <button 
               className="button-primary rounded-full whitespace-nowrap"
@@ -168,25 +139,57 @@ const Browse = () => {
           <div>
             <div className="mb-8 space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {/* Category Filter */}
-                <div className="bg-white p-4 rounded-lg">
-                  <h3 className="font-medium mb-2 flex items-center gap-2">
-                    <Filter className="w-4 h-4" />
-                    Category
-                  </h3>
-                  <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">All Categories</SelectItem>
-                      {categories.map((category) => (
-                        <SelectItem key={category} value={category}>
-                          {category}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                <div className="flex space-x-4">
+                  {/* Category Filter */}
+                  <div className="flex-1 bg-white p-4 rounded-lg">
+                    <h3 className="font-medium mb-2 flex items-center gap-2">
+                      <Filter className="w-4 h-4" />
+                      Category
+                    </h3>
+                    <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All Categories</SelectItem>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  {/* Sort Options */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        className="h-full rounded-lg gap-2 bg-white hover:bg-white/90 border-0"
+                      >
+                        <SortIcon className="w-4 h-4 text-primary" />
+                        <span className="text-primary">Sort By</span>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 bg-white">
+                      <DropdownMenuLabel>Sort Options</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      {sortOptions.map((option) => {
+                        const Icon = option.icon;
+                        return (
+                          <DropdownMenuItem
+                            key={option.value}
+                            onClick={() => handleSortChange(option.value)}
+                            className="flex items-center gap-2 hover:bg-primary/5"
+                          >
+                            <Icon className="w-4 h-4 text-primary" />
+                            <span className="text-primary">{option.label}</span>
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {/* Date Filter */}
@@ -245,3 +248,4 @@ const Browse = () => {
 };
 
 export default Browse;
+
