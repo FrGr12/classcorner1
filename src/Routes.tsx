@@ -1,4 +1,4 @@
-
+```lov-code
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -11,6 +11,7 @@ import ErrorPage from "@/pages/ErrorPage";
 import Auth from "@/pages/Auth";
 import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
+import Onboarding from "@/pages/Onboarding";
 
 // Import teacher dashboard components
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
   {
     path: "/password-reset",
     element: <PasswordReset />,
+  },
+  {
+    path: "/onboarding",
+    element: <Onboarding />,
   },
   {
     path: "/browse",
@@ -87,3 +92,4 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
 ]);
+```
