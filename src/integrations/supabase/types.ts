@@ -814,6 +814,8 @@ export type Database = {
       }
       courses: {
         Row: {
+          auto_promote_from_waitlist: boolean | null
+          auto_send_waitlist_notification: boolean | null
           base_price_group: number | null
           base_price_private: number | null
           category: string
@@ -844,6 +846,8 @@ export type Database = {
           waitlist_enabled: boolean | null
         }
         Insert: {
+          auto_promote_from_waitlist?: boolean | null
+          auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
           category: string
@@ -874,6 +878,8 @@ export type Database = {
           waitlist_enabled?: boolean | null
         }
         Update: {
+          auto_promote_from_waitlist?: boolean | null
+          auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
           category?: string
@@ -1336,6 +1342,7 @@ export type Database = {
           notification_sent_at: string | null
           notification_sent_count: number | null
           notification_status: string | null
+          notification_template: string | null
           session_id: number | null
           status: string | null
           user_id: string | null
@@ -1350,6 +1357,7 @@ export type Database = {
           notification_sent_at?: string | null
           notification_sent_count?: number | null
           notification_status?: string | null
+          notification_template?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null
@@ -1364,6 +1372,7 @@ export type Database = {
           notification_sent_at?: string | null
           notification_sent_count?: number | null
           notification_status?: string | null
+          notification_template?: string | null
           session_id?: number | null
           status?: string | null
           user_id?: string | null

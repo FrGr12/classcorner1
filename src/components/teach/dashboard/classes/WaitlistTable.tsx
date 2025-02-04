@@ -9,7 +9,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Switch } from "@/components/ui/switch";
 import { UserPlus, ArrowUp, Clock } from "lucide-react";
 import { format } from "date-fns";
 import {
@@ -68,17 +67,11 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Badge variant="secondary" className="gap-1">
-            <UserPlus className="h-3 w-3" />
-            {entries.length} {entries.length === 1 ? 'person' : 'people'}
-            {maxSize && ` / ${maxSize}`}
-          </Badge>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <span>Auto-promote</span>
-            <Switch />
-          </div>
-        </div>
+        <Badge variant="secondary" className="gap-1">
+          <UserPlus className="h-3 w-3" />
+          {entries.length} {entries.length === 1 ? 'person' : 'people'}
+          {maxSize && ` / ${maxSize}`}
+        </Badge>
       </div>
 
       <Table>
