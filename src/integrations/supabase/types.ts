@@ -1189,6 +1189,65 @@ export type Database = {
         }
         Relationships: []
       }
+      teacher_dashboard_activity: {
+        Row: {
+          action_details: Json | null
+          action_type: string
+          created_at: string
+          id: number
+          related_booking_id: number | null
+          related_course_id: number | null
+          teacher_id: string
+        }
+        Insert: {
+          action_details?: Json | null
+          action_type: string
+          created_at?: string
+          id?: number
+          related_booking_id?: number | null
+          related_course_id?: number | null
+          teacher_id: string
+        }
+        Update: {
+          action_details?: Json | null
+          action_type?: string
+          created_at?: string
+          id?: number
+          related_booking_id?: number | null
+          related_course_id?: number | null
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_dashboard_activity_related_booking_id_fkey"
+            columns: ["related_booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_dashboard_activity_related_course_id_fkey"
+            columns: ["related_course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_dashboard_activity_related_course_id_fkey"
+            columns: ["related_course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "teacher_dashboard_activity_related_course_id_fkey"
+            columns: ["related_course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       teacher_premium_features: {
         Row: {
           boost_credits: number | null
@@ -1384,6 +1443,10 @@ export type Database = {
         Returns: number
       }
       cleanup_expired_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_old_activity_logs: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }

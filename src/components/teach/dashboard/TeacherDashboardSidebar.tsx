@@ -35,7 +35,7 @@ const TeacherDashboardSidebar = () => {
     { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
     { icon: Star, label: "Reviews", path: "/teach/reviews" },
     { icon: Tag, label: "Promotions", path: "/teach/promotions" },
-    { icon: Bell, label: "Waitlist", path: "/teach/waitlist" },
+    { icon: Bell, label: "Waitlist", path: "/teach/bookings/waitlist" },
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
     { icon: Crown, label: "Premium Features", path: "/teach/premium" },
     { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },

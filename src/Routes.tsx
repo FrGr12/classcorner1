@@ -44,7 +44,7 @@ import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
 import UserReviews from "@/components/user-dashboard/UserReviews";
-import UserPreferences from "@/components/preferences/UserPreferences";
+import UserPreferences from "@/preferences/UserPreferences";
 
 export const router = createBrowserRouter([
   {
@@ -76,7 +76,6 @@ export const router = createBrowserRouter([
     path: "/booking/success",
     element: <BookingSuccess />,
   },
-  // Modified to remove auth check temporarily
   {
     path: "/dashboard/*",
     element: <UserDashboard />,
@@ -92,7 +91,6 @@ export const router = createBrowserRouter([
       { path: "reviews", element: <UserReviews /> },
     ],
   },
-
   {
     path: "/teach/*",
     element: <TeacherDashboard />,
@@ -101,14 +99,18 @@ export const router = createBrowserRouter([
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "messages", element: <TeacherMessages /> },
-      { path: "bookings", element: <TeacherBookings /> },
+      { path: "bookings/*", 
+        element: <TeacherBookings />,
+        children: [
+          { path: "waitlist", element: <TeacherWaitlist /> }
+        ]
+      },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },
       { path: "analytics", element: <TeacherAnalytics /> },
       { path: "reviews", element: <TeacherReviews /> },
       { path: "promotions", element: <TeacherPromotions /> },
-      { path: "waitlist", element: <TeacherWaitlist /> },
       { path: "payments", element: <PaymentHistory /> },
       { path: "premium", element: <TeacherPremium /> },
       { path: "learning-hub", element: <TeacherLearningHub /> },
