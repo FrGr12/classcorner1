@@ -25,11 +25,21 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
           .select('*')
           .eq('course_id', courseId)
           .eq('status', 'active')
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 
-        // Mock stats for demonstration
+        // If there's no active boost, show default stats
+        if (!data) {
+          setStats({
+            views: 0,
+            clicks: 0,
+            conversionRate: 0,
+          });
+          return;
+        }
+
+        // Mock stats for demonstration - in a real app this would come from the boost data
         setStats({
           views: 245,
           clicks: 52,
@@ -37,6 +47,12 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
         });
       } catch (error) {
         console.error('Error fetching boost stats:', error);
+        // Set default values on error
+        setStats({
+          views: 0,
+          clicks: 0,
+          conversionRate: 0,
+        });
       } finally {
         setLoading(false);
       }
