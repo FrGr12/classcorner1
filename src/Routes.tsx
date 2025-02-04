@@ -1,22 +1,13 @@
 
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
-import Auth from "@/pages/Auth";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
-import Payment from "@/pages/Payment";
-import PaymentFailed from "@/pages/PaymentFailed";
-import BookingSuccess from "@/pages/BookingSuccess";
 import UserDashboard from "@/pages/UserDashboard";
 import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 import Teach from "@/pages/Teach";
-import About from "@/pages/About";
-import Resources from "@/pages/Resources";
-import Community from "@/pages/Community";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
-import EmailVerification from "@/pages/EmailVerification";
-import PasswordReset from "@/pages/PasswordReset";
 
 // Import teacher dashboard components
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
@@ -35,24 +26,12 @@ import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
 
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
-import UserMessages from "@/components/user-dashboard/UserMessages";
-import UserBookings from "@/components/user-dashboard/UserBookings";
-import UserNotifications from "@/components/user-dashboard/UserNotifications";
-import UserMatches from "@/components/user-dashboard/UserMatches";
-import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
-import UserProfile from "@/components/user-dashboard/UserProfile";
-import UserReviews from "@/components/user-dashboard/UserReviews";
-import UserPreferences from "@/components/preferences/UserPreferences";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "/auth",
-    element: <Auth />,
   },
   {
     path: "/browse",
@@ -63,30 +42,10 @@ export const router = createBrowserRouter([
     element: <ClassDetails />,
   },
   {
-    path: "/payment",
-    element: <Payment />,
-  },
-  {
-    path: "/payment/failed",
-    element: <PaymentFailed />,
-  },
-  {
-    path: "/booking/success",
-    element: <BookingSuccess />,
-  },
-  {
     path: "/dashboard/*",
     element: <UserDashboard />,
     children: [
       { path: "", element: <UserDashboardOverview /> },
-      { path: "messages", element: <UserMessages /> },
-      { path: "bookings", element: <UserBookings /> },
-      { path: "notifications", element: <UserNotifications /> },
-      { path: "matches", element: <UserMatches /> },
-      { path: "saved", element: <UserSavedClasses /> },
-      { path: "profile", element: <UserProfile /> },
-      { path: "preferences", element: <UserPreferences /> },
-      { path: "reviews", element: <UserReviews /> },
     ],
   },
   {
@@ -107,26 +66,6 @@ export const router = createBrowserRouter([
       { path: "learning-hub", element: <TeacherLearningHub /> },
       { path: "settings", element: <TeacherSettings /> },
     ],
-  },
-  {
-    path: "/about",
-    element: <About />,
-  },
-  {
-    path: "/resources",
-    element: <Resources />,
-  },
-  {
-    path: "/community",
-    element: <Community />,
-  },
-  {
-    path: "/verify",
-    element: <EmailVerification />,
-  },
-  {
-    path: "/reset-password",
-    element: <PasswordReset />,
   },
   {
     path: "*",
