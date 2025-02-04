@@ -22,7 +22,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
         onClick={() => navigate(`/teach/crm?courseId=${classId}`)}
       >
         <MessageSquare className="h-4 w-4 mr-2" />
-        Message
+        Message Participants
       </Button>
 
       <CreateDiscountDialog courseId={classId} />
@@ -37,7 +37,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
         onClick={() => navigate(`/teach/classes/${classId}/edit`)}
       >
         <Edit className="h-4 w-4 mr-2" />
-        Edit
+        Edit Class
       </Button>
     </div>
   );
