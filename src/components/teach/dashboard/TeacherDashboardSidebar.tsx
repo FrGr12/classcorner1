@@ -1,15 +1,13 @@
+
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   UserCircle,
   Users,
-  Calendar,
   BookOpen,
   ChartBar,
   Star,
   Tag,
-  Bell,
-  Menu,
   Wallet,
   Crown,
   GraduationCap,
@@ -27,15 +25,12 @@ const TeacherDashboardSidebar = () => {
   const menuItems = [
     { icon: LayoutDashboard, label: "Overview", path: "/teach" },
     { icon: UserCircle, label: "Profile", path: "/teach/profile" },
-    { icon: MessageSquare, label: "Messages", path: "/teach/messages" },
-    { icon: Users, label: "CRM", path: "/teach/crm" },
-    { icon: Calendar, label: "Bookings", path: "/teach/bookings" },
+    { icon: Users, label: "Messages & Contacts", path: "/teach/crm" },
     { icon: BookOpen, label: "Classes", path: "/teach/classes" },
     { icon: PlusCircle, label: "Create Class", path: "/teach/classes/new" },
     { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
     { icon: Star, label: "Reviews", path: "/teach/reviews" },
     { icon: Tag, label: "Promotions", path: "/teach/promotions" },
-    { icon: Bell, label: "Waitlist", path: "/teach/bookings/waitlist" },
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
     { icon: Crown, label: "Premium Features", path: "/teach/premium" },
     { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
