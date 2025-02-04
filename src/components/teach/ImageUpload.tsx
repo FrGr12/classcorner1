@@ -2,13 +2,15 @@ import { useState, useCallback } from "react";
 import { useDropzone } from "react-dropzone";
 import { X, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface ImageUploadProps {
   images: File[];
   setImages: (images: File[]) => void;
+  className?: string; // Added className prop
 }
 
-const ImageUpload = ({ images, setImages }: ImageUploadProps) => {
+const ImageUpload = ({ images, setImages, className }: ImageUploadProps) => {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       setImages([...images, ...acceptedFiles]);
@@ -29,7 +31,7 @@ const ImageUpload = ({ images, setImages }: ImageUploadProps) => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className={cn("space-y-4", className)}>
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-6 text-center cursor-pointer transition-colors ${
