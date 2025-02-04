@@ -1,4 +1,4 @@
-```lov-code
+
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -92,4 +92,3 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
 ]);
-```
