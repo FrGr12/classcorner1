@@ -1,4 +1,4 @@
-```typescript
+
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Auth from "@/pages/Auth";
@@ -133,4 +133,3 @@ export const router = createBrowserRouter([
     element: <PasswordReset />,
   },
 ]);
-```
