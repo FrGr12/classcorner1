@@ -80,6 +80,10 @@ const Browse = () => {
     setSearchParams(params);
   };
 
+  const handlePriceRangeChange = (value: number[]) => {
+    setPriceRange([value[0], value[1]] as [number, number]);
+  };
+
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
 
   return (
@@ -212,7 +216,7 @@ const Browse = () => {
                       max={200}
                       step={10}
                       value={priceRange}
-                      onValueChange={setPriceRange}
+                      onValueChange={handlePriceRangeChange}
                       className="mt-6"
                     />
                     <div className="flex justify-between mt-2 text-sm text-neutral-600">
