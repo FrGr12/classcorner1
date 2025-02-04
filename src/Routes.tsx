@@ -8,7 +8,7 @@ import Payment from "@/pages/Payment";
 import PaymentFailed from "@/pages/PaymentFailed";
 import BookingSuccess from "@/pages/BookingSuccess";
 import UserDashboard from "@/pages/UserDashboard";
-import TeacherDashboard from "@/pages/TeacherDashboard";
+import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 import Teach from "@/pages/Teach";
 import About from "@/pages/About";
 import Resources from "@/pages/Resources";
@@ -93,20 +93,15 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/teach/*",
+    path: "/teach",
     element: <TeacherDashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "messages", element: <TeacherMessages /> },
-      { 
-        path: "bookings/*", 
-        element: <TeacherBookings />,
-        children: [
-          { path: "waitlist", element: <TeacherWaitlist /> }
-        ]
-      },
+      { path: "bookings", element: <TeacherBookings /> },
+      { path: "bookings/waitlist", element: <TeacherWaitlist /> },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },
