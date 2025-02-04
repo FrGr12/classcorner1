@@ -1,9 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import ClassGrid from "@/components/landing/ClassGrid";
 import Footer from "@/components/landing/Footer";
-import { Search, MapPin, Calendar, Filter } from "lucide-react";
+import { Search, MapPin, Calendar, Filter, Sparkles, TrendingUp, Clock, Star } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -18,6 +19,14 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Slider } from "@/components/ui/slider";
 import UserPreferences from "@/components/preferences/UserPreferences";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const cities = [
   "New York",
@@ -44,11 +53,20 @@ const categories = [
   "Flower & Plants",
 ];
 
+const sortOptions = [
+  { label: "Trending", value: "trending", icon: TrendingUp },
+  { label: "Top Rated", value: "top-rated", icon: Star },
+  { label: "Last Minute Deals", value: "last-minute", icon: Clock },
+  { label: "This Week", value: "this-week", icon: Calendar },
+  { label: "Recommended", value: "recommended", icon: Sparkles },
+];
+
 const Browse = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
+  const [sortBy, setSortBy] = useState(searchParams.get("sort") || "recommended");
   const [date, setDate] = useState<Date | undefined>(
     searchParams.get("date") ? new Date(searchParams.get("date")!) : undefined
   );
@@ -60,8 +78,18 @@ const Browse = () => {
     if (searchInput) params.set("q", searchInput);
     if (selectedCity) params.set("city", selectedCity);
     if (date) params.set("date", date.toISOString());
+    if (sortBy) params.set("sort", sortBy);
     setSearchParams(params);
   };
+
+  const handleSortChange = (value: string) => {
+    setSortBy(value);
+    const params = new URLSearchParams(searchParams);
+    params.set("sort", value);
+    setSearchParams(params);
+  };
+
+  const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -98,6 +126,32 @@ const Browse = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="secondary" className="rounded-full gap-2">
+                  <SortIcon className="w-4 h-4" />
+                  Sort By
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuLabel>Sort Options</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                {sortOptions.map((option) => {
+                  const Icon = option.icon;
+                  return (
+                    <DropdownMenuItem
+                      key={option.value}
+                      onClick={() => handleSortChange(option.value)}
+                      className="flex items-center gap-2"
+                    >
+                      <Icon className="w-4 h-4" />
+                      {option.label}
+                    </DropdownMenuItem>
+                  );
+                })}
+              </DropdownMenuContent>
+            </DropdownMenu>
             
             <button 
               className="button-primary rounded-full whitespace-nowrap"
@@ -176,7 +230,10 @@ const Browse = () => {
                 </div>
               </div>
             </div>
-            <ClassGrid category={selectedCategory === "all" ? null : selectedCategory} />
+            <ClassGrid 
+              category={selectedCategory === "all" ? null : selectedCategory} 
+              sortBy={sortBy}
+            />
           </div>
           
           <div>
