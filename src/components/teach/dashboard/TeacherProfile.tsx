@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { MapPin, Upload, Save } from "lucide-react";
 import ImageUpload from "../ImageUpload";
 
@@ -86,9 +88,9 @@ const TeacherProfile = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">My Profile</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Profile & Settings</h1>
           <p className="text-sm text-muted-foreground">
-            Manage your personal information and teaching preferences
+            Manage your personal information, preferences, and account settings
           </p>
         </div>
         <Button onClick={handleUpdateProfile} className="gap-2">
@@ -195,6 +197,63 @@ const TeacherProfile = () => {
                 className="min-h-[200px] bg-neutral-50"
               />
             </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Notification Settings</CardTitle>
+            <CardDescription>Manage your notification preferences</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="booking-notifications">Booking Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive notifications for new bookings
+                </p>
+              </div>
+              <Switch id="booking-notifications" defaultChecked />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="message-notifications">Message Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive notifications for new messages
+                </p>
+              </div>
+              <Switch id="message-notifications" defaultChecked />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="review-notifications">Review Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive notifications for new reviews
+                </p>
+              </div>
+              <Switch id="review-notifications" defaultChecked />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Settings</CardTitle>
+            <CardDescription>Manage your account settings</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Button 
+              variant="destructive"
+              onClick={() => toast({
+                variant: "destructive",
+                title: "Are you sure?",
+                description: "This action cannot be undone."
+              })}
+            >
+              Delete Account
+            </Button>
           </CardContent>
         </Card>
       </div>

@@ -25,17 +25,16 @@ const TeacherDashboardSidebar = () => {
 
   const menuItems = [
     { icon: LayoutDashboard, label: "Overview", path: "/teach" },
-    { icon: UserCircle, label: "Profile", path: "/teach/profile" },
-    { icon: Users, label: "Messages & Contacts", path: "/teach/crm" },
-    { icon: BookOpen, label: "Classes", path: "/teach/classes" },
+    { icon: BookOpen, label: "Classes & Bookings", path: "/teach/classes" },
     { icon: PlusCircle, label: "Create Class", path: "/teach/classes/new" },
+    { icon: Users, label: "Messages & Contacts", path: "/teach/crm" },
     { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
     { icon: Star, label: "Reviews", path: "/teach/reviews" },
     { icon: Tag, label: "Promotions", path: "/teach/promotions" },
     { icon: Wallet, label: "Payments", path: "/teach/payments" },
     { icon: Crown, label: "Premium Features", path: "/teach/premium" },
     { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
-    { icon: Settings, label: "Settings", path: "/teach/settings" },
+    { icon: UserCircle, label: "Profile & Settings", path: "/teach/profile" },
   ];
 
   return (
