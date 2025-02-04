@@ -29,7 +29,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
       
       <InstantBoost courseId={classId} />
       
-      <SocialShare courseId={classItem.id} category={category} />
+      <SocialShare courseId={classId} category={category} />
 
       <Button
         variant="outline"
@@ -44,4 +44,3 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
 };
 
 export default ClassActions;
-
