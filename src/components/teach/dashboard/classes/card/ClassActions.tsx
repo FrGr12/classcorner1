@@ -15,7 +15,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex gap-2 flex-wrap items-center">
+    <div className="flex gap-2 items-center justify-start">
       <Button 
         variant="outline" 
         size="sm"
@@ -29,7 +29,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
       
       <InstantBoost courseId={classId} />
       
-      <SocialShare courseId={classId} category={category} />
+      <SocialShare courseId={classItem.id} category={category} />
 
       <Button
         variant="outline"
@@ -44,3 +44,4 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
 };
 
 export default ClassActions;
+
