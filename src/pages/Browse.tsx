@@ -1,4 +1,4 @@
-```typescript
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -18,14 +18,6 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Slider } from "@/components/ui/slider";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const cities = [
   "New York",
@@ -69,7 +61,7 @@ const Browse = () => {
   const [date, setDate] = useState<Date | undefined>(
     searchParams.get("date") ? new Date(searchParams.get("date")!) : undefined
   );
-  const [priceRange, setPriceRange] = useState([0, 200]);
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
   const [minRating, setMinRating] = useState(0);
 
   const handleSearch = () => {
@@ -244,4 +236,3 @@ const Browse = () => {
 };
 
 export default Browse;
-```
