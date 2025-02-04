@@ -14,6 +14,7 @@ import {
   MessageSquare,
   Settings,
   PlusCircle,
+  Menu,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
