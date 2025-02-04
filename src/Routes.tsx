@@ -75,7 +75,7 @@ export const router = createBrowserRouter([
     element: <BookingSuccess />,
   },
   {
-    path: "/dashboard",
+    path: "/dashboard/*",
     element: <UserDashboard />,
     children: [
       { path: "", element: <UserDashboardOverview /> },
@@ -90,7 +90,7 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/teach",
+    path: "/teach/*",
     element: <TeacherDashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
