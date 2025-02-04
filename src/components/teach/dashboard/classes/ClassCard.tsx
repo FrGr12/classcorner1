@@ -76,8 +76,8 @@ const mockWaitlist = [
 ];
 
 const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
-  const participants = mockParticipants; // Using mock data
-  const waitlistEntries = mockWaitlist; // Using mock data
+  const participants = mockParticipants;
+  const waitlistEntries = mockWaitlist;
 
   const occupancyRate = useMemo(() => {
     if (!classItem.maxParticipants) return 0;
@@ -97,13 +97,11 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
 
       if (error) throw error;
       toast({
-        title: "Success",
-        description: "Participant promoted from waitlist",
+        description: "Participant promoted from waitlist"
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to promote participant",
+        description: "Failed to promote participant"
       });
     }
   };
@@ -144,7 +142,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
               <h3 className="font-medium mb-3">Participants</h3>
               <ParticipantsTable 
                 participants={participants}
-                onStatusUpdate={() => {}} // Implement status update handler
+                onStatusUpdate={() => {}} 
               />
             </div>
 
