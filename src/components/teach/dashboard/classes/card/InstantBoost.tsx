@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Rocket, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -76,7 +77,7 @@ const InstantBoost = ({ courseId }: InstantBoostProps) => {
       <AlertDialogTrigger asChild>
         <Button variant="outline" size="sm" className="w-full">
           <Rocket className="h-4 w-4 mr-2" />
-          Use Boost Credit
+          Boost Class Visibility
         </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
