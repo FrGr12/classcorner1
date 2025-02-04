@@ -1,7 +1,8 @@
 
 import { useEffect, useState } from "react";
-import { Loader2, TrendingUp, Eye, MousePointerClick } from "lucide-react";
+import { Loader2, TrendingUp, Eye, MousePointerClick, Trophy, Star } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { Badge } from "@/components/ui/badge";
 
 interface BoostStatsProps {
   courseId: number;
@@ -11,6 +12,11 @@ interface Stats {
   views: number;
   clicks: number;
   conversionRate: number;
+  achievements?: {
+    featuredCount: number;
+    topPerformer: boolean;
+    reachMilestone: boolean;
+  };
 }
 
 const BoostStats = ({ courseId }: BoostStatsProps) => {
@@ -35,6 +41,11 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
             views: 0,
             clicks: 0,
             conversionRate: 0,
+            achievements: {
+              featuredCount: 0,
+              topPerformer: false,
+              reachMilestone: false,
+            }
           });
           return;
         }
@@ -44,14 +55,23 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
           views: 245,
           clicks: 52,
           conversionRate: 21.2,
+          achievements: {
+            featuredCount: 3,
+            topPerformer: true,
+            reachMilestone: true,
+          }
         });
       } catch (error) {
         console.error('Error fetching boost stats:', error);
-        // Set default values on error
         setStats({
           views: 0,
           clicks: 0,
           conversionRate: 0,
+          achievements: {
+            featuredCount: 0,
+            topPerformer: false,
+            reachMilestone: false,
+          }
         });
       } finally {
         setLoading(false);
@@ -79,6 +99,23 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
 
   return (
     <div className="space-y-4">
+      {/* Achievements Section */}
+      <div className="flex flex-wrap gap-2 mb-4">
+        {stats.achievements?.featuredCount > 0 && (
+          <Badge variant="default" className="bg-amber-500 hover:bg-amber-600">
+            <Trophy className="h-3 w-3 mr-1" />
+            Featured {stats.achievements.featuredCount}x this month
+          </Badge>
+        )}
+        {stats.achievements?.topPerformer && (
+          <Badge variant="default" className="bg-purple-500 hover:bg-purple-600">
+            <Star className="h-3 w-3 mr-1" />
+            Top Performer
+          </Badge>
+        )}
+      </div>
+
+      {/* Stats Grid */}
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-1">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
@@ -105,9 +142,16 @@ const BoostStats = ({ courseId }: BoostStatsProps) => {
         </div>
       </div>
 
+      {/* Performance Insights */}
       {stats.conversionRate > 20 && (
         <div className="bg-green-50 text-green-700 text-sm p-2 rounded">
           🎉 Great performance! Your conversion rate is above average.
+        </div>
+      )}
+      
+      {stats.views > 200 && (
+        <div className="bg-blue-50 text-blue-700 text-sm p-2 rounded">
+          🚀 Trending! Your class is getting lots of attention.
         </div>
       )}
     </div>

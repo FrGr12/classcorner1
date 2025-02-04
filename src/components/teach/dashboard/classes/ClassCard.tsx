@@ -2,11 +2,10 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Loader2 } from "lucide-react";
 import { format } from "date-fns";
 import { useMemo } from "react";
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import ClassCardHeader from "./card/ClassCardHeader";
 import ClassDetails from "./card/ClassDetails";
 import ParticipantsTable from "./ParticipantsTable";
@@ -20,10 +19,65 @@ interface ClassCardProps {
   onAction: (action: string, classId: number) => void;
 }
 
+// Mock participants data
+const mockParticipants = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    email: "sarah.j@example.com",
+    status: "confirmed",
+    paymentStatus: "paid",
+    attendanceStatus: "present"
+  },
+  {
+    id: 2,
+    name: "Mike Chen",
+    email: "mike.c@example.com",
+    status: "confirmed",
+    paymentStatus: "pending",
+    attendanceStatus: "pending"
+  },
+  {
+    id: 3,
+    name: "Emma Davis",
+    email: "emma.d@example.com",
+    status: "pending",
+    paymentStatus: "unpaid",
+    attendanceStatus: "pending"
+  }
+];
+
+// Mock waitlist data
+const mockWaitlist = [
+  {
+    id: 1,
+    user_id: "1",
+    created_at: new Date().toISOString(),
+    status: "waiting",
+    profile: {
+      first_name: "John",
+      last_name: "Smith",
+      email: "john.s@example.com"
+    },
+    waitlist_position: 1
+  },
+  {
+    id: 2,
+    user_id: "2",
+    created_at: new Date().toISOString(),
+    status: "waiting",
+    profile: {
+      first_name: "Lisa",
+      last_name: "Wong",
+      email: "lisa.w@example.com"
+    },
+    waitlist_position: 2
+  }
+];
+
 const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
-  const { toast } = useToast();
-  const participants = classItem.participants || [];
-  const waitlistEntries = classItem.waitlist || [];
+  const participants = mockParticipants; // Using mock data
+  const waitlistEntries = mockWaitlist; // Using mock data
 
   const occupancyRate = useMemo(() => {
     if (!classItem.maxParticipants) return 0;
@@ -48,7 +102,6 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
       });
     } catch (error) {
       toast({
-        variant: "destructive",
         title: "Error",
         description: "Failed to promote participant",
       });

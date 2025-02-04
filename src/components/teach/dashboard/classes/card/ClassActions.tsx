@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Edit } from "lucide-react";
@@ -38,14 +39,6 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
       >
         <Edit className="h-4 w-4 mr-2" />
         Edit Class Details
-      </Button>
-
-      <Button
-        variant="default"
-        className="w-full"
-        onClick={() => navigate(`/teach/classes/${classId}`)}
-      >
-        Full Class Management
       </Button>
     </div>
   );
