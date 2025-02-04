@@ -1,4 +1,4 @@
-
+```typescript
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -162,34 +162,30 @@ const Browse = () => {
                   </div>
 
                   {/* Sort Options */}
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        className="h-full rounded-lg gap-2 bg-white hover:bg-white/90 border-0"
-                      >
-                        <SortIcon className="w-4 h-4 text-primary" />
-                        <span className="text-primary">Sort By</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 bg-white">
-                      <DropdownMenuLabel>Sort Options</DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {sortOptions.map((option) => {
-                        const Icon = option.icon;
-                        return (
-                          <DropdownMenuItem
-                            key={option.value}
-                            onClick={() => handleSortChange(option.value)}
-                            className="flex items-center gap-2 hover:bg-primary/5"
-                          >
-                            <Icon className="w-4 h-4 text-primary" />
-                            <span className="text-primary">{option.label}</span>
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <div className="flex-1 bg-white p-4 rounded-lg">
+                    <h3 className="font-medium mb-2 flex items-center gap-2">
+                      <SortIcon className="w-4 h-4" />
+                      Sort By
+                    </h3>
+                    <Select value={sortBy} onValueChange={handleSortChange}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select sorting" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sortOptions.map((option) => {
+                          const Icon = option.icon;
+                          return (
+                            <SelectItem key={option.value} value={option.value}>
+                              <div className="flex items-center gap-2">
+                                <Icon className="w-4 h-4" />
+                                <span>{option.label}</span>
+                              </div>
+                            </SelectItem>
+                          );
+                        })}
+                      </SelectContent>
+                    </Select>
+                  </div>
                 </div>
 
                 {/* Date Filter */}
@@ -248,4 +244,4 @@ const Browse = () => {
 };
 
 export default Browse;
-
+```
