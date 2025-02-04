@@ -132,9 +132,9 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-4">
-            <div className="border rounded-lg p-4">
+        <div className="grid gap-6 md:grid-cols-3">
+          <div className="space-y-4 md:col-span-2">
+            <div className="border rounded-lg p-4 shadow-sm">
               <h3 className="font-medium mb-3">Participants</h3>
               <ParticipantsTable 
                 participants={participants}
@@ -142,7 +142,7 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
               />
             </div>
 
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 shadow-sm">
               <h3 className="font-medium mb-3">Waitlist</h3>
               <WaitlistTable 
                 entries={waitlistEntries}
@@ -153,20 +153,22 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
           </div>
 
           <div className="space-y-4">
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 bg-primary/5 shadow-sm">
               <h3 className="font-medium mb-3">Active Discounts</h3>
               <DiscountsList courseId={classItem.id} />
             </div>
 
-            <div className="border rounded-lg p-4">
+            <div className="border rounded-lg p-4 bg-primary/5 shadow-sm">
               <h3 className="font-medium mb-3">Promotion Stats</h3>
               <BoostStats courseId={classItem.id} />
             </div>
 
-            <ClassActions 
-              classId={classItem.id} 
-              category={classItem.category}
-            />
+            <div className="border rounded-lg p-4 bg-primary/5 shadow-sm">
+              <ClassActions 
+                classId={classItem.id} 
+                category={classItem.category}
+              />
+            </div>
           </div>
         </div>
       </CardContent>
@@ -175,4 +177,3 @@ const ClassCard = ({ classItem, onAction }: ClassCardProps) => {
 };
 
 export default ClassCard;
-
