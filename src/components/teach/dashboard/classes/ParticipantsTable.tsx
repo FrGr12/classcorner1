@@ -76,7 +76,8 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   };
 
   const filteredParticipants = participants.filter(participant =>
-    participant.name.toLowerCase().includes(searchTerm.toLowerCase())
+    participant.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (participant.email && participant.email.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   if (!participants || participants.length === 0) {
@@ -106,6 +107,7 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
+            <TableHead>Contact</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Payment</TableHead>
             <TableHead>Attendance</TableHead>
@@ -115,13 +117,11 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
         <TableBody>
           {filteredParticipants.map((participant) => (
             <TableRow key={participant.id}>
+              <TableCell>{participant.name}</TableCell>
               <TableCell>
-                <div>
-                  <div>{participant.name}</div>
-                  {participant.email && (
-                    <div className="text-sm text-muted-foreground">{participant.email}</div>
-                  )}
-                </div>
+                {participant.email && (
+                  <span className="text-sm text-muted-foreground">{participant.email}</span>
+                )}
               </TableCell>
               <TableCell>{getStatusBadge(participant.status)}</TableCell>
               <TableCell>{getPaymentBadge(participant.paymentStatus)}</TableCell>
