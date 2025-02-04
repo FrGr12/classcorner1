@@ -22,17 +22,13 @@ import PasswordReset from "@/pages/PasswordReset";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
-import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
-import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
 import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
 import TeacherPremium from "@/components/teach/dashboard/TeacherPremium";
 import TeacherLearningHub from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
-import TeacherMessages from "@/components/teach/dashboard/TeacherMessages";
-import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
 import CreateClass from "@/components/teach/CreateClass";
 import EditClass from "@/components/teach/EditClass";
 
@@ -93,15 +89,12 @@ export const router = createBrowserRouter([
     ],
   },
   {
-    path: "/teach/*",
+    path: "/teach",
     element: <TeacherDashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
-      { path: "messages", element: <TeacherMessages /> },
-      { path: "bookings", element: <TeacherBookings /> },
-      { path: "bookings/waitlist", element: <TeacherWaitlist /> },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },
@@ -111,7 +104,6 @@ export const router = createBrowserRouter([
       { path: "payments", element: <PaymentHistory /> },
       { path: "premium", element: <TeacherPremium /> },
       { path: "learning-hub", element: <TeacherLearningHub /> },
-      { path: "settings", element: <TeacherSettings /> },
     ],
   },
   {
@@ -139,4 +131,3 @@ export const router = createBrowserRouter([
     element: <PasswordReset />,
   },
 ]);
-
