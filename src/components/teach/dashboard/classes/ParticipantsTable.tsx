@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -9,34 +10,31 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { CheckCircle2, Clock, XCircle, Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { CheckCircle2, Clock, XCircle, Search, MoreVertical, Mail } from "lucide-react";
 
 interface Participant {
   id: number;
   name: string;
+  email?: string;
   status: string;
   paymentStatus: string;
+  attendanceStatus?: string;
 }
 
 interface ParticipantsTableProps {
   participants: Participant[];
+  onStatusUpdate: (participantId: number, status: string) => void;
 }
 
-const ParticipantsTable = ({ participants = [] }: ParticipantsTableProps) => {
+const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTableProps) => {
   const [searchTerm, setSearchTerm] = useState("");
-
-  if (!participants || participants.length === 0) {
-    return (
-      <div className="space-y-2">
-        <h4 className="font-medium">Participants</h4>
-        <p className="text-sm text-muted-foreground">No participants yet</p>
-      </div>
-    );
-  }
-
-  const filteredParticipants = participants.filter(participant =>
-    participant.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -51,10 +49,48 @@ const ParticipantsTable = ({ participants = [] }: ParticipantsTableProps) => {
     }
   };
 
+  const getPaymentBadge = (status: string) => {
+    switch (status) {
+      case "paid":
+        return <Badge variant="success">Paid</Badge>;
+      case "pending":
+        return <Badge variant="warning">Pending</Badge>;
+      case "unpaid":
+        return <Badge variant="destructive">Unpaid</Badge>;
+      default:
+        return <Badge variant="outline">{status}</Badge>;
+    }
+  };
+
+  const getAttendanceBadge = (status?: string) => {
+    switch (status) {
+      case "present":
+        return <Badge variant="success">Present</Badge>;
+      case "absent":
+        return <Badge variant="destructive">Absent</Badge>;
+      case "pending":
+        return <Badge variant="secondary">Pending</Badge>;
+      default:
+        return null;
+    }
+  };
+
+  const filteredParticipants = participants.filter(participant =>
+    participant.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (!participants || participants.length === 0) {
+    return (
+      <div className="text-sm text-muted-foreground">
+        No participants yet
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="font-medium">Participants</h4>
+        <h4 className="font-medium">Participants ({participants.length})</h4>
         <div className="relative w-[200px]">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -65,21 +101,51 @@ const ParticipantsTable = ({ participants = [] }: ParticipantsTableProps) => {
           />
         </div>
       </div>
+
       <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
             <TableHead>Status</TableHead>
             <TableHead>Payment</TableHead>
+            <TableHead>Attendance</TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredParticipants.map((participant) => (
             <TableRow key={participant.id}>
-              <TableCell>{participant.name}</TableCell>
-              <TableCell>{getStatusBadge(participant.status)}</TableCell>
               <TableCell>
-                <Badge variant="outline">{participant.paymentStatus}</Badge>
+                <div>
+                  <div>{participant.name}</div>
+                  {participant.email && (
+                    <div className="text-sm text-muted-foreground">{participant.email}</div>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>{getStatusBadge(participant.status)}</TableCell>
+              <TableCell>{getPaymentBadge(participant.paymentStatus)}</TableCell>
+              <TableCell>{getAttendanceBadge(participant.attendanceStatus)}</TableCell>
+              <TableCell>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreVertical className="h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem>
+                      <Mail className="h-4 w-4 mr-2" />
+                      Send Message
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onStatusUpdate(participant.id, 'confirmed')}>
+                      Mark as Confirmed
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => onStatusUpdate(participant.id, 'cancelled')}>
+                      Cancel Booking
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}
