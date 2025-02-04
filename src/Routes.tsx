@@ -99,12 +99,7 @@ export const router = createBrowserRouter([
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "messages", element: <TeacherMessages /> },
-      { path: "bookings/*", 
-        element: <TeacherBookings />,
-        children: [
-          { path: "waitlist", element: <TeacherWaitlist /> }
-        ]
-      },
+      { path: "bookings", element: <TeacherBookings /> },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },
