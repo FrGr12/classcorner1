@@ -45,7 +45,7 @@ import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
 import UserReviews from "@/components/user-dashboard/UserReviews";
-import UserPreferences from "@/preferences/UserPreferences";
+import UserPreferences from "@/components/preferences/UserPreferences";
 
 export const router = createBrowserRouter([
   {
