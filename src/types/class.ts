@@ -1,3 +1,4 @@
+
 export interface ClassItem {
   id: number;
   title: string;
@@ -16,9 +17,12 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string; // Added duration property
+  duration?: string;
+  shareCount?: number;
+  lastShared?: string;
 }
 
 export interface ClassData {
   [key: string]: ClassItem[];
 }
+
