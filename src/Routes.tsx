@@ -31,7 +31,7 @@ import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 
-export const router = createBrowserRouter([
+const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
@@ -92,3 +92,5 @@ export const router = createBrowserRouter([
     element: <NotFound />,
   },
 ]);
+
+export default router;
