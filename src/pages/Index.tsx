@@ -9,15 +9,17 @@ import TestimonialSection from "@/components/class-details/TestimonialSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-neutral-100">
+    <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="pt-24 md:pt-32">
+      <div className="pt-20 sm:pt-24 md:pt-32">
         <Hero />
       </div>
-      <Categories />
-      <Reviews />
-      <TestimonialSection />
-      <Features />
+      <div className="space-y-8 sm:space-y-12 md:space-y-16">
+        <Categories />
+        <Reviews />
+        <TestimonialSection />
+        <Features />
+      </div>
       <Footer />
     </div>
   );

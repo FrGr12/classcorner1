@@ -11,20 +11,30 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
   }
   
   body {
     @apply bg-neutral-50 text-primary font-sans antialiased;
+    text-rendering: optimizeLegibility;
   }
 }
 
 @layer components {
   .container-padding {
-    @apply px-4 sm:px-6 lg:px-8;
+    @apply px-4 sm:px-6 lg:px-8 xl:px-12 mx-auto max-w-7xl;
   }
 
   .glass-panel {
-    @apply bg-white/80 backdrop-blur-sm border border-neutral-200;
+    @apply bg-white/80 backdrop-blur-sm border border-neutral-200 transition-all duration-200;
+  }
+  
+  .mobile-menu-item {
+    @apply flex items-center gap-2 px-4 py-3 text-sm text-neutral-600 hover:bg-neutral-50 transition-colors;
+  }
+  
+  .desktop-menu-item {
+    @apply px-4 py-2 text-sm text-neutral-600 hover:text-primary transition-colors;
   }
 }
 
@@ -32,34 +42,38 @@
   .text-balance {
     text-wrap: balance;
   }
-}
-
-/* Mobile-first media queries */
-@media (max-width: 640px) {
-  .heading-xl {
-    @apply text-3xl;
-  }
   
-  .heading-lg {
-    @apply text-2xl;
-  }
-  
-  .container-padding {
-    @apply px-4;
+  .text-pretty {
+    text-wrap: pretty;
   }
 }
 
-/* Tablet and above */
-@media (min-width: 641px) {
-  .heading-xl {
-    @apply text-4xl md:text-5xl lg:text-6xl;
-  }
-  
-  .heading-lg {
-    @apply text-3xl md:text-4xl;
-  }
+/* Mobile-first design system */
+.heading-xl {
+  @apply text-4xl sm:text-5xl md:text-6xl font-display leading-tight tracking-tight;
 }
 
+.heading-lg {
+  @apply text-3xl sm:text-4xl md:text-5xl font-display leading-tight tracking-tight;
+}
+
+.heading-md {
+  @apply text-2xl sm:text-3xl md:text-4xl font-display leading-tight;
+}
+
+.body-lg {
+  @apply text-lg sm:text-xl leading-relaxed;
+}
+
+.body-base {
+  @apply text-base leading-relaxed;
+}
+
+.body-sm {
+  @apply text-sm leading-relaxed;
+}
+
+/* Animations */
 .logo {
   will-change: filter;
   transition: filter 300ms;
@@ -85,5 +99,35 @@
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-neutral-100;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-neutral-300 rounded-full hover:bg-neutral-400 transition-colors;
+}
+
+/* Focus styles */
+:focus-visible {
+  @apply outline-none ring-2 ring-accent-purple ring-offset-2;
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .hover\:scale-105 {
+    transform: none !important;
+  }
+  
+  .hover\:shadow-lg {
+    box-shadow: none !important;
   }
 }
