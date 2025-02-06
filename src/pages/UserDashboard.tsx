@@ -9,7 +9,7 @@ import UserNotifications from "@/components/user-dashboard/UserNotifications";
 import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
-import UserPreferences from "@/components/user-dashboard/UserPreferences";
+import UserPreferences from "@/components/preferences/UserPreferences"; // Updated import path
 import UserReviews from "@/components/user-dashboard/UserReviews";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
 
