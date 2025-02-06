@@ -9,7 +9,7 @@ import UserNotifications from "@/components/user-dashboard/UserNotifications";
 import UserMatches from "@/components/user-dashboard/UserMatches";
 import UserSavedClasses from "@/components/user-dashboard/UserSavedClasses";
 import UserProfile from "@/components/user-dashboard/UserProfile";
-import UserPreferences from "@/components/preferences/UserPreferences"; // Updated import path
+import UserPreferences from "@/components/preferences/UserPreferences";
 import UserReviews from "@/components/user-dashboard/UserReviews";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
 
@@ -21,7 +21,12 @@ const UserDashboard = () => {
         <div className="flex-1 bg-gray-50">
           <main className="p-6">
             <Routes>
-              <Route path="/" element={<UserHome />} />
+              <Route path="/" element={
+                <div className="space-y-8">
+                  <UserHome />
+                  <UserMatches />
+                </div>
+              } />
               <Route path="/bookings" element={<UserBookings />} />
               <Route path="/messages" element={<UserMessages />} />
               <Route path="/notifications" element={<UserNotifications />} />
