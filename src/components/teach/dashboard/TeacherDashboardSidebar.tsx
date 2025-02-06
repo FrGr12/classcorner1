@@ -3,18 +3,12 @@ import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
   UserCircle,
-  Users,
-  BookOpen,
-  ChartBar,
-  Star,
-  Tag,
-  Wallet,
-  Crown,
-  GraduationCap,
   MessageSquare,
+  BookOpen,
   Settings,
   PlusCircle,
   Menu,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
@@ -27,15 +21,10 @@ const TeacherDashboardSidebar = () => {
     { icon: LayoutDashboard, label: "Overview", path: "/teach" },
     { icon: BookOpen, label: "Classes & Bookings", path: "/teach/classes" },
     { icon: PlusCircle, label: "Create Class", path: "/teach/classes/new" },
-    { icon: Users, label: "Messages & Contacts", path: "/teach/crm" },
-    { icon: ChartBar, label: "Analytics", path: "/teach/analytics" },
-    { icon: Star, label: "Reviews", path: "/teach/reviews" },
-    { icon: Tag, label: "Promotions", path: "/teach/promotions" },
-    { icon: Wallet, label: "Payments", path: "/teach/payments" },
-    { icon: Crown, label: "Premium Features", path: "/teach/premium" },
-    { icon: GraduationCap, label: "Learning Hub", path: "/teach/learning-hub" },
+    { icon: MessageSquare, label: "Messages", path: "/teach/messages" },
+    { icon: Users, label: "Waitlist", path: "/teach/waitlist" },
     { icon: UserCircle, label: "Profile", path: "/teach/profile" },
-    { icon: Settings, label: "Settings", path: "/teach/settings" }, // Add this line
+    { icon: Settings, label: "Settings", path: "/teach/settings" },
   ];
 
   return (
