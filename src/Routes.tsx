@@ -16,16 +16,11 @@ import Onboarding from "@/pages/Onboarding";
 // Import teacher dashboard components
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
-import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherMessages from "@/components/teach/dashboard/TeacherMessages";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
-import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
-import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
-import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
-import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
-import TeacherPremium from "@/components/teach/dashboard/TeacherPremium";
-import TeacherLearningHub from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
-import EditClass from "@/components/teach/EditClass";
+import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
 import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
+import EditClass from "@/components/teach/EditClass";
 
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
@@ -73,15 +68,10 @@ const router = createBrowserRouter([
     children: [
       { path: "", element: <TeacherOverview /> },
       { path: "profile", element: <TeacherProfile /> },
-      { path: "crm", element: <TeacherCRM /> },
+      { path: "messages", element: <TeacherMessages /> },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/:id/edit", element: <EditClass /> },
-      { path: "analytics", element: <TeacherAnalytics /> },
-      { path: "reviews", element: <TeacherReviews /> },
-      { path: "promotions", element: <TeacherPromotions /> },
-      { path: "payments", element: <PaymentHistory /> },
-      { path: "premium", element: <TeacherPremium /> },
-      { path: "learning-hub", element: <TeacherLearningHub /> },
+      { path: "waitlist", element: <TeacherWaitlist /> },
       { path: "settings", element: <TeacherSettings /> },
     ],
   },
@@ -92,4 +82,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
