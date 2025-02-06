@@ -5,7 +5,6 @@ import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
 import UserDashboard from "@/pages/UserDashboard";
 import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
-import Teach from "@/pages/Teach";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
 import Auth from "@/pages/Auth";
