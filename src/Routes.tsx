@@ -24,7 +24,6 @@ import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 import PaymentHistory from "@/components/teach/dashboard/payments/PaymentHistory";
 import TeacherPremium from "@/components/teach/dashboard/TeacherPremium";
 import TeacherLearningHub from "@/components/teach/dashboard/learning-hub/TeacherLearningHub";
-import CreateClass from "@/components/teach/CreateClass";
 import EditClass from "@/components/teach/EditClass";
 import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
 
@@ -76,7 +75,6 @@ const router = createBrowserRouter([
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "classes", element: <TeacherClasses /> },
-      { path: "classes/new", element: <CreateClass /> },
       { path: "classes/:id/edit", element: <EditClass /> },
       { path: "analytics", element: <TeacherAnalytics /> },
       { path: "reviews", element: <TeacherReviews /> },
@@ -94,3 +92,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
