@@ -873,7 +873,7 @@ export type Database = {
           duration: string | null
           group_bookings_enabled: boolean | null
           id: number
-          instructor_id: string
+          instructor_id: string | null
           last_shared_at: string | null
           learning_objectives: string | null
           location: string
@@ -905,7 +905,7 @@ export type Database = {
           duration?: string | null
           group_bookings_enabled?: boolean | null
           id?: number
-          instructor_id: string
+          instructor_id?: string | null
           last_shared_at?: string | null
           learning_objectives?: string | null
           location: string
@@ -937,7 +937,7 @@ export type Database = {
           duration?: string | null
           group_bookings_enabled?: boolean | null
           id?: number
-          instructor_id?: string
+          instructor_id?: string | null
           last_shared_at?: string | null
           learning_objectives?: string | null
           location?: string
