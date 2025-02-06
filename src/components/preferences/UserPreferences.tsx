@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -53,7 +53,6 @@ interface UserPreferences {
   id: string;
   interests: string[];
   preferred_location: string | null;
-  max_distance: number | null;
   notification_preference: "email" | "in_app" | "both" | "none";
 }
 
@@ -79,7 +78,7 @@ const UserPreferences = () => {
         .single();
 
       if (error && error.code !== "PGRST116") throw error;
-      setPreferences(data || { id: user.id, interests: [], preferred_location: null, max_distance: null, notification_preference: "both" });
+      setPreferences(data || { id: user.id, interests: [], preferred_location: null, notification_preference: "both" });
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -200,21 +199,6 @@ const UserPreferences = () => {
               ))}
             </SelectContent>
           </Select>
-        </div>
-
-        <div className="space-y-4">
-          <label className="text-sm font-medium">Maximum Distance (km)</label>
-          <Input
-            type="number"
-            min="0"
-            value={preferences?.max_distance || ""}
-            onChange={(e) =>
-              setPreferences(prev =>
-                prev ? { ...prev, max_distance: parseInt(e.target.value) || null } : null
-              )
-            }
-            placeholder="Enter maximum distance"
-          />
         </div>
 
         <div className="space-y-4">
