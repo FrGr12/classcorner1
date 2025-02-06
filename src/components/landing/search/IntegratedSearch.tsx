@@ -11,6 +11,7 @@ import FilterButtons from "../filters/FilterButtons";
 import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { mockClasses } from "@/data/mockClasses";
 
 // Define categories for smart search
 const categories = [
@@ -29,6 +30,17 @@ const categories = [
   "Flower & Plants",
 ];
 
+// Get all class titles from mockClasses
+const getAllClassTitles = () => {
+  const titles: string[] = [];
+  Object.values(mockClasses).forEach(classes => {
+    classes.forEach(classItem => {
+      titles.push(classItem.title);
+    });
+  });
+  return [...new Set(titles)]; // Remove duplicates
+};
+
 const IntegratedSearch = () => {
   const navigate = useNavigate();
   const [searchInput, setSearchInput] = useState("");
@@ -37,17 +49,25 @@ const IntegratedSearch = () => {
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
   const [isOpen, setIsOpen] = useState(false);
   const [matchingCategories, setMatchingCategories] = useState<string[]>([]);
+  const [matchingTitles, setMatchingTitles] = useState<string[]>([]);
 
-  // Update matching categories when search input changes
+  // Update matching categories and titles when search input changes
   useEffect(() => {
     if (searchInput) {
-      const matches = categories.filter(category => 
+      // Match categories
+      const categoryMatches = categories.filter(category => 
         category.toLowerCase().includes(searchInput.toLowerCase())
       );
-      setMatchingCategories(matches);
+      setMatchingCategories(categoryMatches);
       
-      // If we have an exact match, update selected categories
-      const exactMatch = matches.find(
+      // Match titles
+      const titleMatches = getAllClassTitles().filter(title =>
+        title.toLowerCase().includes(searchInput.toLowerCase())
+      ).slice(0, 5); // Limit to 5 title suggestions
+      setMatchingTitles(titleMatches);
+      
+      // If we have an exact category match, update selected categories
+      const exactMatch = categoryMatches.find(
         category => category.toLowerCase() === searchInput.toLowerCase()
       );
       if (exactMatch) {
@@ -55,6 +75,7 @@ const IntegratedSearch = () => {
       }
     } else {
       setMatchingCategories([]);
+      setMatchingTitles([]);
     }
   }, [searchInput]);
 
@@ -74,7 +95,6 @@ const IntegratedSearch = () => {
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (matchingCategories.length === 1) {
-        // If we have exactly one matching category, use that
         setSelectedCategories([matchingCategories[0]]);
       }
       handleSearch();
@@ -107,7 +127,7 @@ const IntegratedSearch = () => {
                   className="w-full pl-10 py-6 text-base"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
-                {matchingCategories.length > 0 && (
+                {(matchingCategories.length > 0 || matchingTitles.length > 0) && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                     {matchingCategories.map((category) => (
                       <div
@@ -119,7 +139,19 @@ const IntegratedSearch = () => {
                           handleSearch();
                         }}
                       >
-                        {category}
+                        <span className="text-accent-purple">Category:</span> {category}
+                      </div>
+                    ))}
+                    {matchingTitles.map((title) => (
+                      <div
+                        key={title}
+                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                        onClick={() => {
+                          setSearchInput(title);
+                          handleSearch();
+                        }}
+                      >
+                        <span className="text-accent-purple">Class:</span> {title}
                       </div>
                     ))}
                   </div>
@@ -158,7 +190,7 @@ const IntegratedSearch = () => {
               onKeyDown={handleInputKeyDown}
               className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
             />
-            {matchingCategories.length > 0 && (
+            {(matchingCategories.length > 0 || matchingTitles.length > 0) && (
               <div className="absolute z-10 w-full left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg">
                 {matchingCategories.map((category) => (
                   <div
@@ -170,7 +202,19 @@ const IntegratedSearch = () => {
                       handleSearch();
                     }}
                   >
-                    {category}
+                    <span className="text-accent-purple">Category:</span> {category}
+                  </div>
+                ))}
+                {matchingTitles.map((title) => (
+                  <div
+                    key={title}
+                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                    onClick={() => {
+                      setSearchInput(title);
+                      handleSearch();
+                    }}
+                  >
+                    <span className="text-accent-purple">Class:</span> {title}
                   </div>
                 ))}
               </div>
@@ -199,3 +243,4 @@ const IntegratedSearch = () => {
 };
 
 export default IntegratedSearch;
+
