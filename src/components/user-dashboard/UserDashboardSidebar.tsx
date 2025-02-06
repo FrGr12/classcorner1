@@ -1,3 +1,4 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import {
   Star,
   Settings,
   Menu,
+  Clock
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -64,6 +66,11 @@ const UserDashboardSidebar = () => {
       title: "Reviews",
       href: "/dashboard/reviews",
       icon: Star,
+    },
+    {
+      title: "Waitlist",
+      href: "/dashboard/waitlist",
+      icon: Clock,
     },
   ];
 
