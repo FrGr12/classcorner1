@@ -1,3 +1,4 @@
+
 import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
@@ -10,7 +11,6 @@ import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
-import TeacherPromotions from "@/components/teach/dashboard/TeacherPromotions";
 
 const Dashboard = () => {
   return (
@@ -29,7 +29,6 @@ const Dashboard = () => {
               <Route path="/classes" element={<TeacherClasses />} />
               <Route path="/analytics" element={<TeacherAnalytics />} />
               <Route path="/reviews" element={<TeacherReviews />} />
-              <Route path="/promotions" element={<TeacherPromotions />} />
             </Routes>
           </main>
         </div>
