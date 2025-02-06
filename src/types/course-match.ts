@@ -4,6 +4,10 @@ export interface CourseMatch {
   user_id: string;
   course_id: number;
   match_score: number;
+  interest_score: number;
+  location_score: number;
+  trending_score: number;
+  booking_history_score: number;
   notified_at: string | null;
   created_at: string;
   course: {

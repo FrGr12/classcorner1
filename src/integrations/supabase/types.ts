@@ -697,27 +697,39 @@ export type Database = {
       }
       course_matches: {
         Row: {
+          booking_history_score: number | null
           course_id: number | null
           created_at: string
           id: number
+          interest_score: number | null
+          location_score: number | null
           match_score: number | null
           notified_at: string | null
+          trending_score: number | null
           user_id: string | null
         }
         Insert: {
+          booking_history_score?: number | null
           course_id?: number | null
           created_at?: string
           id?: number
+          interest_score?: number | null
+          location_score?: number | null
           match_score?: number | null
           notified_at?: string | null
+          trending_score?: number | null
           user_id?: string | null
         }
         Update: {
+          booking_history_score?: number | null
           course_id?: number | null
           created_at?: string
           id?: number
+          interest_score?: number | null
+          location_score?: number | null
           match_score?: number | null
           notified_at?: string | null
+          trending_score?: number | null
           user_id?: string | null
         }
         Relationships: [
@@ -1500,11 +1512,25 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_trending_score: {
+        Args: {
+          course_id_param: number
+        }
+        Returns: number
+      }
       cleanup_expired_categories: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
       cleanup_old_activity_logs: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      process_match_notifications: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      update_ai_match_scores: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
