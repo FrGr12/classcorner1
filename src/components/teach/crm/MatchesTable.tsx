@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ const MatchesTable = ({ matches, onNotify, notifyingId }: MatchesTableProps) => 
           <TableRow key={match.id}>
             <TableCell>
               {match.profile ? 
-                `${match.profile.first_name} ${match.profile.last_name}` : 
+                `${match.profile.first_name || ''} ${match.profile.last_name || ''}`.trim() || "Anonymous User" : 
                 "Anonymous User"
               }
             </TableCell>

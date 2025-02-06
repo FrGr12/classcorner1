@@ -15,4 +15,8 @@ export interface CourseMatch {
     tags: string[];
     category: string;
   };
+  profile?: {
+    first_name: string | null;
+    last_name: string | null;
+  };
 }
