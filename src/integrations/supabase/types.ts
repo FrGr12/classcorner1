@@ -487,6 +487,55 @@ export type Database = {
           },
         ]
       }
+      course_browsing_history: {
+        Row: {
+          course_id: number | null
+          id: number
+          last_viewed_section: string | null
+          user_id: string | null
+          view_duration: number | null
+          viewed_at: string
+        }
+        Insert: {
+          course_id?: number | null
+          id?: never
+          last_viewed_section?: string | null
+          user_id?: string | null
+          view_duration?: number | null
+          viewed_at?: string
+        }
+        Update: {
+          course_id?: number | null
+          id?: never
+          last_viewed_section?: string | null
+          user_id?: string | null
+          view_duration?: number | null
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_browsing_history_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_browsing_history_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_browsing_history_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       course_category_assignments: {
         Row: {
           assigned_at: string | null
