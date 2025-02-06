@@ -1,3 +1,4 @@
+
 export interface CourseMatch {
   id: number;
   user_id: string;
@@ -6,11 +7,12 @@ export interface CourseMatch {
   notified_at: string | null;
   created_at: string;
   course: {
+    id: number;
     title: string;
+    description: string;
+    location: string;
+    price: number;
+    tags: string[];
+    category: string;
   };
-  profile: {
-    first_name: string;
-    last_name: string;
-    email?: string;
-  } | null;
 }
