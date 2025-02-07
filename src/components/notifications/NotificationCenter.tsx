@@ -132,7 +132,10 @@ const NotificationCenter = () => {
     try {
       const { error } = await supabase
         .from('notification_logs')
-        .update({ read_at: new Date().toISOString() })
+        .update({
+          read_at: new Date().toISOString(),
+          status: 'read'
+        })
         .eq('id', parseInt(notificationId));
 
       if (error) throw error;
@@ -140,7 +143,7 @@ const NotificationCenter = () => {
       setNotifications(prev =>
         prev.map(n =>
           n.id === notificationId
-            ? { ...n, read_at: new Date().toISOString() }
+            ? { ...n, read_at: new Date().toISOString(), status: 'read' }
             : n
         )
       );
@@ -238,4 +241,3 @@ const NotificationCenter = () => {
 };
 
 export default NotificationCenter;
-
