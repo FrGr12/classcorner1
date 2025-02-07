@@ -55,7 +55,11 @@ const NotificationCenter = () => {
         (payload) => {
           const newNotification: Notification = {
             ...payload.new as any,
-            created_at: payload.new.sent_at || payload.new.created_at,
+            id: payload.new.id.toString(),
+            created_at: payload.new.sent_at || new Date().toISOString(),
+            category: payload.new.category || 'general',
+            read_at: null,
+            reference_id: null
           };
           setNotifications(prev => [newNotification, ...prev]);
         }
@@ -85,6 +89,9 @@ const NotificationCenter = () => {
         ...notification,
         id: notification.id.toString(),
         created_at: notification.sent_at || notification.created_at,
+        category: notification.category || 'general',
+        read_at: notification.read_at || null,
+        reference_id: notification.reference_id || null
       }));
       
       setNotifications(formattedNotifications);
