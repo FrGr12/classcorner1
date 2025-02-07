@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
 import {
   Users,
   Calendar,
@@ -168,68 +169,37 @@ const TeacherOverview = () => {
         </Card>
       </div>
 
-      {/* Recent Activity & Notifications */}
+      {/* Notification Center and Quick Actions */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Recent Activity</CardTitle>
-            <CardDescription>Latest updates from your classes</CardDescription>
-          </CardHeader>
-          <CardContent>
-            {stats.unreadMessages > 0 && (
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <MessageSquare className="h-4 w-4" />
-                  <span>{stats.unreadMessages} unread messages</span>
-                </div>
-                <Button variant="ghost" onClick={() => navigate("/teach/messages")}>
-                  View
-                </Button>
-              </div>
-            )}
-            {stats.pendingReviews > 0 && (
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4" />
-                  <span>{stats.pendingReviews} new reviews</span>
-                </div>
-                <Button variant="ghost" onClick={() => navigate("/teach/reviews")}>
-                  View
-                </Button>
-              </div>
-            )}
-            {stats.upcomingClasses > 0 && (
-              <div className="flex items-center justify-between py-2">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{stats.upcomingClasses} upcoming classes</span>
-                </div>
-                <Button variant="ghost" onClick={() => navigate("/teach/bookings")}>
-                  View
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
+        <NotificationCenter />
+        
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
             <CardDescription>Common tasks and shortcuts</CardDescription>
           </CardHeader>
           <CardContent className="space-y-2">
-            <Button className="w-full justify-start" variant="outline" 
-                    onClick={() => navigate("/teach/new")}>
+            <Button
+              className="w-full justify-start"
+              variant="outline"
+              onClick={() => navigate("/teach/new")}
+            >
               <BookOpen className="mr-2 h-4 w-4" />
               Create New Class
             </Button>
-            <Button className="w-full justify-start" variant="outline"
-                    onClick={() => navigate("/teach/messages")}>
+            <Button
+              className="w-full justify-start"
+              variant="outline"
+              onClick={() => navigate("/teach/messages")}
+            >
               <MessageSquare className="mr-2 h-4 w-4" />
               Message Students
             </Button>
-            <Button className="w-full justify-start" variant="outline"
-                    onClick={() => navigate("/teach/analytics")}>
+            <Button
+              className="w-full justify-start"
+              variant="outline"
+              onClick={() => navigate("/teach/analytics")}
+            >
               <DollarSign className="mr-2 h-4 w-4" />
               View Analytics
             </Button>
