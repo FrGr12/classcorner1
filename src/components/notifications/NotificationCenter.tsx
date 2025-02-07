@@ -13,7 +13,6 @@ import {
   Clock,
   Tag,
   Bell,
-  Check,
   CheckCircle2
 } from "lucide-react";
 
@@ -27,6 +26,9 @@ interface Notification {
   created_at: string;
   read_at: string | null;
   reference_id: string | null;
+  booking_id?: number;
+  error?: string;
+  sent_at?: string;
 }
 
 const NotificationCenter = () => {
@@ -51,7 +53,11 @@ const NotificationCenter = () => {
           table: 'notification_logs'
         },
         (payload) => {
-          setNotifications(prev => [payload.new as Notification, ...prev]);
+          const newNotification: Notification = {
+            ...payload.new as any,
+            created_at: payload.new.sent_at || payload.new.created_at,
+          };
+          setNotifications(prev => [newNotification, ...prev]);
         }
       )
       .subscribe();
@@ -74,7 +80,14 @@ const NotificationCenter = () => {
         .limit(50);
 
       if (error) throw error;
-      setNotifications(data);
+      
+      const formattedNotifications: Notification[] = data.map(notification => ({
+        ...notification,
+        id: notification.id.toString(),
+        created_at: notification.sent_at || notification.created_at,
+      }));
+      
+      setNotifications(formattedNotifications);
     } catch (error: any) {
       toast({
         variant: "destructive",
