@@ -16,6 +16,20 @@ import {
   CheckCircle2
 } from "lucide-react";
 
+interface DatabaseNotification {
+  id: number;
+  user_id: string;
+  notification_type: string;
+  content: string;
+  status: string;
+  booking_id?: number;
+  error?: string;
+  sent_at: string;
+  category?: string;
+  read_at?: string | null;
+  reference_id?: string | null;
+}
+
 interface Notification {
   id: string;
   user_id: string;
@@ -28,7 +42,6 @@ interface Notification {
   reference_id: string | null;
   booking_id?: number;
   error?: string;
-  sent_at?: string;
 }
 
 const NotificationCenter = () => {
@@ -53,13 +66,19 @@ const NotificationCenter = () => {
           table: 'notification_logs'
         },
         (payload) => {
+          const dbNotification = payload.new as DatabaseNotification;
           const newNotification: Notification = {
-            ...payload.new as any,
-            id: payload.new.id.toString(),
-            created_at: payload.new.sent_at || new Date().toISOString(),
-            category: payload.new.category || 'general',
-            read_at: null,
-            reference_id: null
+            id: dbNotification.id.toString(),
+            user_id: dbNotification.user_id,
+            notification_type: dbNotification.notification_type,
+            content: dbNotification.content,
+            status: dbNotification.status,
+            category: dbNotification.category || 'general',
+            created_at: dbNotification.sent_at,
+            read_at: dbNotification.read_at || null,
+            reference_id: dbNotification.reference_id || null,
+            booking_id: dbNotification.booking_id,
+            error: dbNotification.error
           };
           setNotifications(prev => [newNotification, ...prev]);
         }
@@ -80,18 +99,23 @@ const NotificationCenter = () => {
         .from('notification_logs')
         .select('*')
         .eq('user_id', user.id)
-        .order('created_at', { ascending: false })
+        .order('sent_at', { ascending: false })
         .limit(50);
 
       if (error) throw error;
       
-      const formattedNotifications: Notification[] = data.map(notification => ({
-        ...notification,
+      const formattedNotifications: Notification[] = (data as DatabaseNotification[]).map(notification => ({
         id: notification.id.toString(),
-        created_at: notification.sent_at || notification.created_at,
+        user_id: notification.user_id,
+        notification_type: notification.notification_type,
+        content: notification.content,
+        status: notification.status,
         category: notification.category || 'general',
+        created_at: notification.sent_at,
         read_at: notification.read_at || null,
-        reference_id: notification.reference_id || null
+        reference_id: notification.reference_id || null,
+        booking_id: notification.booking_id,
+        error: notification.error
       }));
       
       setNotifications(formattedNotifications);
@@ -109,7 +133,7 @@ const NotificationCenter = () => {
       const { error } = await supabase
         .from('notification_logs')
         .update({ read_at: new Date().toISOString() })
-        .eq('id', notificationId);
+        .eq('id', parseInt(notificationId));
 
       if (error) throw error;
 
@@ -214,3 +238,4 @@ const NotificationCenter = () => {
 };
 
 export default NotificationCenter;
+
