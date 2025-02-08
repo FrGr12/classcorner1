@@ -4,22 +4,22 @@ import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
 import UserDashboard from "@/pages/UserDashboard";
-import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
+import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
 import Auth from "@/pages/Auth";
 import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 import Onboarding from "@/pages/Onboarding";
-
-// Import teacher dashboard components
-import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
-import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
-import TeacherMessages from "@/components/teach/dashboard/TeacherMessages";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
-import TeacherWaitlist from "@/components/teach/dashboard/TeacherWaitlist";
-import TeacherSettings from "@/components/teach/dashboard/TeacherSettings";
+import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
+import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
+import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
+import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
+import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
+import CourseForm from "@/components/teach/CourseForm";
 
 // Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
@@ -56,22 +56,24 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard/*",
-    element: <UserDashboard />,
+    element: <Dashboard />,
     children: [
-      { path: "", element: <UserDashboardOverview /> },
+      { path: "", element: <TeacherOverview /> },
+      { path: "create-class", element: <CourseForm /> },
+      { path: "profile", element: <TeacherProfile /> },
+      { path: "crm", element: <TeacherCRM /> },
+      { path: "bookings", element: <TeacherBookings /> },
+      { path: "classes", element: <TeacherClasses /> },
+      { path: "classes/:id/edit", element: <EditClass /> },
+      { path: "analytics", element: <TeacherAnalytics /> },
+      { path: "reviews", element: <TeacherReviews /> },
     ],
   },
   {
-    path: "/teach/*",
-    element: <TeacherDashboard />,
+    path: "/user-dashboard/*",
+    element: <UserDashboard />,
     children: [
-      { path: "", element: <TeacherOverview /> },
-      { path: "profile", element: <TeacherProfile /> },
-      { path: "messages", element: <TeacherMessages /> },
-      { path: "classes", element: <TeacherClasses /> },
-      { path: "classes/:id/edit", element: <EditClass /> },
-      { path: "waitlist", element: <TeacherWaitlist /> },
-      { path: "settings", element: <TeacherSettings /> },
+      { path: "", element: <UserDashboardOverview /> },
     ],
   },
   {
