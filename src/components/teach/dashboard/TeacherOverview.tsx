@@ -61,10 +61,10 @@ const TeacherOverview = () => {
         firstClassCreated: courses && courses.length > 0
       });
 
-      // Update stats using correct metric fields
+      // Update stats using the correct metric fields
       setStats({
         totalStudents: metrics?.total_students || 0,
-        upcomingClasses: metrics?.total_classes || 0, // Changed from upcoming_classes to total_classes
+        upcomingClasses: metrics?.attended_students || 0, // Changed to use attended_students instead of total_classes
         averageRating: metrics?.avg_rating || 0
       });
 
