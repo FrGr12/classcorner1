@@ -5,33 +5,18 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { Card, CardContent } from "@/components/ui/card";
-import { 
-  BookOpen, 
-  DollarSign, 
-  Users, 
-  Map, 
-  Image as ImageIcon, 
-  Calendar,
-  GraduationCap,
-  Package
-} from "lucide-react";
-import ImageUpload from "@/components/teach/ImageUpload";
-import SessionManagement from "@/components/teach/course-form/SessionManagement";
-import FormWrapper from "@/components/teach/course-form/FormWrapper";
+import { BookOpen } from "lucide-react";
 import { Session } from "@/types/session";
+import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
+import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
+import PricingCapacitySection from "@/components/teach/course-form/PricingCapacitySection";
+import BringItemsSection from "@/components/teach/course-form/BringItemsSection";
+import LearningOutcomesSection from "@/components/teach/course-form/LearningOutcomesSection";
+import ImagesSection from "@/components/teach/course-form/ImagesSection";
+import ScheduleSection from "@/components/teach/course-form/ScheduleSection";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -50,8 +35,6 @@ const CreateClass = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<File[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [currentBringItem, setCurrentBringItem] = useState("");
-  const [currentOutcome, setCurrentOutcome] = useState("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -76,32 +59,6 @@ const CreateClass = () => {
       console.error("Error creating class:", error);
       toast.error("Failed to create class. Please try again.");
     }
-  };
-
-  const addBringItem = () => {
-    if (currentBringItem.trim()) {
-      const currentItems = form.getValues("whatToBring");
-      form.setValue("whatToBring", [...currentItems, currentBringItem.trim()]);
-      setCurrentBringItem("");
-    }
-  };
-
-  const removeBringItem = (index: number) => {
-    const currentItems = form.getValues("whatToBring");
-    form.setValue("whatToBring", currentItems.filter((_, i) => i !== index));
-  };
-
-  const addLearningOutcome = () => {
-    if (currentOutcome.trim()) {
-      const currentOutcomes = form.getValues("learningOutcomes");
-      form.setValue("learningOutcomes", [...currentOutcomes, currentOutcome.trim()]);
-      setCurrentOutcome("");
-    }
-  };
-
-  const removeLearningOutcome = (index: number) => {
-    const currentOutcomes = form.getValues("learningOutcomes");
-    form.setValue("learningOutcomes", currentOutcomes.filter((_, i) => i !== index));
   };
 
   return (
@@ -136,228 +93,20 @@ const CreateClass = () => {
 
       <Form {...form}>
         <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-6">
-              <div className="grid gap-6">
-                <FormField
-                  control={form.control}
-                  name="title"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base">Class Title</FormLabel>
-                      <FormControl>
-                        <Input 
-                          placeholder="Enter an engaging title for your class" 
-                          className="h-11"
-                          {...field} 
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-base">Description</FormLabel>
-                      <FormControl>
-                        <Textarea
-                          placeholder="Describe what students will learn and experience"
-                          className="min-h-[120px] resize-none"
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-            </CardContent>
-          </Card>
+          <BasicInfoSection form={form} />
 
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-              <CardContent className="p-6 space-y-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Map className="w-5 h-5 text-accent-purple" />
-                  <h3 className="text-lg font-medium">Location & Category</h3>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="category"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Category</FormLabel>
-                      <FormControl>
-                        <Input placeholder="e.g., Cooking, Art, Music" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="location"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input placeholder="Enter class location" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-              <CardContent className="p-6 space-y-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <DollarSign className="w-5 h-5 text-accent-purple" />
-                  <h3 className="text-lg font-medium">Pricing & Capacity</h3>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Price per Person</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="0" step="0.01" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="maxParticipants"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Maximum Participants</FormLabel>
-                      <FormControl>
-                        <Input type="number" min="1" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
+            <LocationCategorySection form={form} />
+            <PricingCapacitySection form={form} />
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
-            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-              <CardContent className="p-6 space-y-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <Package className="w-5 h-5 text-accent-purple" />
-                  <h3 className="text-lg font-medium">What to Bring</h3>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      value={currentBringItem}
-                      onChange={(e) => setCurrentBringItem(e.target.value)}
-                      placeholder="Add item..."
-                      onKeyPress={(e) => e.key === 'Enter' && addBringItem()}
-                    />
-                    <Button type="button" onClick={addBringItem}>Add</Button>
-                  </div>
-                  <ul className="space-y-2">
-                    {form.watch("whatToBring").map((item, index) => (
-                      <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
-                        <span className="flex-1">{item}</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeBringItem(index)}
-                        >
-                          Remove
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-              <CardContent className="p-6 space-y-6">
-                <div className="flex items-center gap-2 mb-4">
-                  <GraduationCap className="w-5 h-5 text-accent-purple" />
-                  <h3 className="text-lg font-medium">Learning Outcomes</h3>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex gap-2">
-                    <Input
-                      value={currentOutcome}
-                      onChange={(e) => setCurrentOutcome(e.target.value)}
-                      placeholder="Add learning outcome..."
-                      onKeyPress={(e) => e.key === 'Enter' && addLearningOutcome()}
-                    />
-                    <Button type="button" onClick={addLearningOutcome}>Add</Button>
-                  </div>
-                  <ul className="space-y-2">
-                    {form.watch("learningOutcomes").map((outcome, index) => (
-                      <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
-                        <span className="flex-1">{outcome}</span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => removeLearningOutcome(index)}
-                        >
-                          Remove
-                        </Button>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </CardContent>
-            </Card>
+            <BringItemsSection form={form} />
+            <LearningOutcomesSection form={form} />
           </div>
 
-          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <ImageIcon className="w-5 h-5 text-accent-purple" />
-                <h3 className="text-lg font-medium">Class Images</h3>
-                <p className="text-sm text-muted-foreground ml-auto">
-                  Upload up to 5 images
-                </p>
-              </div>
-              <ImageUpload
-                images={images}
-                setImages={setImages}
-                className="mt-4"
-              />
-            </CardContent>
-          </Card>
-
-          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-            <CardContent className="p-6 space-y-6">
-              <div className="flex items-center gap-2 mb-4">
-                <Calendar className="w-5 h-5 text-accent-purple" />
-                <h3 className="text-lg font-medium">Session Schedule</h3>
-              </div>
-              <SessionManagement
-                form={form}
-                sessions={sessions}
-                setSessions={setSessions}
-              />
-            </CardContent>
-          </Card>
+          <ImagesSection images={images} setImages={setImages} />
+          <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
         </form>
       </Form>
     </div>
