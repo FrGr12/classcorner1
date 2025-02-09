@@ -15,7 +15,6 @@ import Onboarding from "@/pages/Onboarding";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
-import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
@@ -126,14 +125,6 @@ const router = createBrowserRouter([
         ),
       },
       { 
-        path: "bookings", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherBookings />
-          </Suspense>
-        ),
-      },
-      { 
         path: "classes", 
         element: (
           <Suspense fallback={<LoadingState />}>
@@ -194,3 +185,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
