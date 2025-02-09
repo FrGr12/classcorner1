@@ -7,10 +7,6 @@ import ClassDetails from "@/pages/ClassDetails";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
-import Auth from "@/pages/Auth";
-import EmailVerification from "@/pages/EmailVerification";
-import PasswordReset from "@/pages/PasswordReset";
-import Onboarding from "@/pages/Onboarding";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
@@ -19,7 +15,11 @@ import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
+import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
+import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
+import NotificationCenter from "@/components/notifications/NotificationCenter";
+import UserPreferences from "@/components/user-dashboard/UserPreferences";
 
 const router = createBrowserRouter([
   {
@@ -27,47 +27,6 @@ const router = createBrowserRouter([
     element: (
       <Suspense fallback={<LoadingState />}>
         <Index />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
-  },
-  {
-    path: "/auth",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Auth />
-      </Suspense>
-    ),
-  },
-  {
-    path: "/email-verification",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <EmailVerification />
-      </Suspense>
-    ),
-  },
-  {
-    path: "/password-reset",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <PasswordReset />
-      </Suspense>
-    ),
-  },
-  {
-    path: "/onboarding",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Onboarding />
-      </Suspense>
-    ),
-  },
-  {
-    path: "/browse",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Browse />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
@@ -82,7 +41,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/dashboard/*",
+    path: "/teacher-dashboard/*",
     element: (
       <Suspense fallback={<LoadingState />}>
         <Dashboard />
@@ -92,67 +51,62 @@ const router = createBrowserRouter([
     children: [
       { 
         path: "", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherOverview />
-          </Suspense>
-        ),
+        element: <TeacherOverview />
       },
       { 
         path: "create-class", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <CourseForm />
-          </Suspense>
-        ),
+        element: <CourseForm />
       },
       { 
         path: "profile", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherProfile />
-          </Suspense>
-        ),
+        element: <TeacherProfile />
       },
       { 
         path: "crm", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherCRM />
-          </Suspense>
-        ),
+        element: <TeacherCRM />
       },
       { 
         path: "classes", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherClasses />
-          </Suspense>
-        ),
+        element: <TeacherClasses />
       },
       { 
         path: "classes/:id/edit", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <EditClass />
-          </Suspense>
-        ),
+        element: <EditClass />
       },
       { 
         path: "analytics", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherAnalytics />
-          </Suspense>
-        ),
+        element: <TeacherAnalytics />
       },
       { 
         path: "reviews", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherReviews />
-          </Suspense>
-        ),
+        element: <TeacherReviews />
+      },
+    ],
+  },
+  {
+    path: "/dashboard/*",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Dashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+    children: [
+      {
+        path: "",
+        element: <UserHome />,
+      },
+      {
+        path: "notifications",
+        element: <NotificationCenter />,
+      },
+      {
+        path: "waitlist",
+        element: <UserWaitlist />,
+      },
+      {
+        path: "preferences",
+        element: <UserPreferences />,
       },
     ],
   },
@@ -164,4 +118,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
