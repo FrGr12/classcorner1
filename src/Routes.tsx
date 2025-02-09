@@ -2,18 +2,27 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Suspense } from "react";
 import Index from "@/pages/Index";
+import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
+import UserDashboard from "@/pages/UserDashboard";
+import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
-import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
+import Auth from "@/pages/Auth";
+import EmailVerification from "@/pages/EmailVerification";
+import PasswordReset from "@/pages/PasswordReset";
+import Onboarding from "@/pages/Onboarding";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
+import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
+import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
-import UserDashboard from "@/components/user-dashboard/UserDashboard";
 import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
+import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import UserPreferences from "@/components/user-dashboard/UserPreferences";
 
@@ -28,7 +37,48 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/class/:id",
+    path: "/auth",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Auth />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/email-verification",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <EmailVerification />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/password-reset",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <PasswordReset />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/onboarding",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Onboarding />
+      </Suspense>
+    ),
+  },
+  {
+    path: "/browse",
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Browse />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
+  },
+  {
+    path: "/class/:category/:id",
     element: (
       <Suspense fallback={<LoadingState />}>
         <ClassDetails />
@@ -37,38 +87,82 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/teacher-dashboard/*",
+    path: "/dashboard/*",
     element: (
       <Suspense fallback={<LoadingState />}>
-        <TeacherDashboard />
+        <Dashboard />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
     children: [
       { 
         path: "", 
-        element: <TeacherOverview />
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherOverview />
+          </Suspense>
+        ),
       },
       { 
         path: "create-class", 
-        element: <CourseForm />
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <CourseForm />
+          </Suspense>
+        ),
       },
       { 
         path: "profile", 
-        element: <TeacherProfile />
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherProfile />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "crm", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherCRM />
+          </Suspense>
+        ),
       },
       { 
         path: "classes", 
-        element: <TeacherClasses />
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherClasses />
+          </Suspense>
+        ),
       },
       { 
         path: "classes/:id/edit", 
-        element: <EditClass />
-      }
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <EditClass />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "analytics", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherAnalytics />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "reviews", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherReviews />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
-    path: "/dashboard/*",
+    path: "/user-dashboard/*",
     element: (
       <Suspense fallback={<LoadingState />}>
         <UserDashboard />
@@ -76,17 +170,37 @@ const router = createBrowserRouter([
     ),
     errorElement: <ErrorPage />,
     children: [
-      {
-        path: "",
-        element: <UserHome />,
+      { 
+        path: "", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <UserHome />
+          </Suspense>
+        ),
       },
       {
         path: "notifications",
-        element: <NotificationCenter />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <NotificationCenter />
+          </Suspense>
+        ),
+      },
+      {
+        path: "waitlist",
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <UserWaitlist />
+          </Suspense>
+        ),
       },
       {
         path: "preferences",
-        element: <UserPreferences />,
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <UserPreferences />
+          </Suspense>
+        ),
       },
     ],
   },
@@ -98,3 +212,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+
