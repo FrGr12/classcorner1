@@ -16,6 +16,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { Card, CardContent } from "@/components/ui/card";
+import { BookOpen, DollarSign, Users, Map, Image as ImageIcon, Calendar } from "lucide-react";
 import ImageUpload from "@/components/teach/ImageUpload";
 import SessionManagement from "@/components/teach/course-form/SessionManagement";
 import FormWrapper from "@/components/teach/course-form/FormWrapper";
@@ -62,114 +65,184 @@ const CreateClass = () => {
 
   return (
     <div className="container max-w-4xl py-6 space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Create New Class</h1>
-        <p className="text-muted-foreground">
-          Set up your new class and start accepting bookings
-        </p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-semibold tracking-tight">Create New Class</h1>
+          <p className="text-muted-foreground mt-1">
+            Share your expertise with the world
+          </p>
+        </div>
+        <div className="flex gap-4">
+          <Button
+            variant="outline"
+            onClick={() => navigate(-1)}
+            className="gap-2"
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            form="create-class-form"
+            className="gap-2 bg-accent-purple hover:bg-accent-purple/90"
+          >
+            <BookOpen className="w-4 h-4" />
+            Create Class
+          </Button>
+        </div>
       </div>
 
+      <Separator className="my-6" />
+
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormWrapper
-            title="Basic Information"
-            description="General information about your class"
-          >
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Class Title</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter class title" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+            <CardContent className="p-6 space-y-6">
+              <div className="grid gap-6">
+                <FormField
+                  control={form.control}
+                  name="title"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">Class Title</FormLabel>
+                      <FormControl>
+                        <Input 
+                          placeholder="Enter an engaging title for your class" 
+                          className="h-11"
+                          {...field} 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Describe your class"
-                      className="min-h-[120px]"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                <FormField
+                  control={form.control}
+                  name="description"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-base">Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Describe what students will learn and experience"
+                          className="min-h-[120px] resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </CardContent>
+          </Card>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Select category" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Map className="w-5 h-5 text-accent-purple" />
+                  <h3 className="text-lg font-medium">Location & Category</h3>
+                </div>
 
-              <FormField
-                control={form.control}
-                name="location"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input placeholder="Enter location" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-          </FormWrapper>
+                <FormField
+                  control={form.control}
+                  name="category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Category</FormLabel>
+                      <FormControl>
+                        <Input placeholder="e.g., Cooking, Art, Music" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-          <FormWrapper
-            title="Class Images"
-            description="Upload images showcasing your class"
-          >
-            <ImageUpload
-              images={images}
-              setImages={setImages}
-              className="mt-4"
-            />
-          </FormWrapper>
+                <FormField
+                  control={form.control}
+                  name="location"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Location</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter class location" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
 
-          <FormWrapper
-            title="Session & Pricing"
-            description="Set up your class schedule and pricing"
-          >
-            <SessionManagement
-              form={form}
-              sessions={sessions}
-              setSessions={setSessions}
-            />
-          </FormWrapper>
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <DollarSign className="w-5 h-5 text-accent-purple" />
+                  <h3 className="text-lg font-medium">Pricing & Capacity</h3>
+                </div>
 
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => navigate(-1)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit">Create Class</Button>
+                <FormField
+                  control={form.control}
+                  name="price"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Price per Person</FormLabel>
+                      <FormControl>
+                        <Input type="number" min="0" step="0.01" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="maxParticipants"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Maximum Participants</FormLabel>
+                      <FormControl>
+                        <Input type="number" min="1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </CardContent>
+            </Card>
           </div>
+
+          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+            <CardContent className="p-6 space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <ImageIcon className="w-5 h-5 text-accent-purple" />
+                <h3 className="text-lg font-medium">Class Images</h3>
+                <p className="text-sm text-muted-foreground ml-auto">
+                  Upload up to 5 images
+                </p>
+              </div>
+              <ImageUpload
+                images={images}
+                setImages={setImages}
+                className="mt-4"
+              />
+            </CardContent>
+          </Card>
+
+          <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+            <CardContent className="p-6 space-y-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Calendar className="w-5 h-5 text-accent-purple" />
+                <h3 className="text-lg font-medium">Session Schedule</h3>
+              </div>
+              <SessionManagement
+                form={form}
+                sessions={sessions}
+                setSessions={setSessions}
+              />
+            </CardContent>
+          </Card>
         </form>
       </Form>
     </div>
