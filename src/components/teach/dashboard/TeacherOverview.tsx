@@ -53,7 +53,7 @@ const TeacherOverview = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm">
         <WelcomeHeader fullName={profile?.full_name} />
         <div className="flex gap-4">
@@ -74,24 +74,43 @@ const TeacherOverview = () => {
         <div className="space-y-6">
           <TeacherStats stats={stats} />
         </div>
-        <div className="space-y-6">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h3 className="font-semibold mb-4">Quick Actions</h3>
-            <div className="space-y-3">
-              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/dashboard/profile")}>
-                Complete Your Profile
-              </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/dashboard/classes")}>
-                Manage Classes
-              </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/dashboard/messages")}>
-                Check Messages
-              </Button>
-              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/dashboard/reviews")}>
-                View Reviews
-              </Button>
-            </div>
-          </div>
+      </div>
+
+      <div className="bg-white p-8 rounded-lg shadow-sm mt-8 w-full">
+        <h3 className="font-semibold mb-6 text-lg">Quick Actions</h3>
+        <div className="flex flex-wrap gap-4">
+          <Button 
+            variant="secondary" 
+            size="lg"
+            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            onClick={() => navigate("/dashboard/profile")}
+          >
+            Complete Your Profile
+          </Button>
+          <Button 
+            variant="secondary"
+            size="lg"
+            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            onClick={() => navigate("/dashboard/classes")}
+          >
+            Manage Classes
+          </Button>
+          <Button 
+            variant="secondary"
+            size="lg"
+            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            onClick={() => navigate("/dashboard/messages")}
+          >
+            Check Messages
+          </Button>
+          <Button 
+            variant="secondary"
+            size="lg"
+            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            onClick={() => navigate("/dashboard/reviews")}
+          >
+            View Reviews
+          </Button>
         </div>
       </div>
     </div>
