@@ -8,6 +8,7 @@ import { mockClasses } from "@/data/mockClasses";
 import ClassStatsOverview from "./classes/ClassStatsOverview";
 import ClassFilters from "./classes/ClassFilters";
 import ClassCard from "./classes/ClassCard";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 const mockStats = {
   totalClasses: 15,
