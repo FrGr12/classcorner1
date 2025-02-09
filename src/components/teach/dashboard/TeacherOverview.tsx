@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -68,6 +69,7 @@ const TeacherOverview = () => {
       </div>
 
       <NotificationsCard />
+      <NotificationsCard />
 
       <div className="grid gap-6 md:grid-cols-[1fr]">
         <div className="space-y-6">
@@ -124,58 +126,9 @@ const TeacherOverview = () => {
           </div>
         </CardContent>
       </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-            <Button 
-              variant="secondary" 
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/profile")}
-            >
-              Complete Your Profile
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/classes")}
-            >
-              Manage Classes
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/messages")}
-            >
-              Check Messages
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/reviews")}
-            >
-              View Reviews
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/analytics")}
-            >
-              View Analytics
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
 
 export default TeacherOverview;
+
