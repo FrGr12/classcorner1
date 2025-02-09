@@ -5,7 +5,7 @@ import Reviews from "@/components/landing/Reviews";
 import Categories from "@/components/landing/Categories";
 import Features from "@/components/landing/Features";
 import Footer from "@/components/landing/Footer";
-import TestimonialSection from "@/components/class-details/TestimonialSection";
+import TrustedBy from "@/components/landing/TrustedBy";
 
 const Index = () => {
   return (
@@ -15,9 +15,9 @@ const Index = () => {
         <Hero />
       </div>
       <div className="space-y-8 sm:space-y-12 md:space-y-16">
+        <TrustedBy />
         <Categories />
         <Reviews />
-        <TestimonialSection />
         <Features />
       </div>
       <Footer />
