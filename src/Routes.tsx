@@ -19,9 +19,6 @@ import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
-import CourseForm from "@/components/teach/CourseForm";
-
-// Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 
 const router = createBrowserRouter([
@@ -59,7 +56,6 @@ const router = createBrowserRouter([
     element: <Dashboard />,
     children: [
       { path: "", element: <TeacherOverview /> },
-      { path: "create-class", element: <CourseForm /> },
       { path: "profile", element: <TeacherProfile /> },
       { path: "crm", element: <TeacherCRM /> },
       { path: "bookings", element: <TeacherBookings /> },
