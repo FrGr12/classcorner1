@@ -1,5 +1,6 @@
 
 import { createBrowserRouter } from "react-router-dom";
+import { Suspense } from "react";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
@@ -20,65 +21,175 @@ import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
-
-// Import user dashboard components
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
+import LoadingState from "@/components/user-dashboard/LoadingState";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <Index />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Index />
+      </Suspense>
+    ),
     errorElement: <ErrorPage />,
   },
   {
     path: "/auth",
-    element: <Auth />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Auth />
+      </Suspense>
+    ),
   },
   {
     path: "/email-verification",
-    element: <EmailVerification />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <EmailVerification />
+      </Suspense>
+    ),
   },
   {
     path: "/password-reset",
-    element: <PasswordReset />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <PasswordReset />
+      </Suspense>
+    ),
   },
   {
     path: "/onboarding",
-    element: <Onboarding />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Onboarding />
+      </Suspense>
+    ),
   },
   {
     path: "/browse",
-    element: <Browse />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Browse />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/class/:category/:id",
-    element: <ClassDetails />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <ClassDetails />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
   },
   {
     path: "/dashboard/*",
-    element: <Dashboard />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <Dashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <TeacherOverview /> },
-      { path: "create-class", element: <CourseForm /> },
-      { path: "profile", element: <TeacherProfile /> },
-      { path: "crm", element: <TeacherCRM /> },
-      { path: "bookings", element: <TeacherBookings /> },
-      { path: "classes", element: <TeacherClasses /> },
-      { path: "classes/:id/edit", element: <EditClass /> },
-      { path: "analytics", element: <TeacherAnalytics /> },
-      { path: "reviews", element: <TeacherReviews /> },
+      { 
+        path: "", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherOverview />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "create-class", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <CourseForm />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "profile", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherProfile />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "crm", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherCRM />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "bookings", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherBookings />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "classes", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherClasses />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "classes/:id/edit", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <EditClass />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "analytics", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherAnalytics />
+          </Suspense>
+        ),
+      },
+      { 
+        path: "reviews", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <TeacherReviews />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
     path: "/user-dashboard/*",
-    element: <UserDashboard />,
+    element: (
+      <Suspense fallback={<LoadingState />}>
+        <UserDashboard />
+      </Suspense>
+    ),
+    errorElement: <ErrorPage />,
     children: [
-      { path: "", element: <UserDashboardOverview /> },
+      { 
+        path: "", 
+        element: (
+          <Suspense fallback={<LoadingState />}>
+            <UserDashboardOverview />
+          </Suspense>
+        ),
+      },
     ],
   },
   {
     path: "*",
     element: <NotFound />,
+    errorElement: <ErrorPage />,
   },
 ]);
 
