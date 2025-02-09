@@ -1,6 +1,7 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -9,14 +10,11 @@ import NotificationCenter from "@/components/notifications/NotificationCenter";
 import {
   Users,
   Calendar,
-  DollarSign,
   Star,
-  Bell,
-  MessageSquare,
-  BookOpen,
   ArrowRight,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
+  Plus
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -27,15 +25,11 @@ const TeacherOverview = () => {
   const [stats, setStats] = useState({
     totalStudents: 0,
     upcomingClasses: 0,
-    unreadMessages: 0,
-    pendingReviews: 0,
-    totalRevenue: 0,
     averageRating: 0
   });
   const [onboardingSteps, setOnboardingSteps] = useState({
     profileComplete: false,
-    firstClassCreated: false,
-    preferencesSet: false
+    firstClassCreated: false
   });
 
   useEffect(() => {
@@ -62,7 +56,7 @@ const TeacherOverview = () => {
         .select('id')
         .eq('instructor_id', user.id);
 
-      // Fetch engagement metrics
+      // Fetch metrics
       const { data: metrics } = await supabase
         .from('teacher_engagement_metrics')
         .select('*')
@@ -72,17 +66,13 @@ const TeacherOverview = () => {
       // Update onboarding steps
       setOnboardingSteps({
         profileComplete: !!(profileData?.bio && profileData?.avatar_url),
-        firstClassCreated: courses && courses.length > 0,
-        preferencesSet: true // You might want to add a preferences check here
+        firstClassCreated: courses && courses.length > 0
       });
 
       // Update stats
       setStats({
         totalStudents: metrics?.total_students || 0,
-        upcomingClasses: 0, // You'll need to implement this count
-        unreadMessages: 0, // You'll need to implement this count
-        pendingReviews: 0, // You'll need to implement this count
-        totalRevenue: 0, // You'll need to implement this calculation
+        upcomingClasses: metrics?.upcoming_classes || 0,
         averageRating: metrics?.avg_rating || 0
       });
 
@@ -98,32 +88,43 @@ const TeacherOverview = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Dashboard Overview</h1>
-        <Button onClick={() => navigate("/teach/new")}>Create New Class</Button>
+        <div>
+          <h1 className="text-2xl font-bold">Welcome back{profile?.full_name ? `, ${profile.full_name}` : ''}!</h1>
+          <p className="text-muted-foreground mt-1">Here's an overview of your teaching activities</p>
+        </div>
+        <Button onClick={() => navigate("/dashboard/classes")} className="gap-2">
+          <Plus className="h-4 w-4" />
+          Create New Class
+        </Button>
       </div>
 
       {/* Onboarding Progress */}
       {(!onboardingSteps.profileComplete || !onboardingSteps.firstClassCreated) && (
-        <Alert>
-          <AlertCircle className="h-4 w-4" />
-          <AlertTitle>Welcome to your teaching journey!</AlertTitle>
-          <AlertDescription>
-            Complete these steps to get started:
-            <div className="mt-2 space-y-2">
+        <Alert variant="default" className="bg-blue-50 border-blue-200">
+          <AlertCircle className="h-4 w-4 text-blue-500" />
+          <AlertTitle className="text-blue-700">Complete Your Teaching Profile</AlertTitle>
+          <AlertDescription className="text-blue-600">
+            <div className="mt-2 space-y-3">
               {!onboardingSteps.profileComplete && (
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline">Step 1</Badge>
+                  <Badge variant="secondary" className="bg-blue-100">
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Step 1
+                  </Badge>
                   <span>Complete your profile</span>
-                  <Button variant="link" onClick={() => navigate("/teach/profile")}>
+                  <Button variant="link" onClick={() => navigate("/dashboard/profile")} className="text-blue-600">
                     Update Profile <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
               )}
               {!onboardingSteps.firstClassCreated && (
                 <div className="flex items-center gap-2">
-                  <Badge variant="outline">Step 2</Badge>
+                  <Badge variant="secondary" className="bg-blue-100">
+                    <CheckCircle2 className="h-3 w-3 mr-1" />
+                    Step 2
+                  </Badge>
                   <span>Create your first class</span>
-                  <Button variant="link" onClick={() => navigate("/teach/new")}>
+                  <Button variant="link" onClick={() => navigate("/dashboard/classes")} className="text-blue-600">
                     Create Class <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </div>
@@ -134,7 +135,7 @@ const TeacherOverview = () => {
       )}
 
       {/* Key Metrics */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Students</CardTitle>
@@ -142,7 +143,7 @@ const TeacherOverview = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.totalStudents}</div>
-            <p className="text-xs text-muted-foreground">Across all your classes</p>
+            <p className="text-xs text-muted-foreground">Enrolled in your classes</p>
           </CardContent>
         </Card>
 
@@ -153,7 +154,7 @@ const TeacherOverview = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.upcomingClasses}</div>
-            <p className="text-xs text-muted-foreground">Next 7 days</p>
+            <p className="text-xs text-muted-foreground">Scheduled this week</p>
           </CardContent>
         </Card>
 
@@ -164,48 +165,20 @@ const TeacherOverview = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats.averageRating.toFixed(1)}</div>
-            <p className="text-xs text-muted-foreground">Based on student feedback</p>
+            <p className="text-xs text-muted-foreground">From student reviews</p>
           </CardContent>
         </Card>
       </div>
 
-      {/* Notification Center and Quick Actions */}
-      <div className="grid gap-4 md:grid-cols-2">
-        <NotificationCenter />
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-            <CardDescription>Common tasks and shortcuts</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <Button
-              className="w-full justify-start"
-              variant="outline"
-              onClick={() => navigate("/teach/new")}
-            >
-              <BookOpen className="mr-2 h-4 w-4" />
-              Create New Class
-            </Button>
-            <Button
-              className="w-full justify-start"
-              variant="outline"
-              onClick={() => navigate("/teach/messages")}
-            >
-              <MessageSquare className="mr-2 h-4 w-4" />
-              Message Students
-            </Button>
-            <Button
-              className="w-full justify-start"
-              variant="outline"
-              onClick={() => navigate("/teach/analytics")}
-            >
-              <DollarSign className="mr-2 h-4 w-4" />
-              View Analytics
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Notifications */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Recent Activity</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <NotificationCenter />
+        </CardContent>
+      </Card>
     </div>
   );
 };
