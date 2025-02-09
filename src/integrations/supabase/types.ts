@@ -888,6 +888,7 @@ export type Database = {
           instructor_id: string | null
           last_shared_at: string | null
           learning_objectives: string | null
+          learning_outcomes: string[] | null
           location: string
           materials_included: string | null
           max_group_size: number | null
@@ -905,6 +906,7 @@ export type Database = {
           title: string
           updated_at: string
           waitlist_enabled: boolean | null
+          what_to_bring: string[] | null
         }
         Insert: {
           auto_promote_from_waitlist?: boolean | null
@@ -920,6 +922,7 @@ export type Database = {
           instructor_id?: string | null
           last_shared_at?: string | null
           learning_objectives?: string | null
+          learning_outcomes?: string[] | null
           location: string
           materials_included?: string | null
           max_group_size?: number | null
@@ -937,6 +940,7 @@ export type Database = {
           title: string
           updated_at?: string
           waitlist_enabled?: boolean | null
+          what_to_bring?: string[] | null
         }
         Update: {
           auto_promote_from_waitlist?: boolean | null
@@ -952,6 +956,7 @@ export type Database = {
           instructor_id?: string | null
           last_shared_at?: string | null
           learning_objectives?: string | null
+          learning_outcomes?: string[] | null
           location?: string
           materials_included?: string | null
           max_group_size?: number | null
@@ -969,6 +974,7 @@ export type Database = {
           title?: string
           updated_at?: string
           waitlist_enabled?: boolean | null
+          what_to_bring?: string[] | null
         }
         Relationships: []
       }

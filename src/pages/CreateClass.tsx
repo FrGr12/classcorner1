@@ -18,7 +18,16 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import { BookOpen, DollarSign, Users, Map, Image as ImageIcon, Calendar } from "lucide-react";
+import { 
+  BookOpen, 
+  DollarSign, 
+  Users, 
+  Map, 
+  Image as ImageIcon, 
+  Calendar,
+  GraduationCap,
+  Package
+} from "lucide-react";
 import ImageUpload from "@/components/teach/ImageUpload";
 import SessionManagement from "@/components/teach/course-form/SessionManagement";
 import FormWrapper from "@/components/teach/course-form/FormWrapper";
@@ -31,6 +40,8 @@ const formSchema = z.object({
   maxParticipants: z.coerce.number().min(1, "Must allow at least 1 participant"),
   location: z.string().min(1, "Location is required"),
   category: z.string().min(1, "Category is required"),
+  whatToBring: z.array(z.string()).default([]),
+  learningOutcomes: z.array(z.string()).default([]),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -39,6 +50,8 @@ const CreateClass = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<File[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [currentBringItem, setCurrentBringItem] = useState("");
+  const [currentOutcome, setCurrentOutcome] = useState("");
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -49,6 +62,8 @@ const CreateClass = () => {
       maxParticipants: 1,
       location: "",
       category: "",
+      whatToBring: [],
+      learningOutcomes: [],
     },
   });
 
@@ -61,6 +76,32 @@ const CreateClass = () => {
       console.error("Error creating class:", error);
       toast.error("Failed to create class. Please try again.");
     }
+  };
+
+  const addBringItem = () => {
+    if (currentBringItem.trim()) {
+      const currentItems = form.getValues("whatToBring");
+      form.setValue("whatToBring", [...currentItems, currentBringItem.trim()]);
+      setCurrentBringItem("");
+    }
+  };
+
+  const removeBringItem = (index: number) => {
+    const currentItems = form.getValues("whatToBring");
+    form.setValue("whatToBring", currentItems.filter((_, i) => i !== index));
+  };
+
+  const addLearningOutcome = () => {
+    if (currentOutcome.trim()) {
+      const currentOutcomes = form.getValues("learningOutcomes");
+      form.setValue("learningOutcomes", [...currentOutcomes, currentOutcome.trim()]);
+      setCurrentOutcome("");
+    }
+  };
+
+  const removeLearningOutcome = (index: number) => {
+    const currentOutcomes = form.getValues("learningOutcomes");
+    form.setValue("learningOutcomes", currentOutcomes.filter((_, i) => i !== index));
   };
 
   return (
@@ -209,6 +250,80 @@ const CreateClass = () => {
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <Package className="w-5 h-5 text-accent-purple" />
+                  <h3 className="text-lg font-medium">What to Bring</h3>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      value={currentBringItem}
+                      onChange={(e) => setCurrentBringItem(e.target.value)}
+                      placeholder="Add item..."
+                      onKeyPress={(e) => e.key === 'Enter' && addBringItem()}
+                    />
+                    <Button type="button" onClick={addBringItem}>Add</Button>
+                  </div>
+                  <ul className="space-y-2">
+                    {form.watch("whatToBring").map((item, index) => (
+                      <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
+                        <span className="flex-1">{item}</span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeBringItem(index)}
+                        >
+                          Remove
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
+              <CardContent className="p-6 space-y-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <GraduationCap className="w-5 h-5 text-accent-purple" />
+                  <h3 className="text-lg font-medium">Learning Outcomes</h3>
+                </div>
+
+                <div className="space-y-4">
+                  <div className="flex gap-2">
+                    <Input
+                      value={currentOutcome}
+                      onChange={(e) => setCurrentOutcome(e.target.value)}
+                      placeholder="Add learning outcome..."
+                      onKeyPress={(e) => e.key === 'Enter' && addLearningOutcome()}
+                    />
+                    <Button type="button" onClick={addLearningOutcome}>Add</Button>
+                  </div>
+                  <ul className="space-y-2">
+                    {form.watch("learningOutcomes").map((outcome, index) => (
+                      <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
+                        <span className="flex-1">{outcome}</span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => removeLearningOutcome(index)}
+                        >
+                          Remove
+                        </Button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </CardContent>
             </Card>
           </div>
