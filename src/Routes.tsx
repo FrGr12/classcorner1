@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
-import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
+import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
@@ -15,6 +15,7 @@ import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
+import UserDashboard from "@/components/user-dashboard/UserDashboard";
 import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
@@ -44,7 +45,7 @@ const router = createBrowserRouter([
     path: "/teacher-dashboard/*",
     element: (
       <Suspense fallback={<LoadingState />}>
-        <Dashboard />
+        <TeacherDashboard />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
@@ -87,7 +88,7 @@ const router = createBrowserRouter([
     path: "/dashboard/*",
     element: (
       <Suspense fallback={<LoadingState />}>
-        <Dashboard />
+        <UserDashboard />
       </Suspense>
     ),
     errorElement: <ErrorPage />,
