@@ -3,13 +3,7 @@ import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import BookingsTable from "./bookings/BookingsTable";
 import BookingsFilter from "./bookings/BookingsFilter";
 import RescheduleDialog from "./bookings/RescheduleDialog";
@@ -141,7 +135,6 @@ const TeacherBookings = () => {
         />
       )}
 
-      {/* Add Outlet for nested routes */}
       <Outlet />
     </div>
   );

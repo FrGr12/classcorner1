@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
@@ -37,54 +38,60 @@ const TeacherClasses = () => {
     }
   };
 
-  // Convert the mockClasses object into a flat array of all classes
   const allClasses = Object.values(mockClasses).flat();
 
   const filteredClasses = allClasses.filter((classItem) => {
     const matchesSearch =
       classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       classItem.city.toLowerCase().includes(searchTerm.toLowerCase());
-    // Remove the status filter since it's not part of the ClassItem type
     return matchesSearch;
   });
 
   return (
     <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold mb-2">Classes & Bookings</h1>
+        <p className="text-muted-foreground">
+          Manage your classes, bookings, and waitlists
+        </p>
+      </div>
+
       <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold tracking-tight">
-            Classes & Bookings
-          </h2>
-          <p className="text-sm text-muted-foreground">
-            Manage your classes, bookings, and waitlists
-          </p>
-        </div>
-        <Button onClick={() => navigate("/teach/classes/new")} className="gap-2">
+        <ClassStatsOverview stats={mockStats} />
+        <Button onClick={() => navigate("/dashboard/create-class")} className="gap-2">
           <Plus className="h-4 w-4" />
           Add New Class
         </Button>
       </div>
 
-      <ClassStatsOverview stats={mockStats} />
-
-      <ClassFilters
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        statusFilter={statusFilter}
-        setStatusFilter={setStatusFilter}
-        viewMode={viewMode}
-        setViewMode={setViewMode}
-      />
-
-      <div className="grid gap-6 md:grid-cols-1">
-        {filteredClasses.map((classItem) => (
-          <ClassCard
-            key={classItem.id}
-            classItem={classItem}
-            onAction={handleAction}
+      <Card>
+        <CardHeader>
+          <CardTitle>Class Management</CardTitle>
+          <CardDescription>
+            View and manage your classes and schedules
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ClassFilters
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
+            statusFilter={statusFilter}
+            setStatusFilter={setStatusFilter}
+            viewMode={viewMode}
+            setViewMode={setViewMode}
           />
-        ))}
-      </div>
+
+          <div className="grid gap-6 mt-6">
+            {filteredClasses.map((classItem) => (
+              <ClassCard
+                key={classItem.id}
+                classItem={classItem}
+                onAction={handleAction}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

@@ -62,14 +62,15 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="container max-w-4xl py-6 space-y-8">
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold mb-2">Create New Class</h1>
+        <p className="text-muted-foreground">
+          Share your expertise with the world
+        </p>
+      </div>
+
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight text-primary">Create New Class</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Share your expertise with the world
-          </p>
-        </div>
         <div className="flex gap-4">
           <Button
             variant="outline"

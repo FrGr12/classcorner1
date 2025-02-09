@@ -1,3 +1,4 @@
+
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { ReactNode } from "react";
 
@@ -9,7 +10,7 @@ interface FormWrapperProps {
 
 const FormWrapper = ({ title, description, children }: FormWrapperProps) => {
   return (
-    <Card>
+    <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardHeader>
         <CardTitle>{title}</CardTitle>
         <CardDescription>{description}</CardDescription>
