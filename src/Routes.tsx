@@ -4,7 +4,6 @@ import { Suspense } from "react";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
-import UserDashboard from "@/pages/UserDashboard";
 import Dashboard from "@/pages/Dashboard";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
@@ -20,11 +19,7 @@ import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
-import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
-import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
-import NotificationCenter from "@/components/notifications/NotificationCenter";
-import UserPreferences from "@/components/user-dashboard/UserPreferences";
 
 const router = createBrowserRouter([
   {
@@ -162,49 +157,6 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: "/user-dashboard/*",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <UserDashboard />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
-    children: [
-      { 
-        path: "", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserHome />
-          </Suspense>
-        ),
-      },
-      {
-        path: "notifications",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <NotificationCenter />
-          </Suspense>
-        ),
-      },
-      {
-        path: "waitlist",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserWaitlist />
-          </Suspense>
-        ),
-      },
-      {
-        path: "preferences",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserPreferences />
-          </Suspense>
-        ),
-      },
-    ],
-  },
-  {
     path: "*",
     element: <NotFound />,
     errorElement: <ErrorPage />,
@@ -212,4 +164,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
