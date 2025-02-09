@@ -19,6 +19,7 @@ import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
+import CreateClass from "@/pages/CreateClass";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 
 const router = createBrowserRouter([
@@ -61,6 +62,7 @@ const router = createBrowserRouter([
       { path: "bookings", element: <TeacherBookings /> },
       { path: "classes", element: <TeacherClasses /> },
       { path: "classes/:id/edit", element: <EditClass /> },
+      { path: "create-class", element: <CreateClass /> },
       { path: "analytics", element: <TeacherAnalytics /> },
       { path: "reviews", element: <TeacherReviews /> },
     ],

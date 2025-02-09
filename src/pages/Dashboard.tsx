@@ -10,6 +10,7 @@ import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
+import CreateClass from "@/pages/CreateClass";
 
 const Dashboard = () => {
   return (
@@ -25,6 +26,7 @@ const Dashboard = () => {
               <Route path="/crm" element={<TeacherCRM />} />
               <Route path="/bookings" element={<TeacherBookings />} />
               <Route path="/classes" element={<TeacherClasses />} />
+              <Route path="/create-class" element={<CreateClass />} />
               <Route path="/analytics" element={<TeacherAnalytics />} />
               <Route path="/reviews" element={<TeacherReviews />} />
             </Routes>
