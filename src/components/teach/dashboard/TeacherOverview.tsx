@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import WelcomeHeader from "./overview/WelcomeHeader";
 import TeacherStats from "./overview/TeacherStats";
 import NotificationsCard from "./overview/NotificationsCard";
@@ -76,54 +77,57 @@ const TeacherOverview = () => {
         </div>
       </div>
 
-      <div className="bg-white p-8 rounded-lg shadow-sm mt-8 w-full">
-        <h3 className="font-semibold mb-6 text-lg">Quick Actions</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <Button 
-            variant="secondary" 
-            size="lg"
-            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-            onClick={() => navigate("/dashboard/profile")}
-          >
-            Complete Your Profile
-          </Button>
-          <Button 
-            variant="secondary"
-            size="lg"
-            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-            onClick={() => navigate("/dashboard/classes")}
-          >
-            Manage Classes
-          </Button>
-          <Button 
-            variant="secondary"
-            size="lg"
-            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-            onClick={() => navigate("/dashboard/messages")}
-          >
-            Check Messages
-          </Button>
-          <Button 
-            variant="secondary"
-            size="lg"
-            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-            onClick={() => navigate("/dashboard/reviews")}
-          >
-            View Reviews
-          </Button>
-          <Button 
-            variant="secondary"
-            size="lg"
-            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-            onClick={() => navigate("/dashboard/analytics")}
-          >
-            View Analytics
-          </Button>
-        </div>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <Button 
+              variant="secondary" 
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/profile")}
+            >
+              Complete Your Profile
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/classes")}
+            >
+              Manage Classes
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/messages")}
+            >
+              Check Messages
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/reviews")}
+            >
+              View Reviews
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/analytics")}
+            >
+              View Analytics
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
 export default TeacherOverview;
-
