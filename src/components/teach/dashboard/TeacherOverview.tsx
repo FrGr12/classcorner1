@@ -6,7 +6,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { Plus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import WelcomeHeader from "./overview/WelcomeHeader";
-import OnboardingAlert from "./overview/OnboardingAlert";
 import TeacherStats from "./overview/TeacherStats";
 import NotificationsCard from "./overview/NotificationsCard";
 
@@ -18,10 +17,6 @@ const TeacherOverview = () => {
     totalStudents: 0,
     upcomingClasses: 0,
     averageRating: 0
-  });
-  const [onboardingSteps, setOnboardingSteps] = useState({
-    profileComplete: false,
-    firstClassCreated: false
   });
 
   useEffect(() => {
@@ -42,11 +37,6 @@ const TeacherOverview = () => {
 
       setProfile(profileResponse.data);
       
-      setOnboardingSteps({
-        profileComplete: !!(profileResponse.data?.bio && profileResponse.data?.avatar_url),
-        firstClassCreated: coursesResponse.data && coursesResponse.data.length > 0
-      });
-
       setStats({
         totalStudents: metricsResponse.data?.total_students || 0,
         upcomingClasses: metricsResponse.data?.attended_students || 0,
@@ -77,10 +67,6 @@ const TeacherOverview = () => {
           </Button>
         </div>
       </div>
-
-      {(!onboardingSteps.profileComplete || !onboardingSteps.firstClassCreated) && (
-        <OnboardingAlert steps={onboardingSteps} />
-      )}
 
       <div className="grid gap-6 md:grid-cols-[2fr,1fr]">
         <div className="space-y-6">
