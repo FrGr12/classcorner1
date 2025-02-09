@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +35,7 @@ const RescheduleDialog = ({
         .from('bookings')
         .update({
           original_session_id: booking.session_id,
-          session_id: booking.session_id,
+          session_id: booking.session_id, // This will be updated once we have the new session
           rescheduled_at: new Date().toISOString(),
           status: 'rescheduled'
         })

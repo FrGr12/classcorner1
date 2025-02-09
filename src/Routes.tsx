@@ -1,6 +1,5 @@
 
 import { createBrowserRouter } from "react-router-dom";
-import { Suspense } from "react";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
@@ -15,201 +14,72 @@ import Onboarding from "@/pages/Onboarding";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
+import TeacherBookings from "@/components/teach/dashboard/TeacherBookings";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
-import UserHome from "@/components/user-dashboard/UserHome";
-import LoadingState from "@/components/user-dashboard/LoadingState";
-import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
-import NotificationCenter from "@/components/notifications/NotificationCenter";
-import UserPreferences from "@/components/user-dashboard/UserPreferences";
+
+// Import user dashboard components
+import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Index />
-      </Suspense>
-    ),
+    element: <Index />,
     errorElement: <ErrorPage />,
   },
   {
     path: "/auth",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Auth />
-      </Suspense>
-    ),
+    element: <Auth />,
   },
   {
     path: "/email-verification",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <EmailVerification />
-      </Suspense>
-    ),
+    element: <EmailVerification />,
   },
   {
     path: "/password-reset",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <PasswordReset />
-      </Suspense>
-    ),
+    element: <PasswordReset />,
   },
   {
     path: "/onboarding",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Onboarding />
-      </Suspense>
-    ),
+    element: <Onboarding />,
   },
   {
     path: "/browse",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Browse />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
+    element: <Browse />,
   },
   {
     path: "/class/:category/:id",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <ClassDetails />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
+    element: <ClassDetails />,
   },
   {
     path: "/dashboard/*",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <Dashboard />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
+    element: <Dashboard />,
     children: [
-      { 
-        path: "", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherOverview />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "create-class", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <CourseForm />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "profile", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherProfile />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "crm", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherCRM />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "classes", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherClasses />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "classes/:id/edit", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <EditClass />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "analytics", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherAnalytics />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "reviews", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <TeacherReviews />
-          </Suspense>
-        ),
-      },
+      { path: "", element: <TeacherOverview /> },
+      { path: "create-class", element: <CourseForm /> },
+      { path: "profile", element: <TeacherProfile /> },
+      { path: "crm", element: <TeacherCRM /> },
+      { path: "bookings", element: <TeacherBookings /> },
+      { path: "classes", element: <TeacherClasses /> },
+      { path: "classes/:id/edit", element: <EditClass /> },
+      { path: "analytics", element: <TeacherAnalytics /> },
+      { path: "reviews", element: <TeacherReviews /> },
     ],
   },
   {
     path: "/user-dashboard/*",
-    element: (
-      <Suspense fallback={<LoadingState />}>
-        <UserDashboard />
-      </Suspense>
-    ),
-    errorElement: <ErrorPage />,
+    element: <UserDashboard />,
     children: [
-      { 
-        path: "", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserHome />
-          </Suspense>
-        ),
-      },
-      {
-        path: "notifications",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <NotificationCenter />
-          </Suspense>
-        ),
-      },
-      {
-        path: "waitlist",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserWaitlist />
-          </Suspense>
-        ),
-      },
-      {
-        path: "preferences",
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <UserPreferences />
-          </Suspense>
-        ),
-      },
+      { path: "", element: <UserDashboardOverview /> },
     ],
   },
   {
     path: "*",
     element: <NotFound />,
-    errorElement: <ErrorPage />,
   },
 ]);
 
 export default router;
-
