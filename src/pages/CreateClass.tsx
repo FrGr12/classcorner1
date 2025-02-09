@@ -65,8 +65,8 @@ const CreateClass = () => {
     <div className="container max-w-4xl py-6 space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-semibold tracking-tight">Create New Class</h1>
-          <p className="text-muted-foreground mt-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-primary">Create New Class</h1>
+          <p className="text-sm text-muted-foreground mt-1">
             Share your expertise with the world
           </p>
         </div>
@@ -74,14 +74,14 @@ const CreateClass = () => {
           <Button
             variant="outline"
             onClick={() => navigate(-1)}
-            className="gap-2"
+            className="gap-2 text-primary hover:bg-accent-purple/10"
           >
             Cancel
           </Button>
           <Button
             type="submit"
             form="create-class-form"
-            className="gap-2 bg-accent-purple hover:bg-accent-purple/90"
+            className="gap-2 bg-accent-purple hover:bg-accent-purple/90 text-white"
           >
             <BookOpen className="w-4 h-4" />
             Create Class
@@ -89,10 +89,10 @@ const CreateClass = () => {
         </div>
       </div>
 
-      <Separator className="my-6" />
+      <Separator className="my-6 bg-neutral-200" />
 
       <Form {...form}>
-        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <BasicInfoSection form={form} />
 
           <div className="grid gap-6 md:grid-cols-2">

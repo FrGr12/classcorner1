@@ -31,7 +31,7 @@ const BringItemsSection = ({ form }: BringItemsSectionProps) => {
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <Package className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">What to Bring</h3>
+          <h3 className="text-lg font-medium text-primary">What to Bring</h3>
         </div>
 
         <div className="space-y-4">
@@ -40,19 +40,27 @@ const BringItemsSection = ({ form }: BringItemsSectionProps) => {
               value={currentBringItem}
               onChange={(e) => setCurrentBringItem(e.target.value)}
               placeholder="Add item..."
+              className="bg-white border-neutral-200"
               onKeyPress={(e) => e.key === 'Enter' && addBringItem()}
             />
-            <Button type="button" onClick={addBringItem}>Add</Button>
+            <Button 
+              type="button" 
+              onClick={addBringItem}
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            >
+              Add
+            </Button>
           </div>
           <ul className="space-y-2">
             {form.watch("whatToBring").map((item: string, index: number) => (
-              <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
-                <span className="flex-1">{item}</span>
+              <li key={index} className="flex items-center gap-2 bg-white p-2 rounded-md border border-neutral-200">
+                <span className="flex-1 text-primary">{item}</span>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   onClick={() => removeBringItem(index)}
+                  className="text-neutral-500 hover:text-neutral-700"
                 >
                   Remove
                 </Button>

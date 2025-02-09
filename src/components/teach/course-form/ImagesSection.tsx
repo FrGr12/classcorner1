@@ -14,7 +14,7 @@ const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <ImageIcon className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">Class Images</h3>
+          <h3 className="text-lg font-medium text-primary">Class Images</h3>
           <p className="text-sm text-muted-foreground ml-auto">
             Upload up to 5 images
           </p>

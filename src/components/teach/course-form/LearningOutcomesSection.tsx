@@ -31,7 +31,7 @@ const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <GraduationCap className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">Learning Outcomes</h3>
+          <h3 className="text-lg font-medium text-primary">Learning Outcomes</h3>
         </div>
 
         <div className="space-y-4">
@@ -40,19 +40,27 @@ const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
               value={currentOutcome}
               onChange={(e) => setCurrentOutcome(e.target.value)}
               placeholder="Add learning outcome..."
+              className="bg-white border-neutral-200"
               onKeyPress={(e) => e.key === 'Enter' && addLearningOutcome()}
             />
-            <Button type="button" onClick={addLearningOutcome}>Add</Button>
+            <Button 
+              type="button" 
+              onClick={addLearningOutcome}
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            >
+              Add
+            </Button>
           </div>
           <ul className="space-y-2">
             {form.watch("learningOutcomes").map((outcome: string, index: number) => (
-              <li key={index} className="flex items-center gap-2 bg-white/50 p-2 rounded-md">
-                <span className="flex-1">{outcome}</span>
+              <li key={index} className="flex items-center gap-2 bg-white p-2 rounded-md border border-neutral-200">
+                <span className="flex-1 text-primary">{outcome}</span>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
                   onClick={() => removeLearningOutcome(index)}
+                  className="text-neutral-500 hover:text-neutral-700"
                 >
                   Remove
                 </Button>

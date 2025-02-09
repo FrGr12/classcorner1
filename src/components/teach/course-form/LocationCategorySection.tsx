@@ -21,7 +21,7 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <Map className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">Location & Category</h3>
+          <h3 className="text-lg font-medium text-primary">Location & Category</h3>
         </div>
 
         <FormField
@@ -29,9 +29,13 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
           name="category"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Category</FormLabel>
+              <FormLabel className="font-medium text-primary">Category</FormLabel>
               <FormControl>
-                <Input placeholder="e.g., Cooking, Art, Music" {...field} />
+                <Input 
+                  placeholder="e.g., Cooking, Art, Music" 
+                  className="bg-white border-neutral-200"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -43,9 +47,13 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
           name="location"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Location</FormLabel>
+              <FormLabel className="font-medium text-primary">Location</FormLabel>
               <FormControl>
-                <Input placeholder="Enter class location" {...field} />
+                <Input 
+                  placeholder="Enter class location" 
+                  className="bg-white border-neutral-200"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

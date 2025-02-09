@@ -17,7 +17,7 @@ const ScheduleSection = ({ form, sessions, setSessions }: ScheduleSectionProps) 
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">Session Schedule</h3>
+          <h3 className="text-lg font-medium text-primary">Session Schedule</h3>
         </div>
         <SessionManagement
           form={form}

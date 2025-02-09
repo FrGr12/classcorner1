@@ -21,7 +21,7 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
       <CardContent className="p-6 space-y-6">
         <div className="flex items-center gap-2 mb-4">
           <DollarSign className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium">Pricing & Capacity</h3>
+          <h3 className="text-lg font-medium text-primary">Pricing & Capacity</h3>
         </div>
 
         <FormField
@@ -29,9 +29,15 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
           name="price"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Price per Person</FormLabel>
+              <FormLabel className="font-medium text-primary">Price per Person</FormLabel>
               <FormControl>
-                <Input type="number" min="0" step="0.01" {...field} />
+                <Input 
+                  type="number" 
+                  min="0" 
+                  step="0.01" 
+                  className="bg-white border-neutral-200"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -43,9 +49,14 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
           name="maxParticipants"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Maximum Participants</FormLabel>
+              <FormLabel className="font-medium text-primary">Maximum Participants</FormLabel>
               <FormControl>
-                <Input type="number" min="1" {...field} />
+                <Input 
+                  type="number" 
+                  min="1" 
+                  className="bg-white border-neutral-200"
+                  {...field} 
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

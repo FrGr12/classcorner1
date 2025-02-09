@@ -25,11 +25,11 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
             name="title"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Class Title</FormLabel>
+                <FormLabel className="text-base font-medium text-primary">Class Title</FormLabel>
                 <FormControl>
                   <Input 
                     placeholder="Enter an engaging title for your class" 
-                    className="h-11"
+                    className="h-11 bg-white border-neutral-200"
                     {...field} 
                   />
                 </FormControl>
@@ -43,11 +43,11 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-base">Description</FormLabel>
+                <FormLabel className="text-base font-medium text-primary">Description</FormLabel>
                 <FormControl>
                   <Textarea
                     placeholder="Describe what students will learn and experience"
-                    className="min-h-[120px] resize-none"
+                    className="min-h-[120px] resize-none bg-white border-neutral-200"
                     {...field}
                   />
                 </FormControl>
