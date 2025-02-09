@@ -3,7 +3,6 @@ import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import CourseForm from "@/components/teach/CourseForm";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
 import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
@@ -22,7 +21,6 @@ const Dashboard = () => {
           <main className="p-6">
             <Routes>
               <Route path="/" element={<TeacherOverview />} />
-              <Route path="/create-class" element={<CourseForm />} />
               <Route path="/profile" element={<TeacherProfile />} />
               <Route path="/crm" element={<TeacherCRM />} />
               <Route path="/bookings" element={<TeacherBookings />} />

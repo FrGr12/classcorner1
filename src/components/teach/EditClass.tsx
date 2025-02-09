@@ -1,6 +1,6 @@
+
 import { useParams } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import CourseForm from "./CourseForm";
 
 const EditClass = () => {
   const { id } = useParams();
@@ -15,7 +15,10 @@ const EditClass = () => {
       </div>
 
       <Card className="p-6">
-        <CourseForm courseId={id} mode="edit" />
+        <form className="space-y-8">
+          {/* Form implementation will be added later */}
+          <p className="text-muted-foreground">Form coming soon...</p>
+        </form>
       </Card>
     </div>
   );
