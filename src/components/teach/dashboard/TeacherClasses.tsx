@@ -50,19 +50,21 @@ const TeacherClasses = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold mb-2">Classes & Bookings</h1>
-        <p className="text-muted-foreground">
-          Manage your classes, bookings, and waitlists
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <ClassStatsOverview stats={mockStats} />
-        <Button onClick={() => navigate("/dashboard/create-class")} className="gap-2">
-          <Plus className="h-4 w-4" />
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold">Classes & Bookings</h1>
+          <p className="text-muted-foreground">
+            Manage your classes, bookings, and waitlists
+          </p>
+        </div>
+        <Button onClick={() => navigate("/dashboard/create-class")} className="whitespace-nowrap">
+          <Plus className="h-4 w-4 mr-2" />
           Add New Class
         </Button>
+      </div>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        <ClassStatsOverview stats={mockStats} />
       </div>
 
       <Card>
@@ -91,6 +93,12 @@ const TeacherClasses = () => {
               />
             ))}
           </div>
+
+          {filteredClasses.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-muted-foreground">No classes found</p>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

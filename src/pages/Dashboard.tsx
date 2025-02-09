@@ -16,11 +16,11 @@ import { Card } from "@/components/ui/card";
 const Dashboard = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gray-50">
+      <div className="min-h-screen flex flex-col md:flex-row w-full bg-gray-50">
         <DashboardSidebar />
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col min-h-screen">
           <DashboardHeader />
-          <main className="p-6">
+          <main className="flex-1 p-4 md:p-6 overflow-auto">
             <Routes>
               <Route path="/" element={<TeacherOverview />} />
               <Route path="/profile" element={<TeacherProfile />} />
@@ -30,7 +30,7 @@ const Dashboard = () => {
               <Route path="/analytics" element={<TeacherAnalytics />} />
               <Route path="/reviews" element={<TeacherReviews />} />
               <Route path="/notifications" element={
-                <Card className="p-6">
+                <Card className="p-4 md:p-6">
                   <NotificationsCenter limit={20} />
                 </Card>
               } />

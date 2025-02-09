@@ -435,6 +435,55 @@ export type Database = {
         }
         Relationships: []
       }
+      course_activity_log: {
+        Row: {
+          activity_type: string
+          course_id: number | null
+          created_at: string | null
+          id: number
+          metadata: Json | null
+          student_id: string | null
+        }
+        Insert: {
+          activity_type: string
+          course_id?: number | null
+          created_at?: string | null
+          id?: number
+          metadata?: Json | null
+          student_id?: string | null
+        }
+        Update: {
+          activity_type?: string
+          course_id?: number | null
+          created_at?: string | null
+          id?: number
+          metadata?: Json | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_activity_log_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_activity_log_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_activity_log_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       course_boosts: {
         Row: {
           boost_type: string | null
@@ -1261,6 +1310,67 @@ export type Database = {
           user_type?: Database["public"]["Enums"]["user_type"]
         }
         Relationships: []
+      }
+      teacher_course_stats: {
+        Row: {
+          active_students: number | null
+          avg_rating: number | null
+          completed_students: number | null
+          course_id: number | null
+          created_at: string | null
+          id: number
+          revenue: number | null
+          teacher_id: string | null
+          total_students: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          active_students?: number | null
+          avg_rating?: number | null
+          completed_students?: number | null
+          course_id?: number | null
+          created_at?: string | null
+          id?: number
+          revenue?: number | null
+          teacher_id?: string | null
+          total_students?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          active_students?: number | null
+          avg_rating?: number | null
+          completed_students?: number | null
+          course_id?: number | null
+          created_at?: string | null
+          id?: number
+          revenue?: number | null
+          teacher_id?: string | null
+          total_students?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "teacher_course_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "teacher_course_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "teacher_course_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
       }
       teacher_dashboard_activity: {
         Row: {

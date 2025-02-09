@@ -73,7 +73,7 @@ const DashboardSidebar = () => {
       />
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-30 w-64 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto",
+          "fixed inset-y-0 left-0 z-30 w-72 transform bg-white border-r border-gray-200 transition-transform duration-200 ease-in-out lg:translate-x-0 lg:static lg:inset-auto",
           isOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
@@ -88,7 +88,7 @@ const DashboardSidebar = () => {
             <Menu className="h-6 w-6" />
           </Button>
         </div>
-        <nav className="space-y-1 p-4">
+        <nav className="space-y-1 p-4 overflow-y-auto max-h-[calc(100vh-4rem)]">
           {links.map((link) => (
             <Link
               key={link.href}
