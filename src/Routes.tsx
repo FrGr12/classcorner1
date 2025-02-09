@@ -19,7 +19,6 @@ import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
-import CourseForm from "@/components/teach/CourseForm";
 import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
@@ -100,14 +99,6 @@ const router = createBrowserRouter([
         element: (
           <Suspense fallback={<LoadingState />}>
             <TeacherOverview />
-          </Suspense>
-        ),
-      },
-      { 
-        path: "create-class", 
-        element: (
-          <Suspense fallback={<LoadingState />}>
-            <CourseForm />
           </Suspense>
         ),
       },
@@ -212,4 +203,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-
