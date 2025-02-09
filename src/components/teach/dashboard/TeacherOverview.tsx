@@ -70,7 +70,7 @@ const TeacherOverview = () => {
 
       <NotificationsCard />
 
-      <div className="grid gap-6 md:grid-cols-[2fr,1fr]">
+      <div className="grid gap-6 md:grid-cols-[1fr]">
         <div className="space-y-6">
           <TeacherStats stats={stats} />
         </div>
@@ -78,11 +78,11 @@ const TeacherOverview = () => {
 
       <div className="bg-white p-8 rounded-lg shadow-sm mt-8 w-full">
         <h3 className="font-semibold mb-6 text-lg">Quick Actions</h3>
-        <div className="flex flex-wrap gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <Button 
             variant="secondary" 
             size="lg"
-            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
             onClick={() => navigate("/dashboard/profile")}
           >
             Complete Your Profile
@@ -90,7 +90,7 @@ const TeacherOverview = () => {
           <Button 
             variant="secondary"
             size="lg"
-            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
             onClick={() => navigate("/dashboard/classes")}
           >
             Manage Classes
@@ -98,7 +98,7 @@ const TeacherOverview = () => {
           <Button 
             variant="secondary"
             size="lg"
-            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
             onClick={() => navigate("/dashboard/messages")}
           >
             Check Messages
@@ -106,7 +106,7 @@ const TeacherOverview = () => {
           <Button 
             variant="secondary"
             size="lg"
-            className="flex-1 min-w-[200px] bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
             onClick={() => navigate("/dashboard/reviews")}
           >
             View Reviews
