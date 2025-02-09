@@ -8,20 +8,28 @@ export const useNotifications = () => {
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [activeTab, setActiveTab] = useState("all");
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
   const fetchNotifications = async () => {
     try {
+      setIsLoading(true);
+      setError(null);
+      
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
 
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('notification_logs')
         .select('*')
         .eq('user_id', user.id)
         .order('sent_at', { ascending: false })
         .limit(50);
 
-      if (error) throw error;
+      if (fetchError) throw fetchError;
       
       const formattedNotifications: Notification[] = (data as DatabaseNotification[]).map(notification => ({
         id: notification.id.toString(),
@@ -38,12 +46,15 @@ export const useNotifications = () => {
       }));
       
       setNotifications(formattedNotifications);
-    } catch (error: any) {
+    } catch (err: any) {
+      setError(err);
       toast({
         variant: "destructive",
         title: "Error",
         description: "Failed to load notifications"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,7 +95,7 @@ export const useNotifications = () => {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const { error } = await supabase
+      const { error: updateError } = await supabase
         .from('notification_logs')
         .update({
           read_at: new Date().toISOString(),
@@ -92,7 +103,7 @@ export const useNotifications = () => {
         })
         .eq('id', parseInt(notificationId));
 
-      if (error) throw error;
+      if (updateError) throw updateError;
 
       setNotifications(prev =>
         prev.map(n =>
@@ -101,7 +112,7 @@ export const useNotifications = () => {
             : n
         )
       );
-    } catch (error: any) {
+    } catch (err: any) {
       toast({
         variant: "destructive",
         title: "Error",
@@ -112,13 +123,18 @@ export const useNotifications = () => {
 
   useEffect(() => {
     fetchNotifications();
-    subscribeToNotifications();
+    const unsubscribe = subscribeToNotifications();
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
   return {
     notifications,
     activeTab,
     setActiveTab,
-    markAsRead
+    markAsRead,
+    isLoading,
+    error
   };
 };
