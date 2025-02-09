@@ -14,36 +14,36 @@ interface TeacherStatsProps {
 const TeacherStats: FC<TeacherStatsProps> = ({ stats }) => {
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <Card>
+      <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-none">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Total Students</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
+          <Users className="h-4 w-4 text-purple-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.totalStudents}</div>
-          <p className="text-xs text-muted-foreground">Enrolled in your classes</p>
+          <div className="text-2xl font-bold text-purple-900">{stats.totalStudents}</div>
+          <p className="text-xs text-purple-700">Enrolled in your classes</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-none">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Active Classes</CardTitle>
-          <Calendar className="h-4 w-4 text-muted-foreground" />
+          <Calendar className="h-4 w-4 text-blue-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.upcomingClasses}</div>
-          <p className="text-xs text-muted-foreground">Currently running</p>
+          <div className="text-2xl font-bold text-blue-900">{stats.upcomingClasses}</div>
+          <p className="text-xs text-blue-700">Currently running</p>
         </CardContent>
       </Card>
 
-      <Card>
+      <Card className="bg-gradient-to-br from-green-50 to-green-100 border-none">
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Average Rating</CardTitle>
-          <Star className="h-4 w-4 text-muted-foreground" />
+          <Star className="h-4 w-4 text-green-600" />
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{stats.averageRating.toFixed(1)}</div>
-          <p className="text-xs text-muted-foreground">From student reviews</p>
+          <div className="text-2xl font-bold text-green-900">{stats.averageRating.toFixed(1)}</div>
+          <p className="text-xs text-green-700">From student reviews</p>
         </CardContent>
       </Card>
     </div>

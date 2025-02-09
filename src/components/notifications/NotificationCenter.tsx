@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -44,7 +43,11 @@ interface Notification {
   error?: string;
 }
 
-const NotificationCenter = () => {
+interface NotificationCenterProps {
+  limit?: number;
+}
+
+const NotificationCenter = ({ limit }: NotificationCenterProps = {}) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [notifications, setNotifications] = useState<Notification[]>([]);
@@ -95,12 +98,19 @@ const NotificationCenter = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      let query = supabase
         .from('notification_logs')
         .select('*')
         .eq('user_id', user.id)
-        .order('sent_at', { ascending: false })
-        .limit(50);
+        .order('sent_at', { ascending: false });
+
+      if (limit) {
+        query = query.limit(limit);
+      } else {
+        query = query.limit(50);
+      }
+
+      const { data, error } = await query;
 
       if (error) throw error;
       
@@ -174,6 +184,39 @@ const NotificationCenter = () => {
   const filteredNotifications = notifications.filter(
     n => activeTab === "all" || n.category === activeTab
   );
+
+  if (limit) {
+    return (
+      <div className="space-y-4">
+        {notifications.length === 0 ? (
+          <div className="text-center py-4 text-muted-foreground">
+            No notifications
+          </div>
+        ) : (
+          notifications.slice(0, limit).map((notification) => (
+            <div
+              key={notification.id}
+              className={`flex items-start justify-between p-4 rounded-lg border ${
+                !notification.read_at ? 'bg-muted/50' : ''
+              }`}
+            >
+              <div className="flex items-start gap-3">
+                <div className="mt-1 text-muted-foreground">
+                  {getCategoryIcon(notification.category)}
+                </div>
+                <div>
+                  <p className="text-sm">{notification.content}</p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    {new Date(notification.created_at).toLocaleDateString()}
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    );
+  }
 
   return (
     <Card>
