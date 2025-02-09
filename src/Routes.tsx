@@ -2,23 +2,18 @@
 import { createBrowserRouter } from "react-router-dom";
 import { Suspense } from "react";
 import Index from "@/pages/Index";
-import Browse from "@/pages/Browse";
 import ClassDetails from "@/pages/ClassDetails";
 import NotFound from "@/pages/NotFound";
 import ErrorPage from "@/pages/ErrorPage";
 import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherProfile from "@/components/teach/dashboard/TeacherProfile";
-import TeacherCRM from "@/components/teach/dashboard/TeacherCRM";
-import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
-import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import EditClass from "@/components/teach/EditClass";
 import CourseForm from "@/components/teach/CourseForm";
 import UserDashboard from "@/components/user-dashboard/UserDashboard";
 import UserHome from "@/components/user-dashboard/UserHome";
 import LoadingState from "@/components/user-dashboard/LoadingState";
-import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import UserPreferences from "@/components/user-dashboard/UserPreferences";
 
@@ -33,7 +28,7 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
-    path: "/class/:category/:id",
+    path: "/class/:id",
     element: (
       <Suspense fallback={<LoadingState />}>
         <ClassDetails />
@@ -63,25 +58,13 @@ const router = createBrowserRouter([
         element: <TeacherProfile />
       },
       { 
-        path: "crm", 
-        element: <TeacherCRM />
-      },
-      { 
         path: "classes", 
         element: <TeacherClasses />
       },
       { 
         path: "classes/:id/edit", 
         element: <EditClass />
-      },
-      { 
-        path: "analytics", 
-        element: <TeacherAnalytics />
-      },
-      { 
-        path: "reviews", 
-        element: <TeacherReviews />
-      },
+      }
     ],
   },
   {
@@ -100,10 +83,6 @@ const router = createBrowserRouter([
       {
         path: "notifications",
         element: <NotificationCenter />,
-      },
-      {
-        path: "waitlist",
-        element: <UserWaitlist />,
       },
       {
         path: "preferences",
