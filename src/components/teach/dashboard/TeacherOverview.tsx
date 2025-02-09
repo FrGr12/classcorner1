@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ const TeacherOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch profile and metrics in parallel
       const [profileResponse, coursesResponse, metricsResponse] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', user.id).single(),
         supabase.from('courses').select('id').eq('instructor_id', user.id),
@@ -76,6 +74,56 @@ const TeacherOverview = () => {
           <TeacherStats stats={stats} />
         </div>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            <Button 
+              variant="secondary" 
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/profile")}
+            >
+              Complete Your Profile
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/classes")}
+            >
+              Manage Classes
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/messages")}
+            >
+              Check Messages
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/reviews")}
+            >
+              View Reviews
+            </Button>
+            <Button 
+              variant="secondary"
+              size="lg"
+              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/analytics")}
+            >
+              View Analytics
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
