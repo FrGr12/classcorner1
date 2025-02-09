@@ -15,7 +15,7 @@ const NotificationsCard: FC = () => {
         <div>
           <CardTitle className="flex items-center gap-2">
             <BellRing className="h-5 w-5 text-purple-600" />
-            Recent Activity
+            Quick Actions
           </CardTitle>
         </div>
         <Button 
@@ -34,3 +34,4 @@ const NotificationsCard: FC = () => {
 };
 
 export default NotificationsCard;
+
