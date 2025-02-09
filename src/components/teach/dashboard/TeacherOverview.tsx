@@ -29,9 +29,8 @@ const TeacherOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const [profileResponse, coursesResponse, metricsResponse] = await Promise.all([
+      const [profileResponse, metricsResponse] = await Promise.all([
         supabase.from('profiles').select('*').eq('id', user.id).single(),
-        supabase.from('courses').select('id').eq('instructor_id', user.id),
         supabase.from('teacher_engagement_metrics').select('*').eq('instructor_id', user.id).single()
       ]);
 
@@ -61,40 +60,35 @@ const TeacherOverview = () => {
             <Bell className="h-4 w-4" />
             Notifications
           </Button>
-          <Button onClick={() => navigate("/dashboard/classes")} className="gap-2">
+          <Button onClick={() => navigate("/dashboard/create-class")} className="gap-2">
             <Plus className="h-4 w-4" />
             Create New Class
           </Button>
         </div>
       </div>
 
-      <NotificationsCard />
-      <NotificationsCard />
+      <TeacherStats stats={stats} />
 
-      <div className="grid gap-6 md:grid-cols-[1fr]">
-        <div className="space-y-6">
-          <TeacherStats stats={stats} />
-        </div>
-      </div>
+      <NotificationsCard />
 
       <Card>
         <CardHeader>
           <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <Button 
               variant="secondary" 
               size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               onClick={() => navigate("/dashboard/profile")}
             >
-              Complete Your Profile
+              Complete Profile
             </Button>
             <Button 
               variant="secondary"
               size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               onClick={() => navigate("/dashboard/classes")}
             >
               Manage Classes
@@ -102,23 +96,15 @@ const TeacherOverview = () => {
             <Button 
               variant="secondary"
               size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/messages")}
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+              onClick={() => navigate("/dashboard/bookings")}
             >
-              Check Messages
+              View Bookings
             </Button>
             <Button 
               variant="secondary"
               size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/reviews")}
-            >
-              View Reviews
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
               onClick={() => navigate("/dashboard/analytics")}
             >
               View Analytics
@@ -131,4 +117,3 @@ const TeacherOverview = () => {
 };
 
 export default TeacherOverview;
-

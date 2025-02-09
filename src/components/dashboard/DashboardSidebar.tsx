@@ -1,15 +1,15 @@
+
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
   UserCircle,
-  MessageSquare,
-  ClipboardList,
+  CalendarDays,
   BookOpen,
   BarChart,
   Star,
-  Tag,
+  Bell,
   Menu,
   PlusCircle,
 } from "lucide-react";
@@ -21,7 +21,7 @@ const DashboardSidebar = () => {
 
   const links = [
     {
-      title: "Dashboard Overview",
+      title: "Overview",
       href: "/dashboard",
       icon: LayoutDashboard,
     },
@@ -31,39 +31,34 @@ const DashboardSidebar = () => {
       icon: PlusCircle,
     },
     {
-      title: "Profile Management",
+      title: "Profile",
       href: "/dashboard/profile",
       icon: UserCircle,
     },
     {
-      title: "CRM & Messaging",
-      href: "/dashboard/crm",
-      icon: MessageSquare,
-    },
-    {
-      title: "Booking & Waitlist",
+      title: "Bookings",
       href: "/dashboard/bookings",
-      icon: ClipboardList,
+      icon: CalendarDays,
     },
     {
-      title: "Class & Schedule",
+      title: "Classes",
       href: "/dashboard/classes",
       icon: BookOpen,
     },
     {
-      title: "Analytics & Insights",
+      title: "Analytics",
       href: "/dashboard/analytics",
       icon: BarChart,
     },
     {
-      title: "Reviews & Testimonials",
+      title: "Reviews",
       href: "/dashboard/reviews",
       icon: Star,
     },
     {
-      title: "Promotional Tools",
-      href: "/dashboard/promotions",
-      icon: Tag,
+      title: "Notifications",
+      href: "/dashboard/notifications",
+      icon: Bell,
     },
   ];
 
@@ -83,7 +78,7 @@ const DashboardSidebar = () => {
         )}
       >
         <div className="flex h-16 items-center justify-between px-4 border-b">
-          <h2 className="text-xl font-semibold">Teacher Dashboard</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Dashboard</h2>
           <Button
             variant="ghost"
             size="icon"
@@ -101,11 +96,16 @@ const DashboardSidebar = () => {
               className={cn(
                 "flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors",
                 location.pathname === link.href
-                  ? "bg-primary text-primary-foreground"
+                  ? "bg-purple-50 text-purple-900"
                   : "text-gray-700 hover:bg-gray-100"
               )}
             >
-              <link.icon className="h-5 w-5" />
+              <link.icon className={cn(
+                "h-5 w-5",
+                location.pathname === link.href
+                  ? "text-purple-600"
+                  : "text-gray-500"
+              )} />
               <span>{link.title}</span>
             </Link>
           ))}
