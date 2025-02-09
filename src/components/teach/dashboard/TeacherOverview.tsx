@@ -68,10 +68,11 @@ const TeacherOverview = () => {
         </div>
       </div>
 
+      <NotificationsCard />
+
       <div className="grid gap-6 md:grid-cols-[2fr,1fr]">
         <div className="space-y-6">
           <TeacherStats stats={stats} />
-          <NotificationsCard />
         </div>
         <div className="space-y-6">
           <div className="bg-white p-6 rounded-lg shadow-sm">
@@ -98,3 +99,4 @@ const TeacherOverview = () => {
 };
 
 export default TeacherOverview;
+
