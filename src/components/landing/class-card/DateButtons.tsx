@@ -79,17 +79,19 @@ const DateButtons = ({
           </div>
         ))}
         {hasMoreDates && (
-          <Button
-            variant="ghost"
-            className="w-full flex items-center justify-center gap-2"
-            onClick={(e) => {
-              e.stopPropagation();
-              classId && category && navigate(`/class/${category}/${classId}`);
-            }}
-          >
-            <Calendar className="w-4 h-4" />
-            View more dates
-          </Button>
+          <div className="flex items-center">
+            <Button
+              variant="ghost"
+              className="w-full flex items-center justify-center gap-2 text-base"
+              onClick={(e) => {
+                e.stopPropagation();
+                classId && category && navigate(`/class/${category}/${classId}`);
+              }}
+            >
+              <Calendar className="w-5 h-5" />
+              View more dates
+            </Button>
+          </div>
         )}
       </div>
     );
@@ -129,3 +131,4 @@ const DateButtons = ({
 };
 
 export default DateButtons;
+
