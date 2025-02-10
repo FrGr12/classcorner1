@@ -14,13 +14,26 @@ const Hero = () => {
           Discover and Book Amazing Classes
         </motion.h1>
         <motion.p
-          className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto px-4 leading-relaxed"
+          className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto px-4 leading-relaxed mb-8"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
           Find the perfect class to learn something new, meet amazing people, and unlock your creativity.
         </motion.p>
+        <motion.div
+          className="flex flex-wrap gap-4 justify-center"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <button className="button-primary">
+            Start Learning
+          </button>
+          <button className="px-6 py-3 text-neutral-600 hover:text-primary transition-colors">
+            Browse Classes
+          </button>
+        </motion.div>
       </div>
     </header>
   );

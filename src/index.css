@@ -38,7 +38,7 @@
   }
 
   .button-primary {
-    @apply px-6 py-3 bg-accent-purple text-accent-rose rounded-lg 
+    @apply px-6 py-3 bg-accent-purple text-white rounded-lg 
            hover:bg-accent-lavender transition-all duration-200
            font-medium tracking-wide;
   }
