@@ -1,3 +1,4 @@
+
 import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 
 const testimonials = [
@@ -24,7 +25,7 @@ const testimonials = [
 const TestimonialSection = () => {
   return (
     <section className="glass-panel rounded-xl p-8">
-      <h2 className="text-2xl font-bold mb-6">What Students Say</h2>
+      <h2 className="text-2xl font-bold mb-6 text-left">What Students Say</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {testimonials.map((testimonial, index) => (
           <TestimonialCard key={index} {...testimonial} />
