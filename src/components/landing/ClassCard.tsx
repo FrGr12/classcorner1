@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
 import ImageCarousel from "./class-card/ImageCarousel";
@@ -78,7 +79,7 @@ const ClassCard = ({
 
   return (
     <Card 
-      className="overflow-hidden group cursor-pointer hover:shadow-md transition-all duration-200"
+      className="overflow-hidden group cursor-pointer hover:shadow-md transition-all duration-200 border-0 bg-white"
       onClick={handleCardClick}
     >
       <div className="relative">
