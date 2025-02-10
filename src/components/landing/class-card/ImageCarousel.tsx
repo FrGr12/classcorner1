@@ -1,9 +1,11 @@
-import { Image } from "lucide-react";
+
+import { Image, ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
@@ -71,10 +73,15 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 
         {displayImages.length > 1 && (
           <>
+            <CarouselPrevious 
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-200 border-none z-20" 
+            />
             <CarouselNext 
               className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
-                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
-                         transition-opacity duration-200 border-none z-20" 
+                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-200 border-none z-20" 
             />
             <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
               {displayImages.map((_, index) => (
