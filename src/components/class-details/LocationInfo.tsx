@@ -1,3 +1,4 @@
+
 import { MapPin } from "lucide-react";
 import { ClassItem } from "@/types/class";
 
@@ -8,11 +9,11 @@ interface LocationInfoProps {
 const LocationInfo = ({ classItem }: LocationInfoProps) => {
   return (
     <section className="glass-panel rounded-xl p-8">
-      <h2 className="text-2xl font-bold mb-6">Location</h2>
+      <h2 className="text-2xl font-bold mb-6 text-left">Location</h2>
       <div className="space-y-4">
         <div className="flex items-start gap-4 text-neutral-600">
           <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
-          <div>
+          <div className="text-left">
             <p className="font-medium">{classItem.city} Studio</p>
             <p>123 Creative Street</p>
             <p>{classItem.city}, Sweden</p>
