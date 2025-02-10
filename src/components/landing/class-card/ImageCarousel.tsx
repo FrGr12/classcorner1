@@ -63,7 +63,7 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
       >
         <CarouselContent className="-ml-2 md:-ml-4 flex justify-center">
           {displayImages.map((image, index) => (
-            <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 flex justify-center">
+            <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3 flex justify-center">
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 {image ? (
                   <img
