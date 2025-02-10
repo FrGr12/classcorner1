@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 interface ImageCarouselProps {
   images: string[];
   title: string;
+  variant?: 'large' | 'small';
 }
 
 const PlaceholderImage = () => (
@@ -21,7 +22,7 @@ const PlaceholderImage = () => (
   </div>
 );
 
-const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
+const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps) => {
   const [api, setApi] = useState<any>();
   const [current, setCurrent] = useState(0);
 
@@ -50,6 +51,10 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
     ? images 
     : Array(6).fill(null);
 
+  const carouselItemClass = variant === 'large' 
+    ? "pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
+    : "pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4";
+
   return (
     <div className="relative group h-full" onClick={handleClick}>
       <Carousel 
@@ -64,7 +69,7 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
       >
         <CarouselContent className="-ml-2 md:-ml-4">
           {displayImages.map((image, index) => (
-            <CarouselItem key={index} className="pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3">
+            <CarouselItem key={index} className={carouselItemClass}>
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 {image ? (
                   <img
@@ -100,4 +105,3 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 };
 
 export default ImageCarousel;
-

@@ -51,7 +51,9 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <PhotoGallery images={classItem.images} title={classItem.title} showTitle={false} />
+      <div className="w-full">
+        <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
+      </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg mt-[80px]">
@@ -72,7 +74,9 @@ const ClassDetails = () => {
           </div>
           <LocationInfo classItem={classItem} />
           <InstructorInfo classItem={classItem} />
-          <PhotoGallery images={classItem.images} title={classItem.title} />
+          <div className="w-full">
+            <ImageCarousel images={classItem.images} title={classItem.title} variant="small" />
+          </div>
           <TestimonialSection />
           <PolicyInfo />
         </div>
@@ -84,4 +88,3 @@ const ClassDetails = () => {
 };
 
 export default ClassDetails;
-
