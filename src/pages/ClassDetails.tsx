@@ -1,4 +1,3 @@
-
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
@@ -51,9 +50,18 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <PhotoGallery images={classItem.images} title={classItem.title} />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+      <div className="relative">
+        <div className="h-[60vh] relative">
+          <ImageCarousel 
+            images={classItem.images} 
+            title={classItem.title}
+          />
+          <SaveButton />
+        </div>
+      </div>
+
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 -mt-20 relative z-10 pb-24">
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section">
@@ -70,6 +78,7 @@ const ClassDetails = () => {
             <LearningSection />
             <PreparationInfo />
           </div>
+          <PhotoGallery images={classItem.images} title={classItem.title} />
           <LocationInfo classItem={classItem} />
           <InstructorInfo classItem={classItem} />
           <TestimonialSection />
