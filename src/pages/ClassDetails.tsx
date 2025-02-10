@@ -54,7 +54,7 @@ const ClassDetails = () => {
       <PhotoGallery images={classItem.images} title={classItem.title} showTitle={false} />
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
+        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg mt-[30px]">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section">
             <ClassDates 
