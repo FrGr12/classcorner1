@@ -1,3 +1,4 @@
+
 import { Image } from "lucide-react";
 import {
   Carousel,
@@ -14,8 +15,8 @@ interface ImageCarouselProps {
 }
 
 const PlaceholderImage = () => (
-  <div className="flex items-center justify-center w-full h-full bg-neutral-200">
-    <Image className="w-12 h-12 text-neutral-400" />
+  <div className="flex items-center justify-center w-full h-full bg-champagne-500">
+    <Image className="w-12 h-12 text-champagne-300" />
   </div>
 );
 
