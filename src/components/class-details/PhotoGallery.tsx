@@ -18,3 +18,4 @@ const PhotoGallery = ({ images, title }: PhotoGalleryProps) => {
 };
 
 export default PhotoGallery;
+

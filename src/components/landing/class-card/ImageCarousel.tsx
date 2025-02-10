@@ -109,3 +109,4 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 };
 
 export default ImageCarousel;
+
