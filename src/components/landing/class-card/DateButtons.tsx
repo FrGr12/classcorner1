@@ -1,7 +1,9 @@
+
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { Calendar } from "lucide-react";
 
 export interface DateButtonsProps {
   dates: Date[];
@@ -78,14 +80,15 @@ const DateButtons = ({
         ))}
         {hasMoreDates && (
           <Button
-            variant="outline"
-            className="w-full"
+            variant="ghost"
+            className="w-full flex items-center justify-center gap-2"
             onClick={(e) => {
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
             }}
           >
-            More dates
+            <Calendar className="w-4 h-4" />
+            View more dates
           </Button>
         )}
       </div>
@@ -108,15 +111,16 @@ const DateButtons = ({
         ))}
         {hasMoreDates && (
           <Button
-            variant="outline"
+            variant="ghost"
             size="sm"
-            className="text-xs w-full bg-white hover:bg-neutral-50 border-neutral-200"
+            className="text-xs w-full flex items-center justify-center gap-1"
             onClick={(e) => {
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
             }}
           >
-            More dates
+            <Calendar className="w-3 h-3" />
+            View more dates
           </Button>
         )}
       </div>
