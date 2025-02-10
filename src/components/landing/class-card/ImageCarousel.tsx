@@ -1,5 +1,4 @@
 
-import { Image, ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -8,7 +7,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import { cn } from "@/lib/utils";
+import { Image } from "lucide-react";
 
 interface ImageCarouselProps {
   images: string[];
@@ -51,25 +50,25 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
     : Array(6).fill(null);
 
   return (
-    <div className="relative group h-full" onClick={handleClick}>
+    <div className="relative group h-full flex items-center justify-center" onClick={handleClick}>
       <Carousel 
-        className="w-full h-full" 
+        className="w-full h-full flex items-center justify-center" 
         setApi={setApi}
         opts={{
-          align: "start",
+          align: "center",
           loop: true,
           skipSnaps: false,
           dragFree: true
         }}
       >
-        <CarouselContent className="-ml-2 md:-ml-4">
+        <CarouselContent className="-ml-2 md:-ml-4 flex justify-center">
           {displayImages.map((image, index) => (
-            <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
+            <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4 flex justify-center">
               <div className="relative aspect-square overflow-hidden rounded-lg">
                 {image ? (
                   <img
                     src={image}
-                    alt={`${title} - Image ${index + 1}`}
+                    alt={`Image ${index + 1}`}
                     className="object-cover w-full h-full"
                   />
                 ) : (
