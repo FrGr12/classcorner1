@@ -1,4 +1,5 @@
 
+import { Image, ArrowLeft, ArrowRight } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -7,7 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { useEffect, useState } from "react";
-import { Image } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ImageCarouselProps {
   images: string[];
@@ -47,28 +48,19 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 
   const displayImages = images && images.length > 0 
     ? images 
-    : Array(6).fill(null);
+    : Array(3).fill(null);
 
   return (
-    <div className="relative group h-full flex items-center justify-center" onClick={handleClick}>
-      <Carousel 
-        className="w-full h-full flex items-center justify-center" 
-        setApi={setApi}
-        opts={{
-          align: "center",
-          loop: true,
-          skipSnaps: false,
-          dragFree: true
-        }}
-      >
-        <CarouselContent className="-ml-2 md:-ml-4 flex justify-center">
+    <div className="relative group h-full" onClick={handleClick}>
+      <Carousel className="w-full h-full" setApi={setApi}>
+        <CarouselContent>
           {displayImages.map((image, index) => (
-            <CarouselItem key={index} className="pl-2 md:pl-4 basis-3/4 md:basis-1/2 lg:basis-1/3 flex justify-center">
-              <div className="relative aspect-square overflow-hidden rounded-lg">
+            <CarouselItem key={index}>
+              <div className="relative aspect-[4/3] h-full overflow-hidden">
                 {image ? (
                   <img
                     src={image}
-                    alt={`Image ${index + 1}`}
+                    alt={`${title} - Image ${index + 1}`}
                     className="object-cover w-full h-full"
                   />
                 ) : (
@@ -91,6 +83,24 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
                         transition-opacity duration-200 border-none z-20" 
             />
+            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
+              {displayImages.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    api?.scrollTo(index);
+                  }}
+                  className={cn(
+                    "w-1.5 h-1.5 rounded-full transition-all duration-200",
+                    current === index
+                      ? "bg-white scale-110"
+                      : "bg-white/60 hover:bg-white/80"
+                  )}
+                  aria-label={`Go to image ${index + 1}`}
+                />
+              ))}
+            </div>
           </>
         )}
       </Carousel>
@@ -99,3 +109,4 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 };
 
 export default ImageCarousel;
+
