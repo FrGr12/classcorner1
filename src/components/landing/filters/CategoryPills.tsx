@@ -15,8 +15,8 @@ interface CategoryPillsProps {
 }
 
 const getCategoryColor = (name: string): { bg: string, hover: string } => {
-  // We'll return the same hover colors for consistency
-  return { bg: "bg-white", hover: "hover:bg-[#FD98DD] hover:text-[#FD0000]" };
+  // Return consistent hover colors using our deep purple
+  return { bg: "bg-white", hover: "hover:bg-[#6E44FF] hover:text-white" };
 };
 
 const CategoryPills = ({
@@ -48,14 +48,14 @@ const CategoryPills = ({
                 "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
                 "shadow-lg hover:shadow-xl",
                 isSelected
-                  ? "bg-[#FD98DD] text-[#FD0000]"
+                  ? "bg-[#6E44FF] text-white"
                   : `${colors.bg} text-neutral-800 ${colors.hover}`,
                 "group"
               )}
             >
               <Icon className={cn(
                 "w-5 h-5 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
-                isSelected ? "text-[#FD0000]" : "group-hover:text-[#FD0000]"
+                isSelected ? "text-white" : "group-hover:text-white"
               )} />
               <span className="text-xs font-display tracking-wide">{category.name}</span>
             </button>
@@ -67,4 +67,3 @@ const CategoryPills = ({
 };
 
 export default CategoryPills;
-
