@@ -6,7 +6,7 @@ const Hero = () => {
     <header className="relative container-padding py-6 md:py-12 lg:py-16">
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.h1 
-          className="text-4xl sm:text-5xl md:text-6xl font-display mb-6 leading-tight tracking-tight"
+          className="text-4xl sm:text-5xl md:text-6xl font-display mb-6 leading-tight tracking-tight text-accent-purple"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
