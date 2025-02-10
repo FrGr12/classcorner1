@@ -1,3 +1,4 @@
+
 @import '@fontsource/dm-sans';
 @import url('https://fonts.googleapis.com/css2?family=Bangers&display=swap');
 
@@ -37,14 +38,14 @@
   }
 
   .button-primary {
-    @apply px-6 py-3 bg-[#FD98DD] text-[#FD0000] rounded-lg 
-           hover:bg-[#FD98DD]/90 transition-all duration-200
+    @apply px-6 py-3 bg-[#6E44FF] text-[#FFC2E2] rounded-lg 
+           hover:bg-[#B892FF] transition-all duration-200
            font-medium tracking-wide;
   }
 
   .button-secondary {
-    @apply px-6 py-3 bg-[#FD98DD] text-[#FD0000] rounded-lg 
-           hover:bg-[#FD98DD]/90 transition-all duration-200
+    @apply px-6 py-3 bg-[#FF90B3] text-[#6E44FF] rounded-lg 
+           hover:bg-[#EF7A85] transition-all duration-200
            font-medium tracking-wide backdrop-blur-sm;
   }
 }
