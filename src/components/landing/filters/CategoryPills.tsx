@@ -15,22 +15,8 @@ interface CategoryPillsProps {
 }
 
 const getCategoryColor = (name: string): { bg: string, hover: string } => {
-  const colors = {
-    "Pottery": { bg: "bg-[#F97316]", hover: "hover:bg-[#EA580C]" },
-    "Cooking": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
-    "Baking": { bg: "bg-[#D946EF]", hover: "hover:bg-[#C026D3]" },
-    "Painting & Art": { bg: "bg-[#0EA5E9]", hover: "hover:bg-[#0284C7]" },
-    "Candle Making": { bg: "bg-[#F43F5E]", hover: "hover:bg-[#E11D48]" },
-    "Jewellery & Metal": { bg: "bg-[#10B981]", hover: "hover:bg-[#059669]" },
-    "Cocktail & Wine": { bg: "bg-[#6366F1]", hover: "hover:bg-[#4F46E5]" },
-    "Photography": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
-    "Music & Dance": { bg: "bg-[#F59E0B]", hover: "hover:bg-[#D97706]" },
-    "Wood Craft": { bg: "bg-[#84CC16]", hover: "hover:bg-[#65A30D]" },
-    "Textile Craft": { bg: "bg-[#14B8A6]", hover: "hover:bg-[#0D9488]" },
-    "Paper Craft": { bg: "bg-[#8B5CF6]", hover: "hover:bg-[#7C3AED]" },
-    "Flower & Plants": { bg: "bg-[#EC4899]", hover: "hover:bg-[#DB2777]" },
-  };
-  return colors[name as keyof typeof colors] || { bg: "bg-neutral-600", hover: "hover:bg-neutral-700" };
+  // We'll return the same hover colors for consistency
+  return { bg: "bg-white", hover: "hover:bg-[#FD98DD] hover:text-[#FD0000]" };
 };
 
 const CategoryPills = ({
@@ -62,14 +48,14 @@ const CategoryPills = ({
                 "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
                 "shadow-lg hover:shadow-xl",
                 isSelected
-                  ? "bg-[#FD98DD] text-[#FD0000]"  // Selected state with new colors
-                  : `bg-white text-neutral-800 ${colors.hover}`,
+                  ? "bg-[#FD98DD] text-[#FD0000]"
+                  : `${colors.bg} text-neutral-800 ${colors.hover}`,
                 "group"
               )}
             >
               <Icon className={cn(
                 "w-5 h-5 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
-                isSelected && "text-[#FD0000]"  // Icon color when selected
+                isSelected ? "text-[#FD0000]" : "group-hover:text-[#FD0000]"
               )} />
               <span className="text-xs font-display tracking-wide">{category.name}</span>
             </button>
@@ -81,3 +67,4 @@ const CategoryPills = ({
 };
 
 export default CategoryPills;
+
