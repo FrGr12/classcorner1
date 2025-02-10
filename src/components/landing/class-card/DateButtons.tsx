@@ -71,7 +71,7 @@ const DateButtons = ({
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                className={`${isSelected(date) ? '' : 'border-accent-purple text-accent-purple hover:bg-accent-purple/10'}`}
+                className={`${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
                 onClick={(e) => handleDateClick(date, e)}
               >
                 Book Now
