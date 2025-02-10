@@ -55,7 +55,7 @@ const ClassDetails = () => {
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 mt-[80px]">
+        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 mt-[60px]">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section">
             <ClassDates 
@@ -87,3 +87,4 @@ const ClassDetails = () => {
 };
 
 export default ClassDetails;
+
