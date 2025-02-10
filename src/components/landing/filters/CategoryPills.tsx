@@ -1,3 +1,4 @@
+
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
 
@@ -50,6 +51,8 @@ const CategoryPills = ({
         {regularCategories.map((category) => {
           const Icon = category.icon;
           const colors = getCategoryColor(category.name);
+          const isSelected = selectedCategories.includes(category.name);
+          
           return (
             <button
               key={category.name}
@@ -58,13 +61,16 @@ const CategoryPills = ({
                 "flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl transition-all duration-300",
                 "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
                 "shadow-lg hover:shadow-xl",
-                selectedCategories.includes(category.name)
-                  ? `${colors.bg} text-white`
+                isSelected
+                  ? "bg-[#FD98DD] text-[#FD0000]"  // Selected state with new colors
                   : `bg-white text-neutral-800 ${colors.hover}`,
                 "group"
               )}
             >
-              <Icon className="w-5 h-5 transition-transform duration-300 ease-in-out transform group-hover:scale-110" />
+              <Icon className={cn(
+                "w-5 h-5 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
+                isSelected && "text-[#FD0000]"  // Icon color when selected
+              )} />
               <span className="text-xs font-display tracking-wide">{category.name}</span>
             </button>
           );
