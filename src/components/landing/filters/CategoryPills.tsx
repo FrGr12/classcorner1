@@ -33,7 +33,7 @@ const CategoryPills = ({
 
   return (
     <div className="mb-4">
-      <div className="flex gap-4 pb-2 overflow-x-auto no-scrollbar">
+      <div className="flex gap-4 pb-2 overflow-x-auto no-scrollbar shadow-sm">
         {regularCategories.map((category) => {
           const Icon = category.icon;
           const colors = getCategoryColor(category.name);
