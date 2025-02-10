@@ -48,15 +48,24 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 
   const displayImages = images && images.length > 0 
     ? images 
-    : Array(3).fill(null);
+    : Array(6).fill(null);
 
   return (
     <div className="relative group h-full" onClick={handleClick}>
-      <Carousel className="w-full h-full" setApi={setApi}>
-        <CarouselContent>
+      <Carousel 
+        className="w-full h-full" 
+        setApi={setApi}
+        opts={{
+          align: "start",
+          loop: true,
+          skipSnaps: false,
+          dragFree: true
+        }}
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
           {displayImages.map((image, index) => (
-            <CarouselItem key={index}>
-              <div className="relative aspect-[4/3] h-full overflow-hidden">
+            <CarouselItem key={index} className="pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4">
+              <div className="relative aspect-square overflow-hidden rounded-lg">
                 {image ? (
                   <img
                     src={image}
@@ -83,24 +92,6 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
                         bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
                         transition-opacity duration-200 border-none z-20" 
             />
-            <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-20">
-              {displayImages.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    api?.scrollTo(index);
-                  }}
-                  className={cn(
-                    "w-1.5 h-1.5 rounded-full transition-all duration-200",
-                    current === index
-                      ? "bg-white scale-110"
-                      : "bg-white/60 hover:bg-white/80"
-                  )}
-                  aria-label={`Go to image ${index + 1}`}
-                />
-              ))}
-            </div>
           </>
         )}
       </Carousel>
@@ -109,4 +100,3 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
 };
 
 export default ImageCarousel;
-
