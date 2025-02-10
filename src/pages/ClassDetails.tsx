@@ -51,9 +51,7 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="mt-8">
-        <PhotoGallery images={classItem.images} title={classItem.title} />
-      </div>
+      <PhotoGallery images={classItem.images} title={classItem.title} />
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
         <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg">
