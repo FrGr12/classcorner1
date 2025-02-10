@@ -16,7 +16,7 @@ interface ImageCarouselProps {
 }
 
 const PlaceholderImage = () => (
-  <div className="flex items-center justify-center w-full h-full bg-neutral-200">
+  <div className="flex items-center justify-center w-full h-full bg-neutral-200 mt-[80px]">
     <Image className="w-12 h-12 text-neutral-400" />
   </div>
 );
