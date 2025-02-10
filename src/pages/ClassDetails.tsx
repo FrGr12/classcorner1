@@ -72,6 +72,7 @@ const ClassDetails = () => {
           </div>
           <LocationInfo classItem={classItem} />
           <InstructorInfo classItem={classItem} />
+          <PhotoGallery images={classItem.images} title={classItem.title} />
           <TestimonialSection />
           <PolicyInfo />
         </div>
@@ -83,3 +84,4 @@ const ClassDetails = () => {
 };
 
 export default ClassDetails;
+
