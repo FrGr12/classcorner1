@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Search, MapPin, Calendar, X } from "lucide-react";
 import {
@@ -231,7 +232,7 @@ const IntegratedSearch = () => {
 
           <button 
             onClick={handleSearch}
-            className="ml-2 p-3 bg-[#FD98DD] text-[#FD0000] rounded-full hover:bg-[#FD98DD]/90 transition-colors"
+            className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-lavender transition-colors"
           >
             <Search className="w-4 h-4" />
           </button>
