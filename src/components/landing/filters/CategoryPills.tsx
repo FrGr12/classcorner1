@@ -46,7 +46,7 @@ const CategoryPills = ({
               className={cn(
                 "flex flex-col items-center gap-1.5 px-4 py-2 rounded-xl transition-all duration-300",
                 "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
-                "shadow-lg hover:shadow-xl",
+                "shadow-md hover:shadow-lg",
                 isSelected
                   ? "bg-[#6E44FF] text-white"
                   : `${colors.bg} text-neutral-800 ${colors.hover}`,
@@ -67,3 +67,4 @@ const CategoryPills = ({
 };
 
 export default CategoryPills;
+
