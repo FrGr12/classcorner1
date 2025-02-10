@@ -1,3 +1,4 @@
+
 import { Clock, MapPin, Users, Star, Edit } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -33,10 +34,10 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
 
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
-      <div className="space-y-4">
+      <div className="space-y-4 text-left">
         <div>
-          <h1 className="text-3xl font-bold mb-2">{classItem.title}</h1>
-          <p className="text-neutral-600">{classItem.category}</p>
+          <h1 className="text-3xl font-bold mb-2 text-left">{classItem.title}</h1>
+          <p className="text-neutral-600 text-left">{classItem.category}</p>
         </div>
         
         <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-600">
