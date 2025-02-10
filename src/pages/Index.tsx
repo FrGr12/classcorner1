@@ -9,7 +9,7 @@ import TestimonialSection from "@/components/class-details/TestimonialSection";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-neutral-50">
+    <div className="min-h-screen bg-[#FEF7CD]/10">
       <Navigation />
       <div className="pt-20 sm:pt-24 md:pt-32">
         <Hero />
