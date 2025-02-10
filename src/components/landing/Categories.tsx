@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import CategoryPills from "./filters/CategoryPills";
 import ClassGrid from "./ClassGrid";
@@ -110,7 +111,7 @@ const Categories = () => {
   ];
 
   return (
-    <section className="pt-12 sm:pt-16 bg-neutral-100 w-full">
+    <section className="pt-6 sm:pt-8 bg-neutral-100 w-full">
       <div className="px-3 sm:px-4 md:px-6 lg:px-8">
         <div className="mt-8 text-neutral-600">
           <CategoryPills
