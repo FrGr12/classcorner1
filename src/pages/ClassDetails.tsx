@@ -50,12 +50,12 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="w-full mt-[80px]">
+      <div className="w-full mt-[110px]">
         <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 shadow-lg mt-[80px]">
+        <div className="glass-panel rounded-xl p-6 md:p-8 mb-8 mt-[80px]">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section">
             <ClassDates 
