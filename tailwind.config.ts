@@ -26,11 +26,11 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#141413",
-          foreground: "#FAFAF8",
+          DEFAULT: "#005ED1", // tang-blue as primary
+          foreground: "#FFFFFF",
         },
         secondary: {
-          DEFAULT: "#8989DE",
+          DEFAULT: "#FDBA00", // selective-yellow as secondary
           foreground: "#141413",
         },
         neutral: {
@@ -44,9 +44,12 @@ export default {
           800: "#3A3935",
         },
         accent: {
-          purple: "#8989DE",
-          blue: "#61AAF2",
-          green: "#7EBF8E",
+          purple: "#FD98DD", // plum as accent
+          blue: "#005ED1", // tang-blue
+          green: "#009B40", // pigment-green
+          orange: "#FE6000", // orange-pantone
+          yellow: "#FDBA00", // selective-yellow
+          red: "#FD0000", // off-red
         },
         'selective-yellow': {
           DEFAULT: '#FDBA00',
