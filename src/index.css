@@ -37,14 +37,14 @@
   }
 
   .button-primary {
-    @apply px-6 py-3 bg-accent-purple text-white rounded-lg 
-           hover:bg-accent-purple/90 transition-all duration-200
+    @apply px-6 py-3 bg-[#FD98DD] text-[#FD0000] rounded-lg 
+           hover:bg-[#FD98DD]/90 transition-all duration-200
            font-medium tracking-wide;
   }
 
   .button-secondary {
-    @apply px-6 py-3 bg-accent-purple text-white rounded-lg 
-           hover:bg-accent-purple/90 transition-all duration-200
+    @apply px-6 py-3 bg-[#FD98DD] text-[#FD0000] rounded-lg 
+           hover:bg-[#FD98DD]/90 transition-all duration-200
            font-medium tracking-wide backdrop-blur-sm;
   }
 }
