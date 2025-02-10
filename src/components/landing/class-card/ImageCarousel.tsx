@@ -51,12 +51,12 @@ const ImageCarousel = ({ images, title }: ImageCarouselProps) => {
     : Array(3).fill(null);
 
   return (
-    <div className="relative group" onClick={handleClick}>
+    <div className="relative group h-full" onClick={handleClick}>
       <Carousel className="w-full h-full" setApi={setApi}>
         <CarouselContent>
           {displayImages.map((image, index) => (
             <CarouselItem key={index}>
-              <div className="relative aspect-[1/1] overflow-hidden">
+              <div className="relative aspect-[4/3] h-full overflow-hidden">
                 {image ? (
                   <img
                     src={image}
