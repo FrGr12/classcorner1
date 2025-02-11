@@ -10,6 +10,20 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { X } from "lucide-react";
 
@@ -27,6 +41,7 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
   const [sessions, setSessions] = useState<SessionField[]>([
     { id: '1', date: '', time: '' }
   ]);
+  const [recurrencePattern, setRecurrencePattern] = useState<string>();
 
   const addSession = () => {
     setSessions([...sessions, { 
@@ -112,13 +127,57 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             Add session
           </Button>
 
-          <Button 
-            type="button" 
-            variant="outline"
-            className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
-          >
-            Make Recurring
-          </Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button 
+                type="button" 
+                variant="outline"
+                className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+              >
+                Make Recurring
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Set Recurring Schedule</DialogTitle>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <FormLabel>Recurrence Pattern</FormLabel>
+                  <Select
+                    value={recurrencePattern}
+                    onValueChange={setRecurrencePattern}
+                  >
+                    <SelectTrigger className="w-full">
+                      <SelectValue placeholder="Select frequency" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="weekly">Weekly</SelectItem>
+                      <SelectItem value="biweekly">Bi-weekly</SelectItem>
+                      <SelectItem value="monthly">Monthly</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="space-y-2">
+                  <FormLabel>End After (Optional)</FormLabel>
+                  <Input
+                    type="number"
+                    placeholder="Number of occurrences"
+                    className="bg-white border-neutral-200"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <FormLabel>End Date (Optional)</FormLabel>
+                  <Input
+                    type="date"
+                    className="bg-white border-neutral-200"
+                  />
+                </div>
+              </div>
+            </DialogContent>
+          </Dialog>
         </div>
       </CardContent>
     </Card>
