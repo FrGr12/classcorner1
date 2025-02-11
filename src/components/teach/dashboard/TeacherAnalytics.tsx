@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,7 +10,7 @@ import RevenueMetrics from "../analytics/RevenueMetrics";
 import InsightsSection from "../analytics/InsightsSection";
 import { DateRangePicker } from "../analytics/DateRangePicker";
 
-interface Review {
+type Review = {
   id: number;
   rating: number;
   review_text: string | null;
@@ -23,7 +24,7 @@ interface Review {
   };
 }
 
-interface AnalyticsData {
+type AnalyticsData = {
   totalStudents: number;
   averageRating: number;
   activeCourses: number;
@@ -32,7 +33,7 @@ interface AnalyticsData {
   waitlistCount: number;
 }
 
-interface ReviewStats {
+type ReviewStats = {
   averageRating: number;
   recentReviews: number;
   responseRate: number;
