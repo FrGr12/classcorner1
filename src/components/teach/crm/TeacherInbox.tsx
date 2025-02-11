@@ -314,22 +314,22 @@ const TeacherInbox = () => {
     <div className="space-y-6">
       <Card className="p-6">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="text-left">
             <h1 className="text-2xl font-bold">Messages</h1>
-            <p className="text-muted-foreground mt-1">
+            <p className="text-muted-foreground mt-1 text-sm">
               Manage your communications with students
             </p>
           </div>
           <div className="flex gap-3">
             <Button 
               variant="outline"
-              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
+              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 text-sm"
             >
               <Library className="mr-2 h-4 w-4" />
               Templates
             </Button>
             <Button 
-              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white text-sm"
               onClick={() => setIsComposeOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
@@ -347,11 +347,11 @@ const TeacherInbox = () => {
               placeholder="Search messages..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
+              className="pl-9 text-sm"
             />
           </div>
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[180px]">
+            <SelectTrigger className="w-[180px] text-sm">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -374,12 +374,12 @@ const TeacherInbox = () => {
                 <div
                   key={message.id}
                   onClick={() => setSelectedMessage(message)}
-                  className={`p-4 rounded-lg cursor-pointer hover:bg-muted/50 ${
-                    selectedMessage?.id === message.id ? "bg-muted" : ""
+                  className={`p-3 rounded-lg cursor-pointer hover:bg-muted/50 ${
+                    selectedMessage?.id === message.id ? "bg-neutral-100" : ""
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
-                    <Avatar>
+                    <Avatar className="h-8 w-8">
                       <AvatarImage src={message.profiles?.avatar_url || ""} />
                       <AvatarFallback>
                         {message.profiles?.first_name?.[0] || "U"}
@@ -387,19 +387,19 @@ const TeacherInbox = () => {
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className="font-medium truncate">
+                        <p className="font-medium text-sm truncate">
                           {message.profiles?.first_name} {message.profiles?.last_name}
                         </p>
                         <span className="text-xs text-muted-foreground">
                           {format(new Date(message.sent_at), "MMM d")}
                         </span>
                       </div>
-                      <p className="text-sm text-muted-foreground truncate">
+                      <p className="text-xs text-muted-foreground truncate">
                         {message.communication_context || "No subject"}
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm truncate pl-11">
+                  <p className="text-xs truncate pl-11 text-neutral-600">
                     {message.message_content}
                   </p>
                 </div>
@@ -416,31 +416,33 @@ const TeacherInbox = () => {
             {selectedMessage ? (
               <div className="p-6">
                 <div className="flex items-center gap-4 mb-6">
-                  <Avatar className="h-12 w-12">
+                  <Avatar className="h-10 w-10">
                     <AvatarImage src={selectedMessage.profiles?.avatar_url || ""} />
                     <AvatarFallback>
                       {selectedMessage.profiles?.first_name?.[0] || "U"}
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <h2 className="text-xl font-semibold">
+                  <div className="text-left">
+                    <h2 className="text-base font-semibold">
                       {selectedMessage.profiles?.first_name} {selectedMessage.profiles?.last_name}
                     </h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground">
                       {selectedMessage.communication_context}
                     </p>
                   </div>
                 </div>
                 <div className="prose max-w-none">
-                  <p>{selectedMessage.message_content}</p>
+                  <div className="bg-neutral-50 p-4 rounded-lg text-sm text-left">
+                    {selectedMessage.message_content}
+                  </div>
                 </div>
                 <div className="mt-6">
                   <Textarea
                     placeholder="Type your reply..."
-                    className="min-h-[100px]"
+                    className="min-h-[100px] text-sm"
                   />
                   <div className="flex justify-end mt-2">
-                    <Button>
+                    <Button className="text-sm">
                       <Send className="h-4 w-4 mr-2" />
                       Send Reply
                     </Button>
@@ -448,7 +450,7 @@ const TeacherInbox = () => {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
+              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a message to view details
               </div>
             )}
@@ -463,8 +465,8 @@ const TeacherInbox = () => {
             {selectedMessage ? (
               <div className="p-6 space-y-6">
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                  <div className="space-y-4">
+                  <h3 className="text-base font-semibold mb-4">Contact Information</h3>
+                  <div className="space-y-4 text-sm">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-muted-foreground" />
                       <span>
@@ -481,15 +483,15 @@ const TeacherInbox = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Booking History</h3>
-                  <div className="space-y-4">
+                  <h3 className="text-base font-semibold mb-4">Booking History</h3>
+                  <div className="space-y-3">
                     {studentBookings?.map((booking: any) => (
-                      <Card key={booking.id} className="p-4">
-                        <div className="flex items-center gap-4">
+                      <Card key={booking.id} className="p-3 bg-neutral-50">
+                        <div className="flex items-center gap-3">
                           <Calendar className="h-4 w-4 text-muted-foreground" />
                           <div>
-                            <p className="font-medium">{booking.course?.title}</p>
-                            <p className="text-sm text-muted-foreground">
+                            <p className="text-sm font-medium">{booking.course?.title}</p>
+                            <p className="text-xs text-muted-foreground">
                               {format(new Date(booking.created_at), "MMMM d, yyyy")}
                             </p>
                           </div>
@@ -501,10 +503,10 @@ const TeacherInbox = () => {
 
                 {selectedMessage.profiles?.languages && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Languages</h3>
+                    <h3 className="text-base font-semibold mb-4">Languages</h3>
                     <div className="flex gap-2">
                       {selectedMessage.profiles.languages.map((lang) => (
-                        <Badge key={lang} variant="secondary">
+                        <Badge key={lang} variant="secondary" className="text-xs">
                           {lang}
                         </Badge>
                       ))}
@@ -514,7 +516,7 @@ const TeacherInbox = () => {
 
                 {selectedMessage.profiles?.bio && (
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">About</h3>
+                    <h3 className="text-base font-semibold mb-4">About</h3>
                     <p className="text-sm text-muted-foreground">
                       {selectedMessage.profiles.bio}
                     </p>
@@ -522,7 +524,7 @@ const TeacherInbox = () => {
                 )}
               </div>
             ) : (
-              <div className="flex items-center justify-center h-full text-muted-foreground">
+              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
                 Select a message to view contact details
               </div>
             )}
@@ -533,35 +535,37 @@ const TeacherInbox = () => {
       <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
         <DialogContent className="sm:max-w-[525px]">
           <DialogHeader>
-            <DialogTitle>Write New Message</DialogTitle>
+            <DialogTitle className="text-left">Write New Message</DialogTitle>
           </DialogHeader>
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
-              <Label htmlFor="recipient">Recipient</Label>
+              <Label htmlFor="recipient" className="text-sm">Recipient</Label>
               <Input
                 id="recipient"
                 placeholder="Enter recipient ID"
                 value={recipient}
                 onChange={(e) => setRecipient(e.target.value)}
+                className="text-sm"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="subject">Subject</Label>
+              <Label htmlFor="subject" className="text-sm">Subject</Label>
               <Input
                 id="subject"
                 placeholder="Enter message subject"
                 value={messageSubject}
                 onChange={(e) => setMessageSubject(e.target.value)}
+                className="text-sm"
               />
             </div>
             <div className="grid gap-2">
-              <Label htmlFor="message">Message</Label>
+              <Label htmlFor="message" className="text-sm">Message</Label>
               <Textarea
                 id="message"
                 placeholder="Type your message here..."
                 value={messageContent}
                 onChange={(e) => setMessageContent(e.target.value)}
-                className="min-h-[200px]"
+                className="min-h-[200px] text-sm"
               />
             </div>
           </div>
@@ -569,10 +573,11 @@ const TeacherInbox = () => {
             <Button
               onClick={() => setIsComposeOpen(false)}
               variant="outline"
+              className="text-sm"
             >
               Cancel
             </Button>
-            <Button onClick={handleSendMessage} className="gap-2">
+            <Button onClick={handleSendMessage} className="gap-2 text-sm">
               <Send className="h-4 w-4" />
               Send Message
             </Button>
