@@ -2,14 +2,15 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-import ImageUpload from "@/components/teach/ImageUpload";
+import BasicInfoSection from "./form-sections/BasicInfoSection";
+import PricingSection from "./form-sections/PricingSection";
+import LocationSection from "./form-sections/LocationSection";
+import ScheduleSection from "./form-sections/ScheduleSection";
+import ImagesSection from "./form-sections/ImagesSection";
 
 interface EditClassDialogProps {
   open: boolean;
@@ -17,7 +18,7 @@ interface EditClassDialogProps {
   classId: number;
 }
 
-interface ClassData {
+export interface ClassData {
   title: string;
   description: string;
   location: string;
@@ -29,11 +30,6 @@ interface ClassData {
   materials_included: string;
   setup_instructions: string;
   status: string;
-}
-
-interface SessionData {
-  id: number;
-  start_time: string;
 }
 
 const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) => {
@@ -220,92 +216,11 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
           <DialogTitle>Edit Class</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                value={formData.title}
-                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category">Category</Label>
-              <Input
-                id="category"
-                value={formData.category}
-                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea
-              id="description"
-              value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="price">Price</Label>
-              <Input
-                id="price"
-                type="number"
-                value={formData.price}
-                onChange={(e) => setFormData({ ...formData, price: Number(e.target.value) })}
-                required
-                min={0}
-                step={0.01}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="duration">Duration</Label>
-              <Input
-                id="duration"
-                value={formData.duration}
-                onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                placeholder="e.g., 2 hours"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input
-              id="location"
-              value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-              required
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="reschedule">Reschedule Class</Label>
-            <Input
-              id="reschedule"
-              type="datetime-local"
-              value={sessionDate}
-              onChange={(e) => setSessionDate(e.target.value)}
-              className="w-full"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Class Images</Label>
-            <ImageUpload
-              images={images}
-              setImages={setImages}
-            />
-          </div>
+          <BasicInfoSection formData={formData} setFormData={setFormData} />
+          <PricingSection formData={formData} setFormData={setFormData} />
+          <LocationSection formData={formData} setFormData={setFormData} />
+          <ScheduleSection sessionDate={sessionDate} setSessionDate={setSessionDate} />
+          <ImagesSection images={images} setImages={setImages} />
 
           <DialogFooter className="flex justify-between">
             <div className="flex gap-2">
