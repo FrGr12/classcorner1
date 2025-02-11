@@ -1252,7 +1252,9 @@ export type Database = {
           contact_frequency: string | null
           created_at: string
           email: string | null
+          expertise: string[] | null
           first_name: string | null
+          hourly_rate: number | null
           id: string
           interests: string[] | null
           languages: string[] | null
@@ -1261,9 +1263,13 @@ export type Database = {
           location: string | null
           notes: string | null
           phone: string | null
+          portfolio_url: string | null
           preferred_contact_method: string | null
+          preferred_teaching_method: string | null
           search_text: string | null
+          social_media: Json | null
           tags: string[] | null
+          teaching_experience: string | null
           timezone: string | null
           updated_at: string
           user_type: Database["public"]["Enums"]["user_type"]
@@ -1274,7 +1280,9 @@ export type Database = {
           contact_frequency?: string | null
           created_at?: string
           email?: string | null
+          expertise?: string[] | null
           first_name?: string | null
+          hourly_rate?: number | null
           id: string
           interests?: string[] | null
           languages?: string[] | null
@@ -1283,9 +1291,13 @@ export type Database = {
           location?: string | null
           notes?: string | null
           phone?: string | null
+          portfolio_url?: string | null
           preferred_contact_method?: string | null
+          preferred_teaching_method?: string | null
           search_text?: string | null
+          social_media?: Json | null
           tags?: string[] | null
+          teaching_experience?: string | null
           timezone?: string | null
           updated_at?: string
           user_type: Database["public"]["Enums"]["user_type"]
@@ -1296,7 +1308,9 @@ export type Database = {
           contact_frequency?: string | null
           created_at?: string
           email?: string | null
+          expertise?: string[] | null
           first_name?: string | null
+          hourly_rate?: number | null
           id?: string
           interests?: string[] | null
           languages?: string[] | null
@@ -1305,9 +1319,13 @@ export type Database = {
           location?: string | null
           notes?: string | null
           phone?: string | null
+          portfolio_url?: string | null
           preferred_contact_method?: string | null
+          preferred_teaching_method?: string | null
           search_text?: string | null
+          social_media?: Json | null
           tags?: string[] | null
+          teaching_experience?: string | null
           timezone?: string | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]

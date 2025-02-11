@@ -36,9 +36,29 @@ import {
   Palette,
 } from "lucide-react";
 
+interface ProfileData {
+  first_name: string;
+  last_name: string;
+  bio: string;
+  email: string;
+  phone: string;
+  location: string;
+  languages: string[];
+  teaching_experience: string;
+  timezone: string;
+  expertise: string[];
+  preferred_teaching_method: string;
+  hourly_rate: string;
+  portfolio_url: string;
+  social_media: {
+    linkedin: string;
+    instagram: string;
+  };
+}
+
 const UserProfileDuplicate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<ProfileData>({
     first_name: "",
     last_name: "",
     bio: "",
@@ -88,7 +108,7 @@ const UserProfileDuplicate = () => {
           timezone: data.timezone || "",
           expertise: data.expertise || [],
           preferred_teaching_method: data.preferred_teaching_method || "in-person",
-          hourly_rate: data.hourly_rate || "",
+          hourly_rate: data.hourly_rate?.toString() || "",
           portfolio_url: data.portfolio_url || "",
           social_media: data.social_media || { linkedin: "", instagram: "" }
         });
@@ -110,7 +130,10 @@ const UserProfileDuplicate = () => {
 
       const { error } = await supabase
         .from('profiles')
-        .update(profile)
+        .update({
+          ...profile,
+          hourly_rate: profile.hourly_rate ? parseFloat(profile.hourly_rate) : null
+        })
         .eq('id', user.id);
 
       if (error) throw error;
