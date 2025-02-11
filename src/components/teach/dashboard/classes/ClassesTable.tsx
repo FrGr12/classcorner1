@@ -63,9 +63,11 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       // Fetch activity stats for views
       const { data: viewData, error: viewError } = await supabase
         .from('course_activity_log')
-        .select('course_id, count(*)')
-        .eq('activity_type', 'view')
-        .groupBy('course_id');
+        .select(`
+          course_id,
+          count
+        `)
+        .eq('activity_type', 'view');
 
       if (viewError) {
         console.error('Error fetching view stats:', viewError);
@@ -75,9 +77,11 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       // Fetch activity stats for clicks
       const { data: clickData, error: clickError } = await supabase
         .from('course_activity_log')
-        .select('course_id, count(*)')
-        .eq('activity_type', 'click')
-        .groupBy('course_id');
+        .select(`
+          course_id,
+          count
+        `)
+        .eq('activity_type', 'click');
 
       if (clickError) {
         console.error('Error fetching click stats:', clickError);
@@ -96,18 +100,21 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
       // Process view and click stats
       const viewStatsMap: ViewStats = {};
+      
+      // Process views
       viewData?.forEach((stat) => {
         if (!viewStatsMap[stat.course_id]) {
           viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        viewStatsMap[stat.course_id].views = parseInt(stat.count);
+        viewStatsMap[stat.course_id].views += 1;
       });
 
+      // Process clicks
       clickData?.forEach((stat) => {
         if (!viewStatsMap[stat.course_id]) {
           viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        viewStatsMap[stat.course_id].clicks = parseInt(stat.count);
+        viewStatsMap[stat.course_id].clicks += 1;
       });
 
       setViewStats(viewStatsMap);
