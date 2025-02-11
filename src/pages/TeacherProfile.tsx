@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -188,7 +187,7 @@ const TeacherProfile = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 text-left">
       <Card className="p-6">
         <div className="flex items-center justify-between">
           <div className="text-left">
