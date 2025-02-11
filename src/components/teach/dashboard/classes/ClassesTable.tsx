@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
@@ -49,44 +50,54 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   useEffect(() => {
     const fetchStats = async () => {
+      // Fetch view stats with correct count syntax
       const { data: viewData, error: viewError } = await supabase
         .from('course_activity_log')
-        .select('course_id, count(*)')
-        .eq('activity_type', 'view');
+        .select('course_id, activity_count:count()')
+        .eq('activity_type', 'view')
+        .group('course_id');
 
       if (viewError) {
         console.error('Error fetching view stats:', viewError);
         return;
       }
 
+      // Fetch click stats with correct count syntax
       const { data: clickData, error: clickError } = await supabase
         .from('course_activity_log')
-        .select('course_id, count(*)')
-        .eq('activity_type', 'click');
+        .select('course_id, activity_count:count()')
+        .eq('activity_type', 'click')
+        .group('course_id');
 
       if (clickError) {
         console.error('Error fetching click stats:', clickError);
         return;
       }
 
+      // Process view and click stats
       const viewStatsMap: ViewStats = {};
       
-      viewData?.forEach((stat) => {
-        if (!viewStatsMap[stat.course_id]) {
-          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
-        }
-        viewStatsMap[stat.course_id].views = parseInt(stat.count);
-      });
+      if (viewData) {
+        viewData.forEach((stat: any) => {
+          if (!viewStatsMap[stat.course_id]) {
+            viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
+          }
+          viewStatsMap[stat.course_id].views = parseInt(stat.activity_count);
+        });
+      }
 
-      clickData?.forEach((stat) => {
-        if (!viewStatsMap[stat.course_id]) {
-          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
-        }
-        viewStatsMap[stat.course_id].clicks = parseInt(stat.count);
-      });
+      if (clickData) {
+        clickData.forEach((stat: any) => {
+          if (!viewStatsMap[stat.course_id]) {
+            viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
+          }
+          viewStatsMap[stat.course_id].clicks = parseInt(stat.activity_count);
+        });
+      }
 
       setViewStats(viewStatsMap);
 
+      // Fetch payment stats
       const { data: paymentData, error: paymentError } = await supabase
         .from('course_payment_stats')
         .select('*');
