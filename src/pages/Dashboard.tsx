@@ -10,6 +10,7 @@ import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import CreateClass from "@/pages/CreateClass";
+import DuplicateClass from "@/pages/DuplicateClass";
 import NotificationsCenter from "@/components/notifications/NotificationCenter";
 import { Card } from "@/components/ui/card";
 
@@ -27,6 +28,7 @@ const Dashboard = () => {
               <Route path="/bookings" element={<TeacherBookings />} />
               <Route path="/classes" element={<TeacherClasses />} />
               <Route path="/create-class" element={<CreateClass />} />
+              <Route path="/duplicate-class" element={<DuplicateClass />} />
               <Route path="/analytics" element={<TeacherAnalytics />} />
               <Route path="/reviews" element={<TeacherReviews />} />
               <Route path="/notifications" element={

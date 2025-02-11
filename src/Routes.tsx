@@ -11,6 +11,7 @@ import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 import Onboarding from "@/pages/Onboarding";
 import CreateClass from "@/pages/CreateClass";
+import DuplicateClass from "@/pages/DuplicateClass";
 
 const router = createBrowserRouter([
   {
@@ -53,3 +54,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+

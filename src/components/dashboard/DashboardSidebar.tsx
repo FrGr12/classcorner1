@@ -12,6 +12,7 @@ import {
   Bell,
   Menu,
   PlusCircle,
+  Copy,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -29,6 +30,11 @@ const DashboardSidebar = () => {
       title: "Create Class",
       href: "/dashboard/create-class",
       icon: PlusCircle,
+    },
+    {
+      title: "Duplicate Class",
+      href: "/dashboard/duplicate-class",
+      icon: Copy,
     },
     {
       title: "Profile",
