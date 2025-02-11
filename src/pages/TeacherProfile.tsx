@@ -50,7 +50,6 @@ interface TeacherProfileData {
   timezone: string;
   expertise: string[];
   preferred_teaching_method: string;
-  hourly_rate: string;
   portfolio_url: string;
   social_media: {
     linkedin: string;
@@ -75,7 +74,6 @@ const TeacherProfile = () => {
     timezone: "",
     expertise: [],
     preferred_teaching_method: "in-person",
-    hourly_rate: "",
     portfolio_url: "",
     social_media: {
       linkedin: "",
@@ -128,7 +126,6 @@ const TeacherProfile = () => {
           timezone: data.timezone || "",
           expertise: data.expertise || [],
           preferred_teaching_method: data.preferred_teaching_method || "in-person",
-          hourly_rate: data.hourly_rate?.toString() || "",
           portfolio_url: data.portfolio_url || "",
           social_media: socialMedia,
           email_notifications: true,
@@ -164,7 +161,6 @@ const TeacherProfile = () => {
           timezone: profile.timezone,
           expertise: profile.expertise,
           preferred_teaching_method: profile.preferred_teaching_method,
-          hourly_rate: profile.hourly_rate ? parseFloat(profile.hourly_rate) : null,
           portfolio_url: profile.portfolio_url,
           social_media: profile.social_media
         })
@@ -312,20 +308,6 @@ const TeacherProfile = () => {
               value={profile.languages.join(", ")}
               onChange={(e) => setProfile({ ...profile, languages: e.target.value.split(",").map(item => item.trim()) })}
               placeholder="e.g., English, Spanish"
-              className="bg-white"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label className="flex items-center gap-2 text-left">
-              <CreditCard className="h-4 w-4 text-neutral-400" />
-              Base Hourly Rate
-            </Label>
-            <Input
-              type="number"
-              value={profile.hourly_rate}
-              onChange={(e) => setProfile({ ...profile, hourly_rate: e.target.value })}
-              placeholder="Your standard hourly rate"
               className="bg-white"
             />
           </div>
