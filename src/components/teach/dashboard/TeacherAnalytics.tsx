@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -10,11 +11,14 @@ import InsightsSection from "../analytics/InsightsSection";
 import { DateRangePicker } from "../analytics/DateRangePicker";
 
 interface Review {
-  id: string;
+  id: number;
   rating: number;
   review_text: string;
   created_at: string;
   instructor_response: string | null;
+  course_id: number;
+  reviewer_id: string;
+  updated_at: string;
   courses: {
     title: string;
   };
@@ -110,27 +114,27 @@ const TeacherAnalytics = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: reviews } = await supabase
+    const { data: reviewsData } = await supabase
       .from('course_reviews')
-      .select('*')
+      .select('id, rating, instructor_response, created_at')
       .eq('instructor_id', user.id);
 
-    if (!reviews) return;
+    if (!reviewsData) return;
 
-    const totalReviews = reviews.length;
+    const totalReviews = reviewsData.length;
     const averageRating = totalReviews > 0 
-      ? reviews.reduce((acc, rev) => acc + rev.rating, 0) / totalReviews 
+      ? reviewsData.reduce((acc, rev) => acc + rev.rating, 0) / totalReviews 
       : 0;
     
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const recentReviews = reviews.filter(rev => 
+    const recentReviews = reviewsData.filter(rev => 
       new Date(rev.created_at) > thirtyDaysAgo
     ).length;
 
     const responseRate = totalReviews > 0
-      ? (reviews.filter(rev => rev.instructor_response !== null).length / totalReviews) * 100
+      ? (reviewsData.filter(rev => rev.instructor_response !== null).length / totalReviews) * 100
       : 0;
     
     setReviewStats({
@@ -146,17 +150,28 @@ const TeacherAnalytics = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
-    const { data: reviews } = await supabase
+    const { data } = await supabase
       .from('course_reviews')
       .select(`
-        *,
-        courses (title)
+        id,
+        rating,
+        review_text,
+        created_at,
+        instructor_response,
+        course_id,
+        reviewer_id,
+        updated_at,
+        courses (
+          title
+        )
       `)
       .eq('instructor_id', user.id)
       .order('created_at', { ascending: false })
       .limit(5);
 
-    setRecentReviews(reviews || []);
+    if (data) {
+      setRecentReviews(data as Review[]);
+    }
   };
 
   return (
