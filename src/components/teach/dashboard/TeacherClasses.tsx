@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { mockClasses } from "@/data/mockClasses";
 import ClassesTable from "./classes/ClassesTable";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 
 const TeacherClasses = () => {
   const navigate = useNavigate();
@@ -33,16 +33,20 @@ const TeacherClasses = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Classes</h1>
-          <p className="text-muted-foreground">Manage your classes and schedules</p>
-        </div>
-        <Button onClick={() => navigate("/dashboard/create-class")}>
-          <Plus className="h-4 w-4 mr-2" />
-          Create Class
-        </Button>
-      </div>
+      <Card className="border-none shadow-none bg-transparent">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="text-2xl font-bold">Classes</CardTitle>
+              <CardDescription>Manage your classes and schedules</CardDescription>
+            </div>
+            <Button onClick={() => navigate("/dashboard/create-class")}>
+              <Plus className="h-4 w-4 mr-2" />
+              Create Class
+            </Button>
+          </div>
+        </CardHeader>
+      </Card>
 
       <Card>
         <CardHeader>
