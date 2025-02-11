@@ -23,16 +23,14 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
         </div>
         
         <div className="flex gap-3">
-          {draftCount > 0 ? (
-            <Button 
-              variant="outline"
-              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
-              onClick={() => navigate("/dashboard/classes?tab=drafts")}
-              disabled={isSubmitting}
-            >
-              See draft classes ({draftCount})
-            </Button>
-          ) : null}
+          <Button 
+            variant="outline"
+            className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
+            onClick={() => navigate("/dashboard/classes?tab=drafts")}
+            disabled={isSubmitting}
+          >
+            See draft classes ({draftCount})
+          </Button>
           
           <Button 
             type="submit"
@@ -50,3 +48,4 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
 };
 
 export default CreateClassHeader;
+
