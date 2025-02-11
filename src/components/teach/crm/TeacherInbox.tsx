@@ -10,7 +10,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Archive, CheckSquare } from "lucide-react";
+import { Search, Filter, Archive, CheckSquare, Plus, Library } from "lucide-react";
 import MessagesTable from "./MessagesTable";
 import MessageTemplates from "./MessageTemplates";
 import { useQuery } from "@tanstack/react-query";
@@ -128,7 +128,33 @@ const TeacherInbox = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center mb-6">
+      <div>
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h1 className="text-2xl font-bold">Messages</h1>
+            <p className="text-muted-foreground mt-1">
+              Manage your communications with students
+            </p>
+          </div>
+          <div className="flex gap-3">
+            <Button 
+              variant="outline"
+              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
+            >
+              <Library className="mr-2 h-4 w-4" />
+              Saved Templates
+            </Button>
+            <Button 
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create Template
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center">
         <div className="flex gap-4 flex-1">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />

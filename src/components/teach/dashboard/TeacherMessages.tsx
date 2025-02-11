@@ -7,23 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-import { Message } from "../crm/TeacherInbox";
-
-interface Message {
-  id: number;
-  message_content: string;
-  sent_at: string;
-  instructor_id: string;
-  student_id: string;
-  status: string;
-  profile?: {
-    first_name: string | null;
-    last_name: string | null;
-  };
-  course?: {
-    title: string;
-  };
-}
+import type { Message } from "../crm/TeacherInbox";
 
 const TeacherMessages = () => {
   const [loading, setLoading] = useState(true);
