@@ -34,14 +34,12 @@ import {
   BellRing,
   CreditCard,
   Palette,
+  Link as LinkIcon,
+  Instagram,
+  Globe,
 } from "lucide-react";
 
-interface SocialMedia {
-  linkedin: string;
-  instagram: string;
-}
-
-interface ProfileData {
+interface TeacherProfileData {
   first_name: string;
   last_name: string;
   bio: string;
@@ -55,12 +53,16 @@ interface ProfileData {
   preferred_teaching_method: string;
   hourly_rate: string;
   portfolio_url: string;
-  social_media: SocialMedia;
+  social_media: {
+    [key: string]: string;
+  };
+  email_notifications: boolean;
+  sms_notifications: boolean;
 }
 
-const UserProfileDuplicate = () => {
+const TeacherProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [profile, setProfile] = useState<ProfileData>({
+  const [profile, setProfile] = useState<TeacherProfileData>({
     first_name: "",
     last_name: "",
     bio: "",
@@ -76,8 +78,11 @@ const UserProfileDuplicate = () => {
     portfolio_url: "",
     social_media: {
       linkedin: "",
-      instagram: ""
-    }
+      instagram: "",
+      website: ""
+    },
+    email_notifications: true,
+    sms_notifications: false
   });
   const { toast } = useToast();
 
@@ -112,7 +117,9 @@ const UserProfileDuplicate = () => {
           preferred_teaching_method: data.preferred_teaching_method || "in-person",
           hourly_rate: data.hourly_rate?.toString() || "",
           portfolio_url: data.portfolio_url || "",
-          social_media: data.social_media as SocialMedia || { linkedin: "", instagram: "" }
+          social_media: data.social_media || { linkedin: "", instagram: "", website: "" },
+          email_notifications: true,
+          sms_notifications: false
         });
       }
     } catch (error: any) {
@@ -133,8 +140,20 @@ const UserProfileDuplicate = () => {
       const { error } = await supabase
         .from('profiles')
         .update({
-          ...profile,
-          hourly_rate: profile.hourly_rate ? parseFloat(profile.hourly_rate) : null
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          bio: profile.bio,
+          email: profile.email,
+          phone: profile.phone,
+          location: profile.location,
+          languages: profile.languages,
+          teaching_experience: profile.teaching_experience,
+          timezone: profile.timezone,
+          expertise: profile.expertise,
+          preferred_teaching_method: profile.preferred_teaching_method,
+          hourly_rate: profile.hourly_rate ? parseFloat(profile.hourly_rate) : null,
+          portfolio_url: profile.portfolio_url,
+          social_media: profile.social_media
         })
         .eq('id', user.id);
 
@@ -159,9 +178,9 @@ const UserProfileDuplicate = () => {
       <Card className="p-6">
         <div className="flex items-center justify-between">
           <div className="text-left">
-            <h1 className="text-2xl font-semibold">Profile Settings</h1>
+            <h1 className="text-2xl font-semibold">Teacher Profile</h1>
             <p className="text-muted-foreground mt-1">
-              Manage your teacher profile and preferences
+              Manage your teaching profile and settings
             </p>
           </div>
           
@@ -180,21 +199,26 @@ const UserProfileDuplicate = () => {
         <CardHeader>
           <CardTitle>Personal Information</CardTitle>
           <CardDescription>
-            Update your personal details and public profile
+            Your public profile information visible to students
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           <div className="flex items-center gap-4">
-            <div className="relative h-20 w-20 rounded-full bg-neutral-100 overflow-hidden">
+            <div className="relative h-24 w-24 rounded-full bg-neutral-100 overflow-hidden">
               <div className="flex h-full items-center justify-center">
                 <User className="h-8 w-8 text-neutral-400" />
               </div>
             </div>
-            <Button variant="outline" className="gap-2">
-              <Upload className="h-4 w-4" />
-              Upload Photo
-            </Button>
+            <div className="space-y-2">
+              <Button variant="outline" className="gap-2">
+                <Upload className="h-4 w-4" />
+                Upload Photo
+              </Button>
+              <p className="text-sm text-muted-foreground">
+                Recommended: Square image, at least 400x400px
+              </p>
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
@@ -224,6 +248,9 @@ const UserProfileDuplicate = () => {
               placeholder="Tell students about yourself and your teaching experience..."
               className="min-h-[100px] bg-white"
             />
+            <p className="text-sm text-muted-foreground">
+              A brief introduction about yourself and your teaching style
+            </p>
           </div>
         </CardContent>
       </Card>
@@ -232,7 +259,7 @@ const UserProfileDuplicate = () => {
         <CardHeader>
           <CardTitle>Teaching Profile</CardTitle>
           <CardDescription>
-            Showcase your expertise and teaching style
+            Showcase your expertise and qualifications
           </CardDescription>
         </CardHeader>
         
@@ -279,13 +306,72 @@ const UserProfileDuplicate = () => {
           <div className="space-y-2">
             <Label className="flex items-center gap-2">
               <CreditCard className="h-4 w-4 text-neutral-400" />
-              Hourly Rate
+              Base Hourly Rate
             </Label>
             <Input
               type="number"
               value={profile.hourly_rate}
               onChange={(e) => setProfile({ ...profile, hourly_rate: e.target.value })}
               placeholder="Your standard hourly rate"
+              className="bg-white"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="w-full p-6">
+        <CardHeader>
+          <CardTitle>Online Presence</CardTitle>
+          <CardDescription>
+            Your social media and online portfolio links
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <LinkIcon className="h-4 w-4 text-neutral-400" />
+              LinkedIn Profile
+            </Label>
+            <Input
+              value={profile.social_media.linkedin}
+              onChange={(e) => setProfile({ 
+                ...profile, 
+                social_media: { ...profile.social_media, linkedin: e.target.value }
+              })}
+              placeholder="https://linkedin.com/in/your-profile"
+              className="bg-white"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Instagram className="h-4 w-4 text-neutral-400" />
+              Instagram Profile
+            </Label>
+            <Input
+              value={profile.social_media.instagram}
+              onChange={(e) => setProfile({ 
+                ...profile, 
+                social_media: { ...profile.social_media, instagram: e.target.value }
+              })}
+              placeholder="https://instagram.com/your-profile"
+              className="bg-white"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Globe className="h-4 w-4 text-neutral-400" />
+              Personal Website
+            </Label>
+            <Input
+              value={profile.social_media.website}
+              onChange={(e) => setProfile({ 
+                ...profile, 
+                social_media: { ...profile.social_media, website: e.target.value }
+              })}
+              placeholder="https://your-website.com"
               className="bg-white"
             />
           </div>
@@ -336,7 +422,7 @@ const UserProfileDuplicate = () => {
             <Input
               value={profile.location}
               onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-              placeholder="Enter your location"
+              placeholder="City, Country"
               className="bg-white"
             />
           </div>
@@ -368,48 +454,38 @@ const UserProfileDuplicate = () => {
         <CardHeader>
           <CardTitle>Notification Preferences</CardTitle>
           <CardDescription>
-            Manage how you receive updates and communications
+            Manage how you receive updates about your classes and students
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="booking-notifications">New Booking Notifications</Label>
+            <div className="space-y-0.5">
+              <Label>Email Notifications</Label>
               <p className="text-sm text-muted-foreground">
-                Receive notifications when students book your classes
+                Receive updates about bookings and student messages
               </p>
             </div>
-            <Switch id="booking-notifications" defaultChecked />
+            <Switch
+              checked={profile.email_notifications}
+              onCheckedChange={(checked) => 
+                setProfile({ ...profile, email_notifications: checked })
+              }
+            />
           </div>
 
           <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="message-notifications">Message Notifications</Label>
+            <div className="space-y-0.5">
+              <Label>SMS Notifications</Label>
               <p className="text-sm text-muted-foreground">
-                Receive notifications for new student messages
+                Get instant notifications for urgent updates
               </p>
             </div>
-            <Switch id="message-notifications" defaultChecked />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="review-notifications">Review Notifications</Label>
-              <p className="text-sm text-muted-foreground">
-                Get notified when students leave reviews
-              </p>
-            </div>
-            <Switch id="review-notifications" defaultChecked />
-          </div>
-
-          <div className="flex items-center justify-between">
-            <div>
-              <Label htmlFor="reminder-notifications">Class Reminders</Label>
-              <p className="text-sm text-muted-foreground">
-                Receive reminders before your scheduled classes
-              </p>
-            </div>
-            <Switch id="reminder-notifications" defaultChecked />
+            <Switch
+              checked={profile.sms_notifications}
+              onCheckedChange={(checked) => 
+                setProfile({ ...profile, sms_notifications: checked })
+              }
+            />
           </div>
         </CardContent>
       </Card>
@@ -417,4 +493,4 @@ const UserProfileDuplicate = () => {
   );
 };
 
-export default UserProfileDuplicate;
+export default TeacherProfile;
