@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -210,8 +211,8 @@ const TeacherProfile = () => {
 
       <Card className="w-full p-6">
         <CardHeader>
-          <CardTitle>Personal Information</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-left">Personal Information</CardTitle>
+          <CardDescription className="text-left">
             Your public profile information visible to students
           </CardDescription>
         </CardHeader>
@@ -223,7 +224,7 @@ const TeacherProfile = () => {
                 <User className="h-8 w-8 text-neutral-400" />
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 text-left">
               <Button variant="outline" className="gap-2">
                 <Upload className="h-4 w-4" />
                 Upload Photo
@@ -236,7 +237,7 @@ const TeacherProfile = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label>First Name</Label>
+              <Label className="text-left">First Name</Label>
               <Input
                 value={profile.first_name}
                 onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
@@ -244,7 +245,7 @@ const TeacherProfile = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label>Last Name</Label>
+              <Label className="text-left">Last Name</Label>
               <Input
                 value={profile.last_name}
                 onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
@@ -254,14 +255,14 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label>Bio</Label>
+            <Label className="text-left">Bio</Label>
             <Textarea
               value={profile.bio}
               onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
               placeholder="Tell students about yourself and your teaching experience..."
               className="min-h-[100px] bg-white"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-muted-foreground text-left">
               A brief introduction about yourself and your teaching style
             </p>
           </div>
@@ -270,15 +271,15 @@ const TeacherProfile = () => {
 
       <Card className="w-full p-6">
         <CardHeader>
-          <CardTitle>Teaching Profile</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-left">Teaching Profile</CardTitle>
+          <CardDescription className="text-left">
             Showcase your expertise and qualifications
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <BookOpen className="h-4 w-4 text-neutral-400" />
               Teaching Experience
             </Label>
@@ -291,7 +292,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <Palette className="h-4 w-4 text-neutral-400" />
               Areas of Expertise
             </Label>
@@ -304,7 +305,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <Languages className="h-4 w-4 text-neutral-400" />
               Languages Spoken
             </Label>
@@ -317,7 +318,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <CreditCard className="h-4 w-4 text-neutral-400" />
               Base Hourly Rate
             </Label>
@@ -334,15 +335,15 @@ const TeacherProfile = () => {
 
       <Card className="w-full p-6">
         <CardHeader>
-          <CardTitle>Online Presence</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-left">Online Presence</CardTitle>
+          <CardDescription className="text-left">
             Your social media and online portfolio links
           </CardDescription>
         </CardHeader>
         
         <CardContent className="space-y-6">
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <LinkIcon className="h-4 w-4 text-neutral-400" />
               LinkedIn Profile
             </Label>
@@ -358,7 +359,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <Instagram className="h-4 w-4 text-neutral-400" />
               Instagram Profile
             </Label>
@@ -374,7 +375,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <Globe className="h-4 w-4 text-neutral-400" />
               Personal Website
             </Label>
@@ -393,8 +394,8 @@ const TeacherProfile = () => {
 
       <Card className="w-full p-6">
         <CardHeader>
-          <CardTitle>Contact Information</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-left">Contact Information</CardTitle>
+          <CardDescription className="text-left">
             How students and the platform can reach you
           </CardDescription>
         </CardHeader>
@@ -402,7 +403,7 @@ const TeacherProfile = () => {
         <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-left">
                 <Mail className="h-4 w-4 text-neutral-400" />
                 Email
               </Label>
@@ -414,7 +415,7 @@ const TeacherProfile = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label className="flex items-center gap-2">
+              <Label className="flex items-center gap-2 text-left">
                 <Phone className="h-4 w-4 text-neutral-400" />
                 Phone
               </Label>
@@ -428,7 +429,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <MapPin className="h-4 w-4 text-neutral-400" />
               Location
             </Label>
@@ -441,7 +442,7 @@ const TeacherProfile = () => {
           </div>
 
           <div className="space-y-2">
-            <Label className="flex items-center gap-2">
+            <Label className="flex items-center gap-2 text-left">
               <Clock className="h-4 w-4 text-neutral-400" />
               Timezone
             </Label>
@@ -465,16 +466,16 @@ const TeacherProfile = () => {
 
       <Card className="w-full p-6">
         <CardHeader>
-          <CardTitle>Notification Preferences</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-left">Notification Preferences</CardTitle>
+          <CardDescription className="text-left">
             Manage how you receive updates about your classes and students
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>Email Notifications</Label>
-              <p className="text-sm text-muted-foreground">
+              <Label className="text-left">Email Notifications</Label>
+              <p className="text-sm text-muted-foreground text-left">
                 Receive updates about bookings and student messages
               </p>
             </div>
@@ -488,8 +489,8 @@ const TeacherProfile = () => {
 
           <div className="flex items-center justify-between">
             <div className="space-y-0.5">
-              <Label>SMS Notifications</Label>
-              <p className="text-sm text-muted-foreground">
+              <Label className="text-left">SMS Notifications</Label>
+              <p className="text-sm text-muted-foreground text-left">
                 Get instant notifications for urgent updates
               </p>
             </div>
