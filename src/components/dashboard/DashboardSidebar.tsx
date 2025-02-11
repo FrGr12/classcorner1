@@ -4,13 +4,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
-  CalendarDays,
   BookOpen,
   BarChart,
   Star,
   Menu,
   PlusCircle,
-  UserCog,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -28,11 +26,6 @@ const DashboardSidebar = () => {
       title: "Create Class",
       href: "/dashboard/create-class",
       icon: PlusCircle,
-    },
-    {
-      title: "Profile Settings",
-      href: "/dashboard/duplicate-class",
-      icon: UserCog,
     },
     {
       title: "Classes",
