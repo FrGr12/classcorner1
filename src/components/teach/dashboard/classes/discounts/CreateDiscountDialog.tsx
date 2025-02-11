@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,7 +12,6 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,10 +48,11 @@ const formSchema = z.object({
 interface CreateDiscountDialogProps {
   courseId: number;
   onDiscountCreated?: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
 }
 
-const CreateDiscountDialog = ({ courseId, onDiscountCreated }: CreateDiscountDialogProps) => {
-  const [isOpen, setIsOpen] = useState(false);
+const CreateDiscountDialog = ({ courseId, onDiscountCreated, open, onOpenChange }: CreateDiscountDialogProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -84,7 +85,7 @@ const CreateDiscountDialog = ({ courseId, onDiscountCreated }: CreateDiscountDia
       if (error) throw error;
 
       toast.success("Discount created successfully");
-      setIsOpen(false);
+      onOpenChange(false);
       onDiscountCreated?.();
       form.reset();
     } catch (error: any) {
@@ -95,13 +96,7 @@ const CreateDiscountDialog = ({ courseId, onDiscountCreated }: CreateDiscountDia
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="w-full">
-          <Percent className="w-4 h-4 mr-2" />
-          Create Discount
-        </Button>
-      </DialogTrigger>
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Discount</DialogTitle>
