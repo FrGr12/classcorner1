@@ -29,7 +29,7 @@ const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
         <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-          <span className="text-sm font-medium text-primary">Add Outcome</span>
+          <span className="text-sm font-medium text-primary">Learning Outcomes</span>
           <Input
             value={currentOutcome}
             onChange={(e) => setCurrentOutcome(e.target.value)}

@@ -29,7 +29,7 @@ const BringItemsSection = ({ form }: BringItemsSectionProps) => {
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
         <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-          <span className="text-sm font-medium text-primary">Add Item</span>
+          <span className="text-sm font-medium text-primary">What to Bring</span>
           <Input
             value={currentBringItem}
             onChange={(e) => setCurrentBringItem(e.target.value)}

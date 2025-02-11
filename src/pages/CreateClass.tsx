@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -100,7 +101,7 @@ const CreateClass = () => {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Class Requirements & Outcomes</h2>
+            <h2 className="text-xl font-semibold mb-6 text-left">What to Bring and Learning Outcomes</h2>
             <div className="space-y-6">
               <BringItemsSection form={form} />
               <LearningOutcomesSection form={form} />
