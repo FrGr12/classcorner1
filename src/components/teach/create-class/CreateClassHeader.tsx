@@ -30,7 +30,7 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
               onClick={() => navigate("/dashboard/classes?tab=drafts")}
               disabled={isSubmitting}
             >
-              See saved drafts ({draftCount})
+              See draft classes ({draftCount})
             </Button>
           ) : null}
           
@@ -41,7 +41,7 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
             disabled={isSubmitting}
           >
             <Plus className="mr-2 h-4 w-4" />
-            Create Class
+            Publish Class
           </Button>
         </div>
       </div>
