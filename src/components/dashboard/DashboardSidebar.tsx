@@ -26,11 +26,6 @@ const DashboardSidebar = () => {
       icon: LayoutDashboard,
     },
     {
-      title: "Create Class",
-      href: "/dashboard/create-class",
-      icon: PlusCircle,
-    },
-    {
       title: "Profile",
       href: "/dashboard/profile",
       icon: UserCircle,
@@ -44,6 +39,11 @@ const DashboardSidebar = () => {
       title: "Classes",
       href: "/dashboard/classes",
       icon: BookOpen,
+    },
+    {
+      title: "Create Class",
+      href: "/dashboard/create-class",
+      icon: PlusCircle,
     },
     {
       title: "Analytics",
