@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Session } from "@/types/session";
 import { Card } from "@/components/ui/card";
+import { supabase } from "@/integrations/supabase/client";
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
 import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
 import PricingCapacitySection from "@/components/teach/course-form/PricingCapacitySection";
@@ -38,6 +39,7 @@ const CreateClass = () => {
   const navigate = useNavigate();
   const [images, setImages] = useState<File[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -56,12 +58,127 @@ const CreateClass = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // TODO: Implement class creation logic with Supabase
-      toast.success("Class created successfully!");
+      setIsSubmitting(true);
+      
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!userData.user) {
+        toast.error("You must be logged in to create a class");
+        return;
+      }
+
+      // Insert course data
+      const { data: course, error: courseError } = await supabase
+        .from('courses')
+        .insert({
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          max_participants: data.maxParticipants,
+          location: data.location,
+          category: data.category,
+          instructor_id: userData.user.id,
+          what_to_bring: data.whatToBring,
+          learning_outcomes: data.learningOutcomes,
+          status: 'published'
+        })
+        .select()
+        .single();
+
+      if (courseError) throw courseError;
+
+      // Insert sessions
+      if (sessions.length > 0) {
+        const { error: sessionsError } = await supabase
+          .from('course_sessions')
+          .insert(
+            sessions.map(session => ({
+              course_id: course.id,
+              start_time: session.start,
+              is_recurring: session.isRecurring,
+              recurrence_pattern: session.recurrencePattern,
+              recurrence_end_date: session.recurrenceEndDate,
+              recurrence_count: session.recurrenceCount
+            }))
+          );
+
+        if (sessionsError) throw sessionsError;
+      }
+
+      // Upload images if any
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          const image = images[i];
+          const fileExt = image.name.split('.').pop();
+          const filePath = `${course.id}/${Math.random()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('course-images')
+            .upload(filePath, image);
+
+          if (uploadError) throw uploadError;
+
+          // Insert image reference
+          const { error: imageError } = await supabase
+            .from('course_images')
+            .insert({
+              course_id: course.id,
+              image_path: filePath,
+              display_order: i
+            });
+
+          if (imageError) throw imageError;
+        }
+      }
+
+      toast.success("Class published successfully!");
       navigate("/dashboard/classes");
     } catch (error) {
       console.error("Error creating class:", error);
       toast.error("Failed to create class. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const saveDraft = async () => {
+    try {
+      setIsSubmitting(true);
+      const formData = form.getValues();
+      
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!userData.user) {
+        toast.error("You must be logged in to save a draft");
+        return;
+      }
+
+      const { error: courseError } = await supabase
+        .from('courses')
+        .insert({
+          title: formData.title,
+          description: formData.description,
+          price: formData.price,
+          max_participants: formData.maxParticipants,
+          location: formData.location,
+          category: formData.category,
+          instructor_id: userData.user.id,
+          what_to_bring: formData.whatToBring,
+          learning_outcomes: formData.learningOutcomes,
+          status: 'draft'
+        });
+
+      if (courseError) throw courseError;
+
+      toast.success("Class saved as draft");
+      navigate("/dashboard/classes");
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      toast.error("Failed to save draft. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -81,6 +198,7 @@ const CreateClass = () => {
               variant="outline"
               className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
               onClick={() => navigate(-1)}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
@@ -89,6 +207,7 @@ const CreateClass = () => {
               type="submit"
               form="create-class-form"
               className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              disabled={isSubmitting}
             >
               <Plus className="mr-2 h-4 w-4" />
               Create Class
@@ -138,11 +257,8 @@ const CreateClass = () => {
               type="button"
               variant="outline"
               className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 px-8"
-              onClick={() => {
-                // TODO: Save draft logic
-                toast.success("Class saved as draft");
-                navigate("/dashboard/classes");
-              }}
+              onClick={saveDraft}
+              disabled={isSubmitting}
             >
               Save and publish later
             </Button>
@@ -150,6 +266,7 @@ const CreateClass = () => {
             <Button 
               type="submit"
               className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8"
+              disabled={isSubmitting}
             >
               Save and publish
             </Button>
