@@ -128,7 +128,8 @@ const CreateClass = () => {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Additional Location & Category Details</h2>
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Sessions</h2>
+            <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
             <LocationCategoryDetailsSection form={form} />
           </Card>
         </form>
@@ -138,4 +139,3 @@ const CreateClass = () => {
 };
 
 export default CreateClass;
-
