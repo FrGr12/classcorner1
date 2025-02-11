@@ -9,6 +9,7 @@ import {
   Star,
   Menu,
   PlusCircle,
+  User,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -41,6 +42,11 @@ const DashboardSidebar = () => {
       title: "Reviews",
       href: "/dashboard/reviews",
       icon: Star,
+    },
+    {
+      title: "Profile",
+      href: "/dashboard/profile",
+      icon: User,
     },
   ];
 
