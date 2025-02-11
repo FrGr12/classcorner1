@@ -5,31 +5,23 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { mockClasses } from "@/data/mockClasses";
-import ClassStatsOverview from "./classes/ClassStatsOverview";
-import ClassFilters from "./classes/ClassFilters";
-import ClassCard from "./classes/ClassCard";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-
-const mockStats = {
-  totalClasses: 15,
-  totalBookings: 45,
-  waitlistCount: 12,
-  occupancyRate: 85,
-};
+import ClassesTable from "./classes/ClassesTable";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const TeacherClasses = () => {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
-  const [statusFilter, setStatusFilter] = useState("all");
-  const [viewMode, setViewMode] = useState<"grid" | "calendar">("grid");
+  const allClasses = Object.values(mockClasses).flat();
 
   const handleAction = (action: string, classId: number) => {
     switch (action) {
       case "edit":
-        navigate(`/teach/classes/${classId}/edit`);
+        navigate(`/dashboard/classes/${classId}/edit`);
         break;
-      case "duplicate":
-        toast.success("Class duplicated successfully");
+      case "message":
+        toast.success("Opening message composer...");
+        break;
+      case "boost":
+        toast.success("Boost feature coming soon!");
         break;
       case "cancel":
         toast.success("Class cancelled successfully");
@@ -39,66 +31,28 @@ const TeacherClasses = () => {
     }
   };
 
-  const allClasses = Object.values(mockClasses).flat();
-
-  const filteredClasses = allClasses.filter((classItem) => {
-    const matchesSearch =
-      classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      classItem.city.toLowerCase().includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
-
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold">Classes & Bookings</h1>
-          <p className="text-muted-foreground">
-            Manage your classes, bookings, and waitlists
-          </p>
+          <h1 className="text-2xl font-bold">Classes</h1>
+          <p className="text-muted-foreground">Manage your classes and schedules</p>
         </div>
-        <Button onClick={() => navigate("/dashboard/create-class")} className="whitespace-nowrap">
+        <Button onClick={() => navigate("/dashboard/create-class")}>
           <Plus className="h-4 w-4 mr-2" />
-          Add New Class
+          Create Class
         </Button>
-      </div>
-
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-        <ClassStatsOverview stats={mockStats} />
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Class Management</CardTitle>
-          <CardDescription>
-            View and manage your classes and schedules
-          </CardDescription>
+          <CardTitle>Your Classes</CardTitle>
         </CardHeader>
         <CardContent>
-          <ClassFilters
-            searchTerm={searchTerm}
-            setSearchTerm={setSearchTerm}
-            statusFilter={statusFilter}
-            setStatusFilter={setStatusFilter}
-            viewMode={viewMode}
-            setViewMode={setViewMode}
+          <ClassesTable 
+            classes={allClasses}
+            onAction={handleAction}
           />
-
-          <div className="grid gap-6 mt-6">
-            {filteredClasses.map((classItem) => (
-              <ClassCard
-                key={classItem.id}
-                classItem={classItem}
-                onAction={handleAction}
-              />
-            ))}
-          </div>
-
-          {filteredClasses.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-muted-foreground">No classes found</p>
-            </div>
-          )}
         </CardContent>
       </Card>
     </div>
