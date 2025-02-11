@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 
@@ -22,8 +23,8 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
           control={form.control}
           name="price"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium text-primary">Price per Person</FormLabel>
+            <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+              <FormLabel className="text-sm font-medium text-primary">Price per Person</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -33,7 +34,14 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <Button 
+                type="button" 
+                onClick={() => console.log('Price saved:', field.value)}
+                className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              >
+                Save
+              </Button>
+              <FormMessage className="col-start-2" />
             </FormItem>
           )}
         />
@@ -42,8 +50,8 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
           control={form.control}
           name="maxParticipants"
           render={({ field }) => (
-            <FormItem>
-              <FormLabel className="font-medium text-primary">Maximum Participants</FormLabel>
+            <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+              <FormLabel className="text-sm font-medium text-primary">Maximum Participants</FormLabel>
               <FormControl>
                 <Input 
                   type="number" 
@@ -52,7 +60,14 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
                   {...field} 
                 />
               </FormControl>
-              <FormMessage />
+              <Button 
+                type="button" 
+                onClick={() => console.log('Max participants saved:', field.value)}
+                className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              >
+                Save
+              </Button>
+              <FormMessage className="col-start-2" />
             </FormItem>
           )}
         />

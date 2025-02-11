@@ -28,7 +28,8 @@ const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
-        <div className="flex gap-2">
+        <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+          <span className="text-sm font-medium text-primary">Add Outcome</span>
           <Input
             value={currentOutcome}
             onChange={(e) => setCurrentOutcome(e.target.value)}
@@ -44,22 +45,24 @@ const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
             Add
           </Button>
         </div>
-        <ul className="space-y-2">
-          {form.watch("learningOutcomes").map((outcome: string, index: number) => (
-            <li key={index} className="flex items-center gap-2 bg-white p-2 rounded-md border border-neutral-200">
-              <span className="flex-1 text-primary">{outcome}</span>
-              <Button
-                type="button"
-                variant="ghost"
-                size="sm"
-                onClick={() => removeLearningOutcome(index)}
-                className="text-neutral-500 hover:text-neutral-700"
-              >
-                Remove
-              </Button>
-            </li>
-          ))}
-        </ul>
+        <div className="pl-[180px]">
+          <ul className="space-y-2">
+            {form.watch("learningOutcomes").map((outcome: string, index: number) => (
+              <li key={index} className="flex items-center gap-2 bg-white p-2 rounded-md border border-neutral-200">
+                <span className="flex-1 text-primary">{outcome}</span>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => removeLearningOutcome(index)}
+                  className="text-neutral-500 hover:text-neutral-700"
+                >
+                  Remove
+                </Button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </CardContent>
     </Card>
   );
