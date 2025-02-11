@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { format } from "date-fns";
@@ -49,42 +50,6 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const viewStatsMap: ViewStats = {};
-      
-      // Initialize view stats for all courses
-      classes.forEach(classItem => {
-        viewStatsMap[classItem.id] = { views: 0, clicks: 0 };
-      });
-
-      // Fetch course activity logs
-      const { data: activityData, error: activityError } = await supabase
-        .from('course_activity_log')
-        .select('course_id, activity_type')
-        .in('activity_type', ['view', 'click']);
-
-      if (activityError) {
-        console.error('Error fetching activity stats:', activityError);
-        return;
-      }
-
-      // Process activity data
-      if (activityData) {
-        activityData.forEach((log: { course_id: number, activity_type: string }) => {
-          if (log.course_id) {
-            if (!viewStatsMap[log.course_id]) {
-              viewStatsMap[log.course_id] = { views: 0, clicks: 0 };
-            }
-            if (log.activity_type === 'view') {
-              viewStatsMap[log.course_id].views++;
-            } else if (log.activity_type === 'click') {
-              viewStatsMap[log.course_id].clicks++;
-            }
-          }
-        });
-      }
-
-      setViewStats(viewStatsMap);
-
       // Fetch payment stats
       const { data: paymentData, error: paymentError } = await supabase
         .from('course_payment_stats')
@@ -95,6 +60,35 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         return;
       }
 
+      // Fetch activity stats for views
+      const { data: viewData, error: viewError } = await supabase
+        .from('course_activity_log')
+        .select(`
+          course_id,
+          count
+        `)
+        .eq('activity_type', 'view');
+
+      if (viewError) {
+        console.error('Error fetching view stats:', viewError);
+        return;
+      }
+
+      // Fetch activity stats for clicks
+      const { data: clickData, error: clickError } = await supabase
+        .from('course_activity_log')
+        .select(`
+          course_id,
+          count
+        `)
+        .eq('activity_type', 'click');
+
+      if (clickError) {
+        console.error('Error fetching click stats:', clickError);
+        return;
+      }
+
+      // Process payment stats
       const statsMap = paymentData.reduce((acc: PaymentStats, stat) => {
         acc[stat.course_id] = {
           paid_count: stat.paid_count || 0,
@@ -102,12 +96,32 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         };
         return acc;
       }, {});
-      
       setPaymentStats(statsMap);
+
+      // Process view and click stats
+      const viewStatsMap: ViewStats = {};
+      
+      // Process views
+      viewData?.forEach((stat) => {
+        if (!viewStatsMap[stat.course_id]) {
+          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
+        }
+        viewStatsMap[stat.course_id].views += 1;
+      });
+
+      // Process clicks
+      clickData?.forEach((stat) => {
+        if (!viewStatsMap[stat.course_id]) {
+          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
+        }
+        viewStatsMap[stat.course_id].clicks += 1;
+      });
+
+      setViewStats(viewStatsMap);
     };
 
     fetchStats();
-  }, [classes]);
+  }, []);
 
   const getFormattedDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
