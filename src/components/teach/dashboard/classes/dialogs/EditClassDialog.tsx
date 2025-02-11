@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -143,14 +142,14 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
     try {
       const { error } = await supabase
         .from('courses')
-        .update({ status: 'cancelled' })
+        .update({ status: 'archived' })
         .eq('id', classId);
 
       if (error) throw error;
-      toast.success("Class cancelled successfully");
+      toast.success("Class archived successfully");
       onOpenChange(false);
     } catch (error) {
-      toast.error("Failed to cancel class");
+      toast.error("Failed to archive class");
     }
   };
 
