@@ -12,8 +12,7 @@ import {
   Star,
   Settings,
   Menu,
-  Clock,
-  Receipt
+  Clock
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -24,53 +23,48 @@ const UserDashboardSidebar = () => {
   const links = [
     {
       title: "Dashboard",
-      href: "/student-dashboard",
+      href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
       title: "Messages",
-      href: "/student-dashboard/messages",
+      href: "/dashboard/messages",
       icon: MessageSquare,
     },
     {
       title: "Bookings",
-      href: "/student-dashboard/bookings",
+      href: "/dashboard/bookings",
       icon: CalendarDays,
     },
     {
       title: "Notifications",
-      href: "/student-dashboard/notifications",
+      href: "/dashboard/notifications",
       icon: Bell,
     },
     {
       title: "Matches",
-      href: "/student-dashboard/matches",
+      href: "/dashboard/matches",
       icon: Users,
     },
     {
       title: "Saved Classes",
-      href: "/student-dashboard/saved",
+      href: "/dashboard/saved",
       icon: Bookmark,
     },
     {
       title: "Preferences",
-      href: "/student-dashboard/preferences",
+      href: "/dashboard/preferences",
       icon: Settings,
     },
     {
       title: "Reviews",
-      href: "/student-dashboard/reviews",
+      href: "/dashboard/reviews",
       icon: Star,
     },
     {
       title: "Waitlist",
-      href: "/student-dashboard/waitlist",
+      href: "/dashboard/waitlist",
       icon: Clock,
-    },
-    {
-      title: "Payments",
-      href: "/student-dashboard/payments",
-      icon: Receipt,
     },
   ];
 
@@ -90,7 +84,7 @@ const UserDashboardSidebar = () => {
         )}
       >
         <div className="flex h-16 items-center justify-between px-4 border-b">
-          <h2 className="text-xl font-semibold">Student Dashboard</h2>
+          <h2 className="text-xl font-semibold">Dashboard</h2>
           <Button
             variant="ghost"
             size="icon"
