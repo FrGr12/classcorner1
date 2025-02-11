@@ -5,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Edit, MessageSquare, ArrowUp, Share2 } from "lucide-react";
 import { format } from "date-fns";
 import PromoteDialog from "./promote/PromoteDialog";
-import SocialShare from "./card/SocialShare";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 interface ClassesTableProps {
   classes: ClassItem[];
@@ -16,6 +17,7 @@ interface ClassesTableProps {
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
 
   const getFormattedDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
@@ -27,6 +29,11 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const handlePromote = (classId: number) => {
     setSelectedClassId(classId);
     setIsPromoteOpen(true);
+  };
+
+  const handleShare = (classId: number) => {
+    setSelectedClassId(classId);
+    setIsShareOpen(true);
   };
 
   return (
@@ -85,8 +92,15 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                     <span className="text-xs text-muted-foreground">Promote</span>
                   </div>
 
-                  <div className="flex flex-col items-center">
-                    <SocialShare courseId={classItem.id} category={classItem.category} />
+                  <div className="flex flex-col items-center gap-1">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => handleShare(classItem.id)}
+                    >
+                      <Share2 className="h-4 w-4" />
+                    </Button>
+                    <span className="text-xs text-muted-foreground">Share</span>
                   </div>
                 </div>
               </TableCell>
