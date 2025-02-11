@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, MessageSquare, ArrowUp, Share2 } from "lucide-react";
 import MessageParticipantsDialog from "../dialogs/MessageParticipantsDialog";
 import ShareClassDialog from "../dialogs/ShareClassDialog";
+import EditClassDialog from "../dialogs/EditClassDialog";
 
 interface ClassActionsProps {
   classId: number;
@@ -22,6 +23,7 @@ const ClassActions = ({
 }: ClassActionsProps) => {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
 
   return (
     <>
@@ -30,7 +32,7 @@ const ClassActions = ({
           <Button
             variant="outline"
             size="icon"
-            onClick={(e) => onEditClick(classId, e)}
+            onClick={() => setIsEditOpen(true)}
             className="bg-accent-purple hover:bg-accent-purple/90"
           >
             <Edit className="h-4 w-4 text-white" />
@@ -84,6 +86,12 @@ const ClassActions = ({
       <ShareClassDialog
         open={isShareOpen}
         onOpenChange={setIsShareOpen}
+        classId={classId}
+      />
+
+      <EditClassDialog
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
         classId={classId}
       />
     </>
