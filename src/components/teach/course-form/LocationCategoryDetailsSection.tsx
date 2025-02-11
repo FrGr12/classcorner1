@@ -26,12 +26,12 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
               name="date"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
-                  <FormLabel className="text-sm font-medium text-primary min-w-[40px]">Date</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary min-w-[80px]">Select date</FormLabel>
                   <FormControl>
                     <Input 
                       type="date"
                       placeholder="Select date" 
-                      className="bg-white border-neutral-200"
+                      className="bg-white border-neutral-200 w-[180px]"
                       {...field} 
                     />
                   </FormControl>
@@ -45,12 +45,12 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
               name="time"
               render={({ field }) => (
                 <FormItem className="flex items-center gap-2">
-                  <FormLabel className="text-sm font-medium text-primary min-w-[40px]">Time</FormLabel>
+                  <FormLabel className="text-sm font-medium text-primary min-w-[80px]">Select time</FormLabel>
                   <FormControl>
                     <Input 
                       type="time"
                       placeholder="Select time" 
-                      className="bg-white border-neutral-200"
+                      className="bg-white border-neutral-200 w-[180px]"
                       {...field} 
                     />
                   </FormControl>
