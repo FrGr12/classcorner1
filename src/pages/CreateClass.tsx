@@ -132,6 +132,28 @@ const CreateClass = () => {
             <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
             <LocationCategoryDetailsSection form={form} />
           </Card>
+
+          <div className="flex justify-center gap-4 pt-4 pb-12">
+            <Button 
+              type="button"
+              variant="outline"
+              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 px-8"
+              onClick={() => {
+                // TODO: Save draft logic
+                toast.success("Class saved as draft");
+                navigate("/dashboard/classes");
+              }}
+            >
+              Save and publish later
+            </Button>
+            
+            <Button 
+              type="submit"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8"
+            >
+              Save and publish
+            </Button>
+          </div>
         </form>
       </Form>
     </div>
@@ -139,3 +161,4 @@ const CreateClass = () => {
 };
 
 export default CreateClass;
+
