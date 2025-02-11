@@ -18,8 +18,6 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-6 space-y-6">
-        <h3 className="text-lg font-medium text-primary text-left">Location & Category</h3>
-
         <FormField
           control={form.control}
           name="category"

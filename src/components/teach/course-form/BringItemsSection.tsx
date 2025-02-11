@@ -28,8 +28,6 @@ const BringItemsSection = ({ form }: BringItemsSectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-6 space-y-6">
-        <h3 className="text-lg font-medium text-primary text-left">What to Bring</h3>
-
         <div className="space-y-4">
           <div className="flex gap-2">
             <Input
