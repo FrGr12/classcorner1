@@ -58,22 +58,22 @@ const TeacherOverview = () => {
       <DashboardMetrics metrics={metrics} />
       
       <section className="w-full">
-        <h2 className="text-2xl font-semibold mb-4">Messages & Notifications</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Messages & Notifications</h2>
         <MessagesOverview />
       </section>
 
       <section className="w-full">
-        <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Quick Actions</h2>
         <DashboardActions />
       </section>
 
       <section className="w-full">
-        <h2 className="text-2xl font-semibold mb-4">Upcoming Classes</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Upcoming Classes</h2>
         <BookingsOverview />
       </section>
 
       <section className="w-full">
-        <h2 className="text-2xl font-semibold mb-4">Analytics Summary</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Analytics Summary</h2>
         <AnalyticsSummary />
       </section>
     </div>
@@ -81,4 +81,3 @@ const TeacherOverview = () => {
 };
 
 export default TeacherOverview;
-
