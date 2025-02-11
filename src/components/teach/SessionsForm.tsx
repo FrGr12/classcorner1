@@ -104,4 +104,3 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 };
 
 export default SessionsForm;
-
