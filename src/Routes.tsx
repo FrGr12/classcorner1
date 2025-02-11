@@ -11,7 +11,7 @@ import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 import Onboarding from "@/pages/Onboarding";
 import CreateClass from "@/pages/CreateClass";
-import DuplicateClass from "@/pages/DuplicateClass";
+import UserProfileDuplicate from "@/pages/UserProfileDuplicate";
 
 const router = createBrowserRouter([
   {
