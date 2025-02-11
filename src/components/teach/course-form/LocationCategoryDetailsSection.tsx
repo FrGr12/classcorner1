@@ -19,8 +19,8 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
-        <div className="flex items-start gap-4">
-          <div className="flex-1 flex items-center justify-center gap-4">
+        <div className="flex items-center gap-4">
+          <div className="flex-1 flex items-center gap-4">
             <FormField
               control={form.control}
               name="date"
@@ -60,7 +60,7 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             />
           </div>
 
-          <div className="flex flex-col items-end gap-2">
+          <div className="flex items-center gap-2">
             <Button 
               type="button" 
               onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
@@ -84,4 +84,3 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
 };
 
 export default LocationCategoryDetailsSection;
-
