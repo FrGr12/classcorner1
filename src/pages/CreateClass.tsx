@@ -90,18 +90,18 @@ const CreateClass = () => {
 
       // Insert sessions
       if (sessions.length > 0) {
+        const formattedSessions = sessions.map(session => ({
+          course_id: course.id,
+          start_time: session.start.toISOString(),
+          is_recurring: session.isRecurring,
+          recurrence_pattern: session.recurrencePattern,
+          recurrence_end_date: session.recurrenceEndDate ? session.recurrenceEndDate.toISOString() : null,
+          recurrence_count: session.recurrenceCount
+        }));
+
         const { error: sessionsError } = await supabase
           .from('course_sessions')
-          .insert(
-            sessions.map(session => ({
-              course_id: course.id,
-              start_time: session.start,
-              is_recurring: session.isRecurring,
-              recurrence_pattern: session.recurrencePattern,
-              recurrence_end_date: session.recurrenceEndDate,
-              recurrence_count: session.recurrenceCount
-            }))
-          );
+          .insert(formattedSessions);
 
         if (sessionsError) throw sessionsError;
       }
