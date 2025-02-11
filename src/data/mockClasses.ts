@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 const mockClasses: Record<string, ClassItem[]> = {
