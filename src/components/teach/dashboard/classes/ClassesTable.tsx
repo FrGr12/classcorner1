@@ -5,9 +5,10 @@ import { Button } from "@/components/ui/button";
 import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import PromoteDialog from "./promote/PromoteDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,17 +22,51 @@ interface ClassesTableProps {
   onAction: (action: string, classId: number) => void;
 }
 
+interface PaymentStats {
+  [key: number]: {
+    paid_count: number;
+    pending_count: number;
+  };
+}
+
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [paymentStats, setPaymentStats] = useState<PaymentStats>({});
   const [filters, setFilters] = useState({
     title: "",
     date: "",
     capacity: "",
     attendees: "",
     waitlist: "",
+    paid: "",
   });
+
+  useEffect(() => {
+    const fetchPaymentStats = async () => {
+      const { data, error } = await supabase
+        .from('course_payment_stats')
+        .select('*');
+
+      if (error) {
+        console.error('Error fetching payment stats:', error);
+        return;
+      }
+
+      const statsMap = data.reduce((acc: PaymentStats, stat) => {
+        acc[stat.course_id] = {
+          paid_count: stat.paid_count || 0,
+          pending_count: stat.pending_count || 0,
+        };
+        return acc;
+      }, {});
+
+      setPaymentStats(statsMap);
+    };
+
+    fetchPaymentStats();
+  }, []);
 
   const getFormattedDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
@@ -58,14 +93,16 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   };
 
   const filteredClasses = classes.filter(classItem => {
+    const stats = paymentStats[classItem.id] || { paid_count: 0, pending_count: 0 };
     const matchesTitle = classItem.title.toLowerCase().includes(filters.title.toLowerCase());
     const matchesDate = !filters.date || getFormattedDate(classItem.date).toLowerCase().includes(filters.date.toLowerCase());
     const matchesCapacity = !filters.capacity || (classItem.maxParticipants?.toString() || '-').includes(filters.capacity);
+    const matchesPaid = !filters.paid || stats.paid_count.toString().includes(filters.paid);
     // For now, attendees and waitlist are hardcoded to 0
     const matchesAttendees = !filters.attendees || '0'.includes(filters.attendees);
     const matchesWaitlist = !filters.waitlist || '0'.includes(filters.waitlist);
 
-    return matchesTitle && matchesDate && matchesCapacity && matchesAttendees && matchesWaitlist;
+    return matchesTitle && matchesDate && matchesCapacity && matchesAttendees && matchesWaitlist && matchesPaid;
   });
 
   const ColumnFilter = ({ column }: { column: string }) => (
@@ -101,70 +138,82 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
             <TableHead><ColumnFilter column="Capacity" /></TableHead>
             <TableHead><ColumnFilter column="Attendees" /></TableHead>
             <TableHead><ColumnFilter column="Waitlist" /></TableHead>
+            <TableHead><ColumnFilter column="Paid" /></TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredClasses.map((classItem) => (
-            <TableRow key={classItem.id}>
-              <TableCell className="font-medium">{classItem.title}</TableCell>
-              <TableCell>{getFormattedDate(classItem.date)}</TableCell>
-              <TableCell>{classItem.maxParticipants || '-'}</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>
-                <div className="flex gap-4">
-                  <div className="flex flex-col items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => onAction('edit', classItem.id)}
-                      className="bg-accent-purple hover:bg-accent-purple/90"
-                    >
-                      <Edit className="h-4 w-4 text-white" />
-                    </Button>
-                    <span className="text-xs text-muted-foreground">Edit</span>
-                  </div>
+          {filteredClasses.map((classItem) => {
+            const stats = paymentStats[classItem.id] || { paid_count: 0, pending_count: 0 };
+            return (
+              <TableRow key={classItem.id}>
+                <TableCell className="font-medium">{classItem.title}</TableCell>
+                <TableCell>{getFormattedDate(classItem.date)}</TableCell>
+                <TableCell>{classItem.maxParticipants || '-'}</TableCell>
+                <TableCell>0</TableCell>
+                <TableCell>0</TableCell>
+                <TableCell>
+                  <span className="font-medium text-green-600">{stats.paid_count}</span>
+                  {stats.pending_count > 0 && (
+                    <span className="text-sm text-muted-foreground ml-1">
+                      ({stats.pending_count} pending)
+                    </span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-4">
+                    <div className="flex flex-col items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => onAction('edit', classItem.id)}
+                        className="bg-accent-purple hover:bg-accent-purple/90"
+                      >
+                        <Edit className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-muted-foreground">Edit</span>
+                    </div>
 
-                  <div className="flex flex-col items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => onAction('message', classItem.id)}
-                      className="bg-accent-purple hover:bg-accent-purple/90"
-                    >
-                      <MessageSquare className="h-4 w-4 text-white" />
-                    </Button>
-                    <span className="text-xs text-muted-foreground">Message</span>
-                  </div>
+                    <div className="flex flex-col items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => onAction('message', classItem.id)}
+                        className="bg-accent-purple hover:bg-accent-purple/90"
+                      >
+                        <MessageSquare className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-muted-foreground">Message</span>
+                    </div>
 
-                  <div className="flex flex-col items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handlePromote(classItem.id)}
-                      className="bg-accent-purple hover:bg-accent-purple/90"
-                    >
-                      <ArrowUp className="h-4 w-4 text-white" />
-                    </Button>
-                    <span className="text-xs text-muted-foreground">Promote</span>
-                  </div>
+                    <div className="flex flex-col items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handlePromote(classItem.id)}
+                        className="bg-accent-purple hover:bg-accent-purple/90"
+                      >
+                        <ArrowUp className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-muted-foreground">Promote</span>
+                    </div>
 
-                  <div className="flex flex-col items-center gap-1">
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleShare(classItem.id)}
-                      className="bg-accent-purple hover:bg-accent-purple/90"
-                    >
-                      <Share2 className="h-4 w-4 text-white" />
-                    </Button>
-                    <span className="text-xs text-muted-foreground">Share</span>
+                    <div className="flex flex-col items-center gap-1">
+                      <Button
+                        variant="outline"
+                        size="icon"
+                        onClick={() => handleShare(classItem.id)}
+                        className="bg-accent-purple hover:bg-accent-purple/90"
+                      >
+                        <Share2 className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-muted-foreground">Share</span>
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
 

@@ -1649,6 +1649,36 @@ export type Database = {
       }
     }
     Views: {
+      course_payment_stats: {
+        Row: {
+          course_id: number | null
+          paid_count: number | null
+          pending_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       teacher_engagement_metrics: {
         Row: {
           attended_students: number | null
