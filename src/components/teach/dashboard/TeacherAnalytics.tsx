@@ -12,7 +12,7 @@ import { DateRangePicker } from "../analytics/DateRangePicker";
 interface Review {
   id: number;
   rating: number;
-  review_text: string;
+  review_text: string | null;
   created_at: string;
   instructor_response: string | null;
   course_id: number;
@@ -149,6 +149,20 @@ const TeacherAnalytics = () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
 
+    type ReviewResponse = {
+      id: number;
+      rating: number;
+      review_text: string | null;
+      created_at: string;
+      instructor_response: string | null;
+      course_id: number;
+      reviewer_id: string;
+      updated_at: string;
+      courses: {
+        title: string;
+      };
+    };
+
     const { data } = await supabase
       .from('course_reviews')
       .select(`
@@ -169,7 +183,7 @@ const TeacherAnalytics = () => {
       .limit(5);
 
     if (data) {
-      setRecentReviews(data as Review[]);
+      setRecentReviews(data as ReviewResponse[]);
     }
   };
 
