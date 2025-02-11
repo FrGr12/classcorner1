@@ -27,8 +27,8 @@ const formSchema = z.object({
   maxParticipants: z.coerce.number().min(0, "Maximum participants must be 0 or greater"),
   location: z.string().min(1, "Location is required"),
   category: z.string().min(1, "Category is required"),
-  locationDetails: z.string().optional(),
-  categoryDetails: z.string().optional(),
+  date: z.string().optional(),
+  time: z.string().optional(),
   whatToBring: z.array(z.string()).default([]),
   learningOutcomes: z.array(z.string()).default([]),
 });

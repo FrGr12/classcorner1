@@ -19,53 +19,59 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
-        <div className="space-y-4">
+        <div className="flex items-center gap-4">
           <FormField
             control={form.control}
-            name="categoryDetails"
+            name="date"
             render={({ field }) => (
-              <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-                <FormLabel className="text-sm font-medium text-primary">Category Details</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Additional category information" 
-                    className="bg-white border-neutral-200"
-                    {...field} 
-                  />
-                </FormControl>
-                <Button 
-                  type="button" 
-                  onClick={() => console.log('Category details saved:', field.value)}
-                  className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-                >
-                  Save
-                </Button>
-                <FormMessage className="col-start-2" />
+              <FormItem className="flex-1">
+                <FormLabel className="text-sm font-medium text-primary">Date</FormLabel>
+                <div className="flex items-center gap-4">
+                  <FormControl>
+                    <Input 
+                      type="date"
+                      placeholder="Select date" 
+                      className="bg-white border-neutral-200"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <Button 
+                    type="button" 
+                    onClick={() => console.log('Date saved:', field.value)}
+                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+                  >
+                    Save
+                  </Button>
+                </div>
+                <FormMessage />
               </FormItem>
             )}
           />
 
           <FormField
             control={form.control}
-            name="locationDetails"
+            name="time"
             render={({ field }) => (
-              <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-                <FormLabel className="text-sm font-medium text-primary">Location Details</FormLabel>
-                <FormControl>
-                  <Input 
-                    placeholder="Additional location information" 
-                    className="bg-white border-neutral-200"
-                    {...field} 
-                  />
-                </FormControl>
-                <Button 
-                  type="button" 
-                  onClick={() => console.log('Location details saved:', field.value)}
-                  className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-                >
-                  Save
-                </Button>
-                <FormMessage className="col-start-2" />
+              <FormItem className="flex-1">
+                <FormLabel className="text-sm font-medium text-primary">Time</FormLabel>
+                <div className="flex items-center gap-4">
+                  <FormControl>
+                    <Input 
+                      type="time"
+                      placeholder="Select time" 
+                      className="bg-white border-neutral-200"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <Button 
+                    type="button" 
+                    onClick={() => console.log('Time saved:', field.value)}
+                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+                  >
+                    Save
+                  </Button>
+                </div>
+                <FormMessage />
               </FormItem>
             )}
           />
@@ -76,4 +82,3 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
 };
 
 export default LocationCategoryDetailsSection;
-
