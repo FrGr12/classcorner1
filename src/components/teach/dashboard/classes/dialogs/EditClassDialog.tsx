@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -8,6 +9,7 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+import ImageUpload from "@/components/teach/ImageUpload";
 
 interface EditClassDialogProps {
   open: boolean;
@@ -51,6 +53,8 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
     status: "draft"
   });
   const [sessions, setSessions] = useState<SessionData[]>([]);
+  const [images, setImages] = useState<File[]>([]);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
 
   useEffect(() => {
     if (open && classId) {
@@ -92,11 +96,23 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
 
       if (sessionError) throw sessionError;
 
+      // Fetch existing images
+      const { data: imageData, error: imageError } = await supabase
+        .from('course_images')
+        .select('image_path')
+        .eq('course_id', classId)
+        .order('display_order', { ascending: true });
+
+      if (imageError) throw imageError;
+
       if (classData) {
         setFormData(classData);
       }
       if (sessionData) {
         setSessions(sessionData);
+      }
+      if (imageData) {
+        setExistingImages(imageData.map(img => img.image_path));
       }
     } catch (error) {
       console.error('Error fetching class data:', error);
@@ -119,15 +135,35 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
           location: formData.location,
           price: formData.price,
           duration: formData.duration,
-          max_participants: formData.max_participants,
           category: formData.category,
-          learning_objectives: formData.learning_objectives,
-          materials_included: formData.materials_included,
-          setup_instructions: formData.setup_instructions
         })
         .eq('id', classId);
 
       if (error) throw error;
+
+      // Handle new image uploads if any
+      if (images.length > 0) {
+        for (const image of images) {
+          const fileExt = image.name.split('.').pop();
+          const fileName = `${classId}/${Math.random()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('class-images')
+            .upload(fileName, image);
+
+          if (uploadError) throw uploadError;
+
+          const { error: imageError } = await supabase
+            .from('course_images')
+            .insert({
+              course_id: classId,
+              image_path: fileName,
+              display_order: existingImages.length
+            });
+
+          if (imageError) throw imageError;
+        }
+      }
 
       toast.success("Class updated successfully");
       onOpenChange(false);
@@ -150,6 +186,21 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
       onOpenChange(false);
     } catch (error) {
       toast.error("Failed to archive class");
+    }
+  };
+
+  const handleSessionUpdate = async (sessionId: number, newDate: string) => {
+    try {
+      const { error } = await supabase
+        .from('course_sessions')
+        .update({ start_time: newDate })
+        .eq('id', sessionId);
+
+      if (error) throw error;
+      toast.success("Session rescheduled successfully");
+      fetchClassData(); // Refresh the sessions data
+    } catch (error) {
+      toast.error("Failed to reschedule session");
     }
   };
 
@@ -230,36 +281,36 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
-              <Input
-                id="location"
-                value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                required
-              />
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input
+              id="location"
+              value={formData.location}
+              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              required
+            />
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="maxParticipants">Maximum Participants</Label>
-              <Input
-                id="maxParticipants"
-                type="number"
-                value={formData.max_participants}
-                onChange={(e) => setFormData({ ...formData, max_participants: Number(e.target.value) })}
-                required
-                min={1}
-              />
-            </div>
+          <div className="space-y-2">
+            <Label>Class Images</Label>
+            <ImageUpload
+              images={images}
+              setImages={setImages}
+            />
           </div>
 
           <div className="space-y-2">
             <Label>Class Sessions</Label>
             <div className="bg-neutral-50 p-4 rounded-lg space-y-2">
               {sessions.map((session) => (
-                <div key={session.id} className="flex justify-between items-center">
+                <div key={session.id} className="flex justify-between items-center gap-4">
                   <span>{format(new Date(session.start_time), 'PPp')}</span>
+                  <Input
+                    type="datetime-local"
+                    defaultValue={format(new Date(session.start_time), "yyyy-MM-dd'T'HH:mm")}
+                    onChange={(e) => handleSessionUpdate(session.id, e.target.value)}
+                    className="w-auto"
+                  />
                 </div>
               ))}
             </div>
