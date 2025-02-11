@@ -60,20 +60,27 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         return;
       }
 
-      // Fetch activity stats
-      const { data: activityData, error: activityError } = await supabase
+      // Fetch activity stats for views
+      const { data: viewData, error: viewError } = await supabase
         .from('course_activity_log')
-        .select('course_id, activity_type, count')
-        .in('activity_type', ['view', 'click'])
-        .select(`
-          course_id,
-          activity_type,
-          count(*) as count
-        `)
-        .group('course_id, activity_type');
+        .select('course_id, count(*)')
+        .eq('activity_type', 'view')
+        .groupBy('course_id');
 
-      if (activityError) {
-        console.error('Error fetching activity stats:', activityError);
+      if (viewError) {
+        console.error('Error fetching view stats:', viewError);
+        return;
+      }
+
+      // Fetch activity stats for clicks
+      const { data: clickData, error: clickError } = await supabase
+        .from('course_activity_log')
+        .select('course_id, count(*)')
+        .eq('activity_type', 'click')
+        .groupBy('course_id');
+
+      if (clickError) {
+        console.error('Error fetching click stats:', clickError);
         return;
       }
 
@@ -87,18 +94,22 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       }, {});
       setPaymentStats(statsMap);
 
-      // Process view stats
-      const viewStatsMap = activityData.reduce((acc: ViewStats, stat) => {
-        if (!acc[stat.course_id]) {
-          acc[stat.course_id] = { views: 0, clicks: 0 };
+      // Process view and click stats
+      const viewStatsMap: ViewStats = {};
+      viewData?.forEach((stat) => {
+        if (!viewStatsMap[stat.course_id]) {
+          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        if (stat.activity_type === 'view') {
-          acc[stat.course_id].views = Number(stat.count);
-        } else if (stat.activity_type === 'click') {
-          acc[stat.course_id].clicks = Number(stat.count);
+        viewStatsMap[stat.course_id].views = parseInt(stat.count);
+      });
+
+      clickData?.forEach((stat) => {
+        if (!viewStatsMap[stat.course_id]) {
+          viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        return acc;
-      }, {});
+        viewStatsMap[stat.course_id].clicks = parseInt(stat.count);
+      });
+
       setViewStats(viewStatsMap);
     };
 
