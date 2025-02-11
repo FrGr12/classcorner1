@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/select";
 import { Search, Filter, Archive, CheckSquare, Plus, Library } from "lucide-react";
 import MessagesTable from "./MessagesTable";
-import MessageTemplates from "./MessageTemplates";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -82,7 +81,7 @@ const TeacherInbox = () => {
         throw error;
       }
 
-      return data as unknown as Message[];
+      return data as Message[];
     },
   });
 
@@ -188,20 +187,16 @@ const TeacherInbox = () => {
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card className="md:col-span-2">
-          {isLoading ? (
-            <div className="text-center py-8">Loading messages...</div>
-          ) : (
-            <MessagesTable 
-              messages={messages || []} 
-              onSendMessage={handleSendMessage}
-            />
-          )}
-        </Card>
-
-        <MessageTemplates />
-      </div>
+      <Card>
+        {isLoading ? (
+          <div className="text-center py-8">Loading messages...</div>
+        ) : (
+          <MessagesTable 
+            messages={messages || []} 
+            onSendMessage={handleSendMessage}
+          />
+        )}
+      </Card>
     </div>
   );
 };
