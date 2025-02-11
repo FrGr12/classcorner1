@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -130,7 +131,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     </div>
   );
 
-  const handleEditClick = (classId: number) => {
+  const handleEditClick = (classId: number, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent the row click event
+    // Navigate relative to the root path, not the current path
     navigate(`/edit-course/${classId}`);
   };
 
@@ -179,7 +182,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => handleEditClick(classItem.id)}
+                        onClick={(e) => handleEditClick(classItem.id, e)}
                         className="bg-accent-purple hover:bg-accent-purple/90"
                       >
                         <Edit className="h-4 w-4 text-white" />
