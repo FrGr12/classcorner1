@@ -1,3 +1,4 @@
+
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,12 +16,15 @@ type Message = {
   status: string;
   student_id: string;
   course_id: number;
+  instructor_id: string;
+  thread_id: string;
+  is_unread: boolean;
   profile?: {
     first_name: string | null;
     last_name: string | null;
   };
   course?: {
-    title: string;
+    title: string | null;
   };
 };
 

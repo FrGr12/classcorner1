@@ -10,13 +10,33 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Search, Filter, Archive, CheckSquare } from "lucide-react";
 import MessagesTable from "./MessagesTable";
 import MessageTemplates from "./MessageTemplates";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+
+type Message = {
+  id: number;
+  message_type: string;
+  message_content: string;
+  sent_at: string;
+  read_at: string | null;
+  status: string;
+  student_id: string;
+  course_id: number;
+  instructor_id: string;
+  thread_id: string;
+  is_unread: boolean;
+  profile?: {
+    first_name: string | null;
+    last_name: string | null;
+  };
+  course?: {
+    title: string | null;
+  };
+};
 
 const TeacherInbox = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -59,7 +79,7 @@ const TeacherInbox = () => {
         throw error;
       }
 
-      return data;
+      return data as Message[];
     },
   });
 
@@ -83,7 +103,8 @@ const TeacherInbox = () => {
           course_id: courseId,
           message_type: "reply",
           message_content: content,
-          status: "sent"
+          status: "sent",
+          is_unread: true
         });
 
       if (error) throw error;
