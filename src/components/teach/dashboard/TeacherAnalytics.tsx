@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -74,14 +73,14 @@ const TeacherAnalytics = () => {
     // Fetch engagement metrics
     const { data: engagementData } = await supabase
       .from('teacher_engagement_metrics')
-      .select('*')
+      .select('total_students, avg_rating, attended_students')
       .eq('instructor_id', user.id)
       .single();
 
     // Fetch revenue insights
     const { data: revenueData } = await supabase
       .from('teacher_revenue_insights')
-      .select('*')
+      .select('total_revenue')
       .eq('instructor_id', user.id)
       .single();
 
@@ -161,7 +160,7 @@ const TeacherAnalytics = () => {
         course_id,
         reviewer_id,
         updated_at,
-        courses (
+        courses:course_id (
           title
         )
       `)

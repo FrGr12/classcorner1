@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   BookOpen,
   BarChart,
-  Star,
   Menu,
   PlusCircle,
   User,
@@ -37,11 +36,6 @@ const DashboardSidebar = () => {
       title: "Analytics",
       href: "/dashboard/analytics",
       icon: BarChart,
-    },
-    {
-      title: "Reviews",
-      href: "/dashboard/reviews",
-      icon: Star,
     },
     {
       title: "Profile",
