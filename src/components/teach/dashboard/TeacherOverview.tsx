@@ -57,31 +57,28 @@ const TeacherOverview = () => {
     <div className="space-y-8">
       <DashboardMetrics metrics={metrics} />
       
-      <div className="grid gap-8 md:grid-cols-2">
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
-          <DashboardActions />
-        </section>
-        
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Recent Bookings</h2>
-          <BookingsOverview />
-        </section>
-      </div>
+      <section className="w-full">
+        <h2 className="text-2xl font-semibold mb-4">Messages & Notifications</h2>
+        <MessagesOverview />
+      </section>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Messages & Notifications</h2>
-          <MessagesOverview />
-        </section>
-        
-        <section>
-          <h2 className="text-2xl font-semibold mb-4">Analytics Summary</h2>
-          <AnalyticsSummary />
-        </section>
-      </div>
+      <section className="w-full">
+        <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
+        <DashboardActions />
+      </section>
+
+      <section className="w-full">
+        <h2 className="text-2xl font-semibold mb-4">Upcoming Classes</h2>
+        <BookingsOverview />
+      </section>
+
+      <section className="w-full">
+        <h2 className="text-2xl font-semibold mb-4">Analytics Summary</h2>
+        <AnalyticsSummary />
+      </section>
     </div>
   );
 };
 
 export default TeacherOverview;
+
