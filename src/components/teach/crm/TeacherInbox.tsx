@@ -302,21 +302,6 @@ const TeacherInbox = () => {
         return;
       }
 
-      const { error } = await supabase
-        .from("communications")
-        .insert({
-          instructor_id: user.id,
-          student_id: recipient,
-          message_type: "direct",
-          message_content: messageContent,
-          status: "sent",
-          is_unread: true,
-          thread_id: crypto.randomUUID(),
-          communication_context: messageSubject
-        });
-
-      if (error) throw error;
-
       toast({
         title: "Success",
         description: "Message sent successfully",
