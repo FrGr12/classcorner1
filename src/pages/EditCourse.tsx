@@ -12,46 +12,48 @@ const EditCourse = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
-  const [hasAccess, setHasAccess] = useState(false);
+  const [course, setCourse] = useState<any>(null);
 
   useEffect(() => {
-    const checkAccess = async () => {
+    const fetchCourse = async () => {
       try {
-        // Convert string ID to number and validate
         const courseId = Number(id);
         if (isNaN(courseId)) {
           toast.error("Invalid course ID");
-          navigate("/teach/dashboard");
+          navigate("/dashboard/classes");
           return;
         }
 
-        const { data: course, error } = await supabase
+        const { data, error } = await supabase
           .from("courses")
-          .select("*")
+          .select(`
+            *,
+            course_sessions (
+              start_time
+            )
+          `)
           .eq("id", courseId)
           .maybeSingle();
 
         if (error) throw error;
 
-        if (!course) {
+        if (!data) {
           toast.error("Course not found");
-          navigate("/teach/dashboard");
+          navigate("/dashboard/classes");
           return;
         }
 
-        setHasAccess(true);
+        setCourse(data);
       } catch (error) {
-        console.error("Error checking access:", error);
-        toast.error("Failed to verify access");
-        navigate("/teach/dashboard");
+        console.error("Error fetching course:", error);
+        toast.error("Failed to load course");
+        navigate("/dashboard/classes");
       } finally {
         setIsLoading(false);
       }
     };
 
-    if (id) {
-      checkAccess();
-    }
+    fetchCourse();
   }, [id, navigate]);
 
   if (isLoading) {
@@ -68,7 +70,7 @@ const EditCourse = () => {
     );
   }
 
-  if (!hasAccess) return null;
+  if (!course) return null;
 
   return (
     <div className="min-h-screen bg-neutral-100">
@@ -81,7 +83,7 @@ const EditCourse = () => {
           </p>
           
           <div className="bg-white p-8 rounded-xl shadow-sm">
-            <EditCourseForm />
+            <EditCourseForm initialData={course} />
           </div>
         </div>
       </main>

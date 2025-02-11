@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { 
+import {
   AlertDialog,
   AlertDialogAction,
   AlertDialogCancel,
@@ -41,82 +41,39 @@ const formSchema = z.object({
   startTime: z.string().min(1, "Start time is required"),
 });
 
-const EditCourseForm = () => {
+interface EditCourseFormProps {
+  initialData: any;
+}
+
+const EditCourseForm = ({ initialData }: EditCourseFormProps) => {
   const navigate = useNavigate();
-  const { id } = useParams();
   const [isLoading, setIsLoading] = useState(false);
   const [showCancelDialog, setShowCancelDialog] = useState(false);
-  const [currentCourse, setCurrentCourse] = useState<any>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      price: "",
-      location: "",
-      category: "",
-      maxParticipants: "",
-      waitlistEnabled: false,
-      maxWaitlistSize: "",
-      startDate: "",
-      startTime: "",
+      title: initialData.title,
+      description: initialData.description,
+      category: initialData.category,
+      location: initialData.location,
+      price: initialData.price.toString(),
+      maxParticipants: initialData.max_participants?.toString() || "",
+      waitlistEnabled: initialData.waitlist_enabled || false,
+      maxWaitlistSize: initialData.max_waitlist_size?.toString() || "",
+      startDate: initialData.course_sessions?.[0]?.start_time 
+        ? new Date(initialData.course_sessions[0].start_time).toISOString().split('T')[0] 
+        : "",
+      startTime: initialData.course_sessions?.[0]?.start_time 
+        ? new Date(initialData.course_sessions[0].start_time).toTimeString().slice(0, 5)
+        : "",
     },
   });
-
-  useEffect(() => {
-    const fetchCourseDetails = async () => {
-      if (!id) return;
-
-      const { data: course, error } = await supabase
-        .from("courses")
-        .select(`
-          *,
-          course_sessions (
-            start_time
-          )
-        `)
-        .eq('id', Number(id))
-        .maybeSingle();
-
-      if (error) {
-        toast.error("Error fetching course details");
-        return;
-      }
-
-      if (course) {
-        setCurrentCourse(course);
-        const startTime = course.course_sessions?.[0]?.start_time;
-        const date = startTime ? new Date(startTime) : new Date();
-
-        form.reset({
-          title: course.title,
-          description: course.description,
-          category: course.category,
-          location: course.location,
-          price: course.price.toString(),
-          maxParticipants: course.max_participants?.toString() || "",
-          waitlistEnabled: course.waitlist_enabled || false,
-          maxWaitlistSize: course.max_waitlist_size?.toString() || "",
-          startDate: startTime ? date.toISOString().split('T')[0] : "",
-          startTime: startTime ? date.toTimeString().slice(0, 5) : "",
-        });
-      }
-    };
-
-    fetchCourseDetails();
-  }, [id, form]);
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
       toast.loading("Updating your course...");
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast.error("You must be logged in to update a course");
-        return;
-      }
 
       // Update course details
       const { error: courseError } = await supabase
@@ -131,12 +88,12 @@ const EditCourseForm = () => {
           waitlist_enabled: values.waitlistEnabled,
           max_waitlist_size: values.maxWaitlistSize ? Number(values.maxWaitlistSize) : null,
         })
-        .eq('id', Number(id));
+        .eq('id', initialData.id);
 
       if (courseError) throw courseError;
 
       // Update session timing
-      if (currentCourse?.course_sessions?.[0]?.id) {
+      if (initialData.course_sessions?.[0]?.id) {
         const combinedDateTime = new Date(`${values.startDate}T${values.startTime}`);
         
         const { error: sessionError } = await supabase
@@ -144,13 +101,13 @@ const EditCourseForm = () => {
           .update({
             start_time: combinedDateTime.toISOString(),
           })
-          .eq('id', currentCourse.course_sessions[0].id);
+          .eq('id', initialData.course_sessions[0].id);
 
         if (sessionError) throw sessionError;
       }
 
       toast.success("Course updated successfully!");
-      navigate(`/class/${values.category}/${id}`);
+      navigate(`/class/${values.category}/${initialData.id}`);
     } catch (error) {
       console.error("Error updating course:", error);
       toast.error("Failed to update course. Please try again.");
@@ -166,9 +123,9 @@ const EditCourseForm = () => {
       const { error: courseError } = await supabase
         .from("courses")
         .update({
-          status: 'archived' // Changed from 'cancelled' to 'archived'
+          status: 'archived'
         })
-        .eq('id', Number(id));
+        .eq('id', initialData.id);
 
       if (courseError) throw courseError;
 
