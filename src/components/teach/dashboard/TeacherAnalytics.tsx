@@ -9,8 +9,36 @@ import RevenueMetrics from "../analytics/RevenueMetrics";
 import InsightsSection from "../analytics/InsightsSection";
 import { DateRangePicker } from "../analytics/DateRangePicker";
 
+interface Review {
+  id: string;
+  rating: number;
+  review_text: string;
+  created_at: string;
+  instructor_response: string | null;
+  courses: {
+    title: string;
+  };
+}
+
+interface AnalyticsData {
+  totalStudents: number;
+  averageRating: number;
+  activeCourses: number;
+  totalRevenue: number;
+  attendanceRate: number;
+  waitlistCount: number;
+}
+
+interface ReviewStats {
+  averageRating: number;
+  recentReviews: number;
+  responseRate: number;
+  featuredReviews: number;
+  totalReviews: number;
+}
+
 const TeacherAnalytics = () => {
-  const [analyticsData, setAnalyticsData] = useState({
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData>({
     totalStudents: 0,
     averageRating: 0,
     activeCourses: 0,
@@ -19,7 +47,7 @@ const TeacherAnalytics = () => {
     waitlistCount: 0
   });
 
-  const [reviewStats, setReviewStats] = useState({
+  const [reviewStats, setReviewStats] = useState<ReviewStats>({
     averageRating: 0,
     recentReviews: 0,
     responseRate: 0,
@@ -27,7 +55,7 @@ const TeacherAnalytics = () => {
     totalReviews: 0
   });
 
-  const [recentReviews, setRecentReviews] = useState<any[]>([]);
+  const [recentReviews, setRecentReviews] = useState<Review[]>([]);
 
   useEffect(() => {
     fetchAnalytics();
@@ -87,23 +115,29 @@ const TeacherAnalytics = () => {
       .select('*')
       .eq('instructor_id', user.id);
 
-    const totalReviews = reviews?.length || 0;
-    const averageRating = reviews?.reduce((acc, rev) => acc + rev.rating, 0) / totalReviews || 0;
+    if (!reviews) return;
+
+    const totalReviews = reviews.length;
+    const averageRating = totalReviews > 0 
+      ? reviews.reduce((acc, rev) => acc + rev.rating, 0) / totalReviews 
+      : 0;
     
     const thirtyDaysAgo = new Date();
     thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
     
-    const recentReviews = reviews?.filter(rev => 
+    const recentReviews = reviews.filter(rev => 
       new Date(rev.created_at) > thirtyDaysAgo
-    ).length || 0;
+    ).length;
 
-    const responseRate = reviews?.filter(rev => rev.instructor_response !== null).length / totalReviews * 100 || 0;
+    const responseRate = totalReviews > 0
+      ? (reviews.filter(rev => rev.instructor_response !== null).length / totalReviews) * 100
+      : 0;
     
     setReviewStats({
       averageRating,
       recentReviews,
       responseRate,
-      featuredReviews: 8, // This would need to be updated based on your featured reviews logic
+      featuredReviews: 8,
       totalReviews
     });
   };

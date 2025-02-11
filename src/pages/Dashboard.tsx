@@ -6,7 +6,6 @@ import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
-import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import { Card } from "@/components/ui/card";
@@ -24,7 +23,6 @@ const Dashboard = () => {
               <Route path="/classes" element={<TeacherClasses />} />
               <Route path="/create-class" element={<CreateClass />} />
               <Route path="/analytics" element={<TeacherAnalytics />} />
-              <Route path="/reviews" element={<TeacherReviews />} />
               <Route path="/profile" element={<TeacherProfile />} />
             </Routes>
           </main>
