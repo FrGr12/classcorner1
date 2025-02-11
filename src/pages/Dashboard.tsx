@@ -9,6 +9,7 @@ import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import TeacherContacts from "@/pages/TeacherContacts";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
+import TeacherStats from "@/components/teach/dashboard/stats/TeacherStats";
 
 const Dashboard = () => {
   return (
@@ -25,6 +26,7 @@ const Dashboard = () => {
               <Route path="/contacts" element={<TeacherContacts />} />
               <Route path="/profile" element={<TeacherProfile />} />
               <Route path="/classes" element={<TeacherClasses />} />
+              <Route path="/stats" element={<TeacherStats />} />
             </Routes>
           </main>
         </div>
