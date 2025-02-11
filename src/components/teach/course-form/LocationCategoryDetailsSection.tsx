@@ -19,7 +19,7 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
-        <div className="flex items-center justify-center gap-4">
+        <div className="flex items-start gap-4">
           <div className="flex-1 flex items-center justify-center gap-4">
             <FormField
               control={form.control}
@@ -60,21 +60,21 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             />
           </div>
 
-          <div className="flex items-center gap-4">
-            <Button 
-              type="button" 
-              variant="outline"
-              className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
-            >
-              Make Recurring
-            </Button>
-
+          <div className="flex flex-col items-end gap-2">
             <Button 
               type="button" 
               onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
               className="bg-accent-purple hover:bg-accent-purple/90 text-white"
             >
               Add session
+            </Button>
+
+            <Button 
+              type="button" 
+              variant="outline"
+              className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+            >
+              Make Recurring
             </Button>
           </div>
         </div>
