@@ -17,7 +17,6 @@ import BringItemsSection from "@/components/teach/course-form/BringItemsSection"
 import LearningOutcomesSection from "@/components/teach/course-form/LearningOutcomesSection";
 import ImagesSection from "@/components/teach/course-form/ImagesSection";
 import ScheduleSection from "@/components/teach/course-form/ScheduleSection";
-import LocationCategoryDetailsSection from "@/components/teach/course-form/LocationCategoryDetailsSection";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -133,11 +132,6 @@ const CreateClass = () => {
             <p className="text-muted-foreground mb-6 text-left">Schedule one-time or recurring sessions for your class</p>
             <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
           </Card>
-
-          <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Additional Location & Category Details</h2>
-            <LocationCategoryDetailsSection form={form} />
-          </Card>
         </form>
       </Form>
     </div>
@@ -145,4 +139,3 @@ const CreateClass = () => {
 };
 
 export default CreateClass;
-
