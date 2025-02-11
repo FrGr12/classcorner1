@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -74,48 +73,187 @@ const TeacherInbox = () => {
   const { data: messages, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          variant: "destructive",
-          title: "Authentication Error",
-          description: "Please sign in to view messages",
-        });
-        throw new Error("Not authenticated");
-      }
-
-      const { data, error } = await supabase
-        .from("communications")
-        .select(`
-          *,
-          profiles:profiles!communications_student_id_fkey(*),
-          course:courses(*)
-        `)
-        .eq("instructor_id", user.id)
-        .order("sent_at", { ascending: false });
-
-      if (error) throw error;
-
-      return data as unknown as Message[];
-    },
+      return [
+        {
+          id: 1,
+          message_type: "direct",
+          message_content: "Hi! I'm interested in your pottery class next week. Do you still have spots available?",
+          sent_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(), // 30 minutes ago
+          read_at: null,
+          status: "sent",
+          student_id: "1",
+          course_id: 1,
+          instructor_id: "instructor-1",
+          thread_id: "thread-1",
+          is_unread: true,
+          communication_context: "Pottery Class Inquiry",
+          last_activity_at: new Date().toISOString(),
+          profiles: {
+            first_name: "Sarah",
+            last_name: "Johnson",
+            avatar_url: null,
+            location: "Stockholm",
+            bio: "Passionate about arts and crafts, looking to expand my creative skills.",
+            languages: ["English", "Swedish"]
+          },
+          course: {
+            title: "Introduction to Pottery",
+            price: 75,
+            duration: 120
+          }
+        },
+        {
+          id: 2,
+          message_type: "direct",
+          message_content: "Thanks for the amazing cooking class yesterday! I learned so much about Italian cuisine.",
+          sent_at: new Date(Date.now() - 1000 * 60 * 60 * 2).toISOString(), // 2 hours ago
+          read_at: new Date().toISOString(),
+          status: "sent",
+          student_id: "2",
+          course_id: 2,
+          instructor_id: "instructor-1",
+          thread_id: "thread-2",
+          is_unread: false,
+          communication_context: "Cooking Class Feedback",
+          last_activity_at: new Date().toISOString(),
+          profiles: {
+            first_name: "Michael",
+            last_name: "Chen",
+            avatar_url: null,
+            location: "Göteborg",
+            bio: "Food enthusiast and amateur chef. Love learning new cooking techniques.",
+            languages: ["English", "Mandarin"]
+          },
+          course: {
+            title: "Italian Cooking Masterclass",
+            price: 90,
+            duration: 180
+          }
+        },
+        {
+          id: 3,
+          message_type: "direct",
+          message_content: "Could you provide more details about the photography workshop? Specifically about the camera requirements.",
+          sent_at: new Date(Date.now() - 1000 * 60 * 60 * 5).toISOString(), // 5 hours ago
+          read_at: null,
+          status: "sent",
+          student_id: "3",
+          course_id: 3,
+          instructor_id: "instructor-1",
+          thread_id: "thread-3",
+          is_unread: true,
+          communication_context: "Photography Workshop Question",
+          last_activity_at: new Date().toISOString(),
+          profiles: {
+            first_name: "Emma",
+            last_name: "Thompson",
+            avatar_url: null,
+            location: "Malmö",
+            bio: "Amateur photographer with a passion for landscape and street photography.",
+            languages: ["English", "Danish"]
+          },
+          course: {
+            title: "Street Photography Basics",
+            price: 85,
+            duration: 240
+          }
+        },
+        {
+          id: 4,
+          message_type: "direct",
+          message_content: "I need to reschedule my painting class for next week. What are the available time slots?",
+          sent_at: new Date(Date.now() - 1000 * 60 * 60 * 24).toISOString(), // 1 day ago
+          read_at: new Date().toISOString(),
+          status: "sent",
+          student_id: "4",
+          course_id: 4,
+          instructor_id: "instructor-1",
+          thread_id: "thread-4",
+          is_unread: false,
+          communication_context: "Reschedule Request",
+          last_activity_at: new Date().toISOString(),
+          profiles: {
+            first_name: "Lucas",
+            last_name: "Garcia",
+            avatar_url: null,
+            location: "Uppsala",
+            bio: "Art enthusiast exploring various mediums of expression.",
+            languages: ["English", "Spanish"]
+          },
+          course: {
+            title: "Acrylic Painting for Beginners",
+            price: 70,
+            duration: 150
+          }
+        },
+        {
+          id: 5,
+          message_type: "direct",
+          message_content: "Just signed up for the jewelry making workshop! Looking forward to creating my first piece.",
+          sent_at: new Date(Date.now() - 1000 * 60 * 60 * 48).toISOString(), // 2 days ago
+          read_at: new Date().toISOString(),
+          status: "sent",
+          student_id: "5",
+          course_id: 5,
+          instructor_id: "instructor-1",
+          thread_id: "thread-5",
+          is_unread: false,
+          communication_context: "Workshop Confirmation",
+          last_activity_at: new Date().toISOString(),
+          profiles: {
+            first_name: "Sofia",
+            last_name: "Anderson",
+            avatar_url: null,
+            location: "Örebro",
+            bio: "Creative soul with a love for handmade jewelry and accessories.",
+            languages: ["English", "Norwegian"]
+          },
+          course: {
+            title: "Silver Jewelry Making",
+            price: 95,
+            duration: 180
+          }
+        }
+      ] as Message[];
+    }
   });
 
   const { data: studentBookings } = useQuery({
     queryKey: ["bookings", selectedMessage?.student_id],
     enabled: !!selectedMessage?.student_id,
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("bookings")
-        .select(`
-          *,
-          course:courses(*)
-        `)
-        .eq("student_id", selectedMessage?.student_id)
-        .order("created_at", { ascending: false });
-
-      if (error) throw error;
-      return data;
+      return [
+        {
+          id: 1,
+          course: {
+            title: "Introduction to Pottery",
+            price: 75,
+            duration: 120
+          },
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 1 week ago
+          status: "confirmed"
+        },
+        {
+          id: 2,
+          course: {
+            title: "Advanced Pottery Techniques",
+            price: 90,
+            duration: 180
+          },
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14).toISOString(), // 2 weeks ago
+          status: "completed"
+        },
+        {
+          id: 3,
+          course: {
+            title: "Sculpture Workshop",
+            price: 85,
+            duration: 240
+          },
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(), // 3 weeks ago
+          status: "completed"
+        }
+      ];
     }
   });
 
