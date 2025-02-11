@@ -139,7 +139,7 @@ const IntegratedSearch = () => {
                           handleSearch();
                         }}
                       >
-                        <span className="text-[#FD0000]">Category:</span> {category}
+                        <span className="text-accent-purple">Category:</span> {category}
                       </div>
                     ))}
                     {matchingTitles.map((title) => (
@@ -151,7 +151,7 @@ const IntegratedSearch = () => {
                           handleSearch();
                         }}
                       >
-                        <span className="text-[#FD0000]">Class:</span> {title}
+                        <span className="text-accent-purple">Class:</span> {title}
                       </div>
                     ))}
                   </div>
@@ -169,7 +169,7 @@ const IntegratedSearch = () => {
 
               <button
                 onClick={handleSearch}
-                className="w-full py-3 bg-[#FD98DD] text-[#FD0000] rounded-xl font-medium hover:bg-[#FD98DD]/90 transition-colors"
+                className="w-full py-3 bg-accent-rose text-accent-purple rounded-xl font-medium hover:bg-accent-rose/90 transition-colors"
               >
                 Search
               </button>
@@ -202,7 +202,7 @@ const IntegratedSearch = () => {
                       handleSearch();
                     }}
                   >
-                    <span className="text-[#FD0000]">Category:</span> {category}
+                    <span className="text-accent-purple">Category:</span> {category}
                   </div>
                 ))}
                 {matchingTitles.map((title) => (
@@ -214,7 +214,7 @@ const IntegratedSearch = () => {
                       handleSearch();
                     }}
                   >
-                    <span className="text-[#FD0000]">Class:</span> {title}
+                    <span className="text-accent-purple">Class:</span> {title}
                   </div>
                 ))}
               </div>
@@ -243,3 +243,4 @@ const IntegratedSearch = () => {
 };
 
 export default IntegratedSearch;
+
