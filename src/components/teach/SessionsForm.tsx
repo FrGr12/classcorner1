@@ -61,35 +61,31 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium text-primary">Make this a recurring session</span>
-            <SessionFormFields
-              startDate={startDate}
-              setStartDate={setStartDate}
-              startTime={startTime}
-              setStartTime={setStartTime}
-              isRecurring={isRecurring}
-              setIsRecurring={setIsRecurring}
-              recurrencePattern={recurrencePattern}
-              setRecurrencePattern={setRecurrencePattern}
-              recurrenceEndDate={recurrenceEndDate}
-              setRecurrenceEndDate={setRecurrenceEndDate}
-              recurrenceCount={recurrenceCount}
-              setRecurrenceCount={setRecurrenceCount}
-            />
-          </div>
-          <Button
-            type="button"
-            onClick={addSession}
-            disabled={!startDate}
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add
-          </Button>
-        </div>
+      <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+        <SessionFormFields
+          startDate={startDate}
+          setStartDate={setStartDate}
+          startTime={startTime}
+          setStartTime={setStartTime}
+          isRecurring={isRecurring}
+          setIsRecurring={setIsRecurring}
+          recurrencePattern={recurrencePattern}
+          setRecurrencePattern={setRecurrencePattern}
+          recurrenceEndDate={recurrenceEndDate}
+          setRecurrenceEndDate={setRecurrenceEndDate}
+          recurrenceCount={recurrenceCount}
+          setRecurrenceCount={setRecurrenceCount}
+        />
+
+        <Button
+          type="button"
+          onClick={addSession}
+          disabled={!startDate}
+          className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add
+        </Button>
       </div>
 
       <SessionList sessions={sessions} removeSession={removeSession} />
@@ -98,4 +94,3 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 };
 
 export default SessionsForm;
-
