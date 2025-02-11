@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -125,7 +126,8 @@ const CreateClass = () => {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Schedule</h2>
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Dates</h2>
+            <p className="text-muted-foreground mb-6 text-left">Schedule one-time or recurring sessions for your class</p>
             <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
           </Card>
         </form>

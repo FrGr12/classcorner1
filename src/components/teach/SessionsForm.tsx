@@ -1,14 +1,8 @@
+
 import { useState } from "react";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Session } from "@/types/session";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import SessionFormFields from "./session-form/SessionFormFields";
 import SessionList from "./session-form/SessionList";
 
@@ -66,42 +60,34 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Add Sessions</CardTitle>
-        <CardDescription>
-          Schedule regular or recurring sessions for your course
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <SessionFormFields
-          startDate={startDate}
-          setStartDate={setStartDate}
-          startTime={startTime}
-          setStartTime={setStartTime}
-          isRecurring={isRecurring}
-          setIsRecurring={setIsRecurring}
-          recurrencePattern={recurrencePattern}
-          setRecurrencePattern={setRecurrencePattern}
-          recurrenceEndDate={recurrenceEndDate}
-          setRecurrenceEndDate={setRecurrenceEndDate}
-          recurrenceCount={recurrenceCount}
-          setRecurrenceCount={setRecurrenceCount}
-        />
+    <div className="space-y-6">
+      <SessionFormFields
+        startDate={startDate}
+        setStartDate={setStartDate}
+        startTime={startTime}
+        setStartTime={setStartTime}
+        isRecurring={isRecurring}
+        setIsRecurring={setIsRecurring}
+        recurrencePattern={recurrencePattern}
+        setRecurrencePattern={setRecurrencePattern}
+        recurrenceEndDate={recurrenceEndDate}
+        setRecurrenceEndDate={setRecurrenceEndDate}
+        recurrenceCount={recurrenceCount}
+        setRecurrenceCount={setRecurrenceCount}
+      />
 
-        <Button
-          type="button"
-          onClick={addSession}
-          disabled={!startDate}
-          className="w-full"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Session
-        </Button>
+      <Button
+        type="button"
+        onClick={addSession}
+        disabled={!startDate}
+        className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+      >
+        <Plus className="w-4 h-4 mr-2" />
+        Add Date
+      </Button>
 
-        <SessionList sessions={sessions} removeSession={removeSession} />
-      </CardContent>
-    </Card>
+      <SessionList sessions={sessions} removeSession={removeSession} />
+    </div>
   );
 };
 

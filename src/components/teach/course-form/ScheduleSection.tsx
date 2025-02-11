@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
-import SessionManagement from "@/components/teach/course-form/SessionManagement";
+import SessionsForm from "@/components/teach/SessionsForm";
 import { Session } from "@/types/session";
 
 interface ScheduleSectionProps {
@@ -14,11 +14,7 @@ const ScheduleSection = ({ form, sessions, setSessions }: ScheduleSectionProps) 
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4">
-        <SessionManagement
-          form={form}
-          sessions={sessions}
-          setSessions={setSessions}
-        />
+        <SessionsForm sessions={sessions} setSessions={setSessions} />
       </CardContent>
     </Card>
   );
