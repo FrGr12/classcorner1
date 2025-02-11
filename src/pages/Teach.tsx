@@ -3,8 +3,6 @@ import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import CourseMatches from "@/components/teach/crm/CourseMatches";
 import Communications from "@/components/teach/crm/Communications";
-import EngagementMetrics from "@/components/teach/analytics/EngagementMetrics";
-import PerformanceMetrics from "@/components/teach/analytics/PerformanceMetrics";
 import MatchInsights from "@/components/teach/crm/MatchInsights";
 
 const Teach = () => {
@@ -13,11 +11,6 @@ const Teach = () => {
       <Navigation />
       <main className="pt-32 pb-16 container-padding">
         <div className="max-w-7xl mx-auto space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <EngagementMetrics />
-            <PerformanceMetrics />
-          </div>
-
           <div>
             <h2 className="heading-md mb-4">Course Match Insights</h2>
             <p className="text-neutral-600 mb-8">
