@@ -1,22 +1,15 @@
 
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
+import ColumnFilter from "./filters/ColumnFilter";
+import ClassActions from "./actions/ClassActions";
+import PaymentStats from "./PaymentStats";
 
 interface ClassesTableProps {
   classes: ClassItem[];
@@ -34,7 +27,6 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const navigate = useNavigate();
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
-  const [isShareOpen, setIsShareOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [paymentStats, setPaymentStats] = useState<PaymentStats>({});
   const [filters, setFilters] = useState({
@@ -83,16 +75,16 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     setIsPromoteOpen(true);
   };
 
-  const handleShare = (classId: number) => {
-    setSelectedClassId(classId);
-    setIsShareOpen(true);
-  };
-
   const handleFilter = (column: string, value: string) => {
     setFilters(prev => ({
       ...prev,
       [column]: value
     }));
+  };
+
+  const handleEditClick = (classId: number, e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/edit-course/${classId}`);
   };
 
   const filteredClasses = classes.filter(classItem => {
@@ -101,53 +93,59 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     const matchesDate = !filters.date || getFormattedDate(classItem.date).toLowerCase().includes(filters.date.toLowerCase());
     const matchesCapacity = !filters.capacity || (classItem.maxParticipants?.toString() || '-').includes(filters.capacity);
     const matchesPaid = !filters.paid || stats.paid_count.toString().includes(filters.paid);
-    // For now, attendees and waitlist are hardcoded to 0
     const matchesAttendees = !filters.attendees || '0'.includes(filters.attendees);
     const matchesWaitlist = !filters.waitlist || '0'.includes(filters.waitlist);
 
     return matchesTitle && matchesDate && matchesCapacity && matchesAttendees && matchesWaitlist && matchesPaid;
   });
 
-  const ColumnFilter = ({ column }: { column: string }) => (
-    <div className="flex items-center gap-2">
-      <span>{column}</span>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-[200px]">
-          <div className="p-2">
-            <Input
-              placeholder={`Filter ${column.toLowerCase()}...`}
-              value={filters[column.toLowerCase() as keyof typeof filters]}
-              onChange={(e) => handleFilter(column.toLowerCase(), e.target.value)}
-              className="h-8"
-            />
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-
-  const handleEditClick = (classId: number, e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent the row click event
-    // Navigate relative to the root path, not the current path
-    navigate(`/edit-course/${classId}`);
-  };
-
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead><ColumnFilter column="Title" /></TableHead>
-            <TableHead><ColumnFilter column="Date" /></TableHead>
-            <TableHead><ColumnFilter column="Capacity" /></TableHead>
-            <TableHead><ColumnFilter column="Attendees" /></TableHead>
-            <TableHead><ColumnFilter column="Waitlist" /></TableHead>
-            <TableHead><ColumnFilter column="Paid" /></TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Title" 
+                value={filters.title}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Date" 
+                value={filters.date}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Capacity" 
+                value={filters.capacity}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Attendees" 
+                value={filters.attendees}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Waitlist" 
+                value={filters.waitlist}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Paid" 
+                value={filters.paid}
+                onFilter={handleFilter}
+              />
+            </TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -169,63 +167,19 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 <TableCell>0</TableCell>
                 <TableCell>0</TableCell>
                 <TableCell>
-                  <span className="font-medium text-green-600">{stats.paid_count}</span>
-                  {stats.pending_count > 0 && (
-                    <span className="text-sm text-muted-foreground ml-1">
-                      ({stats.pending_count} pending)
-                    </span>
-                  )}
+                  <PaymentStats 
+                    paidCount={stats.paid_count}
+                    pendingCount={stats.pending_count}
+                  />
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()}>
-                  <div className="flex gap-4">
-                    <div className="flex flex-col items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={(e) => handleEditClick(classItem.id, e)}
-                        className="bg-accent-purple hover:bg-accent-purple/90"
-                      >
-                        <Edit className="h-4 w-4 text-white" />
-                      </Button>
-                      <span className="text-xs text-muted-foreground">Edit</span>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => onAction('message', classItem.id)}
-                        className="bg-accent-purple hover:bg-accent-purple/90"
-                      >
-                        <MessageSquare className="h-4 w-4 text-white" />
-                      </Button>
-                      <span className="text-xs text-muted-foreground">Message</span>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handlePromote(classItem.id)}
-                        className="bg-accent-purple hover:bg-accent-purple/90"
-                      >
-                        <ArrowUp className="h-4 w-4 text-white" />
-                      </Button>
-                      <span className="text-xs text-muted-foreground">Promote</span>
-                    </div>
-
-                    <div className="flex flex-col items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => handleShare(classItem.id)}
-                        className="bg-accent-purple hover:bg-accent-purple/90"
-                      >
-                        <Share2 className="h-4 w-4 text-white" />
-                      </Button>
-                      <span className="text-xs text-muted-foreground">Share</span>
-                    </div>
-                  </div>
+                  <ClassActions
+                    classId={classItem.id}
+                    onEditClick={handleEditClick}
+                    onMessageClick={() => onAction('message', classItem.id)}
+                    onPromoteClick={handlePromote}
+                    onShareClick={() => setSelectedClassId(classItem.id)}
+                  />
                 </TableCell>
               </TableRow>
             );
