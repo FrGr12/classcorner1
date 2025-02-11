@@ -56,17 +56,16 @@ const TeacherDashboardSidebar = () => {
         <nav className="space-y-1 p-4">
           {menuItems.map((item) => (
             <Link key={item.path} to={item.path}>
-              <Button
-                variant="ghost"
-                className={`w-full justify-start gap-3 ${
-                  location.pathname === item.path 
-                    ? "bg-[#6E44FF] text-white hover:bg-[#6E44FF]"
-                    : "hover:bg-[#6E44FF]/10 hover:text-[#6E44FF] active:bg-[#6E44FF] active:text-white"
+              <div
+                className={`flex items-center w-full px-3 py-2 rounded-lg transition-colors ${
+                  location.pathname === item.path
+                    ? "bg-[#6E44FF] text-white"
+                    : "text-gray-700 hover:bg-[#6E44FF]/10 hover:text-[#6E44FF] active:bg-[#6E44FF] active:text-white"
                 }`}
               >
-                <item.icon className="h-5 w-5" />
-                <span>{item.label}</span>
-              </Button>
+                <item.icon className="h-5 w-5 mr-3" />
+                <span className="font-medium">{item.label}</span>
+              </div>
             </Link>
           ))}
         </nav>
