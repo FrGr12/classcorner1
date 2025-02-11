@@ -10,6 +10,7 @@ import {
   MessageSquare,
   Users,
   BookOpen,
+  BarChart,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -42,6 +43,11 @@ const DashboardSidebar = () => {
       title: "Contacts",
       href: "/dashboard/contacts",
       icon: Users,
+    },
+    {
+      title: "Stats & Insights",
+      href: "/dashboard/stats",
+      icon: BarChart,
     },
     {
       title: "Profile",
