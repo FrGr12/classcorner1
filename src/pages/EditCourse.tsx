@@ -29,7 +29,7 @@ const EditCourse = () => {
           .from("courses")
           .select("*")
           .eq("id", courseId)
-          .single();
+          .maybeSingle();
 
         if (error) throw error;
 

@@ -77,7 +77,7 @@ const EditCourseForm = () => {
           )
         `)
         .eq('id', Number(id))
-        .single();
+        .maybeSingle();
 
       if (error) {
         toast.error("Error fetching course details");
