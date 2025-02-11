@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -40,6 +39,7 @@ const CreateClass = () => {
   const [images, setImages] = useState<File[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [draftCount, setDraftCount] = useState(0);
 
   const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -55,6 +55,25 @@ const CreateClass = () => {
       learningOutcomes: [],
     },
   });
+
+  useEffect(() => {
+    const fetchDraftCount = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      const { count } = await supabase
+        .from('courses')
+        .select('*', { count: 'exact', head: true })
+        .eq('instructor_id', userData.user.id)
+        .eq('status', 'draft');
+
+      if (count !== null) {
+        setDraftCount(count);
+      }
+    };
+
+    fetchDraftCount();
+  }, []);
 
   const onSubmit = async (data: FormData) => {
     try {
@@ -173,6 +192,7 @@ const CreateClass = () => {
       if (courseError) throw courseError;
 
       toast.success("Class saved as draft");
+      setDraftCount(prev => prev + 1);
       navigate("/dashboard/classes");
     } catch (error) {
       console.error("Error saving draft:", error);
@@ -194,14 +214,16 @@ const CreateClass = () => {
           </div>
           
           <div className="flex gap-3">
-            <Button 
-              variant="outline"
-              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
-              onClick={() => navigate(-1)}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
+            {draftCount > 0 ? (
+              <Button 
+                variant="outline"
+                className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
+                onClick={() => navigate("/dashboard/classes?tab=drafts")}
+                disabled={isSubmitting}
+              >
+                See saved drafts ({draftCount})
+              </Button>
+            ) : null}
             
             <Button 
               type="submit"
