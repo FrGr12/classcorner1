@@ -57,6 +57,7 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessa
             <TableHead>Message</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -80,6 +81,19 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessa
                 >
                   {message.is_unread ? "Unread" : "Read"}
                 </Badge>
+              </TableCell>
+              <TableCell>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onMessageSelect?.(message);
+                    setIsDialogOpen(true);
+                  }}
+                >
+                  <MessageSquare className="h-4 w-4" />
+                </Button>
               </TableCell>
             </TableRow>
           ))}
