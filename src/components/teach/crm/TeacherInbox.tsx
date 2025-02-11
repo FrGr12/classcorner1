@@ -29,13 +29,13 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
 
 export type Profile = {
-  id?: string;
+  id: string;
   first_name: string | null;
   last_name: string | null;
-  avatar_url?: string | null;
-  location?: string | null;
-  bio?: string | null;
-  languages?: string[] | null;
+  avatar_url: string | null;
+  location: string | null;
+  bio: string | null;
+  languages: string[] | null;
 };
 
 export type Message = {
@@ -46,18 +46,18 @@ export type Message = {
   read_at: string | null;
   status: string;
   student_id: string;
-  course_id: number;
+  course_id: number | null;
   instructor_id: string;
   thread_id: string | null;
   is_unread: boolean;
-  assigned_to?: string | null;
-  communication_context?: string | null;
-  last_activity_at?: string | null;
-  profiles: Profile | null;
-  course?: {
+  assigned_to: string | null;
+  communication_context: string | null;
+  last_activity_at: string | null;
+  profile: Profile | null;
+  course: {
     title: string | null;
-    price?: number | null;
-    duration?: number | null;
+    price: number | null;
+    duration: string | null;
   } | null;
 };
 
@@ -88,8 +88,21 @@ const TeacherInbox = () => {
       const { data, error } = await supabase
         .from("communications")
         .select(`
-          *,
-          profiles:student_id(
+          id,
+          message_type,
+          message_content,
+          sent_at,
+          read_at,
+          status,
+          student_id,
+          course_id,
+          instructor_id,
+          thread_id,
+          is_unread,
+          assigned_to,
+          communication_context,
+          last_activity_at,
+          profile:profiles!student_id(
             id,
             first_name,
             last_name,
@@ -109,7 +122,7 @@ const TeacherInbox = () => {
 
       if (error) throw error;
 
-      return (data || []) as Message[];
+      return data as unknown as Message[];
     }
   });
 
@@ -261,7 +274,6 @@ const TeacherInbox = () => {
       </div>
 
       <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
-        {/* Messages List Panel */}
         <ResizablePanel defaultSize={25} minSize={20}>
           <ScrollArea className="h-[600px]">
             <div className="p-4 space-y-0.5">
@@ -277,15 +289,15 @@ const TeacherInbox = () => {
                 >
                   <div className="flex items-center gap-3 mb-2">
                     <Avatar className="h-8 w-8">
-                      <AvatarImage src={message.profiles?.avatar_url || ""} />
+                      <AvatarImage src={message.profile?.avatar_url || ""} />
                       <AvatarFallback>
-                        {message.profiles?.first_name?.[0] || "U"}
+                        {message.profile?.first_name?.[0] || "U"}
                       </AvatarFallback>
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <p className="font-medium text-sm truncate text-left">
-                          {message.profiles?.first_name} {message.profiles?.last_name}
+                          {message.profile?.first_name} {message.profile?.last_name}
                         </p>
                         <span className="text-xs text-muted-foreground shrink-0 ml-2">
                           {format(new Date(message.sent_at), "MMM d")}
@@ -307,21 +319,20 @@ const TeacherInbox = () => {
 
         <ResizableHandle />
 
-        {/* Message Content Panel */}
         <ResizablePanel defaultSize={45}>
           <ScrollArea className="h-[600px]">
             {selectedMessage ? (
               <div className="p-6">
                 <div className="flex items-center gap-4 mb-6">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={selectedMessage.profiles?.avatar_url || ""} />
+                    <AvatarImage src={selectedMessage.profile?.avatar_url || ""} />
                     <AvatarFallback>
-                      {selectedMessage.profiles?.first_name?.[0] || "U"}
+                      {selectedMessage.profile?.first_name?.[0] || "U"}
                     </AvatarFallback>
                   </Avatar>
                   <div className="text-left">
                     <h2 className="text-base font-semibold">
-                      {selectedMessage.profiles?.first_name} {selectedMessage.profiles?.last_name}
+                      {selectedMessage.profile?.first_name} {selectedMessage.profile?.last_name}
                     </h2>
                     <p className="text-xs text-muted-foreground">
                       {selectedMessage.communication_context}
@@ -359,7 +370,6 @@ const TeacherInbox = () => {
 
         <ResizableHandle />
 
-        {/* Contact Details Panel */}
         <ResizablePanel defaultSize={30}>
           <ScrollArea className="h-[600px]">
             {selectedMessage ? (
@@ -370,13 +380,13 @@ const TeacherInbox = () => {
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-muted-foreground" />
                       <span>
-                        {selectedMessage.profiles?.first_name} {selectedMessage.profiles?.last_name}
+                        {selectedMessage.profile?.first_name} {selectedMessage.profile?.last_name}
                       </span>
                     </div>
-                    {selectedMessage.profiles?.location && (
+                    {selectedMessage.profile?.location && (
                       <div className="flex items-center gap-2">
                         <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span>{selectedMessage.profiles.location}</span>
+                        <span>{selectedMessage.profile.location}</span>
                       </div>
                     )}
                   </div>
@@ -401,11 +411,11 @@ const TeacherInbox = () => {
                   </div>
                 </div>
 
-                {selectedMessage.profiles?.languages && (
+                {selectedMessage.profile?.languages && (
                   <div className="border-t pt-6">
                     <h3 className="text-base font-semibold mb-4 text-left">Languages</h3>
                     <div className="flex gap-2">
-                      {selectedMessage.profiles.languages.map((lang) => (
+                      {selectedMessage.profile.languages.map((lang) => (
                         <Badge key={lang} variant="secondary" className="text-xs">
                           {lang}
                         </Badge>
@@ -414,11 +424,11 @@ const TeacherInbox = () => {
                   </div>
                 )}
 
-                {selectedMessage.profiles?.bio && (
+                {selectedMessage.profile?.bio && (
                   <div className="border-t pt-6">
                     <h3 className="text-base font-semibold mb-4 text-left">About</h3>
                     <p className="text-sm text-muted-foreground text-left">
-                      {selectedMessage.profiles.bio}
+                      {selectedMessage.profile.bio}
                     </p>
                   </div>
                 )}

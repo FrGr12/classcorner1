@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -61,8 +60,21 @@ const TeacherMessages = () => {
       const { data, error } = await supabase
         .from('communications')
         .select(`
-          *,
-          profiles:student_id(
+          id,
+          message_type,
+          message_content,
+          sent_at,
+          read_at,
+          status,
+          student_id,
+          course_id,
+          instructor_id,
+          thread_id,
+          is_unread,
+          assigned_to,
+          communication_context,
+          last_activity_at,
+          profile:profiles!student_id(
             id,
             first_name,
             last_name,
@@ -81,7 +93,7 @@ const TeacherMessages = () => {
         .order('sent_at', { ascending: false });
 
       if (error) throw error;
-      setMessages(data || []);
+      setMessages(data as unknown as Message[]);
     } catch (error: any) {
       console.error("Error fetching messages:", error);
       toast.error(error.message || "Failed to fetch messages");
@@ -174,7 +186,7 @@ const TeacherMessages = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <span className="font-semibold">
-                          {message.profiles?.first_name} {message.profiles?.last_name}
+                          {message.profile?.first_name} {message.profile?.last_name}
                         </span>
                         {message.course?.title && (
                           <span className="text-sm text-muted-foreground ml-2">
@@ -208,7 +220,7 @@ const TeacherMessages = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <span className="font-semibold">
-                            {message.profiles?.first_name} {message.profiles?.last_name}
+                            {message.profile?.first_name} {message.profile?.last_name}
                           </span>
                           {message.course?.title && (
                             <span className="text-sm text-muted-foreground ml-2">
@@ -243,7 +255,7 @@ const TeacherMessages = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <span className="font-semibold">
-                            {message.profiles?.first_name} {message.profiles?.last_name}
+                            {message.profile?.first_name} {message.profile?.last_name}
                           </span>
                           {message.course?.title && (
                             <span className="text-sm text-muted-foreground ml-2">
@@ -266,7 +278,7 @@ const TeacherMessages = () => {
           {selectedMessage && (
             <div className="mt-6 space-y-4 border-t pt-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold">Reply to {selectedMessage.profiles?.first_name}</h3>
+                <h3 className="font-semibold">Reply to {selectedMessage.profile?.first_name}</h3>
                 <Button 
                   variant="ghost" 
                   size="sm"

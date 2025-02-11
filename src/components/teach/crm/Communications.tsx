@@ -22,6 +22,7 @@ import {
 import { Search, Filter, PenSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
+import type { Message } from './TeacherInbox';
 
 const Communications = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -51,12 +52,34 @@ const Communications = () => {
       const { data, error } = await supabase
         .from("communications")
         .select(`
-          *,
-          profile:profiles!communications_student_id_fkey_profiles(
+          id,
+          message_type,
+          message_content,
+          sent_at,
+          read_at,
+          status,
+          student_id,
+          course_id,
+          instructor_id,
+          thread_id,
+          is_unread,
+          assigned_to,
+          communication_context,
+          last_activity_at,
+          profile:profiles!student_id(
+            id,
             first_name,
-            last_name
+            last_name,
+            avatar_url,
+            location,
+            bio,
+            languages
           ),
-          course:courses(title)
+          course:courses(
+            title,
+            price,
+            duration
+          )
         `)
         .eq("instructor_id", user.id)
         .order("sent_at", { ascending: false });
@@ -70,7 +93,7 @@ const Communications = () => {
         throw error;
       }
 
-      return data;
+      return data as unknown as Message[];
     },
     meta: {
       onError: (error: Error) => {
