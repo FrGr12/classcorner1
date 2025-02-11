@@ -64,8 +64,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       variant="outline"
                       size="icon"
                       onClick={() => onAction('edit', classItem.id)}
+                      className="bg-accent-purple hover:bg-accent-purple/90"
                     >
-                      <Edit className="h-4 w-4" />
+                      <Edit className="h-4 w-4 text-white" />
                     </Button>
                     <span className="text-xs text-muted-foreground">Edit</span>
                   </div>
@@ -75,8 +76,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       variant="outline"
                       size="icon"
                       onClick={() => onAction('message', classItem.id)}
+                      className="bg-accent-purple hover:bg-accent-purple/90"
                     >
-                      <MessageSquare className="h-4 w-4" />
+                      <MessageSquare className="h-4 w-4 text-white" />
                     </Button>
                     <span className="text-xs text-muted-foreground">Message</span>
                   </div>
@@ -86,8 +88,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       variant="outline"
                       size="icon"
                       onClick={() => handlePromote(classItem.id)}
+                      className="bg-accent-purple hover:bg-accent-purple/90"
                     >
-                      <ArrowUp className="h-4 w-4" />
+                      <ArrowUp className="h-4 w-4 text-white" />
                     </Button>
                     <span className="text-xs text-muted-foreground">Promote</span>
                   </div>
@@ -97,8 +100,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       variant="outline"
                       size="icon"
                       onClick={() => handleShare(classItem.id)}
+                      className="bg-accent-purple hover:bg-accent-purple/90"
                     >
-                      <Share2 className="h-4 w-4" />
+                      <Share2 className="h-4 w-4 text-white" />
                     </Button>
                     <span className="text-xs text-muted-foreground">Share</span>
                   </div>
