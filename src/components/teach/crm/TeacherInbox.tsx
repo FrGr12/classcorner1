@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -16,13 +17,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Archive, CheckSquare, Plus, Library, Send } from "lucide-react";
-import MessagesTable from "./MessagesTable";
+import { Search, Filter, Archive, CheckSquare, Plus, Library, Send, User, MessageSquare, MapPin, Calendar, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { format } from "date-fns";
+
+export type Profile = {
+  first_name: string | null;
+  last_name: string | null;
+  avatar_url?: string | null;
+  location?: string | null;
+  bio?: string | null;
+  languages?: string[] | null;
+};
 
 export type Message = {
   id: number;
@@ -39,12 +53,11 @@ export type Message = {
   assigned_to?: string | null;
   communication_context?: string | null;
   last_activity_at?: string | null;
-  profiles?: {
-    first_name: string | null;
-    last_name: string | null;
-  } | null;
+  profiles?: Profile | null;
   course?: {
     title: string | null;
+    price?: number | null;
+    duration?: number | null;
   } | null;
 };
 
@@ -55,7 +68,7 @@ const TeacherInbox = () => {
   const [messageSubject, setMessageSubject] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [recipient, setRecipient] = useState("");
-  const [selectedMessage, setSelectedMessage] = useState(null);
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { toast } = useToast();
 
   const { data: messages, isLoading } = useQuery({
@@ -76,19 +89,34 @@ const TeacherInbox = () => {
         .from("communications")
         .select(`
           *,
-          profiles:profiles!communications_student_id_fkey(
-            first_name,
-            last_name
-          ),
-          course:courses(title)
+          profiles:profiles!communications_student_id_fkey(*),
+          course:courses(*)
         `)
         .eq("instructor_id", user.id)
         .order("sent_at", { ascending: false });
 
       if (error) throw error;
 
-      return data as Message[];
+      return data as unknown as Message[];
     },
+  });
+
+  const { data: studentBookings } = useQuery({
+    queryKey: ["bookings", selectedMessage?.student_id],
+    enabled: !!selectedMessage?.student_id,
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("bookings")
+        .select(`
+          *,
+          course:courses(*)
+        `)
+        .eq("student_id", selectedMessage?.student_id)
+        .order("created_at", { ascending: false });
+
+      if (error) throw error;
+      return data;
+    }
   });
 
   const handleSendMessage = async () => {
@@ -173,7 +201,7 @@ const TeacherInbox = () => {
         </div>
       </Card>
 
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center mb-6">
         <div className="flex gap-4 flex-1">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
@@ -196,29 +224,173 @@ const TeacherInbox = () => {
               <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
-          <div className="flex gap-2">
-            <Button variant="outline" size="icon">
-              <Archive className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon">
-              <CheckSquare className="h-4 w-4" />
-            </Button>
-          </div>
         </div>
       </div>
 
-      <Card>
-        {isLoading ? (
-          <div className="text-center py-8">Loading messages...</div>
-        ) : (
-          <MessagesTable 
-            messages={messages || []} 
-            onSendMessage={handleSendMessage}
-            selectedMessage={selectedMessage}
-            onMessageSelect={setSelectedMessage}
-          />
-        )}
-      </Card>
+      <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
+        {/* Messages List Panel */}
+        <ResizablePanel defaultSize={25} minSize={20}>
+          <ScrollArea className="h-[600px]">
+            <div className="p-4 space-y-2">
+              {messages?.map((message) => (
+                <div
+                  key={message.id}
+                  onClick={() => setSelectedMessage(message)}
+                  className={`p-4 rounded-lg cursor-pointer hover:bg-muted/50 ${
+                    selectedMessage?.id === message.id ? "bg-muted" : ""
+                  }`}
+                >
+                  <div className="flex items-center gap-3 mb-2">
+                    <Avatar>
+                      <AvatarImage src={message.profiles?.avatar_url || ""} />
+                      <AvatarFallback>
+                        {message.profiles?.first_name?.[0] || "U"}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <p className="font-medium truncate">
+                          {message.profiles?.first_name} {message.profiles?.last_name}
+                        </p>
+                        <span className="text-xs text-muted-foreground">
+                          {format(new Date(message.sent_at), "MMM d")}
+                        </span>
+                      </div>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {message.communication_context || "No subject"}
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-sm truncate pl-11">
+                    {message.message_content}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </ScrollArea>
+        </ResizablePanel>
+
+        <ResizableHandle />
+
+        {/* Message Content Panel */}
+        <ResizablePanel defaultSize={45}>
+          <ScrollArea className="h-[600px]">
+            {selectedMessage ? (
+              <div className="p-6">
+                <div className="flex items-center gap-4 mb-6">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={selectedMessage.profiles?.avatar_url || ""} />
+                    <AvatarFallback>
+                      {selectedMessage.profiles?.first_name?.[0] || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <h2 className="text-xl font-semibold">
+                      {selectedMessage.profiles?.first_name} {selectedMessage.profiles?.last_name}
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedMessage.communication_context}
+                    </p>
+                  </div>
+                </div>
+                <div className="prose max-w-none">
+                  <p>{selectedMessage.message_content}</p>
+                </div>
+                <div className="mt-6">
+                  <Textarea
+                    placeholder="Type your reply..."
+                    className="min-h-[100px]"
+                  />
+                  <div className="flex justify-end mt-2">
+                    <Button>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Reply
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                Select a message to view details
+              </div>
+            )}
+          </ScrollArea>
+        </ResizablePanel>
+
+        <ResizableHandle />
+
+        {/* Contact Details Panel */}
+        <ResizablePanel defaultSize={30}>
+          <ScrollArea className="h-[600px]">
+            {selectedMessage ? (
+              <div className="p-6 space-y-6">
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-2">
+                      <User className="h-4 w-4 text-muted-foreground" />
+                      <span>
+                        {selectedMessage.profiles?.first_name} {selectedMessage.profiles?.last_name}
+                      </span>
+                    </div>
+                    {selectedMessage.profiles?.location && (
+                      <div className="flex items-center gap-2">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span>{selectedMessage.profiles.location}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <h3 className="text-lg font-semibold mb-4">Booking History</h3>
+                  <div className="space-y-4">
+                    {studentBookings?.map((booking: any) => (
+                      <Card key={booking.id} className="p-4">
+                        <div className="flex items-center gap-4">
+                          <Calendar className="h-4 w-4 text-muted-foreground" />
+                          <div>
+                            <p className="font-medium">{booking.course?.title}</p>
+                            <p className="text-sm text-muted-foreground">
+                              {format(new Date(booking.created_at), "MMMM d, yyyy")}
+                            </p>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+                </div>
+
+                {selectedMessage.profiles?.languages && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Languages</h3>
+                    <div className="flex gap-2">
+                      {selectedMessage.profiles.languages.map((lang) => (
+                        <Badge key={lang} variant="secondary">
+                          {lang}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {selectedMessage.profiles?.bio && (
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">About</h3>
+                    <p className="text-sm text-muted-foreground">
+                      {selectedMessage.profiles.bio}
+                    </p>
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center justify-center h-full text-muted-foreground">
+                Select a message to view contact details
+              </div>
+            )}
+          </ScrollArea>
+        </ResizablePanel>
+      </ResizablePanelGroup>
 
       <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
         <DialogContent className="sm:max-w-[525px]">
