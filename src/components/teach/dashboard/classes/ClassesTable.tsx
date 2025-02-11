@@ -2,8 +2,7 @@
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, MessageSquare, Sparkles, X } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Edit, MessageSquare, Sparkles, ArrowUp } from "lucide-react";
 import { format } from "date-fns";
 
 interface ClassesTableProps {
@@ -25,7 +24,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <TableRow>
           <TableHead>Class Name</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead>Status</TableHead>
+          <TableHead>Capacity</TableHead>
+          <TableHead>Attendees</TableHead>
+          <TableHead>Waitlist</TableHead>
           <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
@@ -34,9 +35,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
           <TableRow key={classItem.id}>
             <TableCell className="font-medium">{classItem.title}</TableCell>
             <TableCell>{getFormattedDate(classItem.date)}</TableCell>
-            <TableCell>
-              <Badge>{classItem.level}</Badge>
-            </TableCell>
+            <TableCell>{classItem.maxParticipants || '-'}</TableCell>
+            <TableCell>0</TableCell>
+            <TableCell>0</TableCell>
             <TableCell>
               <div className="flex gap-2">
                 <Button
@@ -63,9 +64,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 <Button
                   variant="outline"
                   size="icon"
-                  onClick={() => onAction('cancel', classItem.id)}
+                  onClick={() => onAction('promote', classItem.id)}
                 >
-                  <X className="h-4 w-4" />
+                  <ArrowUp className="h-4 w-4" />
                 </Button>
               </div>
             </TableCell>
