@@ -1,6 +1,7 @@
-import { Outlet } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import TeacherDashboardSidebar from "./TeacherDashboardSidebar";
 import { SidebarProvider } from "@/contexts/SidebarContext";
+import TeacherStats from "./TeacherStats";
 
 const TeacherDashboard = () => {
   return (
@@ -9,7 +10,10 @@ const TeacherDashboard = () => {
         <TeacherDashboardSidebar />
         <div className="flex-1 bg-gray-50">
           <main className="p-6">
-            <Outlet />
+            <Routes>
+              <Route path="stats" element={<TeacherStats />} />
+              <Route path="*" element={<div>Other routes go here</div>} />
+            </Routes>
           </main>
         </div>
       </div>
