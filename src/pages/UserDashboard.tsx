@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import UserDashboardSidebar from "@/components/user-dashboard/UserDashboardSidebar";
+import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserHome from "@/components/user-dashboard/UserHome";
 import UserBookings from "@/components/user-dashboard/UserBookings";
 import UserMessages from "@/components/user-dashboard/UserMessages";
