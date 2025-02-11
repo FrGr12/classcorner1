@@ -1,13 +1,9 @@
-import { useState } from "react";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, Clock } from "lucide-react";
+
+import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -15,9 +11,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { format } from "date-fns";
+import { CalendarIcon, Clock } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SessionFormFieldsProps {
@@ -50,16 +50,16 @@ const SessionFormFields = ({
   setRecurrenceCount,
 }: SessionFormFieldsProps) => {
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-4">
-        <div>
-          <Label>Date</Label>
+    <>
+      <Label className="text-sm font-medium text-primary">Session Date & Time</Label>
+      <div className="flex gap-4">
+        <div className="flex-1">
           <Popover>
             <PopoverTrigger asChild>
               <Button
                 variant="outline"
                 className={cn(
-                  "w-full justify-start text-left font-normal",
+                  "w-full justify-start text-left font-normal bg-white border-neutral-200",
                   !startDate && "text-muted-foreground"
                 )}
               >
@@ -67,7 +67,7 @@ const SessionFormFields = ({
                 {startDate ? format(startDate, "PPP") : "Select date"}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
+            <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
                 selected={startDate}
@@ -78,38 +78,36 @@ const SessionFormFields = ({
           </Popover>
         </div>
 
-        <div>
-          <Label>Time</Label>
+        <div className="flex-1">
           <div className="flex items-center space-x-2">
             <Input
               type="time"
               value={startTime}
               onChange={(e) => setStartTime(e.target.value)}
-              className="w-full"
+              className="bg-white border-neutral-200"
             />
             <Clock className="h-4 w-4 text-muted-foreground" />
           </div>
         </div>
       </div>
 
-      <div className="flex items-center space-x-2">
-        <Switch
+      <div className="flex items-center gap-2">
+        <Switch 
           checked={isRecurring}
           onCheckedChange={setIsRecurring}
-          id="recurring"
         />
-        <Label htmlFor="recurring">Recurring Session</Label>
+        <span className="text-sm text-neutral-600">Recurring session</span>
       </div>
 
       {isRecurring && (
-        <div className="space-y-4">
+        <div className="space-y-4 col-span-2">
           <div>
             <Label>Recurrence Pattern</Label>
             <Select
               value={recurrencePattern}
               onValueChange={setRecurrencePattern}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white border-neutral-200">
                 <SelectValue placeholder="Select frequency" />
               </SelectTrigger>
               <SelectContent>
@@ -127,6 +125,7 @@ const SessionFormFields = ({
               placeholder="Number of occurrences"
               value={recurrenceCount}
               onChange={(e) => setRecurrenceCount(e.target.value)}
+              className="bg-white border-neutral-200"
             />
           </div>
 
@@ -137,7 +136,7 @@ const SessionFormFields = ({
                 <Button
                   variant="outline"
                   className={cn(
-                    "w-full justify-start text-left font-normal",
+                    "w-full justify-start text-left font-normal bg-white border-neutral-200",
                     !recurrenceEndDate && "text-muted-foreground"
                   )}
                 >
@@ -147,7 +146,7 @@ const SessionFormFields = ({
                     : "Select end date"}
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-0">
+              <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
                   selected={recurrenceEndDate}
@@ -159,7 +158,7 @@ const SessionFormFields = ({
           </div>
         </div>
       )}
-    </div>
+    </>
   );
 };
 

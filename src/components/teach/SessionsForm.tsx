@@ -61,30 +61,32 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 
   return (
     <div className="space-y-6">
-      <SessionFormFields
-        startDate={startDate}
-        setStartDate={setStartDate}
-        startTime={startTime}
-        setStartTime={setStartTime}
-        isRecurring={isRecurring}
-        setIsRecurring={setIsRecurring}
-        recurrencePattern={recurrencePattern}
-        setRecurrencePattern={setRecurrencePattern}
-        recurrenceEndDate={recurrenceEndDate}
-        setRecurrenceEndDate={setRecurrenceEndDate}
-        recurrenceCount={recurrenceCount}
-        setRecurrenceCount={setRecurrenceCount}
-      />
+      <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+        <SessionFormFields
+          startDate={startDate}
+          setStartDate={setStartDate}
+          startTime={startTime}
+          setStartTime={setStartTime}
+          isRecurring={isRecurring}
+          setIsRecurring={setIsRecurring}
+          recurrencePattern={recurrencePattern}
+          setRecurrencePattern={setRecurrencePattern}
+          recurrenceEndDate={recurrenceEndDate}
+          setRecurrenceEndDate={setRecurrenceEndDate}
+          recurrenceCount={recurrenceCount}
+          setRecurrenceCount={setRecurrenceCount}
+        />
 
-      <Button
-        type="button"
-        onClick={addSession}
-        disabled={!startDate}
-        className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-      >
-        <Plus className="w-4 h-4 mr-2" />
-        Add Date
-      </Button>
+        <Button
+          type="button"
+          onClick={addSession}
+          disabled={!startDate}
+          className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add
+        </Button>
+      </div>
 
       <SessionList sessions={sessions} removeSession={removeSession} />
     </div>
