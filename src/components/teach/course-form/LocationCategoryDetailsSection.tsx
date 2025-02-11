@@ -65,7 +65,7 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
             className="bg-accent-purple hover:bg-accent-purple/90 text-white"
           >
-            Save
+            Add session
           </Button>
         </div>
       </CardContent>
