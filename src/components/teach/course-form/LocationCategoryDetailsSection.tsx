@@ -7,6 +7,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
 
@@ -25,14 +26,23 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel className="text-sm font-medium text-primary">Date</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="date"
-                    placeholder="Select date" 
-                    className="bg-white border-neutral-200"
-                    {...field} 
-                  />
-                </FormControl>
+                <div className="flex items-center gap-4">
+                  <FormControl>
+                    <Input 
+                      type="date"
+                      placeholder="Select date" 
+                      className="bg-white border-neutral-200"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <Button 
+                    type="button" 
+                    onClick={() => console.log('Date saved:', field.value)}
+                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+                  >
+                    Save
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -44,14 +54,23 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             render={({ field }) => (
               <FormItem className="flex-1">
                 <FormLabel className="text-sm font-medium text-primary">Time</FormLabel>
-                <FormControl>
-                  <Input 
-                    type="time"
-                    placeholder="Select time" 
-                    className="bg-white border-neutral-200"
-                    {...field} 
-                  />
-                </FormControl>
+                <div className="flex items-center gap-4">
+                  <FormControl>
+                    <Input 
+                      type="time"
+                      placeholder="Select time" 
+                      className="bg-white border-neutral-200"
+                      {...field} 
+                    />
+                  </FormControl>
+                  <Button 
+                    type="button" 
+                    onClick={() => console.log('Time saved:', field.value)}
+                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+                  >
+                    Save
+                  </Button>
+                </div>
                 <FormMessage />
               </FormItem>
             )}
@@ -63,4 +82,3 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
 };
 
 export default LocationCategoryDetailsSection;
-
