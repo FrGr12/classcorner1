@@ -6,98 +6,62 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
-import { Message } from "./TeacherInbox";
+import type { Message } from "./TeacherInbox";
 
 interface MessagesTableProps {
   messages: Message[];
-  onSendMessage: (studentId: string, courseId: number, content: string) => Promise<void>;
+  onMessageSelect?: (message: Message) => void;
+  selectedMessage?: Message | null;
 }
 
-const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
+const MessagesTable = ({ messages, onMessageSelect, selectedMessage }: MessagesTableProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [selectedStudent, setSelectedStudent] = useState<{ id: string; name: string } | null>(null);
-  const [selectedCourse, setSelectedCourse] = useState<{ id: number; title: string } | null>(null);
   const [messageContent, setMessageContent] = useState("");
   const [isSending, setIsSending] = useState(false);
 
-  const handleSendMessage = async () => {
-    if (!selectedStudent || !selectedCourse || !messageContent.trim()) return;
-
-    setIsSending(true);
-    try {
-      await onSendMessage(selectedStudent.id, selectedCourse.id, messageContent);
-      setIsDialogOpen(false);
-      setMessageContent("");
-    } finally {
-      setIsSending(false);
-    }
-  };
-
-  const openMessageDialog = (message: Message) => {
-    setSelectedStudent({
-      id: message.student_id,
-      name: message.student_profile ? 
-        `${message.student_profile.first_name} ${message.student_profile.last_name}` : 
-        "Anonymous User"
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
-    setSelectedCourse({
-      id: message.course_id,
-      title: message.course?.title || "Unknown Course"
-    });
-    setIsDialogOpen(true);
   };
 
   return (
-    <>
+    <div className="w-full">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Student</TableHead>
-            <TableHead>Course</TableHead>
+            <TableHead>From</TableHead>
+            <TableHead>Subject</TableHead>
             <TableHead>Message</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Sent</TableHead>
+            <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {messages.map((message) => (
-            <TableRow key={message.id}>
+            <TableRow 
+              key={message.id}
+              className={`cursor-pointer hover:bg-muted/50 ${selectedMessage?.id === message.id ? 'bg-muted' : ''}`}
+              onClick={() => onMessageSelect?.(message)}
+            >
               <TableCell>
-                {message.student_profile ? 
-                  `${message.student_profile.first_name} ${message.student_profile.last_name}` : 
-                  "Anonymous User"
-                }
+                {message.profiles?.first_name} {message.profiles?.last_name}
               </TableCell>
-              <TableCell>{message.course?.title || "N/A"}</TableCell>
+              <TableCell>{message.communication_context || 'No subject'}</TableCell>
               <TableCell className="max-w-md truncate">
                 {message.message_content}
               </TableCell>
-              <TableCell>
-                <Badge variant="outline">
-                  {message.message_type}
-                </Badge>
-              </TableCell>
-              <TableCell>
-                {new Date(message.sent_at).toLocaleDateString()}
-              </TableCell>
+              <TableCell>{formatDate(message.sent_at)}</TableCell>
               <TableCell>
                 <Badge 
-                  variant={message.read_at ? "default" : "secondary"}
+                  variant={message.is_unread ? "secondary" : "default"}
                 >
-                  {message.read_at ? "Read" : "Unread"}
+                  {message.is_unread ? "Unread" : "Read"}
                 </Badge>
-              </TableCell>
-              <TableCell>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => openMessageDialog(message)}
-                >
-                  <MessageSquare className="h-4 w-4 mr-2" />
-                  Reply
-                </Button>
               </TableCell>
             </TableRow>
           ))}
@@ -107,15 +71,19 @@ const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Send Message</DialogTitle>
+            <DialogTitle>Reply to Message</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
-              <p className="text-sm font-medium">To: {selectedStudent?.name}</p>
-              <p className="text-sm text-muted-foreground">Course: {selectedCourse?.title}</p>
+              <p className="text-sm font-medium">
+                To: {selectedMessage?.profiles?.first_name} {selectedMessage?.profiles?.last_name}
+              </p>
+              <p className="text-sm text-muted-foreground">
+                Re: {selectedMessage?.communication_context || 'No subject'}
+              </p>
             </div>
             <Textarea
-              placeholder="Type your message here..."
+              placeholder="Type your reply here..."
               value={messageContent}
               onChange={(e) => setMessageContent(e.target.value)}
               className="min-h-[100px]"
@@ -129,15 +97,14 @@ const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
               Cancel
             </Button>
             <Button
-              onClick={handleSendMessage}
               disabled={isSending || !messageContent.trim()}
             >
-              {isSending ? "Sending..." : "Send Message"}
+              {isSending ? "Sending..." : "Send Reply"}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
