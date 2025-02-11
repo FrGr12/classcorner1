@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -35,7 +34,7 @@ export type Message = {
   student_id: string;
   course_id: number;
   instructor_id: string;
-  thread_id: string;
+  thread_id: string | null;
   is_unread: boolean;
   assigned_to?: string | null;
   communication_context?: string | null;
@@ -43,10 +42,10 @@ export type Message = {
   profiles?: {
     first_name: string | null;
     last_name: string | null;
-  };
+  } | null;
   course?: {
     title: string | null;
-  };
+  } | null;
 };
 
 const TeacherInbox = () => {
@@ -56,6 +55,7 @@ const TeacherInbox = () => {
   const [messageSubject, setMessageSubject] = useState("");
   const [messageContent, setMessageContent] = useState("");
   const [recipient, setRecipient] = useState("");
+  const [selectedMessage, setSelectedMessage] = useState(null);
   const { toast } = useToast();
 
   const { data: messages, isLoading } = useQuery({
@@ -76,7 +76,7 @@ const TeacherInbox = () => {
         .from("communications")
         .select(`
           *,
-          profiles!communications_student_id_fkey(
+          profiles:profiles!communications_student_id_fkey(
             first_name,
             last_name
           ),
@@ -85,16 +85,9 @@ const TeacherInbox = () => {
         .eq("instructor_id", user.id)
         .order("sent_at", { ascending: false });
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to fetch messages",
-        });
-        throw error;
-      }
+      if (error) throw error;
 
-      return data as unknown as Message[];
+      return data as Message[];
     },
   });
 
@@ -221,6 +214,8 @@ const TeacherInbox = () => {
           <MessagesTable 
             messages={messages || []} 
             onSendMessage={handleSendMessage}
+            selectedMessage={selectedMessage}
+            onMessageSelect={setSelectedMessage}
           />
         )}
       </Card>
@@ -279,4 +274,3 @@ const TeacherInbox = () => {
 };
 
 export default TeacherInbox;
-

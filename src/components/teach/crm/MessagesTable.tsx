@@ -12,9 +12,10 @@ interface MessagesTableProps {
   messages: Message[];
   onMessageSelect?: (message: Message) => void;
   selectedMessage?: Message | null;
+  onSendMessage?: (studentId: string, courseId: number, content: string) => Promise<void>;
 }
 
-const MessagesTable = ({ messages, onMessageSelect, selectedMessage }: MessagesTableProps) => {
+const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessage }: MessagesTableProps) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [messageContent, setMessageContent] = useState("");
   const [isSending, setIsSending] = useState(false);
@@ -27,6 +28,23 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage }: MessagesT
       hour: '2-digit',
       minute: '2-digit'
     });
+  };
+
+  const handleSendReply = async () => {
+    if (!selectedMessage || !onSendMessage || !messageContent.trim()) return;
+
+    try {
+      setIsSending(true);
+      await onSendMessage(
+        selectedMessage.student_id,
+        selectedMessage.course_id,
+        messageContent
+      );
+      setMessageContent("");
+      setIsDialogOpen(false);
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -98,6 +116,7 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage }: MessagesT
             </Button>
             <Button
               disabled={isSending || !messageContent.trim()}
+              onClick={handleSendReply}
             >
               {isSending ? "Sending..." : "Send Reply"}
             </Button>
