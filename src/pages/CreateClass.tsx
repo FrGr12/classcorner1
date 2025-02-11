@@ -62,9 +62,9 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div>
-        <h1 className="text-2xl font-bold mb-2">Create New Class</h1>
+        <h1 className="text-2xl font-semibold mb-1">Create New Class</h1>
         <p className="text-muted-foreground">
           Share your expertise with the world
         </p>
@@ -93,21 +93,37 @@ const CreateClass = () => {
       <Separator className="my-6 bg-neutral-200" />
 
       <Form {...form}>
-        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <BasicInfoSection form={form} />
+        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <section className="w-full">
+            <h2 className="text-xl font-semibold mb-4 text-left">Basic Information</h2>
+            <BasicInfoSection form={form} />
+          </section>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <LocationCategorySection form={form} />
-            <PricingCapacitySection form={form} />
-          </div>
+          <section className="w-full">
+            <h2 className="text-xl font-semibold mb-4 text-left">Location & Category</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              <LocationCategorySection form={form} />
+              <PricingCapacitySection form={form} />
+            </div>
+          </section>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            <BringItemsSection form={form} />
-            <LearningOutcomesSection form={form} />
-          </div>
+          <section className="w-full">
+            <h2 className="text-xl font-semibold mb-4 text-left">Additional Details</h2>
+            <div className="grid gap-6 md:grid-cols-2">
+              <BringItemsSection form={form} />
+              <LearningOutcomesSection form={form} />
+            </div>
+          </section>
 
-          <ImagesSection images={images} setImages={setImages} />
-          <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
+          <section className="w-full">
+            <h2 className="text-xl font-semibold mb-4 text-left">Images</h2>
+            <ImagesSection images={images} setImages={setImages} />
+          </section>
+
+          <section className="w-full">
+            <h2 className="text-xl font-semibold mb-4 text-left">Schedule</h2>
+            <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
+          </section>
         </form>
       </Form>
     </div>
