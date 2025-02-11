@@ -52,9 +52,9 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
     setup_instructions: "",
     status: "draft"
   });
-  const [sessions, setSessions] = useState<SessionData[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [sessionDate, setSessionDate] = useState<string>("");
 
   useEffect(() => {
     if (open && classId) {
@@ -86,15 +86,17 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
         .single();
 
       if (classError) throw classError;
-      
-      // Fetch session dates
+
+      // Fetch the first session date
       const { data: sessionData, error: sessionError } = await supabase
         .from('course_sessions')
-        .select('id, start_time')
+        .select('start_time')
         .eq('course_id', classId)
-        .order('start_time', { ascending: true });
+        .order('start_time', { ascending: true })
+        .limit(1)
+        .single();
 
-      if (sessionError) throw sessionError;
+      if (sessionError && sessionError.code !== 'PGRST116') throw sessionError;
 
       // Fetch existing images
       const { data: imageData, error: imageError } = await supabase
@@ -109,7 +111,7 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
         setFormData(classData);
       }
       if (sessionData) {
-        setSessions(sessionData);
+        setSessionDate(format(new Date(sessionData.start_time), "yyyy-MM-dd'T'HH:mm"));
       }
       if (imageData) {
         setExistingImages(imageData.map(img => img.image_path));
@@ -127,7 +129,7 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
     setIsLoading(true);
 
     try {
-      const { error } = await supabase
+      const { error: courseError } = await supabase
         .from('courses')
         .update({
           title: formData.title,
@@ -139,7 +141,17 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
         })
         .eq('id', classId);
 
-      if (error) throw error;
+      if (courseError) throw courseError;
+
+      // Update session date if changed
+      if (sessionDate) {
+        const { error: sessionError } = await supabase
+          .from('course_sessions')
+          .update({ start_time: sessionDate })
+          .eq('course_id', classId);
+
+        if (sessionError) throw sessionError;
+      }
 
       // Handle new image uploads if any
       if (images.length > 0) {
@@ -186,21 +198,6 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
       onOpenChange(false);
     } catch (error) {
       toast.error("Failed to archive class");
-    }
-  };
-
-  const handleSessionUpdate = async (sessionId: number, newDate: string) => {
-    try {
-      const { error } = await supabase
-        .from('course_sessions')
-        .update({ start_time: newDate })
-        .eq('id', sessionId);
-
-      if (error) throw error;
-      toast.success("Session rescheduled successfully");
-      fetchClassData(); // Refresh the sessions data
-    } catch (error) {
-      toast.error("Failed to reschedule session");
     }
   };
 
@@ -292,28 +289,22 @@ const EditClassDialog = ({ open, onOpenChange, classId }: EditClassDialogProps) 
           </div>
 
           <div className="space-y-2">
+            <Label htmlFor="reschedule">Reschedule Class</Label>
+            <Input
+              id="reschedule"
+              type="datetime-local"
+              value={sessionDate}
+              onChange={(e) => setSessionDate(e.target.value)}
+              className="w-full"
+            />
+          </div>
+
+          <div className="space-y-2">
             <Label>Class Images</Label>
             <ImageUpload
               images={images}
               setImages={setImages}
             />
-          </div>
-
-          <div className="space-y-2">
-            <Label>Class Sessions</Label>
-            <div className="bg-neutral-50 p-4 rounded-lg space-y-2">
-              {sessions.map((session) => (
-                <div key={session.id} className="flex justify-between items-center gap-4">
-                  <span>{format(new Date(session.start_time), 'PPp')}</span>
-                  <Input
-                    type="datetime-local"
-                    defaultValue={format(new Date(session.start_time), "yyyy-MM-dd'T'HH:mm")}
-                    onChange={(e) => handleSessionUpdate(session.id, e.target.value)}
-                    className="w-auto"
-                  />
-                </div>
-              ))}
-            </div>
           </div>
 
           <DialogFooter className="flex justify-between">
