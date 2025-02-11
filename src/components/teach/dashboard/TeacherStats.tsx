@@ -1,4 +1,3 @@
-
 import { FC } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -17,7 +16,7 @@ const TeacherStats = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 text-left">
       {/* Welcome Header */}
       <Card className="mb-8">
         <CardContent className="p-6">
@@ -34,7 +33,7 @@ const TeacherStats = () => {
 
       {/* Overview/Highlights Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Overview & Highlights</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Overview & Highlights</h2>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="bg-accent-purple text-white">
             <CardContent className="pt-6">
@@ -92,7 +91,7 @@ const TeacherStats = () => {
 
       {/* KPIs Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Key Performance Indicators</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Key Performance Indicators</h2>
         <div className="grid gap-4 md:grid-cols-3">
           <Card>
             <CardContent className="p-6">
@@ -137,7 +136,7 @@ const TeacherStats = () => {
 
       {/* Trends Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Booking Trends</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Booking Trends</h2>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-4">
@@ -153,7 +152,7 @@ const TeacherStats = () => {
 
       {/* Financial Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Financial Overview</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Financial Overview</h2>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -180,7 +179,7 @@ const TeacherStats = () => {
 
       {/* Reviews Section */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Reviews & Feedback</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Reviews & Feedback</h2>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6">
@@ -196,7 +195,7 @@ const TeacherStats = () => {
 
       {/* Student Demographics */}
       <section>
-        <h2 className="text-xl font-semibold mb-4">Student Demographics</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Student Demographics</h2>
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between mb-6">
