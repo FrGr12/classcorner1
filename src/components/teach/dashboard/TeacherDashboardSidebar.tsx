@@ -8,6 +8,7 @@ import {
   PlusCircle,
   Menu,
   Users,
+  BarChart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useSidebarContext } from "@/contexts/SidebarContext";
@@ -22,6 +23,7 @@ const TeacherDashboardSidebar = () => {
     { icon: PlusCircle, label: "Create Class", path: "/teach/classes/new" },
     { icon: MessageSquare, label: "Messages", path: "/teach/messages" },
     { icon: Users, label: "Waitlist", path: "/teach/waitlist" },
+    { icon: BarChart, label: "Stats & Insights", path: "/teach/stats" },
     { icon: Settings, label: "Settings", path: "/teach/settings" },
   ];
 
