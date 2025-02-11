@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown } from "lucide-react";
 import { format } from "date-fns";
 import PromoteDialog from "./promote/PromoteDialog";
+import ClassDetailsDialog from "./ClassDetailsDialog";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -33,6 +34,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [paymentStats, setPaymentStats] = useState<PaymentStats>({});
   const [filters, setFilters] = useState({
     title: "",
@@ -146,7 +148,14 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
           {filteredClasses.map((classItem) => {
             const stats = paymentStats[classItem.id] || { paid_count: 0, pending_count: 0 };
             return (
-              <TableRow key={classItem.id}>
+              <TableRow 
+                key={classItem.id}
+                className="cursor-pointer hover:bg-accent/50"
+                onClick={() => {
+                  setSelectedClassId(classItem.id);
+                  setIsDetailsOpen(true);
+                }}
+              >
                 <TableCell className="font-medium">{classItem.title}</TableCell>
                 <TableCell>{getFormattedDate(classItem.date)}</TableCell>
                 <TableCell>{classItem.maxParticipants || '-'}</TableCell>
@@ -160,7 +169,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                     </span>
                   )}
                 </TableCell>
-                <TableCell>
+                <TableCell onClick={(e) => e.stopPropagation()}>
                   <div className="flex gap-4">
                     <div className="flex flex-col items-center gap-1">
                       <Button
@@ -220,6 +229,12 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       <PromoteDialog 
         open={isPromoteOpen} 
         onOpenChange={setIsPromoteOpen}
+        classId={selectedClassId}
+      />
+
+      <ClassDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
         classId={selectedClassId}
       />
     </>
