@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -36,7 +37,7 @@ const TeacherMessages = () => {
           } else if (payload.eventType === 'UPDATE') {
             setMessages(prev => 
               prev.map(msg => 
-                msg.id === payload.new.id ? { ...msg, ...payload.new } : msg
+                msg.id === payload.new.id ? { ...msg, ...payload.new } as Message : msg
               )
             );
           }
@@ -61,8 +62,20 @@ const TeacherMessages = () => {
         .from('communications')
         .select(`
           *,
-          profiles!communications_student_id_fkey(first_name, last_name),
-          course:courses(title)
+          profiles:student_id(
+            id,
+            first_name,
+            last_name,
+            avatar_url,
+            location,
+            bio,
+            languages
+          ),
+          course:courses(
+            title,
+            price,
+            duration
+          )
         `)
         .eq('instructor_id', user.id)
         .order('sent_at', { ascending: false });
