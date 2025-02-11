@@ -7,6 +7,7 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +21,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Upload, User, Mail, Phone, MapPin, Save } from "lucide-react";
+import { 
+  Upload, 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Save,
+  Languages,
+  Clock,
+  BookOpen,
+  BellRing,
+  CreditCard,
+  Palette,
+} from "lucide-react";
 
 const UserProfileDuplicate = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,6 +45,17 @@ const UserProfileDuplicate = () => {
     email: "",
     phone: "",
     location: "",
+    languages: [],
+    teaching_experience: "",
+    timezone: "",
+    expertise: [],
+    preferred_teaching_method: "in-person",
+    hourly_rate: "",
+    portfolio_url: "",
+    social_media: {
+      linkedin: "",
+      instagram: ""
+    }
   });
   const { toast } = useToast();
 
@@ -58,6 +83,14 @@ const UserProfileDuplicate = () => {
           email: data.email || "",
           phone: data.phone || "",
           location: data.location || "",
+          languages: data.languages || [],
+          teaching_experience: data.teaching_experience || "",
+          timezone: data.timezone || "",
+          expertise: data.expertise || [],
+          preferred_teaching_method: data.preferred_teaching_method || "in-person",
+          hourly_rate: data.hourly_rate || "",
+          portfolio_url: data.portfolio_url || "",
+          social_media: data.social_media || { linkedin: "", instagram: "" }
         });
       }
     } catch (error: any) {
@@ -103,7 +136,7 @@ const UserProfileDuplicate = () => {
           <div className="text-left">
             <h1 className="text-2xl font-semibold">Profile Settings</h1>
             <p className="text-muted-foreground mt-1">
-              Manage your personal information and preferences
+              Manage your teacher profile and preferences
             </p>
           </div>
           
@@ -119,9 +152,14 @@ const UserProfileDuplicate = () => {
       </Card>
 
       <Card className="w-full p-6">
-        <h2 className="text-xl font-semibold mb-6 text-left">Personal Information</h2>
+        <CardHeader>
+          <CardTitle>Personal Information</CardTitle>
+          <CardDescription>
+            Update your personal details and public profile
+          </CardDescription>
+        </CardHeader>
         
-        <div className="space-y-6">
+        <CardContent className="space-y-6">
           <div className="flex items-center gap-4">
             <div className="relative h-20 w-20 rounded-full bg-neutral-100 overflow-hidden">
               <div className="flex h-full items-center justify-center">
@@ -158,17 +196,86 @@ const UserProfileDuplicate = () => {
             <Textarea
               value={profile.bio}
               onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-              placeholder="Tell us about yourself..."
+              placeholder="Tell students about yourself and your teaching experience..."
               className="min-h-[100px] bg-white"
             />
           </div>
-        </div>
+        </CardContent>
       </Card>
 
       <Card className="w-full p-6">
-        <h2 className="text-xl font-semibold mb-6 text-left">Contact Information</h2>
+        <CardHeader>
+          <CardTitle>Teaching Profile</CardTitle>
+          <CardDescription>
+            Showcase your expertise and teaching style
+          </CardDescription>
+        </CardHeader>
         
-        <div className="space-y-6">
+        <CardContent className="space-y-6">
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <BookOpen className="h-4 w-4 text-neutral-400" />
+              Teaching Experience
+            </Label>
+            <Textarea
+              value={profile.teaching_experience}
+              onChange={(e) => setProfile({ ...profile, teaching_experience: e.target.value })}
+              placeholder="Describe your teaching experience and qualifications..."
+              className="bg-white"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Palette className="h-4 w-4 text-neutral-400" />
+              Areas of Expertise
+            </Label>
+            <Input
+              value={profile.expertise.join(", ")}
+              onChange={(e) => setProfile({ ...profile, expertise: e.target.value.split(",").map(item => item.trim()) })}
+              placeholder="e.g., Painting, Drawing, Sculpture"
+              className="bg-white"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Languages className="h-4 w-4 text-neutral-400" />
+              Languages Spoken
+            </Label>
+            <Input
+              value={profile.languages.join(", ")}
+              onChange={(e) => setProfile({ ...profile, languages: e.target.value.split(",").map(item => item.trim()) })}
+              placeholder="e.g., English, Spanish"
+              className="bg-white"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <CreditCard className="h-4 w-4 text-neutral-400" />
+              Hourly Rate
+            </Label>
+            <Input
+              type="number"
+              value={profile.hourly_rate}
+              onChange={(e) => setProfile({ ...profile, hourly_rate: e.target.value })}
+              placeholder="Your standard hourly rate"
+              className="bg-white"
+            />
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="w-full p-6">
+        <CardHeader>
+          <CardTitle>Contact Information</CardTitle>
+          <CardDescription>
+            How students and the platform can reach you
+          </CardDescription>
+        </CardHeader>
+        
+        <CardContent className="space-y-6">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
@@ -208,17 +315,43 @@ const UserProfileDuplicate = () => {
               className="bg-white"
             />
           </div>
-        </div>
+
+          <div className="space-y-2">
+            <Label className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-neutral-400" />
+              Timezone
+            </Label>
+            <Select 
+              value={profile.timezone} 
+              onValueChange={(value) => setProfile({ ...profile, timezone: value })}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select your timezone" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="UTC-8">Pacific Time (PT)</SelectItem>
+                <SelectItem value="UTC-5">Eastern Time (ET)</SelectItem>
+                <SelectItem value="UTC+0">Greenwich Mean Time (GMT)</SelectItem>
+                <SelectItem value="UTC+1">Central European Time (CET)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
       </Card>
 
       <Card className="w-full p-6">
-        <h2 className="text-xl font-semibold mb-6 text-left">Notification Settings</h2>
-        <div className="space-y-6">
+        <CardHeader>
+          <CardTitle>Notification Preferences</CardTitle>
+          <CardDescription>
+            Manage how you receive updates and communications
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="booking-notifications">Booking Notifications</Label>
+              <Label htmlFor="booking-notifications">New Booking Notifications</Label>
               <p className="text-sm text-muted-foreground">
-                Receive notifications for new bookings
+                Receive notifications when students book your classes
               </p>
             </div>
             <Switch id="booking-notifications" defaultChecked />
@@ -228,16 +361,35 @@ const UserProfileDuplicate = () => {
             <div>
               <Label htmlFor="message-notifications">Message Notifications</Label>
               <p className="text-sm text-muted-foreground">
-                Receive notifications for new messages
+                Receive notifications for new student messages
               </p>
             </div>
             <Switch id="message-notifications" defaultChecked />
           </div>
-        </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="review-notifications">Review Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Get notified when students leave reviews
+              </p>
+            </div>
+            <Switch id="review-notifications" defaultChecked />
+          </div>
+
+          <div className="flex items-center justify-between">
+            <div>
+              <Label htmlFor="reminder-notifications">Class Reminders</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive reminders before your scheduled classes
+              </p>
+            </div>
+            <Switch id="reminder-notifications" defaultChecked />
+          </div>
+        </CardContent>
       </Card>
     </div>
   );
 };
 
 export default UserProfileDuplicate;
-
