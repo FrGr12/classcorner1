@@ -60,13 +60,23 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
             />
           </div>
 
-          <Button 
-            type="button" 
-            onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-          >
-            Add session
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button 
+              type="button" 
+              variant="outline"
+              className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+            >
+              Make Recurring
+            </Button>
+
+            <Button 
+              type="button" 
+              onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            >
+              Add session
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>
@@ -74,3 +84,4 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
 };
 
 export default LocationCategoryDetailsSection;
+
