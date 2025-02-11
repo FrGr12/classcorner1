@@ -4,8 +4,6 @@ import { SidebarProvider } from "@/contexts/SidebarContext";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
-import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
-import TeacherAnalytics from "@/components/teach/dashboard/TeacherAnalytics";
 import TeacherInbox from "@/components/teach/crm/TeacherInbox";
 import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
@@ -20,10 +18,8 @@ const Dashboard = () => {
           <main className="flex-1 p-4 md:p-6 overflow-auto">
             <Routes>
               <Route index element={<TeacherOverview />} />
-              <Route path="/classes" element={<TeacherClasses />} />
               <Route path="/create-class" element={<CreateClass />} />
               <Route path="/inbox" element={<TeacherInbox />} />
-              <Route path="/analytics" element={<TeacherAnalytics />} />
               <Route path="/profile" element={<TeacherProfile />} />
             </Routes>
           </main>

@@ -4,8 +4,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
-  BookOpen,
-  BarChart,
   Menu,
   PlusCircle,
   User,
@@ -29,19 +27,9 @@ const DashboardSidebar = () => {
       icon: PlusCircle,
     },
     {
-      title: "Classes",
-      href: "/dashboard/classes",
-      icon: BookOpen,
-    },
-    {
       title: "Inbox",
       href: "/dashboard/inbox",
       icon: MessageSquare,
-    },
-    {
-      title: "Analytics",
-      href: "/dashboard/analytics",
-      icon: BarChart,
     },
     {
       title: "Profile",
