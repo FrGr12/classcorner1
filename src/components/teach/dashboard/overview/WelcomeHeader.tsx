@@ -20,7 +20,7 @@ const WelcomeHeader: FC = () => {
     <Card className="mb-8">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="text-left">
             <h1 className="text-2xl font-bold">{greeting}!</h1>
             <p className="text-muted-foreground mt-1">
               Welcome to your teaching dashboard. Here's what you can do:
