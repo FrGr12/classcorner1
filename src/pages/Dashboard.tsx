@@ -22,7 +22,7 @@ const Dashboard = () => {
           <DashboardHeader />
           <main className="flex-1 p-4 md:p-6 overflow-auto">
             <Routes>
-              <Route path="/" element={<TeacherOverview />} />
+              <Route index element={<TeacherOverview />} />
               <Route path="/profile" element={<TeacherProfile />} />
               <Route path="/bookings" element={<TeacherBookings />} />
               <Route path="/classes" element={<TeacherClasses />} />

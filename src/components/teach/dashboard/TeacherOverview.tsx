@@ -8,6 +8,7 @@ import DashboardActions from "./overview/DashboardActions";
 import BookingsOverview from "./overview/BookingsOverview";
 import MessagesOverview from "./overview/MessagesOverview";
 import AnalyticsSummary from "./overview/AnalyticsSummary";
+import WelcomeHeader from "./overview/WelcomeHeader";
 
 const TeacherOverview = () => {
   const navigate = useNavigate();
@@ -55,6 +56,7 @@ const TeacherOverview = () => {
 
   return (
     <div className="space-y-8">
+      <WelcomeHeader />
       <DashboardMetrics metrics={metrics} />
       
       <section className="w-full">
