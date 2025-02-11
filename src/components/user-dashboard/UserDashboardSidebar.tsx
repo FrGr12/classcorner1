@@ -23,47 +23,47 @@ const UserDashboardSidebar = () => {
   const links = [
     {
       title: "Dashboard",
-      href: "/dashboard",
+      href: "/student-dashboard",
       icon: LayoutDashboard,
     },
     {
       title: "Messages",
-      href: "/dashboard/messages",
+      href: "/student-dashboard/messages",
       icon: MessageSquare,
     },
     {
       title: "Bookings",
-      href: "/dashboard/bookings",
+      href: "/student-dashboard/bookings",
       icon: CalendarDays,
     },
     {
       title: "Notifications",
-      href: "/dashboard/notifications",
+      href: "/student-dashboard/notifications",
       icon: Bell,
     },
     {
       title: "Matches",
-      href: "/dashboard/matches",
+      href: "/student-dashboard/matches",
       icon: Users,
     },
     {
       title: "Saved Classes",
-      href: "/dashboard/saved",
+      href: "/student-dashboard/saved",
       icon: Bookmark,
     },
     {
       title: "Preferences",
-      href: "/dashboard/preferences",
+      href: "/student-dashboard/preferences",
       icon: Settings,
     },
     {
       title: "Reviews",
-      href: "/dashboard/reviews",
+      href: "/student-dashboard/reviews",
       icon: Star,
     },
     {
       title: "Waitlist",
-      href: "/dashboard/waitlist",
+      href: "/student-dashboard/waitlist",
       icon: Clock,
     },
   ];
