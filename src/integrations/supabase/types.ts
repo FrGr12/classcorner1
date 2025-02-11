@@ -1332,6 +1332,39 @@ export type Database = {
         }
         Relationships: []
       }
+      student_metrics: {
+        Row: {
+          average_rating: number | null
+          created_at: string | null
+          id: string
+          student_id: string | null
+          total_classes_attended: number | null
+          total_spent: number | null
+          upcoming_classes: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          average_rating?: number | null
+          created_at?: string | null
+          id?: string
+          student_id?: string | null
+          total_classes_attended?: number | null
+          total_spent?: number | null
+          upcoming_classes?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          average_rating?: number | null
+          created_at?: string | null
+          id?: string
+          student_id?: string | null
+          total_classes_attended?: number | null
+          total_spent?: number | null
+          upcoming_classes?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       teacher_course_stats: {
         Row: {
           active_students: number | null

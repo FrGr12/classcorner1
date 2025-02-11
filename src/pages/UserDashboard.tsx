@@ -12,6 +12,7 @@ import UserProfile from "@/components/user-dashboard/UserProfile";
 import UserPreferences from "@/components/preferences/UserPreferences";
 import UserReviews from "@/components/user-dashboard/UserReviews";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
+import UserPayments from "@/components/user-dashboard/UserPayments";
 
 const UserDashboard = () => {
   return (
@@ -36,6 +37,7 @@ const UserDashboard = () => {
               <Route path="/preferences" element={<UserPreferences />} />
               <Route path="/reviews" element={<UserReviews />} />
               <Route path="/waitlist" element={<UserWaitlist />} />
+              <Route path="/payments" element={<UserPayments />} />
             </Routes>
           </main>
         </div>
