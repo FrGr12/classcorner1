@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -121,7 +120,7 @@ const CreateClass = () => {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Images</h2>
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Images</h2>
             <ImagesSection images={images} setImages={setImages} />
           </Card>
 
