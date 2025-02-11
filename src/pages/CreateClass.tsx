@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { BookOpen } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Session } from "@/types/session";
 import { Card } from "@/components/ui/card";
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
@@ -66,7 +66,7 @@ const CreateClass = () => {
     <div className="space-y-8">
       <Card className="p-6">
         <div className="flex items-center justify-between">
-          <div>
+          <div className="text-left">
             <h1 className="text-2xl font-semibold">Create New Class</h1>
             <p className="text-muted-foreground mt-1">
               Share your expertise with the world
@@ -87,7 +87,7 @@ const CreateClass = () => {
               form="create-class-form"
               className="bg-accent-purple hover:bg-accent-purple/90 text-white"
             >
-              <BookOpen className="mr-2 h-4 w-4" />
+              <Plus className="mr-2 h-4 w-4" />
               Create Class
             </Button>
           </div>
