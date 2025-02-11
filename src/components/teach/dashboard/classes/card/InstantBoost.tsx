@@ -27,11 +27,18 @@ const InstantBoost = ({ courseId }: InstantBoostProps) => {
     try {
       setIsLoading(true);
 
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("You must be logged in to use this feature");
+        return;
+      }
+
       // Check boost credits
       const { data: premiumFeatures, error: creditsError } = await supabase
         .from('teacher_premium_features')
         .select('boost_credits')
-        .single();
+        .eq('teacher_id', user.id)
+        .maybeSingle();
 
       if (creditsError) throw creditsError;
 
@@ -59,7 +66,7 @@ const InstantBoost = ({ courseId }: InstantBoostProps) => {
         .update({ 
           boost_credits: premiumFeatures.boost_credits - 1 
         })
-        .eq('teacher_id', (await supabase.auth.getUser()).data.user?.id);
+        .eq('teacher_id', user.id);
 
       if (updateError) throw updateError;
 
