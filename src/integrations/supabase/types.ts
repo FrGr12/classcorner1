@@ -1258,6 +1258,7 @@ export type Database = {
           languages: string[] | null
           last_contacted: string | null
           last_name: string | null
+          location: string | null
           notes: string | null
           phone: string | null
           preferred_contact_method: string | null
@@ -1279,6 +1280,7 @@ export type Database = {
           languages?: string[] | null
           last_contacted?: string | null
           last_name?: string | null
+          location?: string | null
           notes?: string | null
           phone?: string | null
           preferred_contact_method?: string | null
@@ -1300,6 +1302,7 @@ export type Database = {
           languages?: string[] | null
           last_contacted?: string | null
           last_name?: string | null
+          location?: string | null
           notes?: string | null
           phone?: string | null
           preferred_contact_method?: string | null
