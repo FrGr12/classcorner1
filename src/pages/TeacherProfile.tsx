@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +53,9 @@ interface TeacherProfileData {
   hourly_rate: string;
   portfolio_url: string;
   social_media: {
-    [key: string]: string;
+    linkedin: string;
+    instagram: string;
+    website: string;
   };
   email_notifications: boolean;
   sms_notifications: boolean;
@@ -103,6 +104,18 @@ const TeacherProfile = () => {
 
       if (error) throw error;
       if (data) {
+        const socialMedia = typeof data.social_media === 'object' && data.social_media !== null
+          ? {
+              linkedin: (data.social_media as any)?.linkedin || "",
+              instagram: (data.social_media as any)?.instagram || "",
+              website: (data.social_media as any)?.website || ""
+            }
+          : {
+              linkedin: "",
+              instagram: "",
+              website: ""
+            };
+
         setProfile({
           first_name: data.first_name || "",
           last_name: data.last_name || "",
@@ -117,7 +130,7 @@ const TeacherProfile = () => {
           preferred_teaching_method: data.preferred_teaching_method || "in-person",
           hourly_rate: data.hourly_rate?.toString() || "",
           portfolio_url: data.portfolio_url || "",
-          social_media: data.social_media || { linkedin: "", instagram: "", website: "" },
+          social_media: socialMedia,
           email_notifications: true,
           sms_notifications: false
         });
