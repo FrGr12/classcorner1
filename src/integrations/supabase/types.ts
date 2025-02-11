@@ -1431,6 +1431,39 @@ export type Database = {
           },
         ]
       }
+      teacher_metrics: {
+        Row: {
+          avg_rating: number | null
+          created_at: string | null
+          id: string
+          instructor_id: string | null
+          total_revenue: number | null
+          total_students: number | null
+          upcoming_classes: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          created_at?: string | null
+          id?: string
+          instructor_id?: string | null
+          total_revenue?: number | null
+          total_students?: number | null
+          upcoming_classes?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          avg_rating?: number | null
+          created_at?: string | null
+          id?: string
+          instructor_id?: string | null
+          total_revenue?: number | null
+          total_students?: number | null
+          upcoming_classes?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       teacher_premium_features: {
         Row: {
           boost_credits: number | null

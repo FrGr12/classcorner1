@@ -12,7 +12,6 @@ import AnalyticsSummary from "./overview/AnalyticsSummary";
 const TeacherOverview = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [profile, setProfile] = useState<any>(null);
   const [metrics, setMetrics] = useState({
     totalStudents: 0,
     upcomingClasses: 0,
@@ -21,33 +20,35 @@ const TeacherOverview = () => {
   });
 
   useEffect(() => {
-    fetchTeacherData();
+    fetchTeacherMetrics();
   }, []);
 
-  const fetchTeacherData = async () => {
+  const fetchTeacherMetrics = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const [profileResponse, metricsResponse] = await Promise.all([
-        supabase.from('profiles').select('*').eq('id', user.id).single(),
-        supabase.from('teacher_engagement_metrics').select('*').eq('instructor_id', user.id).single()
-      ]);
+      const { data: metricsData, error } = await supabase
+        .from('teacher_metrics')
+        .select('*')
+        .eq('instructor_id', user.id)
+        .single();
 
-      setProfile(profileResponse.data);
-      
+      if (error) throw error;
+
       setMetrics({
-        totalStudents: metricsResponse.data?.total_students || 0,
-        upcomingClasses: metricsResponse.data?.upcoming_classes || 0,
-        totalRevenue: metricsResponse.data?.total_revenue || 0,
-        averageRating: metricsResponse.data?.avg_rating || 0
+        totalStudents: metricsData?.total_students || 0,
+        upcomingClasses: metricsData?.upcoming_classes || 0,
+        totalRevenue: metricsData?.total_revenue || 0,
+        averageRating: metricsData?.avg_rating || 0
       });
 
     } catch (error: any) {
+      console.error('Error fetching metrics:', error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to load dashboard data"
+        description: "Failed to load dashboard metrics"
       });
     }
   };
