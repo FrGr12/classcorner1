@@ -3,8 +3,9 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Rocket, Tag } from "lucide-react";
 import CreateDiscountDialog from "../discounts/CreateDiscountDialog";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PromoteDialogProps {
   open: boolean;
@@ -14,6 +15,24 @@ interface PromoteDialogProps {
 
 const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [boostCredits, setBoostCredits] = useState(0);
+
+  useEffect(() => {
+    const fetchBoostCredits = async () => {
+      const { data, error } = await supabase
+        .from('teacher_premium_features')
+        .select('boost_credits')
+        .single();
+
+      if (!error && data) {
+        setBoostCredits(data.boost_credits);
+      }
+    };
+
+    if (open) {
+      fetchBoostCredits();
+    }
+  }, [open]);
 
   const handleBoost = () => {
     toast.success("Opening boost feature...");
@@ -60,10 +79,21 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
               onClick={handleBoost}
             >
               <Rocket className="h-5 w-5" />
-              <div className="text-left">
+              <div className="text-left flex-1">
                 <div className="font-medium">Boost Visibility</div>
                 <div className="text-sm text-muted-foreground">
                   Increase your class visibility in search results
+                </div>
+                <div className="mt-1 text-xs">
+                  {boostCredits > 0 ? (
+                    <span className="text-green-600">
+                      {boostCredits} boost {boostCredits === 1 ? 'credit' : 'credits'} available
+                    </span>
+                  ) : (
+                    <span className="text-amber-600">
+                      No credits available - Purchase credits to boost
+                    </span>
+                  )}
                 </div>
               </div>
             </Button>
