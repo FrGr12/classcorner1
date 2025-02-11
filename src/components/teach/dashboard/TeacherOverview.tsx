@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DashboardMetrics from "./overview/DashboardMetrics";
-import DashboardActions from "./overview/DashboardActions";
 import BookingsOverview from "./overview/BookingsOverview";
 import MessagesOverview from "./overview/MessagesOverview";
 import AnalyticsSummary from "./overview/AnalyticsSummary";
@@ -65,11 +64,6 @@ const TeacherOverview = () => {
       </section>
 
       <section className="w-full">
-        <h2 className="text-xl font-semibold mb-4 text-left">Quick Actions</h2>
-        <DashboardActions />
-      </section>
-
-      <section className="w-full">
         <h2 className="text-xl font-semibold mb-4 text-left">Upcoming Classes</h2>
         <BookingsOverview />
       </section>
@@ -83,3 +77,4 @@ const TeacherOverview = () => {
 };
 
 export default TeacherOverview;
+
