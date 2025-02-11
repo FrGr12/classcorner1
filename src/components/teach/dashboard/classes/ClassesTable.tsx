@@ -2,7 +2,7 @@
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, MessageSquare, Sparkles, ArrowUp } from "lucide-react";
+import { Edit, MessageSquare, ArrowUp } from "lucide-react";
 import { format } from "date-fns";
 
 interface ClassesTableProps {
@@ -60,17 +60,6 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                     <MessageSquare className="h-4 w-4" />
                   </Button>
                   <span className="text-xs text-muted-foreground">Message</span>
-                </div>
-
-                <div className="flex flex-col items-center gap-1">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={() => onAction('boost', classItem.id)}
-                  >
-                    <Sparkles className="h-4 w-4" />
-                  </Button>
-                  <span className="text-xs text-muted-foreground">Boost</span>
                 </div>
 
                 <div className="flex flex-col items-center gap-1">
