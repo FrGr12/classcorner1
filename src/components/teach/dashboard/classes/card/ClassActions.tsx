@@ -18,6 +18,7 @@ interface ClassActionsProps {
 const ClassActions = ({ classId, category }: ClassActionsProps) => {
   const navigate = useNavigate();
   const [isMessageDialogOpen, setIsMessageDialogOpen] = useState(false);
+  const [isDiscountDialogOpen, setIsDiscountDialogOpen] = useState(false);
   const [message, setMessage] = useState("");
 
   // Mock participants data - in a real app, this would come from your backend
@@ -55,7 +56,11 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
           Message Participants
         </Button>
 
-        <CreateDiscountDialog courseId={classId} />
+        <CreateDiscountDialog 
+          courseId={classId} 
+          open={isDiscountDialogOpen}
+          onOpenChange={setIsDiscountDialogOpen}
+        />
         
         <InstantBoost courseId={classId} />
         
