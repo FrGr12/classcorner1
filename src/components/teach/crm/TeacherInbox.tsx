@@ -74,17 +74,6 @@ const TeacherInbox = () => {
   const { data: messages, isLoading } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        toast({
-          variant: "destructive",
-          title: "Authentication Error",
-          description: "Please sign in to view messages",
-        });
-        throw new Error("Not authenticated");
-      }
-
       const dummyMessages: Message[] = [
         {
           id: 1,
@@ -95,7 +84,7 @@ const TeacherInbox = () => {
           status: "unread",
           student_id: "1",
           course_id: 1,
-          instructor_id: user.id,
+          instructor_id: "dummy-instructor",
           thread_id: "thread1",
           is_unread: true,
           assigned_to: null,
@@ -125,7 +114,7 @@ const TeacherInbox = () => {
           status: "read",
           student_id: "2",
           course_id: 2,
-          instructor_id: user.id,
+          instructor_id: "dummy-instructor",
           thread_id: "thread2",
           is_unread: false,
           assigned_to: null,
@@ -155,7 +144,7 @@ const TeacherInbox = () => {
           status: "unread",
           student_id: "3",
           course_id: 3,
-          instructor_id: user.id,
+          instructor_id: "dummy-instructor",
           thread_id: "thread3",
           is_unread: true,
           assigned_to: null,
@@ -185,7 +174,7 @@ const TeacherInbox = () => {
           status: "unread",
           student_id: "4",
           course_id: 4,
-          instructor_id: user.id,
+          instructor_id: "dummy-instructor",
           thread_id: "thread4",
           is_unread: true,
           assigned_to: null,
@@ -215,7 +204,7 @@ const TeacherInbox = () => {
           status: "read",
           student_id: "5",
           course_id: 5,
-          instructor_id: user.id,
+          instructor_id: "dummy-instructor",
           thread_id: "thread5",
           is_unread: false,
           assigned_to: null,
