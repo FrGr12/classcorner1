@@ -8,7 +8,6 @@ import {
   BookOpen,
   BarChart,
   Star,
-  Bell,
   Menu,
   PlusCircle,
   UserCog,
@@ -36,11 +35,6 @@ const DashboardSidebar = () => {
       icon: UserCog,
     },
     {
-      title: "Bookings",
-      href: "/dashboard/bookings",
-      icon: CalendarDays,
-    },
-    {
       title: "Classes",
       href: "/dashboard/classes",
       icon: BookOpen,
@@ -54,11 +48,6 @@ const DashboardSidebar = () => {
       title: "Reviews",
       href: "/dashboard/reviews",
       icon: Star,
-    },
-    {
-      title: "Notifications",
-      href: "/dashboard/notifications",
-      icon: Bell,
     },
   ];
 
