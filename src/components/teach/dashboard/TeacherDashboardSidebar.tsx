@@ -58,7 +58,11 @@ const TeacherDashboardSidebar = () => {
             <Link key={item.path} to={item.path}>
               <Button
                 variant={location.pathname === item.path ? "default" : "ghost"}
-                className="w-full justify-start gap-3"
+                className={`w-full justify-start gap-3 ${
+                  location.pathname === item.path 
+                    ? "bg-accent-purple text-white hover:bg-accent-purple/90"
+                    : "hover:bg-accent-purple/10 hover:text-accent-purple"
+                }`}
               >
                 <item.icon className="h-5 w-5" />
                 <span>{item.label}</span>
@@ -72,3 +76,4 @@ const TeacherDashboardSidebar = () => {
 };
 
 export default TeacherDashboardSidebar;
+
