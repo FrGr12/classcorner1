@@ -127,8 +127,8 @@ const TeacherInbox = () => {
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="flex items-center justify-between mb-4">
+      <Card className="p-6">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">Messages</h1>
             <p className="text-muted-foreground mt-1">
@@ -151,7 +151,7 @@ const TeacherInbox = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </Card>
 
       <div className="flex justify-between items-center">
         <div className="flex gap-4 flex-1">
@@ -202,3 +202,4 @@ const TeacherInbox = () => {
 };
 
 export default TeacherInbox;
+
