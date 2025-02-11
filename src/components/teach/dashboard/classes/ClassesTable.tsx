@@ -49,48 +49,43 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   useEffect(() => {
     const fetchStats = async () => {
-      const { data: viewData, error: viewError } = await supabase
-        .from('course_activity_stats')
-        .select('*')
-        .eq('activity_type', 'view');
-
-      if (viewError) {
-        console.error('Error fetching view stats:', viewError);
-        return;
-      }
-
-      const { data: clickData, error: clickError } = await supabase
-        .from('course_activity_stats')
-        .select('*')
-        .eq('activity_type', 'click');
-
-      if (clickError) {
-        console.error('Error fetching click stats:', clickError);
-        return;
-      }
-
       const viewStatsMap: ViewStats = {};
       
-      if (viewData) {
-        viewData.forEach((stat: { course_id: number, activity_count: number }) => {
-          if (!viewStatsMap[stat.course_id]) {
-            viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
-          }
-          viewStatsMap[stat.course_id].views = stat.activity_count;
-        });
+      // Initialize view stats for all courses
+      classes.forEach(classItem => {
+        viewStatsMap[classItem.id] = { views: 0, clicks: 0 };
+      });
+
+      // Fetch course activity logs
+      const { data: activityData, error: activityError } = await supabase
+        .from('course_activity_log')
+        .select('course_id, activity_type')
+        .in('activity_type', ['view', 'click']);
+
+      if (activityError) {
+        console.error('Error fetching activity stats:', activityError);
+        return;
       }
 
-      if (clickData) {
-        clickData.forEach((stat: { course_id: number, activity_count: number }) => {
-          if (!viewStatsMap[stat.course_id]) {
-            viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
+      // Process activity data
+      if (activityData) {
+        activityData.forEach((log: { course_id: number, activity_type: string }) => {
+          if (log.course_id) {
+            if (!viewStatsMap[log.course_id]) {
+              viewStatsMap[log.course_id] = { views: 0, clicks: 0 };
+            }
+            if (log.activity_type === 'view') {
+              viewStatsMap[log.course_id].views++;
+            } else if (log.activity_type === 'click') {
+              viewStatsMap[log.course_id].clicks++;
+            }
           }
-          viewStatsMap[stat.course_id].clicks = stat.activity_count;
         });
       }
 
       setViewStats(viewStatsMap);
 
+      // Fetch payment stats
       const { data: paymentData, error: paymentError } = await supabase
         .from('course_payment_stats')
         .select('*');
@@ -112,7 +107,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     };
 
     fetchStats();
-  }, []);
+  }, [classes]);
 
   const getFormattedDate = (date: Date | Date[]) => {
     if (Array.isArray(date)) {
