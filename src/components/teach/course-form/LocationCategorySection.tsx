@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { Map } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 interface LocationCategorySectionProps {
@@ -19,10 +18,7 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-6 space-y-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Map className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium text-primary">Location & Category</h3>
-        </div>
+        <h3 className="text-lg font-medium text-primary text-left">Location & Category</h3>
 
         <FormField
           control={form.control}

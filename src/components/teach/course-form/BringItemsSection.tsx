@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Package } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 interface BringItemsSectionProps {
@@ -29,10 +28,7 @@ const BringItemsSection = ({ form }: BringItemsSectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-6 space-y-6">
-        <div className="flex items-center gap-2 mb-4">
-          <Package className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium text-primary">What to Bring</h3>
-        </div>
+        <h3 className="text-lg font-medium text-primary text-left">What to Bring</h3>
 
         <div className="space-y-4">
           <div className="flex gap-2">
