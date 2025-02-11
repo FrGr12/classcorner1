@@ -23,12 +23,20 @@ interface PaymentStats {
   };
 }
 
+interface ViewStats {
+  [key: number]: {
+    views: number;
+    clicks: number;
+  };
+}
+
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const navigate = useNavigate();
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [paymentStats, setPaymentStats] = useState<PaymentStats>({});
+  const [viewStats, setViewStats] = useState<ViewStats>({});
   const [filters, setFilters] = useState({
     title: "",
     date: "",
@@ -36,31 +44,65 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     attendees: "",
     waitlist: "",
     paid: "",
+    views: "",
+    clicks: "",
   });
 
   useEffect(() => {
-    const fetchPaymentStats = async () => {
-      const { data, error } = await supabase
+    const fetchStats = async () => {
+      // Fetch payment stats
+      const { data: paymentData, error: paymentError } = await supabase
         .from('course_payment_stats')
         .select('*');
 
-      if (error) {
-        console.error('Error fetching payment stats:', error);
+      if (paymentError) {
+        console.error('Error fetching payment stats:', paymentError);
         return;
       }
 
-      const statsMap = data.reduce((acc: PaymentStats, stat) => {
+      // Fetch activity stats
+      const { data: activityData, error: activityError } = await supabase
+        .from('course_activity_log')
+        .select('course_id, activity_type, count')
+        .in('activity_type', ['view', 'click'])
+        .select(`
+          course_id,
+          activity_type,
+          count(*) as count
+        `)
+        .group('course_id, activity_type');
+
+      if (activityError) {
+        console.error('Error fetching activity stats:', activityError);
+        return;
+      }
+
+      // Process payment stats
+      const statsMap = paymentData.reduce((acc: PaymentStats, stat) => {
         acc[stat.course_id] = {
           paid_count: stat.paid_count || 0,
           pending_count: stat.pending_count || 0,
         };
         return acc;
       }, {});
-
       setPaymentStats(statsMap);
+
+      // Process view stats
+      const viewStatsMap = activityData.reduce((acc: ViewStats, stat) => {
+        if (!acc[stat.course_id]) {
+          acc[stat.course_id] = { views: 0, clicks: 0 };
+        }
+        if (stat.activity_type === 'view') {
+          acc[stat.course_id].views = Number(stat.count);
+        } else if (stat.activity_type === 'click') {
+          acc[stat.course_id].clicks = Number(stat.count);
+        }
+        return acc;
+      }, {});
+      setViewStats(viewStatsMap);
     };
 
-    fetchPaymentStats();
+    fetchStats();
   }, []);
 
   const getFormattedDate = (date: Date | Date[]) => {
@@ -89,14 +131,20 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const filteredClasses = classes.filter(classItem => {
     const stats = paymentStats[classItem.id] || { paid_count: 0, pending_count: 0 };
+    const views = viewStats[classItem.id]?.views || 0;
+    const clicks = viewStats[classItem.id]?.clicks || 0;
     const matchesTitle = classItem.title.toLowerCase().includes(filters.title.toLowerCase());
     const matchesDate = !filters.date || getFormattedDate(classItem.date).toLowerCase().includes(filters.date.toLowerCase());
     const matchesCapacity = !filters.capacity || (classItem.maxParticipants?.toString() || '-').includes(filters.capacity);
     const matchesPaid = !filters.paid || stats.paid_count.toString().includes(filters.paid);
+    const matchesViews = !filters.views || views.toString().includes(filters.views);
+    const matchesClicks = !filters.clicks || clicks.toString().includes(filters.clicks);
     const matchesAttendees = !filters.attendees || '0'.includes(filters.attendees);
     const matchesWaitlist = !filters.waitlist || '0'.includes(filters.waitlist);
 
-    return matchesTitle && matchesDate && matchesCapacity && matchesAttendees && matchesWaitlist && matchesPaid;
+    return matchesTitle && matchesDate && matchesCapacity && 
+           matchesAttendees && matchesWaitlist && matchesPaid && 
+           matchesViews && matchesClicks;
   });
 
   return (
@@ -127,6 +175,20 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
             </TableHead>
             <TableHead>
               <ColumnFilter 
+                column="Views" 
+                value={filters.views}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
+                column="Clicks" 
+                value={filters.clicks}
+                onFilter={handleFilter}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter 
                 column="Attendees" 
                 value={filters.attendees}
                 onFilter={handleFilter}
@@ -152,6 +214,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <TableBody>
           {filteredClasses.map((classItem) => {
             const stats = paymentStats[classItem.id] || { paid_count: 0, pending_count: 0 };
+            const views = viewStats[classItem.id]?.views || 0;
+            const clicks = viewStats[classItem.id]?.clicks || 0;
             return (
               <TableRow 
                 key={classItem.id}
@@ -164,6 +228,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 <TableCell className="font-medium">{classItem.title}</TableCell>
                 <TableCell>{getFormattedDate(classItem.date)}</TableCell>
                 <TableCell>{classItem.maxParticipants || '-'}</TableCell>
+                <TableCell>{views}</TableCell>
+                <TableCell>{clicks}</TableCell>
                 <TableCell>0</TableCell>
                 <TableCell>0</TableCell>
                 <TableCell>
