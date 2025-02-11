@@ -85,9 +85,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                     <span className="text-xs text-muted-foreground">Promote</span>
                   </div>
 
-                  <div className="flex flex-col items-center gap-1">
+                  <div className="flex flex-col items-center">
                     <SocialShare courseId={classItem.id} category={classItem.category} />
-                    <span className="text-xs text-muted-foreground">Share</span>
                   </div>
                 </div>
               </TableCell>
