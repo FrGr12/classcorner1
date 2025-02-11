@@ -36,6 +36,11 @@ import {
   Palette,
 } from "lucide-react";
 
+interface SocialMedia {
+  linkedin: string;
+  instagram: string;
+}
+
 interface ProfileData {
   first_name: string;
   last_name: string;
@@ -50,10 +55,7 @@ interface ProfileData {
   preferred_teaching_method: string;
   hourly_rate: string;
   portfolio_url: string;
-  social_media: {
-    linkedin: string;
-    instagram: string;
-  };
+  social_media: SocialMedia;
 }
 
 const UserProfileDuplicate = () => {
@@ -110,7 +112,7 @@ const UserProfileDuplicate = () => {
           preferred_teaching_method: data.preferred_teaching_method || "in-person",
           hourly_rate: data.hourly_rate?.toString() || "",
           portfolio_url: data.portfolio_url || "",
-          social_media: data.social_media || { linkedin: "", instagram: "" }
+          social_media: data.social_media as SocialMedia || { linkedin: "", instagram: "" }
         });
       }
     } catch (error: any) {
