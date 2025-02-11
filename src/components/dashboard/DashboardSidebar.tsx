@@ -4,7 +4,6 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   LayoutDashboard,
-  UserCircle,
   CalendarDays,
   BookOpen,
   BarChart,
@@ -35,11 +34,6 @@ const DashboardSidebar = () => {
       title: "Profile Settings",
       href: "/dashboard/duplicate-class",
       icon: UserCog,
-    },
-    {
-      title: "Profile",
-      href: "/dashboard/profile",
-      icon: UserCircle,
     },
     {
       title: "Bookings",
@@ -122,4 +116,3 @@ const DashboardSidebar = () => {
 };
 
 export default DashboardSidebar;
-

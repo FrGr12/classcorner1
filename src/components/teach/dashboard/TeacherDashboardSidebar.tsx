@@ -2,7 +2,6 @@
 import { Link, useLocation } from "react-router-dom";
 import {
   LayoutDashboard,
-  UserCircle,
   MessageSquare,
   BookOpen,
   Settings,
@@ -23,7 +22,6 @@ const TeacherDashboardSidebar = () => {
     { icon: PlusCircle, label: "Create Class", path: "/teach/classes/new" },
     { icon: MessageSquare, label: "Messages", path: "/teach/messages" },
     { icon: Users, label: "Waitlist", path: "/teach/waitlist" },
-    { icon: UserCircle, label: "Profile", path: "/teach/profile" },
     { icon: Settings, label: "Settings", path: "/teach/settings" },
   ];
 

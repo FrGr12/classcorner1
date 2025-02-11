@@ -9,7 +9,6 @@ import {
   Bell,
   Users,
   Bookmark,
-  UserCircle,
   Star,
   Settings,
   Menu,
@@ -51,11 +50,6 @@ const UserDashboardSidebar = () => {
       title: "Saved Classes",
       href: "/dashboard/saved",
       icon: Bookmark,
-    },
-    {
-      title: "Profile",
-      href: "/dashboard/profile",
-      icon: UserCircle,
     },
     {
       title: "Preferences",
