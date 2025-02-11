@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,7 @@ interface PaymentStats {
 }
 
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
+  const navigate = useNavigate();
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
@@ -130,6 +130,10 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     </div>
   );
 
+  const handleEditClick = (classId: number) => {
+    navigate(`/edit-course/${classId}`);
+  };
+
   return (
     <>
       <Table>
@@ -175,7 +179,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                       <Button
                         variant="outline"
                         size="icon"
-                        onClick={() => onAction('edit', classItem.id)}
+                        onClick={() => handleEditClick(classItem.id)}
                         className="bg-accent-purple hover:bg-accent-purple/90"
                       >
                         <Edit className="h-4 w-4 text-white" />
