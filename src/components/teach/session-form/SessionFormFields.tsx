@@ -17,7 +17,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { CalendarIcon, Clock } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface SessionFormFieldsProps {
@@ -79,15 +79,12 @@ const SessionFormFields = ({
         </div>
 
         <div className="flex-1">
-          <div className="flex items-center space-x-2">
-            <Input
-              type="time"
-              value={startTime}
-              onChange={(e) => setStartTime(e.target.value)}
-              className="bg-white border-neutral-200"
-            />
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </div>
+          <Input
+            type="time"
+            value={startTime}
+            onChange={(e) => setStartTime(e.target.value)}
+            className="bg-white border-neutral-200"
+          />
         </div>
       </div>
 
@@ -163,3 +160,4 @@ const SessionFormFields = ({
 };
 
 export default SessionFormFields;
+
