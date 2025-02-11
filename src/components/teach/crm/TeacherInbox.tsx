@@ -85,44 +85,160 @@ const TeacherInbox = () => {
         throw new Error("Not authenticated");
       }
 
-      const { data, error } = await supabase
-        .from("communications")
-        .select(`
-          id,
-          message_type,
-          message_content,
-          sent_at,
-          read_at,
-          status,
-          student_id,
-          course_id,
-          instructor_id,
-          thread_id,
-          is_unread,
-          assigned_to,
-          communication_context,
-          last_activity_at,
-          profile:profiles!student_id(
-            id,
-            first_name,
-            last_name,
-            avatar_url,
-            location,
-            bio,
-            languages
-          ),
-          course:courses(
-            title,
-            price,
-            duration
-          )
-        `)
-        .eq("instructor_id", user.id)
-        .order("sent_at", { ascending: false });
+      const dummyMessages: Message[] = [
+        {
+          id: 1,
+          message_type: "inquiry",
+          message_content: "Hi, I'm interested in your pottery class. Could you tell me more about the materials we'll be using?",
+          sent_at: new Date().toISOString(),
+          read_at: null,
+          status: "unread",
+          student_id: "1",
+          course_id: 1,
+          instructor_id: user.id,
+          thread_id: "thread1",
+          is_unread: true,
+          assigned_to: null,
+          communication_context: "Pottery Class Inquiry",
+          last_activity_at: new Date().toISOString(),
+          profile: {
+            id: "1",
+            first_name: "Emma",
+            last_name: "Watson",
+            avatar_url: null,
+            location: "Stockholm",
+            bio: "Art enthusiast looking to explore new creative outlets",
+            languages: ["English", "Swedish"]
+          },
+          course: {
+            title: "Introduction to Pottery",
+            price: 1200,
+            duration: "2 hours"
+          }
+        },
+        {
+          id: 2,
+          message_type: "feedback",
+          message_content: "The woodworking class was amazing! I learned so much about different types of wood and techniques.",
+          sent_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+          read_at: new Date(Date.now() - 43200000).toISOString(),
+          status: "read",
+          student_id: "2",
+          course_id: 2,
+          instructor_id: user.id,
+          thread_id: "thread2",
+          is_unread: false,
+          assigned_to: null,
+          communication_context: "Woodworking Class Feedback",
+          last_activity_at: new Date(Date.now() - 43200000).toISOString(),
+          profile: {
+            id: "2",
+            first_name: "James",
+            last_name: "Smith",
+            avatar_url: null,
+            location: "Gothenburg",
+            bio: "DIY enthusiast and weekend warrior",
+            languages: ["English"]
+          },
+          course: {
+            title: "Advanced Woodworking",
+            price: 1500,
+            duration: "3 hours"
+          }
+        },
+        {
+          id: 3,
+          message_type: "question",
+          message_content: "Do we need to bring our own canvas for the painting workshop?",
+          sent_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+          read_at: null,
+          status: "unread",
+          student_id: "3",
+          course_id: 3,
+          instructor_id: user.id,
+          thread_id: "thread3",
+          is_unread: true,
+          assigned_to: null,
+          communication_context: "Painting Workshop Materials",
+          last_activity_at: new Date(Date.now() - 172800000).toISOString(),
+          profile: {
+            id: "3",
+            first_name: "Sofia",
+            last_name: "Andersson",
+            avatar_url: null,
+            location: "Uppsala",
+            bio: "Aspiring artist with a passion for colors",
+            languages: ["Swedish", "English", "Spanish"]
+          },
+          course: {
+            title: "Oil Painting Basics",
+            price: 900,
+            duration: "2.5 hours"
+          }
+        },
+        {
+          id: 4,
+          message_type: "booking",
+          message_content: "I'd like to book a private session for my daughter's birthday. Do you offer group discounts?",
+          sent_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+          read_at: null,
+          status: "unread",
+          student_id: "4",
+          course_id: 4,
+          instructor_id: user.id,
+          thread_id: "thread4",
+          is_unread: true,
+          assigned_to: null,
+          communication_context: "Private Session Inquiry",
+          last_activity_at: new Date(Date.now() - 259200000).toISOString(),
+          profile: {
+            id: "4",
+            first_name: "Maria",
+            last_name: "Garcia",
+            avatar_url: null,
+            location: "Stockholm",
+            bio: "Mother of two creative kids",
+            languages: ["Spanish", "English"]
+          },
+          course: {
+            title: "Ceramic Art for Kids",
+            price: 800,
+            duration: "1.5 hours"
+          }
+        },
+        {
+          id: 5,
+          message_type: "support",
+          message_content: "I might be running 10 minutes late to tomorrow's class. Is that okay?",
+          sent_at: new Date(Date.now() - 345600000).toISOString(), // 4 days ago
+          read_at: new Date(Date.now() - 342000000).toISOString(),
+          status: "read",
+          student_id: "5",
+          course_id: 5,
+          instructor_id: user.id,
+          thread_id: "thread5",
+          is_unread: false,
+          assigned_to: null,
+          communication_context: "Class Attendance",
+          last_activity_at: new Date(Date.now() - 342000000).toISOString(),
+          profile: {
+            id: "5",
+            first_name: "Lars",
+            last_name: "Johansson",
+            avatar_url: null,
+            location: "Malmö",
+            bio: "Photography enthusiast",
+            languages: ["Swedish", "English", "Danish"]
+          },
+          course: {
+            title: "Digital Photography",
+            price: 1100,
+            duration: "2 hours"
+          }
+        }
+      ];
 
-      if (error) throw error;
-
-      return data as unknown as Message[];
+      return dummyMessages;
     }
   });
 

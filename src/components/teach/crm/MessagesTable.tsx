@@ -37,7 +37,7 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessa
       setIsSending(true);
       await onSendMessage(
         selectedMessage.student_id,
-        selectedMessage.course_id,
+        selectedMessage.course_id || 0,
         messageContent
       );
       setMessageContent("");
@@ -67,7 +67,7 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessa
               onClick={() => onMessageSelect?.(message)}
             >
               <TableCell>
-                {message.profiles?.first_name} {message.profiles?.last_name}
+                {message.profile?.first_name} {message.profile?.last_name}
               </TableCell>
               <TableCell>{message.communication_context || 'No subject'}</TableCell>
               <TableCell className="max-w-md truncate">
@@ -94,7 +94,7 @@ const MessagesTable = ({ messages, onMessageSelect, selectedMessage, onSendMessa
           <div className="space-y-4">
             <div>
               <p className="text-sm font-medium">
-                To: {selectedMessage?.profiles?.first_name} {selectedMessage?.profiles?.last_name}
+                To: {selectedMessage?.profile?.first_name} {selectedMessage?.profile?.last_name}
               </p>
               <p className="text-sm text-muted-foreground">
                 Re: {selectedMessage?.communication_context || 'No subject'}
