@@ -61,7 +61,7 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 
   return (
     <div className="space-y-6">
-      <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+      <div className="grid grid-cols-[1fr_auto] items-start gap-4">
         <SessionFormFields
           startDate={startDate}
           setStartDate={setStartDate}
@@ -77,15 +77,25 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
           setRecurrenceCount={setRecurrenceCount}
         />
 
-        <Button
-          type="button"
-          onClick={addSession}
-          disabled={!startDate}
-          className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add
-        </Button>
+        <div className="space-y-2">
+          <Button
+            type="button"
+            onClick={addSession}
+            disabled={!startDate}
+            className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10 w-full"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsRecurring(!isRecurring)}
+            className={`w-full ${isRecurring ? 'bg-accent-purple/10 border-accent-purple text-accent-purple' : 'bg-white'}`}
+          >
+            {isRecurring ? 'Recurring On' : 'Make Recurring'}
+          </Button>
+        </div>
       </div>
 
       <SessionList sessions={sessions} removeSession={removeSession} />
@@ -94,3 +104,4 @@ const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
 };
 
 export default SessionsForm;
+

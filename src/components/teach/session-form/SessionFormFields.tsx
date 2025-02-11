@@ -2,7 +2,6 @@
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -41,7 +40,6 @@ const SessionFormFields = ({
   startTime,
   setStartTime,
   isRecurring,
-  setIsRecurring,
   recurrencePattern,
   setRecurrencePattern,
   recurrenceEndDate,
@@ -88,16 +86,8 @@ const SessionFormFields = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Switch 
-          checked={isRecurring}
-          onCheckedChange={setIsRecurring}
-        />
-        <span className="text-sm text-neutral-600">Recurring session</span>
-      </div>
-
       {isRecurring && (
-        <div className="space-y-4 col-span-2">
+        <div className="space-y-4 mt-4">
           <div>
             <Label>Recurrence Pattern</Label>
             <Select
