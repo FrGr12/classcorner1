@@ -60,28 +60,32 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         return;
       }
 
-      // Fetch activity stats for views
+      // Fetch activity stats for views - Fixed with GROUP BY
       const { data: viewData, error: viewError } = await supabase
         .from('course_activity_log')
         .select(`
           course_id,
           count
         `)
-        .eq('activity_type', 'view');
+        .eq('activity_type', 'view')
+        .select('course_id, count(*)')
+        .group('course_id');
 
       if (viewError) {
         console.error('Error fetching view stats:', viewError);
         return;
       }
 
-      // Fetch activity stats for clicks
+      // Fetch activity stats for clicks - Fixed with GROUP BY
       const { data: clickData, error: clickError } = await supabase
         .from('course_activity_log')
         .select(`
           course_id,
           count
         `)
-        .eq('activity_type', 'click');
+        .eq('activity_type', 'click')
+        .select('course_id, count(*)')
+        .group('course_id');
 
       if (clickError) {
         console.error('Error fetching click stats:', clickError);
@@ -106,7 +110,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         if (!viewStatsMap[stat.course_id]) {
           viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        viewStatsMap[stat.course_id].views += 1;
+        viewStatsMap[stat.course_id].views = parseInt(stat.count);
       });
 
       // Process clicks
@@ -114,7 +118,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         if (!viewStatsMap[stat.course_id]) {
           viewStatsMap[stat.course_id] = { views: 0, clicks: 0 };
         }
-        viewStatsMap[stat.course_id].clicks += 1;
+        viewStatsMap[stat.course_id].clicks = parseInt(stat.count);
       });
 
       setViewStats(viewStatsMap);
