@@ -13,7 +13,6 @@ import Onboarding from "@/pages/Onboarding";
 import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import EditCourse from "@/pages/EditCourse";
-import TeacherDashboard from "@/components/teach/dashboard/TeacherDashboard";
 
 const router = createBrowserRouter([
   {
@@ -48,10 +47,6 @@ const router = createBrowserRouter([
   {
     path: "/dashboard/*",
     element: <Dashboard />,
-  },
-  {
-    path: "/teach/*",
-    element: <TeacherDashboard />,
   },
   {
     path: "/edit-course/:id",
