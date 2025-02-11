@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -20,6 +20,37 @@ const UserProfile = () => {
     location: "",
   });
 
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  const fetchProfile = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user.id)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setProfile({
+          first_name: data.first_name || "",
+          last_name: data.last_name || "",
+          bio: data.bio || "",
+          email: data.email || "",
+          phone: data.phone || "",
+          location: data.location || "",
+        });
+      }
+    } catch (error: any) {
+      toast.error("Error loading profile");
+    }
+  };
+
   const handleSave = async () => {
     try {
       setIsSubmitting(true);
@@ -32,7 +63,6 @@ const UserProfile = () => {
         .eq('id', user.id);
 
       if (error) throw error;
-
       toast.success("Profile updated successfully");
     } catch (error) {
       toast.error("Failed to update profile");
@@ -42,7 +72,7 @@ const UserProfile = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="max-w-[1200px] mx-auto space-y-8">
       {/* Header Section */}
       <Card className="p-6">
         <div className="flex items-center justify-between">
@@ -55,7 +85,7 @@ const UserProfile = () => {
           
           <Button 
             onClick={handleSave}
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
             disabled={isSubmitting}
           >
             <Save className="mr-2 h-4 w-4" />
@@ -64,9 +94,9 @@ const UserProfile = () => {
         </div>
       </Card>
 
-      {/* Basic Information */}
-      <Card className="p-6">
-        <h2 className="text-xl font-semibold mb-6 text-left">Basic Information</h2>
+      {/* Personal Information */}
+      <Card className="w-full p-6">
+        <h2 className="text-xl font-semibold mb-6 text-left">Personal Information</h2>
         
         <div className="space-y-6">
           {/* Profile Photo */}
@@ -116,7 +146,7 @@ const UserProfile = () => {
       </Card>
 
       {/* Contact Information */}
-      <Card className="p-6">
+      <Card className="w-full p-6">
         <h2 className="text-xl font-semibold mb-6 text-left">Contact Information</h2>
         
         <div className="space-y-6">
