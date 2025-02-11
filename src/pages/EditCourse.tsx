@@ -17,13 +17,6 @@ const EditCourse = () => {
   useEffect(() => {
     const checkAccess = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (!user) {
-          toast.error("You must be logged in to edit courses");
-          navigate("/auth");
-          return;
-        }
-
         // Convert string ID to number and validate
         const courseId = Number(id);
         if (isNaN(courseId)) {
@@ -34,7 +27,7 @@ const EditCourse = () => {
 
         const { data: course, error } = await supabase
           .from("courses")
-          .select("instructor_id")
+          .select("*")
           .eq("id", courseId)
           .single();
 
@@ -42,12 +35,6 @@ const EditCourse = () => {
 
         if (!course) {
           toast.error("Course not found");
-          navigate("/teach/dashboard");
-          return;
-        }
-
-        if (course.instructor_id !== user.id) {
-          toast.error("You don't have permission to edit this course");
           navigate("/teach/dashboard");
           return;
         }
