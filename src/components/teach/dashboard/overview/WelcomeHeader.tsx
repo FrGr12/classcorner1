@@ -19,7 +19,7 @@ const WelcomeHeader: FC = () => {
   return (
     <Card className="mb-8">
       <CardContent className="p-6">
-        <div className="space-y-6">
+        <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">{greeting}!</h1>
             <p className="text-muted-foreground mt-1">
@@ -27,25 +27,25 @@ const WelcomeHeader: FC = () => {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex gap-3">
             <Button 
-              variant="default"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/create-class")}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create New Class
-            </Button>
-            
-            <Button 
-              variant="default"
-              size="lg"
-              className="w-full bg-accent-purple hover:bg-accent-purple/90 text-white"
+              variant="outline"
+              size="sm"
+              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
               onClick={() => navigate("/dashboard/classes")}
             >
               <BookOpen className="mr-2 h-4 w-4" />
               Manage Classes
+            </Button>
+            
+            <Button 
+              variant="default"
+              size="sm"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => navigate("/dashboard/create-class")}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              Create New Class
             </Button>
           </div>
         </div>
