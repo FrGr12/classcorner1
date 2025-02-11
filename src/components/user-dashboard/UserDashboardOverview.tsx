@@ -1,20 +1,38 @@
 
-import { Card } from "@/components/ui/card";
-import NotificationPreferences from "@/components/notifications/NotificationPreferences";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const UserDashboardOverview = () => {
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Dashboard</h1>
-      <div className="grid gap-6 md:grid-cols-2">
-        <NotificationPreferences />
-        <Card>
-          <h2 className="text-lg font-semibold">Overview</h2>
-          <p className="text-sm text-muted-foreground">
-            Here you can find a summary of your activities and notifications.
-          </p>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Dashboard Overview</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Your Next Class</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  No upcoming classes scheduled.
+                </p>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Recent Activity</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-sm text-muted-foreground">
+                  No recent activity to display.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

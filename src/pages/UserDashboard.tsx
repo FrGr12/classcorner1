@@ -2,6 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import { SidebarProvider } from "@/contexts/SidebarContext";
 import UserDashboardSidebar from "@/components/user-dashboard/UserDashboardSidebar";
+import UserDashboardHeader from "@/components/user-dashboard/UserDashboardHeader";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserHome from "@/components/user-dashboard/UserHome";
 import UserBookings from "@/components/user-dashboard/UserBookings";
@@ -18,17 +19,13 @@ import UserPayments from "@/components/user-dashboard/UserPayments";
 const UserDashboard = () => {
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex flex-col md:flex-row w-full bg-gray-50">
         <UserDashboardSidebar />
-        <div className="flex-1 bg-gray-50">
-          <main className="p-6">
+        <div className="flex-1 flex flex-col min-h-screen">
+          <UserDashboardHeader />
+          <main className="flex-1 p-4 md:p-6 overflow-auto">
             <Routes>
-              <Route path="/" element={
-                <div className="space-y-8">
-                  <UserHome />
-                  <UserMatches />
-                </div>
-              } />
+              <Route path="/" element={<UserDashboardOverview />} />
               <Route path="/bookings" element={<UserBookings />} />
               <Route path="/messages" element={<UserMessages />} />
               <Route path="/notifications" element={<UserNotifications />} />
