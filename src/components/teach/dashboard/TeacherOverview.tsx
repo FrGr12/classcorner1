@@ -1,22 +1,22 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Bell } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import WelcomeHeader from "./overview/WelcomeHeader";
-import TeacherStats from "./overview/TeacherStats";
-import NotificationsCard from "./overview/NotificationsCard";
+import DashboardMetrics from "./overview/DashboardMetrics";
+import DashboardActions from "./overview/DashboardActions";
+import BookingsOverview from "./overview/BookingsOverview";
+import MessagesOverview from "./overview/MessagesOverview";
+import AnalyticsSummary from "./overview/AnalyticsSummary";
 
 const TeacherOverview = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [profile, setProfile] = useState<any>(null);
-  const [stats, setStats] = useState({
+  const [metrics, setMetrics] = useState({
     totalStudents: 0,
     upcomingClasses: 0,
+    totalRevenue: 0,
     averageRating: 0
   });
 
@@ -36,9 +36,10 @@ const TeacherOverview = () => {
 
       setProfile(profileResponse.data);
       
-      setStats({
+      setMetrics({
         totalStudents: metricsResponse.data?.total_students || 0,
-        upcomingClasses: metricsResponse.data?.attended_students || 0,
+        upcomingClasses: metricsResponse.data?.upcoming_classes || 0,
+        totalRevenue: metricsResponse.data?.total_revenue || 0,
         averageRating: metricsResponse.data?.avg_rating || 0
       });
 
@@ -53,65 +54,31 @@ const TeacherOverview = () => {
 
   return (
     <div className="space-y-8">
-      <div className="flex items-center justify-between bg-white p-6 rounded-lg shadow-sm">
-        <WelcomeHeader fullName={profile?.full_name} />
-        <div className="flex gap-4">
-          <Button variant="outline" onClick={() => navigate("/dashboard/notifications")} className="gap-2">
-            <Bell className="h-4 w-4" />
-            Notifications
-          </Button>
-          <Button onClick={() => navigate("/dashboard/create-class")} className="gap-2">
-            <Plus className="h-4 w-4" />
-            Create New Class
-          </Button>
-        </div>
+      <DashboardMetrics metrics={metrics} />
+      
+      <div className="grid gap-8 md:grid-cols-2">
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Quick Actions</h2>
+          <DashboardActions />
+        </section>
+        
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Recent Bookings</h2>
+          <BookingsOverview />
+        </section>
       </div>
 
-      <TeacherStats stats={stats} />
-
-      <NotificationsCard />
-
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Quick Actions</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <Button 
-              variant="secondary" 
-              size="lg"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-              onClick={() => navigate("/dashboard/profile")}
-            >
-              Complete Profile
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-              onClick={() => navigate("/dashboard/classes")}
-            >
-              Manage Classes
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-              onClick={() => navigate("/dashboard/bookings")}
-            >
-              View Bookings
-            </Button>
-            <Button 
-              variant="secondary"
-              size="lg"
-              className="w-full bg-purple-600 hover:bg-purple-700 text-white"
-              onClick={() => navigate("/dashboard/analytics")}
-            >
-              View Analytics
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-8 md:grid-cols-2">
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Messages & Notifications</h2>
+          <MessagesOverview />
+        </section>
+        
+        <section>
+          <h2 className="text-2xl font-semibold mb-4">Analytics Summary</h2>
+          <AnalyticsSummary />
+        </section>
+      </div>
     </div>
   );
 };
