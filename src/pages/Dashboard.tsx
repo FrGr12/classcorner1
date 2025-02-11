@@ -8,6 +8,7 @@ import TeacherInbox from "@/components/teach/crm/TeacherInbox";
 import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import TeacherContacts from "@/pages/TeacherContacts";
+import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 
 const Dashboard = () => {
   return (
@@ -23,6 +24,7 @@ const Dashboard = () => {
               <Route path="/inbox" element={<TeacherInbox />} />
               <Route path="/contacts" element={<TeacherContacts />} />
               <Route path="/profile" element={<TeacherProfile />} />
+              <Route path="/classes" element={<TeacherClasses />} />
             </Routes>
           </main>
         </div>

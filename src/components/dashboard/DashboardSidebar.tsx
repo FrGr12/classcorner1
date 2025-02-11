@@ -9,6 +9,7 @@ import {
   User,
   MessageSquare,
   Users,
+  BookOpen,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -21,6 +22,11 @@ const DashboardSidebar = () => {
       title: "Overview",
       href: "/dashboard",
       icon: LayoutDashboard,
+    },
+    {
+      title: "Classes",
+      href: "/dashboard/classes",
+      icon: BookOpen,
     },
     {
       title: "Create Class",
