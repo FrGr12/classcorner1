@@ -4,17 +4,26 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Search, Filter, Archive, CheckSquare, Plus, Library } from "lucide-react";
+import { Search, Filter, Archive, CheckSquare, Plus, Library, Send } from "lucide-react";
 import MessagesTable from "./MessagesTable";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export type Message = {
   id: number;
@@ -43,6 +52,10 @@ export type Message = {
 const TeacherInbox = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [isComposeOpen, setIsComposeOpen] = useState(false);
+  const [messageSubject, setMessageSubject] = useState("");
+  const [messageContent, setMessageContent] = useState("");
+  const [recipient, setRecipient] = useState("");
   const { toast } = useToast();
 
   const { data: messages, isLoading } = useQuery({
@@ -85,7 +98,16 @@ const TeacherInbox = () => {
     },
   });
 
-  const handleSendMessage = async (studentId: string, courseId: number, content: string) => {
+  const handleSendMessage = async () => {
+    if (!recipient || !messageSubject || !messageContent) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Please fill in all fields",
+      });
+      return;
+    }
+
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
@@ -101,13 +123,13 @@ const TeacherInbox = () => {
         .from("communications")
         .insert({
           instructor_id: user.id,
-          student_id: studentId,
-          course_id: courseId,
-          message_type: "reply",
-          message_content: content,
+          student_id: recipient,
+          message_type: "direct",
+          message_content: messageContent,
           status: "sent",
           is_unread: true,
-          thread_id: crypto.randomUUID()
+          thread_id: crypto.randomUUID(),
+          communication_context: messageSubject
         });
 
       if (error) throw error;
@@ -116,6 +138,10 @@ const TeacherInbox = () => {
         title: "Success",
         description: "Message sent successfully",
       });
+      setIsComposeOpen(false);
+      setMessageSubject("");
+      setMessageContent("");
+      setRecipient("");
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -141,13 +167,14 @@ const TeacherInbox = () => {
               className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
             >
               <Library className="mr-2 h-4 w-4" />
-              Saved Templates
+              Templates
             </Button>
             <Button 
               className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+              onClick={() => setIsComposeOpen(true)}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Create Template
+              Write Message
             </Button>
           </div>
         </div>
@@ -197,9 +224,58 @@ const TeacherInbox = () => {
           />
         )}
       </Card>
+
+      <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
+        <DialogContent className="sm:max-w-[525px]">
+          <DialogHeader>
+            <DialogTitle>Write New Message</DialogTitle>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="recipient">Recipient</Label>
+              <Input
+                id="recipient"
+                placeholder="Enter recipient ID"
+                value={recipient}
+                onChange={(e) => setRecipient(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="subject">Subject</Label>
+              <Input
+                id="subject"
+                placeholder="Enter message subject"
+                value={messageSubject}
+                onChange={(e) => setMessageSubject(e.target.value)}
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea
+                id="message"
+                placeholder="Type your message here..."
+                value={messageContent}
+                onChange={(e) => setMessageContent(e.target.value)}
+                className="min-h-[200px]"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              onClick={() => setIsComposeOpen(false)}
+              variant="outline"
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleSendMessage} className="gap-2">
+              <Send className="h-4 w-4" />
+              Send Message
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
 
 export default TeacherInbox;
-
