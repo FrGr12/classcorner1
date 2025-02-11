@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -5,10 +6,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { Session } from "@/types/session";
 import { Card } from "@/components/ui/card";
+import { Session } from "@/types/session";
 import { supabase } from "@/integrations/supabase/client";
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
 import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
@@ -17,6 +16,8 @@ import BringItemsSection from "@/components/teach/course-form/BringItemsSection"
 import LearningOutcomesSection from "@/components/teach/course-form/LearningOutcomesSection";
 import ImagesSection from "@/components/teach/course-form/ImagesSection";
 import LocationCategoryDetailsSection from "@/components/teach/course-form/LocationCategoryDetailsSection";
+import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader";
+import CreateClassActions from "@/components/teach/create-class/CreateClassActions";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -114,7 +115,7 @@ const CreateClass = () => {
           start_time: session.start.toISOString(),
           is_recurring: session.isRecurring,
           recurrence_pattern: session.recurrencePattern,
-          recurrence_end_date: session.recurrenceEndDate ? session.recurrenceEndDate.toISOString() : null,
+          recurrence_end_date: session.recurrenceEndDate?.toISOString(),
           recurrence_count: session.recurrenceCount
         }));
 
@@ -204,39 +205,7 @@ const CreateClass = () => {
 
   return (
     <div className="space-y-8">
-      <Card className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="text-left">
-            <h1 className="text-2xl font-semibold">Create New Class</h1>
-            <p className="text-muted-foreground mt-1">
-              Share your expertise with the world
-            </p>
-          </div>
-          
-          <div className="flex gap-3">
-            {draftCount > 0 ? (
-              <Button 
-                variant="outline"
-                className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
-                onClick={() => navigate("/dashboard/classes?tab=drafts")}
-                disabled={isSubmitting}
-              >
-                See saved drafts ({draftCount})
-              </Button>
-            ) : null}
-            
-            <Button 
-              type="submit"
-              form="create-class-form"
-              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-              disabled={isSubmitting}
-            >
-              <Plus className="mr-2 h-4 w-4" />
-              Create Class
-            </Button>
-          </div>
-        </div>
-      </Card>
+      <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
 
       <Form {...form}>
         <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
@@ -274,25 +243,7 @@ const CreateClass = () => {
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
-          <div className="flex justify-center gap-4 pt-4 pb-12">
-            <Button 
-              type="button"
-              variant="outline"
-              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 px-8"
-              onClick={saveDraft}
-              disabled={isSubmitting}
-            >
-              Save and publish later
-            </Button>
-            
-            <Button 
-              type="submit"
-              className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8"
-              disabled={isSubmitting}
-            >
-              Save and publish
-            </Button>
-          </div>
+          <CreateClassActions isSubmitting={isSubmitting} onSaveDraft={saveDraft} />
         </form>
       </Form>
     </div>
