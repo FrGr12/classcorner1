@@ -264,13 +264,15 @@ const TeacherInbox = () => {
         {/* Messages List Panel */}
         <ResizablePanel defaultSize={25} minSize={20}>
           <ScrollArea className="h-[600px]">
-            <div className="p-4 space-y-2">
+            <div className="p-4 space-y-0.5">
               {messages?.map((message) => (
                 <div
                   key={message.id}
                   onClick={() => setSelectedMessage(message)}
-                  className={`p-3 rounded-lg cursor-pointer hover:bg-muted/50 ${
-                    selectedMessage?.id === message.id ? "bg-neutral-100" : ""
+                  className={`p-4 border-b border-neutral-100 cursor-pointer transition-colors ${
+                    selectedMessage?.id === message.id 
+                      ? "bg-accent-purple/5" 
+                      : "hover:bg-neutral-50"
                   }`}
                 >
                   <div className="flex items-center gap-3 mb-2">
@@ -282,19 +284,19 @@ const TeacherInbox = () => {
                     </Avatar>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <p className="font-medium text-sm truncate">
+                        <p className="font-medium text-sm truncate text-left">
                           {message.profiles?.first_name} {message.profiles?.last_name}
                         </p>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-xs text-muted-foreground shrink-0 ml-2">
                           {format(new Date(message.sent_at), "MMM d")}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="text-xs text-muted-foreground truncate text-left">
                         {message.communication_context || "No subject"}
                       </p>
                     </div>
                   </div>
-                  <p className="text-xs truncate pl-11 text-neutral-600">
+                  <p className="text-xs truncate text-neutral-600 text-left pl-11">
                     {message.message_content}
                   </p>
                 </div>
@@ -326,9 +328,12 @@ const TeacherInbox = () => {
                     </p>
                   </div>
                 </div>
-                <div className="prose max-w-none">
-                  <div className="bg-neutral-50 p-4 rounded-lg text-sm text-left">
+                <div className="prose max-w-none space-y-4">
+                  <div className="bg-accent-purple/5 p-4 rounded-lg text-sm text-left border border-accent-purple/10">
                     {selectedMessage.message_content}
+                  </div>
+                  <div className="text-xs text-muted-foreground text-left">
+                    Sent {format(new Date(selectedMessage.sent_at), "PPp")}
                   </div>
                 </div>
                 <div className="mt-6">
@@ -360,7 +365,7 @@ const TeacherInbox = () => {
             {selectedMessage ? (
               <div className="p-6 space-y-6">
                 <div>
-                  <h3 className="text-base font-semibold mb-4">Contact Information</h3>
+                  <h3 className="text-base font-semibold mb-4 text-left">Contact Information</h3>
                   <div className="space-y-4 text-sm">
                     <div className="flex items-center gap-2">
                       <User className="h-4 w-4 text-muted-foreground" />
@@ -377,14 +382,14 @@ const TeacherInbox = () => {
                   </div>
                 </div>
 
-                <div>
-                  <h3 className="text-base font-semibold mb-4">Booking History</h3>
+                <div className="border-t pt-6">
+                  <h3 className="text-base font-semibold mb-4 text-left">Booking History</h3>
                   <div className="space-y-3">
                     {studentBookings?.map((booking: any) => (
-                      <Card key={booking.id} className="p-3 bg-neutral-50">
+                      <Card key={booking.id} className="p-3 bg-neutral-50 border-neutral-200">
                         <div className="flex items-center gap-3">
                           <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <div>
+                          <div className="text-left">
                             <p className="text-sm font-medium">{booking.course?.title}</p>
                             <p className="text-xs text-muted-foreground">
                               {format(new Date(booking.created_at), "MMMM d, yyyy")}
@@ -397,8 +402,8 @@ const TeacherInbox = () => {
                 </div>
 
                 {selectedMessage.profiles?.languages && (
-                  <div>
-                    <h3 className="text-base font-semibold mb-4">Languages</h3>
+                  <div className="border-t pt-6">
+                    <h3 className="text-base font-semibold mb-4 text-left">Languages</h3>
                     <div className="flex gap-2">
                       {selectedMessage.profiles.languages.map((lang) => (
                         <Badge key={lang} variant="secondary" className="text-xs">
@@ -410,9 +415,9 @@ const TeacherInbox = () => {
                 )}
 
                 {selectedMessage.profiles?.bio && (
-                  <div>
-                    <h3 className="text-base font-semibold mb-4">About</h3>
-                    <p className="text-sm text-muted-foreground">
+                  <div className="border-t pt-6">
+                    <h3 className="text-base font-semibold mb-4 text-left">About</h3>
+                    <p className="text-sm text-muted-foreground text-left">
                       {selectedMessage.profiles.bio}
                     </p>
                   </div>
