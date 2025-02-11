@@ -47,6 +47,25 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
     }
   };
 
+  // If we're in a class card (on the main page), just show the first image
+  const isClassCard = location.pathname === '/';
+  if (isClassCard) {
+    const image = images && images.length > 0 ? images[0] : null;
+    return (
+      <div className="relative aspect-square overflow-hidden rounded-lg">
+        {image ? (
+          <img
+            src={image}
+            alt={`${title}`}
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <PlaceholderImage />
+        )}
+      </div>
+    );
+  }
+
   const displayImages = images && images.length > 0 
     ? images 
     : Array(6).fill(null);
@@ -105,3 +124,4 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
 };
 
 export default ImageCarousel;
+
