@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
+import { Message } from "../crm/TeacherInbox";
 
 interface Message {
   id: number;
@@ -107,9 +107,12 @@ const TeacherMessages = () => {
         .from('communications')
         .insert({
           message_content: newMessage,
+          message_type: "reply",
           instructor_id: user.id,
           student_id: selectedMessage.student_id,
-          status: 'sent'
+          status: 'sent',
+          thread_id: selectedMessage.thread_id,
+          is_unread: true
         });
 
       if (error) throw error;

@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-type Message = {
+export type Message = {
   id: number;
   message_type: string;
   message_content: string;
@@ -29,7 +29,10 @@ type Message = {
   instructor_id: string;
   thread_id: string;
   is_unread: boolean;
-  profile?: {
+  assigned_to?: string | null;
+  communication_context?: string | null;
+  last_activity_at?: string | null;
+  student_profile?: {
     first_name: string | null;
     last_name: string | null;
   };
@@ -61,7 +64,7 @@ const TeacherInbox = () => {
         .from("communications")
         .select(`
           *,
-          profile:profiles!communications_student_id_fkey(
+          student_profile:profiles!communications_student_id_fkey(
             first_name,
             last_name
           ),
@@ -79,7 +82,7 @@ const TeacherInbox = () => {
         throw error;
       }
 
-      return data as Message[];
+      return data as unknown as Message[];
     },
   });
 
@@ -104,7 +107,8 @@ const TeacherInbox = () => {
           message_type: "reply",
           message_content: content,
           status: "sent",
-          is_unread: true
+          is_unread: true,
+          thread_id: crypto.randomUUID()
         });
 
       if (error) throw error;

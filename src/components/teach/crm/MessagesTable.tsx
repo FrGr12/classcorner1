@@ -6,27 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { MessageSquare } from "lucide-react";
-
-type Message = {
-  id: number;
-  message_type: string;
-  message_content: string;
-  sent_at: string;
-  read_at: string | null;
-  status: string;
-  student_id: string;
-  course_id: number;
-  instructor_id: string;
-  thread_id: string;
-  is_unread: boolean;
-  profile?: {
-    first_name: string | null;
-    last_name: string | null;
-  };
-  course?: {
-    title: string | null;
-  };
-};
+import { Message } from "./TeacherInbox";
 
 interface MessagesTableProps {
   messages: Message[];
@@ -56,7 +36,9 @@ const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
   const openMessageDialog = (message: Message) => {
     setSelectedStudent({
       id: message.student_id,
-      name: message.profile ? `${message.profile.first_name} ${message.profile.last_name}` : "Anonymous User"
+      name: message.student_profile ? 
+        `${message.student_profile.first_name} ${message.student_profile.last_name}` : 
+        "Anonymous User"
     });
     setSelectedCourse({
       id: message.course_id,
@@ -83,8 +65,8 @@ const MessagesTable = ({ messages, onSendMessage }: MessagesTableProps) => {
           {messages.map((message) => (
             <TableRow key={message.id}>
               <TableCell>
-                {message.profile ? 
-                  `${message.profile.first_name} ${message.profile.last_name}` : 
+                {message.student_profile ? 
+                  `${message.student_profile.first_name} ${message.student_profile.last_name}` : 
                   "Anonymous User"
                 }
               </TableCell>
