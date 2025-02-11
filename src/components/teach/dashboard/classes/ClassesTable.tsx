@@ -25,10 +25,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <TableRow>
           <TableHead>Class Name</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead>Location</TableHead>
           <TableHead>Status</TableHead>
-          <TableHead>Price</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -36,13 +34,11 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
           <TableRow key={classItem.id}>
             <TableCell className="font-medium">{classItem.title}</TableCell>
             <TableCell>{getFormattedDate(classItem.date)}</TableCell>
-            <TableCell>{classItem.city}</TableCell>
             <TableCell>
               <Badge>{classItem.level}</Badge>
             </TableCell>
-            <TableCell>£{classItem.price}</TableCell>
-            <TableCell className="text-right">
-              <div className="flex justify-end gap-2">
+            <TableCell>
+              <div className="flex gap-2">
                 <Button
                   variant="outline"
                   size="icon"
