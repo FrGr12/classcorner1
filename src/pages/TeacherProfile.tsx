@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -195,7 +196,7 @@ const TeacherProfile = () => {
           
           <Button 
             onClick={handleUpdateProfile}
-            className="bg-[#9b87f5] hover:bg-[#7E69AB] text-white"
+            className="bg-[#6E44FF] hover:bg-[#5835CC] text-white"
             disabled={isSubmitting}
           >
             <Save className="mr-2 h-4 w-4" />
