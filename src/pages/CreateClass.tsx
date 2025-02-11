@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { BookOpen } from "lucide-react";
 import { Session } from "@/types/session";
+import { Card } from "@/components/ui/card";
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
 import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
 import PricingCapacitySection from "@/components/teach/course-form/PricingCapacitySection";
@@ -63,67 +64,68 @@ const CreateClass = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h1 className="text-2xl font-semibold mb-1">Create New Class</h1>
-        <p className="text-muted-foreground">
-          Share your expertise with the world
-        </p>
-      </div>
-
-      <div className="flex items-center justify-between">
-        <div className="flex gap-4">
-          <Button
-            variant="outline"
-            onClick={() => navigate(-1)}
-            className="gap-2 text-primary hover:bg-accent-purple/10"
-          >
-            Cancel
-          </Button>
-          <Button
-            type="submit"
-            form="create-class-form"
-            className="gap-2 bg-accent-purple hover:bg-accent-purple/90 text-white"
-          >
-            <BookOpen className="w-4 h-4" />
-            Create Class
-          </Button>
+      <Card className="p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-semibold">Create New Class</h1>
+            <p className="text-muted-foreground mt-1">
+              Share your expertise with the world
+            </p>
+          </div>
+          
+          <div className="flex gap-3">
+            <Button 
+              variant="outline"
+              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
+              onClick={() => navigate(-1)}
+            >
+              Cancel
+            </Button>
+            
+            <Button 
+              type="submit"
+              form="create-class-form"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            >
+              <BookOpen className="mr-2 h-4 w-4" />
+              Create Class
+            </Button>
+          </div>
         </div>
-      </div>
-
-      <Separator className="my-6 bg-neutral-200" />
+      </Card>
 
       <Form {...form}>
         <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <section className="w-full">
-            <h2 className="text-xl font-semibold mb-4 text-left">Basic Information</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6">Basic Information</h2>
             <BasicInfoSection form={form} />
-          </section>
+          </Card>
 
-          <section className="w-full">
-            <h2 className="text-xl font-semibold mb-4 text-left">Location & Category</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6">Location & Category</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <LocationCategorySection form={form} />
               <PricingCapacitySection form={form} />
             </div>
-          </section>
+          </Card>
 
-          <section className="w-full">
-            <h2 className="text-xl font-semibold mb-4 text-left">Additional Details</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6">Additional Details</h2>
             <div className="grid gap-6 md:grid-cols-2">
               <BringItemsSection form={form} />
               <LearningOutcomesSection form={form} />
             </div>
-          </section>
+          </Card>
 
-          <section className="w-full">
-            <h2 className="text-xl font-semibold mb-4 text-left">Images</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6">Images</h2>
             <ImagesSection images={images} setImages={setImages} />
-          </section>
+          </Card>
 
-          <section className="w-full">
-            <h2 className="text-xl font-semibold mb-4 text-left">Schedule</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6">Schedule</h2>
             <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
-          </section>
+          </Card>
         </form>
       </Form>
     </div>
