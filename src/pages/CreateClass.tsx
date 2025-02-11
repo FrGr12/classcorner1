@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -16,7 +17,6 @@ import BringItemsSection from "@/components/teach/course-form/BringItemsSection"
 import LearningOutcomesSection from "@/components/teach/course-form/LearningOutcomesSection";
 import ImagesSection from "@/components/teach/course-form/ImagesSection";
 import LocationCategoryDetailsSection from "@/components/teach/course-form/LocationCategoryDetailsSection";
-import ScheduleSection from "@/components/teach/course-form/ScheduleSection";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -130,7 +130,7 @@ const CreateClass = () => {
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Add Sessions</h2>
             <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
-            <ScheduleSection form={form} sessions={sessions} setSessions={setSessions} />
+            <LocationCategoryDetailsSection form={form} />
           </Card>
 
           <div className="flex justify-center gap-4 pt-4 pb-12">
