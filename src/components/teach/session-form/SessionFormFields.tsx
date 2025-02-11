@@ -51,8 +51,12 @@ const SessionFormFields = ({
 }: SessionFormFieldsProps) => {
   return (
     <>
-      <Label className="text-sm font-medium text-primary">Session Date & Time</Label>
-      <div className="flex gap-4">
+      <Switch 
+        checked={isRecurring}
+        onCheckedChange={setIsRecurring}
+      />
+
+      <div className="grid grid-cols-2 gap-4 mt-4">
         <div className="flex-1">
           <Popover>
             <PopoverTrigger asChild>
@@ -88,16 +92,8 @@ const SessionFormFields = ({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
-        <Switch 
-          checked={isRecurring}
-          onCheckedChange={setIsRecurring}
-        />
-        <span className="text-sm text-neutral-600">Recurring session</span>
-      </div>
-
       {isRecurring && (
-        <div className="space-y-4 col-span-2">
+        <div className="space-y-4 mt-4">
           <div>
             <Label>Recurrence Pattern</Label>
             <Select
