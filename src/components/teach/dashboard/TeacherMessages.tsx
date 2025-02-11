@@ -61,7 +61,7 @@ const TeacherMessages = () => {
         .from('communications')
         .select(`
           *,
-          profile:profiles!communications_student_id_fkey(first_name, last_name),
+          profiles!communications_student_id_fkey(first_name, last_name),
           course:courses(title)
         `)
         .eq('instructor_id', user.id)
@@ -161,7 +161,7 @@ const TeacherMessages = () => {
                     <div className="flex items-center justify-between mb-2">
                       <div>
                         <span className="font-semibold">
-                          {message.profile?.first_name} {message.profile?.last_name}
+                          {message.profiles?.first_name} {message.profiles?.last_name}
                         </span>
                         {message.course?.title && (
                           <span className="text-sm text-muted-foreground ml-2">
@@ -195,7 +195,7 @@ const TeacherMessages = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <span className="font-semibold">
-                            {message.profile?.first_name} {message.profile?.last_name}
+                            {message.profiles?.first_name} {message.profiles?.last_name}
                           </span>
                           {message.course?.title && (
                             <span className="text-sm text-muted-foreground ml-2">
@@ -230,7 +230,7 @@ const TeacherMessages = () => {
                       <div className="flex items-center justify-between mb-2">
                         <div>
                           <span className="font-semibold">
-                            {message.profile?.first_name} {message.profile?.last_name}
+                            {message.profiles?.first_name} {message.profiles?.last_name}
                           </span>
                           {message.course?.title && (
                             <span className="text-sm text-muted-foreground ml-2">
@@ -253,7 +253,7 @@ const TeacherMessages = () => {
           {selectedMessage && (
             <div className="mt-6 space-y-4 border-t pt-4">
               <div className="flex justify-between items-center">
-                <h3 className="font-semibold">Reply to {selectedMessage.profile?.first_name}</h3>
+                <h3 className="font-semibold">Reply to {selectedMessage.profiles?.first_name}</h3>
                 <Button 
                   variant="ghost" 
                   size="sm"

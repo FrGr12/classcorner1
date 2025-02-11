@@ -40,7 +40,7 @@ export type Message = {
   assigned_to?: string | null;
   communication_context?: string | null;
   last_activity_at?: string | null;
-  student_profile?: {
+  profiles?: {
     first_name: string | null;
     last_name: string | null;
   };
@@ -76,7 +76,7 @@ const TeacherInbox = () => {
         .from("communications")
         .select(`
           *,
-          student_profile:profiles!communications_student_id_fkey(
+          profiles!communications_student_id_fkey(
             first_name,
             last_name
           ),
@@ -94,7 +94,7 @@ const TeacherInbox = () => {
         throw error;
       }
 
-      return data as Message[];
+      return data as unknown as Message[];
     },
   });
 
@@ -279,3 +279,4 @@ const TeacherInbox = () => {
 };
 
 export default TeacherInbox;
+
