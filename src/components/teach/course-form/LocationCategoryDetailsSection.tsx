@@ -20,13 +20,13 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
       <CardContent className="p-4 space-y-4">
         <div className="flex items-center gap-4">
-          <FormField
-            control={form.control}
-            name="date"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel className="text-sm font-medium text-primary">Date</FormLabel>
-                <div className="flex items-center gap-4">
+          <div className="flex-1 flex items-center gap-4">
+            <FormField
+              control={form.control}
+              name="date"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2">
+                  <FormLabel className="text-sm font-medium text-primary min-w-[40px]">Date</FormLabel>
                   <FormControl>
                     <Input 
                       type="date"
@@ -35,26 +35,17 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
                       {...field} 
                     />
                   </FormControl>
-                  <Button 
-                    type="button" 
-                    onClick={() => console.log('Date saved:', field.value)}
-                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-                  >
-                    Save
-                  </Button>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-          <FormField
-            control={form.control}
-            name="time"
-            render={({ field }) => (
-              <FormItem className="flex-1">
-                <FormLabel className="text-sm font-medium text-primary">Time</FormLabel>
-                <div className="flex items-center gap-4">
+            <FormField
+              control={form.control}
+              name="time"
+              render={({ field }) => (
+                <FormItem className="flex items-center gap-2">
+                  <FormLabel className="text-sm font-medium text-primary min-w-[40px]">Time</FormLabel>
                   <FormControl>
                     <Input 
                       type="time"
@@ -63,18 +54,19 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
                       {...field} 
                     />
                   </FormControl>
-                  <Button 
-                    type="button" 
-                    onClick={() => console.log('Time saved:', field.value)}
-                    className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-                  >
-                    Save
-                  </Button>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button 
+            type="button" 
+            onClick={() => console.log('Date and time saved:', form.getValues(['date', 'time']))}
+            className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+          >
+            Save
+          </Button>
         </div>
       </CardContent>
     </Card>
