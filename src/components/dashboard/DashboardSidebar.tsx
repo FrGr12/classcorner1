@@ -8,6 +8,7 @@ import {
   PlusCircle,
   User,
   MessageSquare,
+  Users,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
 
@@ -30,6 +31,11 @@ const DashboardSidebar = () => {
       title: "Inbox",
       href: "/dashboard/inbox",
       icon: MessageSquare,
+    },
+    {
+      title: "Contacts",
+      href: "/dashboard/contacts",
+      icon: Users,
     },
     {
       title: "Profile",
