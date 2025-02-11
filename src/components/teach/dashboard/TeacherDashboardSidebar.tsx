@@ -60,8 +60,8 @@ const TeacherDashboardSidebar = () => {
                 variant={location.pathname === item.path ? "default" : "ghost"}
                 className={`w-full justify-start gap-3 ${
                   location.pathname === item.path 
-                    ? "bg-accent-purple text-white hover:bg-accent-purple/90"
-                    : "hover:bg-accent-purple/10 hover:text-accent-purple"
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                    : "hover:bg-primary/10 hover:text-primary"
                 }`}
               >
                 <item.icon className="h-5 w-5" />
