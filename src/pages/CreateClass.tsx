@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -7,7 +6,6 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Plus } from "lucide-react";
 import { Session } from "@/types/session";
 import { Card } from "@/components/ui/card";
@@ -101,29 +99,23 @@ const CreateClass = () => {
             <BasicInfoSection form={form} />
           </Card>
 
-          <div className="space-y-8">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
-              <LocationCategorySection form={form} />
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
-              <PricingCapacitySection form={form} />
-            </Card>
-          </div>
-
-          <div className="space-y-8">
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-6 text-left">What to Bring</h2>
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Class Requirements & Outcomes</h2>
+            <div className="space-y-6">
               <BringItemsSection form={form} />
-            </Card>
-
-            <Card className="p-6">
-              <h2 className="text-xl font-semibold mb-6 text-left">Learning Outcomes</h2>
               <LearningOutcomesSection form={form} />
-            </Card>
-          </div>
+            </div>
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
+            <LocationCategorySection form={form} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
+            <PricingCapacitySection form={form} />
+          </Card>
 
           <Card className="p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Images</h2>
