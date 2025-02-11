@@ -8,7 +8,6 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent } from "@/components/ui/card";
-import { DollarSign } from "lucide-react";
 import { UseFormReturn } from "react-hook-form";
 
 interface PricingCapacitySectionProps {
@@ -18,12 +17,7 @@ interface PricingCapacitySectionProps {
 const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-      <CardContent className="p-6 space-y-6">
-        <div className="flex items-center gap-2 mb-4">
-          <DollarSign className="w-5 h-5 text-accent-purple" />
-          <h3 className="text-lg font-medium text-primary">Pricing & Capacity</h3>
-        </div>
-
+      <CardContent className="p-4 space-y-4">
         <FormField
           control={form.control}
           name="price"
