@@ -18,8 +18,8 @@ const UserBookings = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Dummy class data matching landing page format
-  const dummyClass = {
+  // Dummy class data for different sections
+  const upcomingClass = {
     id: 1,
     title: "Introduction to Pottery Making",
     instructor: "Sarah Johnson",
@@ -29,68 +29,54 @@ const UserBookings = () => {
     level: "All Levels",
     date: new Date(),
     city: "Stockholm",
-    category: "Pottery",
-    groupBookingsEnabled: true,
-    privateBookingsEnabled: true,
-    basePriceGroup: 65,
-    basePricePrivate: 85,
-    maxParticipants: 8
+    category: "Pottery"
   };
 
-  const dummyWaitlistClass = {
-    ...dummyClass,
+  const waitlistClass = {
     id: 2,
     title: "Advanced Baking Workshop",
     instructor: "Michael Chen",
+    price: 85,
+    rating: 4.9,
+    images: ["/placeholder.svg"],
+    level: "Advanced",
+    date: new Date(),
+    city: "Stockholm",
     category: "Baking"
   };
 
-  const dummySavedClass = {
-    ...dummyClass,
+  const savedClass = {
     id: 3,
     title: "Watercolor Painting Basics",
     instructor: "Emma Davis",
+    price: 65,
+    rating: 4.7,
+    images: ["/placeholder.svg"],
+    level: "Beginner",
+    date: new Date(),
+    city: "Stockholm",
     category: "Painting & Art"
   };
 
-  const dummyPastClass = {
-    ...dummyClass,
+  const pastClass = {
     id: 4,
     title: "Candle Making Masterclass",
     instructor: "David Wilson",
+    price: 70,
+    rating: 4.6,
+    images: ["/placeholder.svg"],
+    level: "Intermediate",
+    date: new Date(),
+    city: "Stockholm",
     category: "Candle Making"
   };
 
   useEffect(() => {
-    fetchBookings();
+    // Simulate loading
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
   }, []);
-
-  const fetchBookings = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select(`
-          *,
-          course:courses(title, location),
-          session:course_sessions(start_time)
-        `)
-        .eq('student_id', user.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-      setLoading(false);
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error fetching bookings",
-        description: error.message,
-      });
-      setLoading(false);
-    }
-  };
 
   if (loading) {
     return <LoadingState />;
@@ -116,7 +102,7 @@ const UserBookings = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Upcoming Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...dummyClass} />
+                <ClassCard {...upcomingClass} />
               </div>
             </div>
 
@@ -124,7 +110,7 @@ const UserBookings = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Waitlisted Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...dummyWaitlistClass} />
+                <ClassCard {...waitlistClass} />
               </div>
             </div>
 
@@ -132,7 +118,7 @@ const UserBookings = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Saved Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...dummySavedClass} />
+                <ClassCard {...savedClass} />
               </div>
             </div>
 
@@ -140,7 +126,7 @@ const UserBookings = () => {
             <div className="space-y-4">
               <h3 className="text-lg font-semibold">Past Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...dummyPastClass} />
+                <ClassCard {...pastClass} />
               </div>
             </div>
           </CardContent>
