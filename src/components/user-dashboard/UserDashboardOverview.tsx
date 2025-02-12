@@ -38,11 +38,12 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
+      // Map the database fields to our state fields
       setMetrics({
         totalClasses: metricsData?.total_classes_attended || 0,
         upcomingBookings: metricsData?.upcoming_classes || 0,
         averageRating: metricsData?.average_rating || 0,
-        waitlistCount: metricsData?.waitlist_count || 0
+        waitlistCount: 0 // This will be updated when we add waitlist functionality
       });
 
     } catch (error: any) {

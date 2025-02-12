@@ -23,7 +23,7 @@ const UserDashboardHeader = () => {
       icon: LayoutDashboard,
     },
     {
-      title: "Messages",
+      title: "Inbox",
       href: "/student-dashboard/messages",
       icon: MessageSquare,
     },
