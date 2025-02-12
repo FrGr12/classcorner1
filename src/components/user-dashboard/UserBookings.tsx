@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +19,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import LoadingState from "./LoadingState";
 
 const UserBookings = () => {
@@ -213,6 +217,13 @@ const UserBookings = () => {
     }
   };
 
+  const resetFilters = () => {
+    setTitleFilter("");
+    setInstructorFilter("");
+    setDateFilter("");
+    setStatusFilter("all");
+  };
+
   const filteredClasses = classes.filter(classItem => {
     const matchesSearch = classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          classItem.instructor.toLowerCase().includes(searchTerm.toLowerCase());
@@ -242,6 +253,8 @@ const UserBookings = () => {
   }
 
   const dialogContent = getDialogContent();
+
+  const isFiltersActive = titleFilter || instructorFilter || dateFilter || statusFilter !== "all";
 
   return (
     <div className="space-y-8">
@@ -283,74 +296,71 @@ const UserBookings = () => {
               <Button variant="outline" size="icon">
                 <Download className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon">
-                <Filter className="h-4 w-4" />
-              </Button>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    className={isFiltersActive ? "bg-[#6E44FF] text-white hover:bg-[#6E44FF]/90" : ""}
+                  >
+                    <Filter className="h-4 w-4" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80" align="end">
+                  <div className="space-y-4">
+                    <h4 className="font-medium leading-none">Filter Classes</h4>
+                    <div className="space-y-2">
+                      <Input
+                        placeholder="Filter by title..."
+                        value={titleFilter}
+                        onChange={(e) => setTitleFilter(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Filter by instructor..."
+                        value={instructorFilter}
+                        onChange={(e) => setInstructorFilter(e.target.value)}
+                      />
+                      <Input
+                        placeholder="Filter by date..."
+                        value={dateFilter}
+                        onChange={(e) => setDateFilter(e.target.value)}
+                      />
+                      <Select value={statusFilter} onValueChange={setStatusFilter}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Filter by status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="all">All Classes</SelectItem>
+                          <SelectItem value="upcoming">Upcoming</SelectItem>
+                          <SelectItem value="waitlisted">Waitlisted</SelectItem>
+                          <SelectItem value="saved">Saved</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      {isFiltersActive && (
+                        <Button 
+                          variant="outline" 
+                          className="w-full mt-2"
+                          onClick={resetFilters}
+                        >
+                          Reset Filters
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
             </div>
           </div>
 
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[300px]">
-                  <div className="space-y-2">
-                    <span className="text-base">Title</span>
-                    <Input
-                      placeholder="Filter titles..."
-                      value={titleFilter}
-                      onChange={(e) => setTitleFilter(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="space-y-2">
-                    <span className="text-base">Instructor</span>
-                    <Input
-                      placeholder="Filter instructors..."
-                      value={instructorFilter}
-                      onChange={(e) => setInstructorFilter(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="space-y-2">
-                    <span className="text-base">Date</span>
-                    <Input
-                      placeholder="Filter dates..."
-                      value={dateFilter}
-                      onChange={(e) => setDateFilter(e.target.value)}
-                      className="w-full"
-                    />
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="space-y-2">
-                    <span className="text-base">Status</span>
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="All" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="upcoming">Upcoming</SelectItem>
-                        <SelectItem value="waitlisted">Waitlisted</SelectItem>
-                        <SelectItem value="saved">Saved</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="space-y-2">
-                    <span className="text-base">Price</span>
-                  </div>
-                </TableHead>
-                <TableHead className="text-right">
-                  <div className="space-y-2">
-                    <span className="text-base">Actions</span>
-                  </div>
-                </TableHead>
+                <TableHead className="w-[300px] text-base">Title</TableHead>
+                <TableHead className="text-base">Instructor</TableHead>
+                <TableHead className="text-base">Date</TableHead>
+                <TableHead className="text-base">Status</TableHead>
+                <TableHead className="text-base">Price</TableHead>
+                <TableHead className="text-right text-base">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
