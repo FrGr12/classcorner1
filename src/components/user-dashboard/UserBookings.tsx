@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -27,6 +28,9 @@ const UserBookings = () => {
   const [statusFilter, setStatusFilter] = useState("all");
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [dialogType, setDialogType] = useState<string | null>(null);
+  const [titleFilter, setTitleFilter] = useState("");
+  const [instructorFilter, setInstructorFilter] = useState("");
+  const [dateFilter, setDateFilter] = useState("");
   const { toast } = useToast();
 
   const classes = [
@@ -213,7 +217,11 @@ const UserBookings = () => {
     const matchesSearch = classItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          classItem.instructor.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === "all" || classItem.status === statusFilter;
-    return matchesSearch && matchesStatus;
+    const matchesTitle = titleFilter === "" || classItem.title.toLowerCase().includes(titleFilter.toLowerCase());
+    const matchesInstructor = instructorFilter === "" || classItem.instructor.toLowerCase().includes(instructorFilter.toLowerCase());
+    const matchesDate = dateFilter === "" || classItem.date.toLocaleDateString().includes(dateFilter);
+    
+    return matchesSearch && matchesStatus && matchesTitle && matchesInstructor && matchesDate;
   });
 
   const getStatusBadgeClass = (status: string) => {
@@ -284,18 +292,71 @@ const UserBookings = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[300px] text-lg">Title</TableHead>
-                <TableHead className="text-lg">Instructor</TableHead>
-                <TableHead className="text-lg">Date</TableHead>
-                <TableHead className="text-lg">Status</TableHead>
-                <TableHead className="text-lg">Price</TableHead>
-                <TableHead className="text-right text-lg">Actions</TableHead>
+                <TableHead className="w-[300px]">
+                  <div className="space-y-2">
+                    <span className="text-base">Title</span>
+                    <Input
+                      placeholder="Filter titles..."
+                      value={titleFilter}
+                      onChange={(e) => setTitleFilter(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="space-y-2">
+                    <span className="text-base">Instructor</span>
+                    <Input
+                      placeholder="Filter instructors..."
+                      value={instructorFilter}
+                      onChange={(e) => setInstructorFilter(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="space-y-2">
+                    <span className="text-base">Date</span>
+                    <Input
+                      placeholder="Filter dates..."
+                      value={dateFilter}
+                      onChange={(e) => setDateFilter(e.target.value)}
+                      className="w-full"
+                    />
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="space-y-2">
+                    <span className="text-base">Status</span>
+                    <Select value={statusFilter} onValueChange={setStatusFilter}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="All" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="upcoming">Upcoming</SelectItem>
+                        <SelectItem value="waitlisted">Waitlisted</SelectItem>
+                        <SelectItem value="saved">Saved</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </TableHead>
+                <TableHead>
+                  <div className="space-y-2">
+                    <span className="text-base">Price</span>
+                  </div>
+                </TableHead>
+                <TableHead className="text-right">
+                  <div className="space-y-2">
+                    <span className="text-base">Actions</span>
+                  </div>
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredClasses.map((classItem) => (
                 <TableRow key={classItem.id}>
-                  <TableCell className="font-medium text-base">
+                  <TableCell className="font-medium text-sm">
                     <Link 
                       to={`/class/${classItem.id}`}
                       className="hover:text-primary transition-colors"
@@ -303,16 +364,16 @@ const UserBookings = () => {
                       {classItem.title}
                     </Link>
                   </TableCell>
-                  <TableCell className="text-base">{classItem.instructor}</TableCell>
-                  <TableCell className="text-base">
+                  <TableCell className="text-sm">{classItem.instructor}</TableCell>
+                  <TableCell className="text-sm">
                     {classItem.date.toLocaleDateString()}
                   </TableCell>
-                  <TableCell className="text-base">
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${getStatusBadgeClass(classItem.status)}`}>
+                  <TableCell className="text-sm">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeClass(classItem.status)}`}>
                       {classItem.status}
                     </span>
                   </TableCell>
-                  <TableCell className="text-base">${classItem.price}</TableCell>
+                  <TableCell className="text-sm">${classItem.price}</TableCell>
                   <TableCell className="text-right">
                     <div className="flex justify-end gap-4">
                       <div className="flex flex-col items-center gap-1">
@@ -330,10 +391,10 @@ const UserBookings = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          className="h-8 w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20"
                           onClick={() => handleAction("message", classItem.id)}
                         >
-                          <MessageSquare className="h-4 w-4 text-purple-700" />
+                          <MessageSquare className="h-4 w-4 text-[#6E44FF]" />
                         </Button>
                         <span className="text-xs text-neutral-600">Message</span>
                       </div>
@@ -341,10 +402,10 @@ const UserBookings = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          className="h-8 w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20"
                           onClick={() => handleAction("promote", classItem.id)}
                         >
-                          <ArrowUp className="h-4 w-4 text-purple-700" />
+                          <ArrowUp className="h-4 w-4 text-[#6E44FF]" />
                         </Button>
                         <span className="text-xs text-neutral-600">Promote</span>
                       </div>
@@ -352,10 +413,10 @@ const UserBookings = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          className="h-8 w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20"
                           onClick={() => handleAction("share", classItem.id)}
                         >
-                          <Share2 className="h-4 w-4 text-purple-700" />
+                          <Share2 className="h-4 w-4 text-[#6E44FF]" />
                         </Button>
                         <span className="text-xs text-neutral-600">Share</span>
                       </div>
