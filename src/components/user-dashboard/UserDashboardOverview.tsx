@@ -39,9 +39,9 @@ const UserDashboardOverview = () => {
       if (error) throw error;
 
       setMetrics({
-        totalClasses: metricsData?.total_classes || 0,
-        upcomingBookings: metricsData?.upcoming_bookings || 0,
-        averageRating: metricsData?.avg_rating || 0,
+        totalClasses: metricsData?.total_classes_attended || 0,
+        upcomingBookings: metricsData?.upcoming_classes || 0,
+        averageRating: metricsData?.average_rating || 0,
         waitlistCount: metricsData?.waitlist_count || 0
       });
 
