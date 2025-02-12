@@ -52,12 +52,13 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
   if (isClassCard) {
     const image = images && images.length > 0 ? images[0] : null;
     return (
-      <div className="relative aspect-square overflow-hidden rounded-lg">
+      <div className="relative w-full h-full overflow-hidden rounded-lg">
         {image ? (
           <img
             src={image}
             alt={`${title}`}
             className="object-cover w-full h-full"
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />
         ) : (
           <PlaceholderImage />
@@ -95,6 +96,7 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
                     src={image}
                     alt={`${title} - Image ${index + 1}`}
                     className="object-cover w-full h-full"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
                 ) : (
                   <PlaceholderImage />
@@ -124,4 +126,3 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
 };
 
 export default ImageCarousel;
-
