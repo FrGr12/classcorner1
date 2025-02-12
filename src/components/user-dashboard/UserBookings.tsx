@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Calendar } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -10,13 +11,55 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import LoadingState from "./LoadingState";
-import BookingsTable from "./BookingsTable";
-import type { Booking } from "@/types/booking";
+import ClassCard from "../landing/ClassCard";
+import UserDashboardHeader from "./UserDashboardHeader";
 
 const UserBookings = () => {
-  const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+
+  // Dummy class data matching landing page format
+  const dummyClass = {
+    id: 1,
+    title: "Introduction to Pottery Making",
+    instructor: "Sarah Johnson",
+    price: 75,
+    rating: 4.8,
+    images: ["/placeholder.svg"],
+    level: "All Levels",
+    date: new Date(),
+    city: "Stockholm",
+    category: "Pottery",
+    groupBookingsEnabled: true,
+    privateBookingsEnabled: true,
+    basePriceGroup: 65,
+    basePricePrivate: 85,
+    maxParticipants: 8
+  };
+
+  const dummyWaitlistClass = {
+    ...dummyClass,
+    id: 2,
+    title: "Advanced Baking Workshop",
+    instructor: "Michael Chen",
+    category: "Baking"
+  };
+
+  const dummySavedClass = {
+    ...dummyClass,
+    id: 3,
+    title: "Watercolor Painting Basics",
+    instructor: "Emma Davis",
+    category: "Painting & Art"
+  };
+
+  const dummyPastClass = {
+    ...dummyClass,
+    id: 4,
+    title: "Candle Making Masterclass",
+    instructor: "David Wilson",
+    category: "Candle Making"
+  };
 
   useEffect(() => {
     fetchBookings();
@@ -38,38 +81,13 @@ const UserBookings = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      const isValidBooking = (item: any): item is Booking => {
-        return (
-          typeof item === 'object' &&
-          item !== null &&
-          typeof item.id === 'number' &&
-          typeof item.booking_type === 'string' &&
-          typeof item.status === 'string' &&
-          typeof item.payment_status === 'string' &&
-          item.course &&
-          typeof item.course === 'object' &&
-          typeof item.course.title === 'string' &&
-          typeof item.course.location === 'string'
-        );
-      };
-
-      if (Array.isArray(data)) {
-        const validBookings = data
-          .filter(isValidBooking)
-          .map(booking => ({
-            ...booking,
-            session: booking.session && !('error' in booking.session) ? booking.session : null
-          }));
-        setBookings(validBookings);
-      }
+      setLoading(false);
     } catch (error: any) {
       toast({
         variant: "destructive",
         title: "Error fetching bookings",
         description: error.message,
       });
-    } finally {
       setLoading(false);
     }
   };
@@ -79,20 +97,56 @@ const UserBookings = () => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div>
-            <CardTitle>Your Bookings</CardTitle>
-            <CardDescription>View and manage your class bookings</CardDescription>
-          </div>
-          <Calendar className="h-5 w-5 text-muted-foreground" />
-        </div>
-      </CardHeader>
-      <CardContent>
-        <BookingsTable bookings={bookings} />
-      </CardContent>
-    </Card>
+    <div className="space-y-8">
+      <UserDashboardHeader />
+      
+      <div className="container mx-auto px-4">
+        <Card>
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div>
+                <CardTitle>Classes & Bookings</CardTitle>
+                <CardDescription>View and manage your class bookings</CardDescription>
+              </div>
+              <Calendar className="h-5 w-5 text-muted-foreground" />
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-8">
+            {/* Upcoming Classes Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Upcoming Classes</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ClassCard {...dummyClass} />
+              </div>
+            </div>
+
+            {/* Waitlisted Classes Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Waitlisted Classes</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ClassCard {...dummyWaitlistClass} />
+              </div>
+            </div>
+
+            {/* Saved Classes Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Saved Classes</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ClassCard {...dummySavedClass} />
+              </div>
+            </div>
+
+            {/* Past Classes Section */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold">Past Classes</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <ClassCard {...dummyPastClass} />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 
