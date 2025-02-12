@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import LoadingState from "./LoadingState";
 import ClassCard from "../landing/ClassCard";
+import UserDashboardHeader from "./UserDashboardHeader";
 
 const UserBookings = () => {
   const [loading, setLoading] = useState(true);
@@ -83,16 +84,14 @@ const UserBookings = () => {
 
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-xl font-semibold mb-4">Classes & Bookings</h2>
-      </div>
+      <UserDashboardHeader />
       
       <div className="container mx-auto px-4">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle>Your Classes</CardTitle>
+                <CardTitle>Classes & Bookings</CardTitle>
                 <CardDescription>View and manage your class bookings</CardDescription>
               </div>
               <Calendar className="h-5 w-5 text-muted-foreground" />
