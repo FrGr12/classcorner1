@@ -84,14 +84,14 @@ const UserBookings = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-4">Classes & Bookings</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Classes & Bookings</h2>
       </div>
       
       <div className="container mx-auto px-4">
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <div>
+              <div className="text-left">
                 <CardTitle>Your Classes</CardTitle>
                 <CardDescription>View and manage your class bookings</CardDescription>
               </div>
@@ -101,7 +101,7 @@ const UserBookings = () => {
           <CardContent className="space-y-8">
             {/* Upcoming Classes Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Upcoming Classes</h3>
+              <h3 className="text-lg font-semibold text-left">Upcoming Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <ClassCard {...upcomingClass} />
               </div>
@@ -109,7 +109,7 @@ const UserBookings = () => {
 
             {/* Waitlisted Classes Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Waitlisted Classes</h3>
+              <h3 className="text-lg font-semibold text-left">Waitlisted Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <ClassCard {...waitlistClass} />
               </div>
@@ -117,7 +117,7 @@ const UserBookings = () => {
 
             {/* Saved Classes Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Saved Classes</h3>
+              <h3 className="text-lg font-semibold text-left">Saved Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <ClassCard {...savedClass} />
               </div>
@@ -125,7 +125,7 @@ const UserBookings = () => {
 
             {/* Past Classes Section */}
             <div className="space-y-4">
-              <h3 className="text-lg font-semibold">Past Classes</h3>
+              <h3 className="text-lg font-semibold text-left">Past Classes</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <ClassCard {...pastClass} />
               </div>
