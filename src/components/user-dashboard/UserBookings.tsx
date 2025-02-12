@@ -10,14 +10,13 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MessageSquare, ArrowUp, Share2, Search, Download, Filter, XCircle } from "lucide-react";
+import { MessageSquare, Share2, Search, Download, Filter, XCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Popover,
@@ -407,17 +406,6 @@ const UserBookings = () => {
                           <MessageSquare className="h-4 w-4 text-[#6E44FF]" />
                         </Button>
                         <span className="text-xs text-neutral-600">Message</span>
-                      </div>
-                      <div className="flex flex-col items-center gap-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="h-8 w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20"
-                          onClick={() => handleAction("promote", classItem.id)}
-                        >
-                          <ArrowUp className="h-4 w-4 text-[#6E44FF]" />
-                        </Button>
-                        <span className="text-xs text-neutral-600">Promote</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <Button
