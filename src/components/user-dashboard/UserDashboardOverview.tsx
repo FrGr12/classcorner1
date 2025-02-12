@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, CalendarDays, Star, Clock, BellRing, Calendar } from "lucide-react";
+import { ArrowRight, Users, CalendarDays, Star, Clock } from "lucide-react";
 import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import ClassCard from "@/components/landing/ClassCard";
@@ -120,13 +120,13 @@ const UserDashboardOverview = () => {
             title,
             price,
             location,
-            instructor:profiles (
+            instructor:profiles!instructor_id (
               first_name,
               last_name
             ),
             images:course_images(image_path)
           ),
-          course_sessions!inner (
+          session:course_sessions!inner (
             start_time
           )
         `)
@@ -145,7 +145,7 @@ const UserDashboardOverview = () => {
         rating: 4.5,
         images: booking.courses.images.map((img: any) => img.image_path),
         level: "All Levels",
-        date: new Date(booking.course_sessions.start_time),
+        date: new Date(booking.session.start_time),
         city: booking.courses.location
       }));
 
@@ -259,6 +259,38 @@ const UserDashboardOverview = () => {
     }
   };
 
+  const renderClassSection = (
+    title: string,
+    classes: ClassPreview[],
+    emptyMessage: string,
+    viewAllPath: string
+  ) => (
+    <Card>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle>{title}</CardTitle>
+        <Button 
+          variant="ghost" 
+          className="text-accent-purple"
+          onClick={() => navigate(viewAllPath)}
+        >
+          View All
+          <ArrowRight className="ml-2 h-4 w-4" />
+        </Button>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {classes.length > 0 ? (
+          classes.map(classItem => (
+            <ClassCard key={classItem.id} {...classItem} />
+          ))
+        ) : (
+          <p className="text-muted-foreground text-center py-4">
+            {emptyMessage}
+          </p>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="space-y-8">
       <h2 className="text-xl font-semibold mb-4 text-left">Highlights</h2>
@@ -326,36 +358,41 @@ const UserDashboardOverview = () => {
           </CardContent>
         </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Upcoming Classes</CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/bookings")}
-            >
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {upcomingClasses.length > 0 ? (
-              upcomingClasses.map(classItem => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No upcoming classes scheduled
-              </p>
-            )}
-          </CardContent>
-        </Card>
+        {renderClassSection(
+          "Upcoming Classes",
+          upcomingClasses,
+          "No upcoming classes scheduled",
+          "/student-dashboard/bookings"
+        )}
       </div>
 
-      <section className="w-full">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        {renderClassSection(
+          "Waitlisted Classes",
+          waitlistedClasses,
+          "You're not on any waitlists",
+          "/student-dashboard/waitlist"
+        )}
+
+        {renderClassSection(
+          "Saved Classes",
+          savedClasses,
+          "No saved classes yet",
+          "/student-dashboard/saved"
+        )}
+      </div>
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+        {renderClassSection(
+          "Recommended Classes",
+          matchedClasses,
+          "No recommendations yet",
+          "/student-dashboard/matches"
+        )}
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-lg font-semibold">Reviews</CardTitle>
+            <CardTitle>Reviews</CardTitle>
             <Button 
               variant="ghost" 
               className="text-accent-purple"
@@ -366,7 +403,7 @@ const UserDashboardOverview = () => {
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-4">
               {recentReviews.length > 0 ? (
                 recentReviews.map((review) => (
                   <TestimonialCard
@@ -379,14 +416,14 @@ const UserDashboardOverview = () => {
                   />
                 ))
               ) : (
-                <p className="text-muted-foreground col-span-3 text-center py-8">
+                <p className="text-muted-foreground text-center py-8">
                   No reviews yet. After taking classes, your reviews will appear here.
                 </p>
               )}
             </div>
           </CardContent>
         </Card>
-      </section>
+      </div>
     </div>
   );
 };
