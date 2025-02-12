@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -98,22 +99,26 @@ const UserBookings = () => {
     return <LoadingState />;
   }
 
-  const renderSection = (title: string, emptyMessage: string, link: string) => (
+  const renderSection = (title: string, emptyMessage: string, link: string, classData?: any) => (
     <Card className="bg-white rounded-lg p-6">
       <div className="flex items-center justify-between mb-8">
-        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <CardTitle className="text-xl font-semibold">{title}</CardTitle>
         <Link 
           to={link} 
-          className="text-sm text-primary hover:text-primary/80 flex items-center"
+          className="text-base text-primary hover:text-primary/80 flex items-center"
         >
           View All
-          <ArrowRight className="h-4 w-4 ml-1" />
+          <ArrowRight className="h-5 w-5 ml-1" />
         </Link>
       </div>
       <CardContent className="p-0">
-        <div className="text-center text-muted-foreground">
-          {emptyMessage}
-        </div>
+        {classData ? (
+          <ClassCard {...classData} />
+        ) : (
+          <div className="text-center text-muted-foreground text-lg py-8">
+            {emptyMessage}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
@@ -121,32 +126,36 @@ const UserBookings = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-4 text-left">Classes & Bookings</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-left">Classes & Bookings</h2>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {renderSection(
-          "Notifications",
-          "No notifications",
-          "/student-dashboard/notifications"
-        )}
-
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {renderSection(
           "Upcoming Classes",
           "No upcoming classes scheduled",
-          "/student-dashboard/bookings/upcoming"
+          "/student-dashboard/bookings/upcoming",
+          upcomingClass
         )}
 
         {renderSection(
           "Waitlisted Classes",
           "You're not on any waitlists",
-          "/student-dashboard/bookings/waitlist"
+          "/student-dashboard/bookings/waitlist",
+          waitlistClass
         )}
 
         {renderSection(
           "Saved Classes",
           "No saved classes yet",
-          "/student-dashboard/bookings/saved"
+          "/student-dashboard/bookings/saved",
+          savedClass
+        )}
+
+        {renderSection(
+          "Past Classes",
+          "No past classes",
+          "/student-dashboard/bookings/past",
+          pastClass
         )}
       </div>
     </div>
