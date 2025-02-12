@@ -121,7 +121,7 @@ const UserBookings = () => {
             {/* Upcoming Classes Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-left">Upcoming Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ClassCard {...upcomingClass} />
               </div>
             </div>
@@ -129,7 +129,7 @@ const UserBookings = () => {
             {/* Waitlisted Classes Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-left">Waitlisted Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ClassCard {...waitlistClass} />
               </div>
             </div>
@@ -137,7 +137,7 @@ const UserBookings = () => {
             {/* Saved Classes Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-left">Saved Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ClassCard {...savedClass} />
               </div>
             </div>
@@ -145,7 +145,7 @@ const UserBookings = () => {
             {/* Past Classes Section */}
             <div className="space-y-4">
               <h3 className="text-lg font-semibold text-left">Past Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ClassCard {...pastClass} />
               </div>
             </div>
