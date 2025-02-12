@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -11,7 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Edit, MessageSquare, ArrowUp, Share2, Search, Download, Filter } from "lucide-react";
+import { MessageSquare, ArrowUp, Share2, Search, Download, Filter, XCircle } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -114,25 +113,35 @@ const UserBookings = () => {
     if (!selectedClass) return null;
 
     switch (dialogType) {
-      case "edit":
+      case "cancel":
         return {
-          title: "Edit Booking",
-          description: `Edit your booking for ${selectedClass.title}`,
+          title: "Cancel Booking",
+          description: `Are you sure you want to cancel your booking for ${selectedClass.title}?`,
           content: (
             <div className="space-y-4">
-              <p>You can modify your booking details here.</p>
-              <Button 
-                className="w-full bg-purple-600 hover:bg-purple-700"
-                onClick={() => {
-                  toast({
-                    title: "Booking updated",
-                    description: "Your booking has been updated successfully."
-                  });
-                  handleDialogClose();
-                }}
-              >
-                Update Booking
-              </Button>
+              <p className="text-muted-foreground">
+                Please note that cancellation policies may apply. Check the class details for more information.
+              </p>
+              <div className="flex gap-3 justify-end">
+                <Button 
+                  variant="outline"
+                  onClick={handleDialogClose}
+                >
+                  Keep Booking
+                </Button>
+                <Button 
+                  variant="destructive"
+                  onClick={() => {
+                    toast({
+                      title: "Booking cancelled",
+                      description: "Your booking has been cancelled successfully."
+                    });
+                    handleDialogClose();
+                  }}
+                >
+                  Confirm Cancellation
+                </Button>
+              </div>
             </div>
           )
         };
@@ -310,12 +319,12 @@ const UserBookings = () => {
                         <Button
                           variant="outline"
                           size="sm"
-                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
-                          onClick={() => handleAction("edit", classItem.id)}
+                          className="h-8 w-8 p-0 bg-red-100 hover:bg-red-200 border-red-200"
+                          onClick={() => handleAction("cancel", classItem.id)}
                         >
-                          <Edit className="h-4 w-4 text-purple-700" />
+                          <XCircle className="h-4 w-4 text-red-700" />
                         </Button>
-                        <span className="text-xs text-neutral-600">Edit</span>
+                        <span className="text-xs text-neutral-600">Cancel</span>
                       </div>
                       <div className="flex flex-col items-center gap-1">
                         <Button
