@@ -22,7 +22,6 @@ const UserDashboard = () => {
       <div className="min-h-screen flex flex-col md:flex-row w-full bg-gray-50">
         <UserDashboardSidebar />
         <div className="flex-1 flex flex-col min-h-screen">
-          <UserDashboardHeader />
           <main className="flex-1 p-4 md:p-6 overflow-auto">
             <Routes>
               <Route path="/" element={<UserDashboardOverview />} />
@@ -38,6 +37,7 @@ const UserDashboard = () => {
               <Route path="/payments" element={<UserPayments />} />
             </Routes>
           </main>
+          <UserDashboardHeader />
         </div>
       </div>
     </SidebarProvider>
