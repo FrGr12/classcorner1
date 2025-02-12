@@ -10,6 +10,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import LoadingState from "./LoadingState";
 import ClassCard from "../landing/ClassCard";
 
@@ -17,7 +18,7 @@ const UserBookings = () => {
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
-  // Dummy class data for different sections
+  // Dummy class data for different sections with booking specific information
   const upcomingClass = {
     id: 1,
     title: "Wheel Throwing Workshop",
@@ -29,6 +30,10 @@ const UserBookings = () => {
     date: [new Date("2024-02-20"), new Date("2024-02-27")],
     city: "Manchester",
     category: "Pottery",
+    status: "Confirmed",
+    bookingReference: "BOOK-001",
+    participants: 2,
+    session: new Date("2024-02-20T14:00:00"),
     groupBookingsEnabled: true,
     privateBookingsEnabled: true,
     basePriceGroup: 90,
@@ -47,50 +52,16 @@ const UserBookings = () => {
     date: [new Date("2024-02-25"), new Date("2024-03-03")],
     city: "Stockholm",
     category: "Baking",
+    status: "Waitlisted",
+    position: 2,
+    estimatedAvailability: "March 2024",
     groupBookingsEnabled: true,
     privateBookingsEnabled: false,
     basePriceGroup: 85,
     maxParticipants: 6
   };
 
-  const savedClass = {
-    id: 3,
-    title: "Watercolor Painting Basics",
-    instructor: "Emma Davis",
-    price: 65,
-    rating: 4.7,
-    images: ["/placeholder.svg"],
-    level: "Beginner",
-    date: [new Date("2024-03-01"), new Date("2024-03-08")],
-    city: "Stockholm",
-    category: "Painting & Art",
-    groupBookingsEnabled: true,
-    privateBookingsEnabled: true,
-    basePriceGroup: 65,
-    basePricePrivate: 95,
-    maxParticipants: 10
-  };
-
-  const pastClass = {
-    id: 4,
-    title: "Candle Making Masterclass",
-    instructor: "David Wilson",
-    price: 70,
-    rating: 4.6,
-    images: ["/placeholder.svg"],
-    level: "Intermediate",
-    date: [new Date("2024-01-15"), new Date("2024-01-22")],
-    city: "Stockholm",
-    category: "Candle Making",
-    groupBookingsEnabled: true,
-    privateBookingsEnabled: true,
-    basePriceGroup: 70,
-    basePricePrivate: 100,
-    maxParticipants: 8
-  };
-
   useEffect(() => {
-    // Simulate loading
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -103,50 +74,65 @@ const UserBookings = () => {
   return (
     <div className="space-y-8">
       <div>
-        <h2 className="text-xl font-semibold mb-4 text-left">Classes & Bookings</h2>
+        <h2 className="text-xl font-semibold mb-4 text-left">Your Bookings</h2>
       </div>
       
-      <div className="container mx-auto px-4">
-        <Card>
+      <div className="mx-auto">
+        <Card className="border-none shadow-sm">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div className="text-left">
-                <CardTitle>Your Classes</CardTitle>
-                <CardDescription>View and manage your class bookings</CardDescription>
+                <CardTitle>Upcoming Classes</CardTitle>
+                <CardDescription>Your confirmed and upcoming class bookings</CardDescription>
               </div>
               <Calendar className="h-5 w-5 text-muted-foreground" />
             </div>
           </CardHeader>
-          <CardContent className="space-y-8">
-            {/* Upcoming Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Upcoming Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <CardContent>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="relative">
                 <ClassCard {...upcomingClass} />
+                <div className="absolute top-4 right-4 z-10">
+                  <Badge className="bg-green-500 hover:bg-green-600">
+                    {upcomingClass.status}
+                  </Badge>
+                </div>
+                <div className="mt-4 px-4">
+                  <div className="text-sm text-muted-foreground">
+                    <p>Booking Reference: {upcomingClass.bookingReference}</p>
+                    <p>Participants: {upcomingClass.participants}</p>
+                    <p>Session: {upcomingClass.session.toLocaleDateString()} at {upcomingClass.session.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+                  </div>
+                </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
 
-            {/* Waitlisted Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Waitlisted Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <Card className="border-none shadow-sm mt-8">
+          <CardHeader>
+            <div className="flex items-center justify-between">
+              <div className="text-left">
+                <CardTitle>Waitlist</CardTitle>
+                <CardDescription>Classes you're currently waitlisted for</CardDescription>
+              </div>
+            </div>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="relative">
                 <ClassCard {...waitlistClass} />
-              </div>
-            </div>
-
-            {/* Saved Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Saved Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...savedClass} />
-              </div>
-            </div>
-
-            {/* Past Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Past Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <ClassCard {...pastClass} />
+                <div className="absolute top-4 right-4 z-10">
+                  <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 hover:bg-yellow-200">
+                    {waitlistClass.status}
+                  </Badge>
+                </div>
+                <div className="mt-4 px-4">
+                  <div className="text-sm text-muted-foreground">
+                    <p>Waitlist Position: #{waitlistClass.position}</p>
+                    <p>Estimated Availability: {waitlistClass.estimatedAvailability}</p>
+                  </div>
+                </div>
               </div>
             </div>
           </CardContent>
