@@ -1,15 +1,14 @@
-
 import { useState, useEffect } from "react";
-import { Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { ArrowRight } from "lucide-react";
 import LoadingState from "./LoadingState";
 import ClassCard from "../landing/ClassCard";
 
@@ -90,7 +89,6 @@ const UserBookings = () => {
   };
 
   useEffect(() => {
-    // Simulate loading
     setTimeout(() => {
       setLoading(false);
     }, 1000);
@@ -100,26 +98,22 @@ const UserBookings = () => {
     return <LoadingState />;
   }
 
-  const renderSection = (title: string, description: string, classes: any[], emptyMessage: string) => (
-    <Card className="border-none shadow-none">
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="text-left">
-            <CardTitle>{title}</CardTitle>
-            <CardDescription>{description}</CardDescription>
-          </div>
+  const renderSection = (title: string, emptyMessage: string, link: string) => (
+    <Card className="bg-white rounded-lg p-6">
+      <div className="flex items-center justify-between mb-8">
+        <CardTitle className="text-lg font-semibold">{title}</CardTitle>
+        <Link 
+          to={link} 
+          className="text-sm text-primary hover:text-primary/80 flex items-center"
+        >
+          View All
+          <ArrowRight className="h-4 w-4 ml-1" />
+        </Link>
+      </div>
+      <CardContent className="p-0">
+        <div className="text-center text-muted-foreground">
+          {emptyMessage}
         </div>
-      </CardHeader>
-      <CardContent>
-        {classes.length > 0 ? (
-          <div className="grid grid-cols-1 gap-6">
-            {classes.map((classItem) => (
-              <ClassCard key={classItem.id} {...classItem} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-muted-foreground text-center py-4">{emptyMessage}</p>
-        )}
       </CardContent>
     </Card>
   );
@@ -130,33 +124,29 @@ const UserBookings = () => {
         <h2 className="text-xl font-semibold mb-4 text-left">Classes & Bookings</h2>
       </div>
       
-      <div className="grid gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {renderSection(
+          "Notifications",
+          "No notifications",
+          "/student-dashboard/notifications"
+        )}
+
         {renderSection(
           "Upcoming Classes",
-          "Your confirmed upcoming class bookings",
-          [upcomingClass],
-          "No upcoming classes scheduled"
+          "No upcoming classes scheduled",
+          "/student-dashboard/bookings/upcoming"
         )}
 
         {renderSection(
           "Waitlisted Classes",
-          "Classes you're currently on the waitlist for",
-          [waitlistClass],
-          "You're not on any waitlists"
+          "You're not on any waitlists",
+          "/student-dashboard/bookings/waitlist"
         )}
 
         {renderSection(
           "Saved Classes",
-          "Classes you've saved for later",
-          [savedClass],
-          "No saved classes"
-        )}
-
-        {renderSection(
-          "Past Classes",
-          "Classes you've previously attended",
-          [pastClass],
-          "No past classes"
+          "No saved classes yet",
+          "/student-dashboard/bookings/saved"
         )}
       </div>
     </div>
