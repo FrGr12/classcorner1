@@ -1247,6 +1247,7 @@ export type Database = {
       }
       profiles: {
         Row: {
+          account_type: string | null
           avatar_url: string | null
           bio: string | null
           contact_frequency: string | null
@@ -1273,8 +1274,10 @@ export type Database = {
           timezone: string | null
           updated_at: string
           user_type: Database["public"]["Enums"]["user_type"]
+          username: string | null
         }
         Insert: {
+          account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
           contact_frequency?: string | null
@@ -1301,8 +1304,10 @@ export type Database = {
           timezone?: string | null
           updated_at?: string
           user_type: Database["public"]["Enums"]["user_type"]
+          username?: string | null
         }
         Update: {
+          account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
           contact_frequency?: string | null
@@ -1329,6 +1334,7 @@ export type Database = {
           timezone?: string | null
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
+          username?: string | null
         }
         Relationships: []
       }
