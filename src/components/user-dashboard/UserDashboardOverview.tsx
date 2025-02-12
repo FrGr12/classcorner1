@@ -60,11 +60,12 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
+      // Map the database fields to our state fields
       setMetrics({
         totalClasses: metricsData?.total_classes_attended || 0,
         upcomingBookings: metricsData?.upcoming_classes || 0,
         averageRating: metricsData?.average_rating || 0,
-        waitlistCount: 0
+        waitlistCount: 0 // This will be updated when we add waitlist functionality
       });
 
     } catch (error: any) {
@@ -123,10 +124,10 @@ const UserDashboardOverview = () => {
               first_name,
               last_name
             ),
-            images:course_images(image_path),
-            course_sessions!inner (
-              start_time
-            )
+            images:course_images(image_path)
+          ),
+          session:course_sessions!inner (
+            start_time
           )
         `)
         .eq('student_id', user.id)
@@ -136,19 +137,19 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
-      const formattedClasses = data?.map(booking => ({
+      const formattedClasses = data.map(booking => ({
         id: booking.courses.id,
         title: booking.courses.title,
-        instructor: `${booking.courses.instructor?.first_name || ''} ${booking.courses.instructor?.last_name || ''}`,
+        instructor: `${booking.courses.instructor.first_name} ${booking.courses.instructor.last_name}`,
         price: booking.courses.price,
         rating: 4.5,
-        images: booking.courses.images?.map((img: any) => img.image_path) || [],
+        images: booking.courses.images.map((img: any) => img.image_path),
         level: "All Levels",
-        date: new Date(booking.courses.course_sessions[0]?.start_time),
+        date: new Date(booking.session.start_time),
         city: booking.courses.location
       }));
 
-      setUpcomingClasses(formattedClasses || []);
+      setUpcomingClasses(formattedClasses);
     } catch (error) {
       console.error('Error fetching upcoming classes:', error);
     }
@@ -159,6 +160,7 @@ const UserDashboardOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // Implement saved classes fetching when the feature is ready
       setSavedClasses([]);
     } catch (error) {
       console.error('Error fetching saved classes:', error);
@@ -179,11 +181,12 @@ const UserDashboardOverview = () => {
             title,
             price,
             location,
-            instructor:profiles!instructor_id (
+            instructor_id,
+            images:course_images(image_path),
+            profiles:instructor_id (
               first_name,
               last_name
-            ),
-            images:course_images(image_path)
+            )
           )
         `)
         .eq('user_id', user.id)
@@ -192,19 +195,19 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
-      const formattedClasses = data?.map(entry => ({
+      const formattedClasses = data.map(entry => ({
         id: entry.courses.id,
         title: entry.courses.title,
-        instructor: `${entry.courses.instructor?.first_name || ''} ${entry.courses.instructor?.last_name || ''}`,
+        instructor: `${entry.courses.profiles.first_name} ${entry.courses.profiles.last_name}`,
         price: entry.courses.price,
         rating: 4.5,
-        images: entry.courses.images?.map((img: any) => img.image_path) || [],
+        images: entry.courses.images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
         city: entry.courses.location
       }));
 
-      setWaitlistedClasses(formattedClasses || []);
+      setWaitlistedClasses(formattedClasses);
     } catch (error) {
       console.error('Error fetching waitlisted classes:', error);
     }
@@ -224,11 +227,12 @@ const UserDashboardOverview = () => {
             title,
             price,
             location,
-            instructor:profiles!instructor_id (
+            instructor_id,
+            images:course_images(image_path),
+            profiles:instructor_id (
               first_name,
               last_name
-            ),
-            images:course_images(image_path)
+            )
           )
         `)
         .eq('user_id', user.id)
@@ -237,19 +241,19 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
-      const formattedClasses = data?.map(match => ({
+      const formattedClasses = data.map(match => ({
         id: match.courses.id,
         title: match.courses.title,
-        instructor: `${match.courses.instructor?.first_name || ''} ${match.courses.instructor?.last_name || ''}`,
+        instructor: `${match.courses.profiles.first_name} ${match.courses.profiles.last_name}`,
         price: match.courses.price,
         rating: 4.5,
-        images: match.courses.images?.map((img: any) => img.image_path) || [],
+        images: match.courses.images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
         city: match.courses.location
       }));
 
-      setMatchedClasses(formattedClasses || []);
+      setMatchedClasses(formattedClasses);
     } catch (error) {
       console.error('Error fetching matched classes:', error);
     }
