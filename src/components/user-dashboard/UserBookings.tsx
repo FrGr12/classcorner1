@@ -100,57 +100,64 @@ const UserBookings = () => {
     return <LoadingState />;
   }
 
+  const renderSection = (title: string, description: string, classes: any[], emptyMessage: string) => (
+    <Card className="border-none shadow-none">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="text-left">
+            <CardTitle>{title}</CardTitle>
+            <CardDescription>{description}</CardDescription>
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {classes.length > 0 ? (
+          <div className="grid grid-cols-1 gap-6">
+            {classes.map((classItem) => (
+              <ClassCard key={classItem.id} {...classItem} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted-foreground text-center py-4">{emptyMessage}</p>
+        )}
+      </CardContent>
+    </Card>
+  );
+
   return (
     <div className="space-y-8">
       <div>
         <h2 className="text-xl font-semibold mb-4 text-left">Classes & Bookings</h2>
       </div>
       
-      <div className="container mx-auto px-4">
-        <Card>
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <div className="text-left">
-                <CardTitle>Your Classes</CardTitle>
-                <CardDescription>View and manage your class bookings</CardDescription>
-              </div>
-              <Calendar className="h-5 w-5 text-muted-foreground" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-8">
-            {/* Upcoming Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Upcoming Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ClassCard {...upcomingClass} />
-              </div>
-            </div>
+      <div className="grid gap-6">
+        {renderSection(
+          "Upcoming Classes",
+          "Your confirmed upcoming class bookings",
+          [upcomingClass],
+          "No upcoming classes scheduled"
+        )}
 
-            {/* Waitlisted Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Waitlisted Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ClassCard {...waitlistClass} />
-              </div>
-            </div>
+        {renderSection(
+          "Waitlisted Classes",
+          "Classes you're currently on the waitlist for",
+          [waitlistClass],
+          "You're not on any waitlists"
+        )}
 
-            {/* Saved Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Saved Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ClassCard {...savedClass} />
-              </div>
-            </div>
+        {renderSection(
+          "Saved Classes",
+          "Classes you've saved for later",
+          [savedClass],
+          "No saved classes"
+        )}
 
-            {/* Past Classes Section */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-semibold text-left">Past Classes</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <ClassCard {...pastClass} />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        {renderSection(
+          "Past Classes",
+          "Classes you've previously attended",
+          [pastClass],
+          "No past classes"
+        )}
       </div>
     </div>
   );
