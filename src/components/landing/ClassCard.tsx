@@ -82,7 +82,7 @@ const ClassCard = ({
       className="overflow-hidden group cursor-pointer hover:shadow-md transition-all duration-200 border-0 bg-white"
       onClick={handleCardClick}
     >
-      <div className="relative">
+      <div className="relative aspect-[4/3]">
         <ImageCarousel images={images} title={title} />
         <SaveButton />
         <CategoryBadges displayCategory={displayCategory} />
