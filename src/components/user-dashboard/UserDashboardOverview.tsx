@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, CalendarDays, Star, Clock, BellRing, Calendar, Bookmark } from "lucide-react";
+import { ArrowRight, Users, CalendarDays, Star, Clock, BellRing, Calendar } from "lucide-react";
 import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import ClassCard from "@/components/landing/ClassCard";
@@ -120,14 +120,13 @@ const UserDashboardOverview = () => {
             title,
             price,
             location,
-            instructor_id,
-            images:course_images(image_path),
-            profiles:instructor_id (
+            instructor:profiles (
               first_name,
               last_name
-            )
+            ),
+            images:course_images(image_path)
           ),
-          session:course_sessions (
+          course_sessions!inner (
             start_time
           )
         `)
@@ -141,12 +140,12 @@ const UserDashboardOverview = () => {
       const formattedClasses = data.map(booking => ({
         id: booking.courses.id,
         title: booking.courses.title,
-        instructor: `${booking.courses.profiles.first_name} ${booking.courses.profiles.last_name}`,
+        instructor: `${booking.courses.instructor.first_name} ${booking.courses.instructor.last_name}`,
         price: booking.courses.price,
         rating: 4.5,
         images: booking.courses.images.map((img: any) => img.image_path),
         level: "All Levels",
-        date: new Date(booking.session.start_time),
+        date: new Date(booking.course_sessions.start_time),
         city: booking.courses.location
       }));
 
@@ -312,10 +311,7 @@ const UserDashboardOverview = () => {
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <BellRing className="h-5 w-5 text-purple-600" />
-              Notifications
-            </CardTitle>
+            <CardTitle>Notifications</CardTitle>
             <Button 
               variant="ghost" 
               className="text-accent-purple"
@@ -332,10 +328,7 @@ const UserDashboardOverview = () => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-purple-600" />
-              Upcoming Classes
-            </CardTitle>
+            <CardTitle>Upcoming Classes</CardTitle>
             <Button 
               variant="ghost" 
               className="text-accent-purple"
@@ -357,98 +350,12 @@ const UserDashboardOverview = () => {
             )}
           </CardContent>
         </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Bookmark className="h-5 w-5 text-purple-600" />
-              Saved Classes
-            </CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/saved")}
-            >
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {savedClasses.length > 0 ? (
-              savedClasses.map(classItem => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No saved classes yet
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5 text-purple-600" />
-              Waitlisted Classes
-            </CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/waitlist")}
-            >
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            {waitlistedClasses.length > 0 ? (
-              waitlistedClasses.map(classItem => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))
-            ) : (
-              <p className="text-muted-foreground text-center py-4">
-                No waitlisted classes
-              </p>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="md:col-span-2">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="flex items-center gap-2">
-              <Star className="h-5 w-5 text-purple-600" />
-              You Might Be Interested In
-            </CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/matches")}
-            >
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {matchedClasses.length > 0 ? (
-                matchedClasses.map(classItem => (
-                  <ClassCard key={classItem.id} {...classItem} />
-                ))
-              ) : (
-                <p className="text-muted-foreground text-center py-4 col-span-3">
-                  No matched classes found
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
       </div>
 
       <section className="w-full">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-xl">Your Reviews</CardTitle>
+            <CardTitle className="text-lg font-semibold">Reviews</CardTitle>
             <Button 
               variant="ghost" 
               className="text-accent-purple"

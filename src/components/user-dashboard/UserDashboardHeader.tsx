@@ -5,12 +5,7 @@ import {
   LayoutDashboard,
   MessageSquare,
   CalendarDays,
-  Bell,
-  Users,
-  Bookmark,
-  Star,
   Settings,
-  Clock
 } from "lucide-react";
 
 const UserDashboardHeader = () => {
@@ -23,44 +18,19 @@ const UserDashboardHeader = () => {
       icon: LayoutDashboard,
     },
     {
-      title: "Inbox",
+      title: "Messages",
       href: "/student-dashboard/messages",
       icon: MessageSquare,
     },
     {
-      title: "Bookings",
+      title: "Classes and Bookings",
       href: "/student-dashboard/bookings",
       icon: CalendarDays,
-    },
-    {
-      title: "Notifications",
-      href: "/student-dashboard/notifications",
-      icon: Bell,
-    },
-    {
-      title: "Matches",
-      href: "/student-dashboard/matches",
-      icon: Users,
-    },
-    {
-      title: "Saved",
-      href: "/student-dashboard/saved",
-      icon: Bookmark,
     },
     {
       title: "Settings",
       href: "/student-dashboard/preferences",
       icon: Settings,
-    },
-    {
-      title: "Reviews",
-      href: "/student-dashboard/reviews",
-      icon: Star,
-    },
-    {
-      title: "Waitlist",
-      href: "/student-dashboard/waitlist",
-      icon: Clock,
     },
   ];
 
