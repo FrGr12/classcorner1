@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -9,9 +8,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { ArrowRight } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Edit, MessageSquare, ArrowUp, Share2 } from "lucide-react";
 import LoadingState from "./LoadingState";
-import ClassCard from "../landing/ClassCard";
 
 const UserBookings = () => {
   const [loading, setLoading] = useState(true);
@@ -23,35 +23,25 @@ const UserBookings = () => {
       id: 1,
       title: "Wheel Throwing Workshop",
       instructor: "Michael Chen",
+      date: new Date("2024-02-20"),
+      capacity: 8,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 90,
-      rating: 4.9,
-      images: ["/placeholder.svg"],
-      level: "All Levels",
-      date: [new Date("2024-02-20"), new Date("2024-02-27")],
-      city: "Manchester",
-      category: "Pottery",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 90,
-      basePricePrivate: 120,
-      maxParticipants: 8
+      status: "upcoming"
     },
     {
       id: 5,
       title: "Pottery for Beginners",
       instructor: "Sarah Wilson",
+      date: new Date("2024-02-22"),
+      capacity: 6,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 75,
-      rating: 4.8,
-      images: ["/placeholder.svg"],
-      level: "Beginner",
-      date: [new Date("2024-02-22"), new Date("2024-03-01")],
-      city: "Manchester",
-      category: "Pottery",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 75,
-      basePricePrivate: 100,
-      maxParticipants: 6
+      status: "upcoming"
     }
   ];
 
@@ -60,33 +50,25 @@ const UserBookings = () => {
       id: 2,
       title: "Advanced Baking Workshop",
       instructor: "Michael Chen",
+      date: new Date("2024-02-25"),
+      capacity: 6,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 85,
-      rating: 4.9,
-      images: ["/placeholder.svg"],
-      level: "Advanced",
-      date: [new Date("2024-02-25"), new Date("2024-03-03")],
-      city: "Stockholm",
-      category: "Baking",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: false,
-      basePriceGroup: 85,
-      maxParticipants: 6
+      status: "upcoming"
     },
     {
       id: 6,
       title: "Sourdough Masterclass",
       instructor: "Lisa Johnson",
+      date: new Date("2024-03-05"),
+      capacity: 8,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 95,
-      rating: 4.7,
-      images: ["/placeholder.svg"],
-      level: "Intermediate",
-      date: [new Date("2024-03-05"), new Date("2024-03-12")],
-      city: "Stockholm",
-      category: "Baking",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: false,
-      basePriceGroup: 95,
-      maxParticipants: 8
+      status: "upcoming"
     }
   ];
 
@@ -95,35 +77,25 @@ const UserBookings = () => {
       id: 3,
       title: "Watercolor Painting Basics",
       instructor: "Emma Davis",
+      date: new Date("2024-03-01"),
+      capacity: 10,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 65,
-      rating: 4.7,
-      images: ["/placeholder.svg"],
-      level: "Beginner",
-      date: [new Date("2024-03-01"), new Date("2024-03-08")],
-      city: "Stockholm",
-      category: "Painting & Art",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 65,
-      basePricePrivate: 95,
-      maxParticipants: 10
+      status: "upcoming"
     },
     {
       id: 7,
       title: "Oil Painting Workshop",
       instructor: "Robert Smith",
+      date: new Date("2024-03-10"),
+      capacity: 8,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 85,
-      rating: 4.8,
-      images: ["/placeholder.svg"],
-      level: "All Levels",
-      date: [new Date("2024-03-10"), new Date("2024-03-17")],
-      city: "Stockholm",
-      category: "Painting & Art",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 85,
-      basePricePrivate: 120,
-      maxParticipants: 8
+      status: "upcoming"
     }
   ];
 
@@ -132,35 +104,25 @@ const UserBookings = () => {
       id: 4,
       title: "Candle Making Masterclass",
       instructor: "David Wilson",
+      date: new Date("2024-01-15"),
+      capacity: 8,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 70,
-      rating: 4.6,
-      images: ["/placeholder.svg"],
-      level: "Intermediate",
-      date: [new Date("2024-01-15"), new Date("2024-01-22")],
-      city: "Stockholm",
-      category: "Candle Making",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 70,
-      basePricePrivate: 100,
-      maxParticipants: 8
+      status: "upcoming"
     },
     {
       id: 8,
       title: "Scented Candle Workshop",
       instructor: "Anna Lee",
+      date: new Date("2024-01-10"),
+      capacity: 6,
+      attendees: 0,
+      waitlist: 0,
+      paid: 0,
       price: 65,
-      rating: 4.9,
-      images: ["/placeholder.svg"],
-      level: "Beginner",
-      date: [new Date("2024-01-10"), new Date("2024-01-17")],
-      city: "Stockholm",
-      category: "Candle Making",
-      groupBookingsEnabled: true,
-      privateBookingsEnabled: true,
-      basePriceGroup: 65,
-      basePricePrivate: 90,
-      maxParticipants: 6
+      status: "upcoming"
     }
   ];
 
@@ -170,75 +132,129 @@ const UserBookings = () => {
     }, 1000);
   }, []);
 
+  const handleAction = (action: string, classId: number) => {
+    switch (action) {
+      case "edit":
+        toast({
+          title: "Edit class",
+          description: "Opening class editor..."
+        });
+        break;
+      case "message":
+        toast({
+          title: "Message teacher",
+          description: "Opening message composer..."
+        });
+        break;
+      case "promote":
+        toast({
+          title: "Promote class",
+          description: "Opening promotion options..."
+        });
+        break;
+      case "share":
+        toast({
+          title: "Share class",
+          description: "Opening share options..."
+        });
+        break;
+      default:
+        break;
+    }
+  };
+
   if (loading) {
     return <LoadingState />;
   }
 
-  const renderSection = (title: string, emptyMessage: string, link: string, classes: any[]) => (
-    <Card className="bg-white rounded-lg p-6">
-      <div className="flex items-center justify-between mb-6">
-        <CardTitle className="text-xl font-semibold">{title}</CardTitle>
-        <Link 
-          to={link} 
-          className="text-base text-primary hover:text-primary/80 flex items-center"
-        >
-          View All
-          <ArrowRight className="h-5 w-5 ml-1" />
-        </Link>
-      </div>
-      <CardContent className="p-0">
-        {classes.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {classes.map((classItem) => (
-              <div key={classItem.id} className="transform scale-90 origin-top-left">
-                <ClassCard {...classItem} />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-muted-foreground text-lg py-8">
-            {emptyMessage}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-
   return (
     <div className="space-y-8">
-      <div>
-        <h2 className="text-2xl font-semibold mb-6 text-left">Classes & Bookings</h2>
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold mb-2">Classes & Bookings</h2>
+          <p className="text-muted-foreground">
+            Manage your classes and schedules
+          </p>
+        </div>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {renderSection(
-          "Upcoming Classes",
-          "No upcoming classes scheduled",
-          "/student-dashboard/bookings/upcoming",
-          upcomingClasses
-        )}
 
-        {renderSection(
-          "Waitlisted Classes",
-          "You're not on any waitlists",
-          "/student-dashboard/bookings/waitlist",
-          waitlistClasses
-        )}
-
-        {renderSection(
-          "Saved Classes",
-          "No saved classes yet",
-          "/student-dashboard/bookings/saved",
-          savedClasses
-        )}
-
-        {renderSection(
-          "Past Classes",
-          "No past classes",
-          "/student-dashboard/bookings/past",
-          pastClasses
-        )}
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Your Classes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[200px]">Title</TableHead>
+                <TableHead>Date</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {upcomingClasses.map((classItem) => (
+                <TableRow key={classItem.id}>
+                  <TableCell className="font-medium">
+                    <Link 
+                      to={`/class/${classItem.id}`}
+                      className="hover:text-primary transition-colors"
+                    >
+                      {classItem.title}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {classItem.date.toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-green-100 text-green-800">
+                      {classItem.status}
+                    </span>
+                  </TableCell>
+                  <TableCell>${classItem.price}</TableCell>
+                  <TableCell className="text-right">
+                    <div className="flex justify-end gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleAction("edit", classItem.id)}
+                      >
+                        <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleAction("message", classItem.id)}
+                      >
+                        <MessageSquare className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleAction("promote", classItem.id)}
+                      >
+                        <ArrowUp className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="h-8 w-8 p-0"
+                        onClick={() => handleAction("share", classItem.id)}
+                      >
+                        <Share2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
     </div>
   );
 };
