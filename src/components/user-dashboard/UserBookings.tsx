@@ -12,12 +12,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Edit, MessageSquare, ArrowUp, Share2, Search, Download, Filter } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import LoadingState from "./LoadingState";
 
 const UserBookings = () => {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  const [dialogType, setDialogType] = useState<string | null>(null);
   const { toast } = useToast();
 
   const classes = [
@@ -86,33 +96,107 @@ const UserBookings = () => {
   }, []);
 
   const handleAction = (action: string, classId: number) => {
-    switch (action) {
+    setSelectedClassId(classId);
+    setDialogType(action);
+  };
+
+  const handleDialogClose = () => {
+    setSelectedClassId(null);
+    setDialogType(null);
+  };
+
+  const getSelectedClass = () => {
+    return classes.find(c => c.id === selectedClassId);
+  };
+
+  const getDialogContent = () => {
+    const selectedClass = getSelectedClass();
+    if (!selectedClass) return null;
+
+    switch (dialogType) {
       case "edit":
-        toast({
-          title: "Edit booking",
-          description: "Opening booking editor..."
-        });
-        break;
+        return {
+          title: "Edit Booking",
+          description: `Edit your booking for ${selectedClass.title}`,
+          content: (
+            <div className="space-y-4">
+              <p>You can modify your booking details here.</p>
+              <Button 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                onClick={() => {
+                  toast({
+                    title: "Booking updated",
+                    description: "Your booking has been updated successfully."
+                  });
+                  handleDialogClose();
+                }}
+              >
+                Update Booking
+              </Button>
+            </div>
+          )
+        };
       case "message":
-        toast({
-          title: "Message teacher",
-          description: "Opening message composer..."
-        });
-        break;
+        return {
+          title: "Message Teacher",
+          description: `Send a message to ${selectedClass.instructor}`,
+          content: (
+            <div className="space-y-4">
+              <Input placeholder="Type your message here..." className="h-24" />
+              <Button 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                onClick={() => {
+                  toast({
+                    title: "Message sent",
+                    description: "Your message has been sent to the instructor."
+                  });
+                  handleDialogClose();
+                }}
+              >
+                Send Message
+              </Button>
+            </div>
+          )
+        };
       case "promote":
-        toast({
-          title: "Share with friends",
-          description: "Opening share options..."
-        });
-        break;
+        return {
+          title: "Share with Friends",
+          description: "Share this class with your friends",
+          content: (
+            <div className="space-y-4">
+              <Input placeholder="Enter email addresses..." />
+              <Button 
+                className="w-full bg-purple-600 hover:bg-purple-700"
+                onClick={() => {
+                  toast({
+                    title: "Invitation sent",
+                    description: "Invitations have been sent to your friends."
+                  });
+                  handleDialogClose();
+                }}
+              >
+                Send Invitations
+              </Button>
+            </div>
+          )
+        };
       case "share":
-        toast({
-          title: "Share class",
-          description: "Opening share options..."
-        });
-        break;
+        return {
+          title: "Share Class",
+          description: "Share this class on social media",
+          content: (
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <Button variant="outline" className="w-full">Twitter</Button>
+                <Button variant="outline" className="w-full">Facebook</Button>
+                <Button variant="outline" className="w-full">LinkedIn</Button>
+                <Button variant="outline" className="w-full">Copy Link</Button>
+              </div>
+            </div>
+          )
+        };
       default:
-        break;
+        return null;
     }
   };
 
@@ -139,6 +223,8 @@ const UserBookings = () => {
   if (loading) {
     return <LoadingState />;
   }
+
+  const dialogContent = getDialogContent();
 
   return (
     <div className="space-y-8">
@@ -189,18 +275,18 @@ const UserBookings = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-[300px]">Title</TableHead>
-                <TableHead>Instructor</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[300px] text-lg">Title</TableHead>
+                <TableHead className="text-lg">Instructor</TableHead>
+                <TableHead className="text-lg">Date</TableHead>
+                <TableHead className="text-lg">Status</TableHead>
+                <TableHead className="text-lg">Price</TableHead>
+                <TableHead className="text-right text-lg">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredClasses.map((classItem) => (
                 <TableRow key={classItem.id}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium text-base">
                     <Link 
                       to={`/class/${classItem.id}`}
                       className="hover:text-primary transition-colors"
@@ -208,50 +294,62 @@ const UserBookings = () => {
                       {classItem.title}
                     </Link>
                   </TableCell>
-                  <TableCell>{classItem.instructor}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-base">{classItem.instructor}</TableCell>
+                  <TableCell className="text-base">
                     {classItem.date.toLocaleDateString()}
                   </TableCell>
-                  <TableCell>
-                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusBadgeClass(classItem.status)}`}>
+                  <TableCell className="text-base">
+                    <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${getStatusBadgeClass(classItem.status)}`}>
                       {classItem.status}
                     </span>
                   </TableCell>
-                  <TableCell>${classItem.price}</TableCell>
+                  <TableCell className="text-base">${classItem.price}</TableCell>
                   <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleAction("edit", classItem.id)}
-                      >
-                        <Edit className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleAction("message", classItem.id)}
-                      >
-                        <MessageSquare className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleAction("promote", classItem.id)}
-                      >
-                        <ArrowUp className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={() => handleAction("share", classItem.id)}
-                      >
-                        <Share2 className="h-4 w-4" />
-                      </Button>
+                    <div className="flex justify-end gap-4">
+                      <div className="flex flex-col items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          onClick={() => handleAction("edit", classItem.id)}
+                        >
+                          <Edit className="h-4 w-4 text-purple-700" />
+                        </Button>
+                        <span className="text-xs text-neutral-600">Edit</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          onClick={() => handleAction("message", classItem.id)}
+                        >
+                          <MessageSquare className="h-4 w-4 text-purple-700" />
+                        </Button>
+                        <span className="text-xs text-neutral-600">Message</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          onClick={() => handleAction("promote", classItem.id)}
+                        >
+                          <ArrowUp className="h-4 w-4 text-purple-700" />
+                        </Button>
+                        <span className="text-xs text-neutral-600">Promote</span>
+                      </div>
+                      <div className="flex flex-col items-center gap-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-purple-100 hover:bg-purple-200 border-purple-200"
+                          onClick={() => handleAction("share", classItem.id)}
+                        >
+                          <Share2 className="h-4 w-4 text-purple-700" />
+                        </Button>
+                        <span className="text-xs text-neutral-600">Share</span>
+                      </div>
                     </div>
                   </TableCell>
                 </TableRow>
@@ -260,6 +358,20 @@ const UserBookings = () => {
           </Table>
         </CardContent>
       </Card>
+
+      <Dialog open={dialogType !== null} onOpenChange={() => handleDialogClose()}>
+        <DialogContent>
+          {dialogContent && (
+            <>
+              <DialogHeader>
+                <DialogTitle>{dialogContent.title}</DialogTitle>
+                <DialogDescription>{dialogContent.description}</DialogDescription>
+              </DialogHeader>
+              {dialogContent.content}
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
