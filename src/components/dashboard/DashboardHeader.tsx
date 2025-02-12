@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Menu } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
@@ -6,7 +7,7 @@ const DashboardHeader = () => {
   const { toggle } = useSidebarContext();
 
   return (
-    <header className="h-16 border-b bg-white flex items-center px-6">
+    <header className="h-16 border-t bg-white flex items-center px-6">
       <Button
         variant="ghost"
         size="icon"
