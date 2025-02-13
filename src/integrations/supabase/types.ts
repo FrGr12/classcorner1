@@ -1339,6 +1339,44 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_steps: {
+        Row: {
+          created_at: string | null
+          id: string
+          interests_completed: boolean | null
+          location_completed: boolean | null
+          preferences_completed: boolean | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          interests_completed?: boolean | null
+          location_completed?: boolean | null
+          preferences_completed?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          interests_completed?: boolean | null
+          location_completed?: boolean | null
+          preferences_completed?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboarding_steps_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       payment_transactions: {
         Row: {
           amount: number
