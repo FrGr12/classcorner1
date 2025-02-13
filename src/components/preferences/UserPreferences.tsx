@@ -9,8 +9,10 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { X, Save, User, Mail, Phone, CreditCard, MapPin, Bell, Settings } from "lucide-react";
+
 const categories = ["Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making", "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance", "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"];
 const cities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Helsingborg", "Jönköping", "Norrköping"];
+
 interface UserPreferencesData {
   id: string;
   interests: string[];
@@ -24,6 +26,7 @@ interface UserPreferencesData {
   email: string;
   phone: string;
 }
+
 interface ProfileUpdateData {
   email_notifications: boolean;
   class_reminders: boolean;
@@ -33,6 +36,7 @@ interface ProfileUpdateData {
   email: string;
   phone: string;
 }
+
 const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -40,9 +44,11 @@ const UserPreferences = () => {
   const {
     toast
   } = useToast();
+
   useEffect(() => {
     fetchPreferences();
   }, []);
+
   const fetchPreferences = async () => {
     try {
       const {
@@ -85,6 +91,7 @@ const UserPreferences = () => {
       setLoading(false);
     }
   };
+
   const handleSave = async () => {
     if (!preferences) return;
     setSaving(true);
@@ -126,13 +133,15 @@ const UserPreferences = () => {
       setSaving(false);
     }
   };
+
   const addInterest = (interest: string) => {
     if (!preferences || preferences.interests.includes(interest)) return;
     setPreferences({
       ...preferences,
-      interests: [...preferences.interests, interest]
+      interests: [...preferences.interests, interest],
     });
   };
+
   const removeInterest = (interest: string) => {
     if (!preferences) return;
     setPreferences({
@@ -140,11 +149,13 @@ const UserPreferences = () => {
       interests: preferences.interests.filter(i => i !== interest)
     });
   };
+
   if (loading) {
     return <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
       </div>;
   }
+
   return <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
@@ -249,25 +260,39 @@ const UserPreferences = () => {
             </Label>
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
-                {preferences?.interests.map(interest => <Badge key={interest} variant="secondary" className="gap-1">
+                {preferences?.interests.map((interest) => (
+                  <Badge key={interest} variant="secondary" className="gap-1">
                     {interest}
-                    <button onClick={() => removeInterest(interest)} className="ml-1 hover:text-destructive">
+                    <button
+                      onClick={() => removeInterest(interest)}
+                      className="ml-1 hover:text-destructive"
+                    >
                       <X className="h-3 w-3" />
                     </button>
-                  </Badge>)}
+                  </Badge>
+                ))}
               </div>
               <Select onValueChange={addInterest}>
                 <SelectTrigger>
                   <SelectValue placeholder="Add an interest" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.filter(c => !preferences?.interests.includes(c)).map(category => <SelectItem key={category} value={category}>
+                  {categories
+                    .filter((c) => !preferences?.interests.includes(c))
+                    .map((category) => (
+                      <SelectItem key={category} value={category}>
                         {category}
-                      </SelectItem>)}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSave} className="text-secondary-DEFAULT bg-primary-foreground">Add</Button>
+            <Button 
+              variant="outline"
+              className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10"
+            >
+              Add
+            </Button>
           </div>
 
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
@@ -352,4 +377,5 @@ const UserPreferences = () => {
       </div>
     </div>;
 };
+
 export default UserPreferences;
