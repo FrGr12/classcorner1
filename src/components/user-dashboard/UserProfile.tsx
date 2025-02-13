@@ -1,9 +1,18 @@
 
 import { useState, useEffect } from "react";
-import { Card } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -21,13 +30,13 @@ import {
   Save,
   Clock,
   BadgeCheck,
+  BellRing,
   AtSign
 } from "lucide-react";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 
 const UserProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
   const [profile, setProfile] = useState({
     first_name: "",
     last_name: "",
@@ -37,7 +46,10 @@ const UserProfile = () => {
     location: "",
     bio: "",
     timezone: "",
-    account_type: "",
+    email_notifications: true,
+    sms_notifications: false,
+    class_reminders: true,
+    marketing_emails: false,
   });
 
   useEffect(() => {
@@ -66,11 +78,18 @@ const UserProfile = () => {
           location: data.location || "",
           bio: data.bio || "",
           timezone: data.timezone || "",
-          account_type: data.account_type || "student",
+          email_notifications: data.email_notifications ?? true,
+          sms_notifications: data.sms_notifications ?? false,
+          class_reminders: data.class_reminders ?? true,
+          marketing_emails: data.marketing_emails ?? false,
         });
       }
     } catch (error: any) {
-      toast.error("Error loading profile");
+      toast({
+        variant: "destructive",
+        title: "Error loading profile",
+        description: error.message,
+      });
     }
   };
 
@@ -86,129 +105,153 @@ const UserProfile = () => {
         .eq('id', user.id);
 
       if (error) throw error;
-      toast.success("Profile updated successfully");
-    } catch (error) {
-      toast.error("Failed to update profile");
+      toast({
+        title: "Success",
+        description: "Your profile has been updated.",
+      });
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update profile",
+      });
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-[1200px] mx-auto space-y-6">
-      {/* Header Section */}
-      <Card className="p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-semibold">Profile Settings</h1>
-            <p className="text-muted-foreground mt-1">
-              Manage your personal information and preferences
-            </p>
-          </div>
-          
-          <Button 
-            onClick={handleSave}
-            className="bg-[#6E44FF] hover:bg-[#6E44FF]/90 text-white"
-            disabled={isSubmitting}
-          >
-            <Save className="mr-2 h-4 w-4" />
-            Save Changes
-          </Button>
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Profile & Preferences</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage your personal information, preferences, and account settings
+          </p>
         </div>
-      </Card>
+        <Button onClick={handleSave} className="gap-2 bg-[#6E44FF] hover:bg-[#6E44FF]/90" disabled={isSubmitting}>
+          <Save className="h-4 w-4" />
+          Save Changes
+        </Button>
+      </div>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        {/* Account Information */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6">Account Information</h2>
-          <div className="space-y-6">
-            <div className="flex items-center gap-4">
-              <div className="relative h-20 w-20 rounded-full bg-neutral-100 overflow-hidden flex items-center justify-center">
-                <User className="h-8 w-8 text-neutral-400" />
+      <div className="grid gap-6 md:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>
+              Update your personal details and public profile
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="space-y-2">
+              <Label>Profile Photo</Label>
+              <div className="flex items-center gap-4">
+                <div className="relative h-20 w-20 rounded-full bg-neutral-100 overflow-hidden">
+                  <div className="flex h-full items-center justify-center">
+                    <User className="h-8 w-8 text-neutral-400" />
+                  </div>
+                </div>
+                <Button variant="outline" className="gap-2">
+                  <Upload className="h-4 w-4" />
+                  Upload Photo
+                </Button>
               </div>
-              <Button variant="outline" className="gap-2">
-                <Upload className="h-4 w-4" />
-                Upload Photo
-              </Button>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <BadgeCheck className="h-4 w-4" />
-                <span>Account Type: {profile.account_type}</span>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>First Name</Label>
+                <Input
+                  value={profile.first_name}
+                  onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
+                />
               </div>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
-                <span>Member since: {new Date().getFullYear()}</span>
+              <div className="space-y-2">
+                <Label>Last Name</Label>
+                <Input
+                  value={profile.last_name}
+                  onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
+                />
               </div>
             </div>
 
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <AtSign className="h-4 w-4 text-neutral-400" />
+                <AtSign className="h-4 w-4" />
                 Username
               </Label>
               <Input
                 value={profile.username}
                 onChange={(e) => setProfile({ ...profile, username: e.target.value })}
-                className="bg-white"
               />
             </div>
-          </div>
+
+            <div className="space-y-2">
+              <Label>Bio</Label>
+              <Textarea
+                value={profile.bio}
+                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
+                placeholder="Tell us about yourself..."
+                className="min-h-[100px]"
+              />
+            </div>
+          </CardContent>
         </Card>
 
-        {/* Contact Information */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-6">Contact Information</h2>
-          <div className="space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle>Contact Information</CardTitle>
+            <CardDescription>
+              Update your contact details and preferences
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-neutral-400" />
+                <Mail className="h-4 w-4" />
                 Email Address
               </Label>
               <Input
                 value={profile.email}
                 onChange={(e) => setProfile({ ...profile, email: e.target.value })}
                 type="email"
-                className="bg-white"
               />
             </div>
 
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-neutral-400" />
+                <Phone className="h-4 w-4" />
                 Phone Number
               </Label>
               <Input
                 value={profile.phone}
                 onChange={(e) => setProfile({ ...profile, phone: e.target.value })}
                 type="tel"
-                className="bg-white"
               />
             </div>
 
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-neutral-400" />
+                <MapPin className="h-4 w-4" />
                 Location
               </Label>
               <Input
                 value={profile.location}
                 onChange={(e) => setProfile({ ...profile, location: e.target.value })}
-                className="bg-white"
               />
             </div>
 
             <div className="space-y-2">
               <Label className="flex items-center gap-2">
-                <Clock className="h-4 w-4 text-neutral-400" />
+                <Clock className="h-4 w-4" />
                 Timezone
               </Label>
               <Select 
                 value={profile.timezone} 
                 onValueChange={(value) => setProfile({ ...profile, timezone: value })}
               >
-                <SelectTrigger className="bg-white">
+                <SelectTrigger>
                   <SelectValue placeholder="Select your timezone" />
                 </SelectTrigger>
                 <SelectContent>
@@ -219,42 +262,100 @@ const UserProfile = () => {
                 </SelectContent>
               </Select>
             </div>
-          </div>
+          </CardContent>
         </Card>
 
-        {/* Personal Information */}
-        <Card className="p-6 md:col-span-2">
-          <h2 className="text-xl font-semibold mb-6">Personal Information</h2>
-          <div className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label>First Name</Label>
-                <Input
-                  value={profile.first_name}
-                  onChange={(e) => setProfile({ ...profile, first_name: e.target.value })}
-                  className="bg-white"
-                />
+        <Card>
+          <CardHeader>
+            <CardTitle>Notification Settings</CardTitle>
+            <CardDescription>Manage your notification preferences</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="email-notifications">Email Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive class updates via email
+                </p>
               </div>
-              <div className="space-y-2">
-                <Label>Last Name</Label>
-                <Input
-                  value={profile.last_name}
-                  onChange={(e) => setProfile({ ...profile, last_name: e.target.value })}
-                  className="bg-white"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label>Bio</Label>
-              <Textarea
-                value={profile.bio}
-                onChange={(e) => setProfile({ ...profile, bio: e.target.value })}
-                placeholder="Tell us about yourself..."
-                className="min-h-[100px] bg-white"
+              <Switch
+                id="email-notifications"
+                checked={profile.email_notifications}
+                onCheckedChange={(checked) =>
+                  setProfile({ ...profile, email_notifications: checked })
+                }
               />
             </div>
-          </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="sms-notifications">SMS Notifications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Get instant updates via SMS
+                </p>
+              </div>
+              <Switch
+                id="sms-notifications"
+                checked={profile.sms_notifications}
+                onCheckedChange={(checked) =>
+                  setProfile({ ...profile, sms_notifications: checked })
+                }
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="class-reminders">Class Reminders</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive reminders before your classes
+                </p>
+              </div>
+              <Switch
+                id="class-reminders"
+                checked={profile.class_reminders}
+                onCheckedChange={(checked) =>
+                  setProfile({ ...profile, class_reminders: checked })
+                }
+              />
+            </div>
+
+            <div className="flex items-center justify-between">
+              <div>
+                <Label htmlFor="marketing-emails">Marketing Communications</Label>
+                <p className="text-sm text-muted-foreground">
+                  Receive updates about new classes and promotions
+                </p>
+              </div>
+              <Switch
+                id="marketing-emails"
+                checked={profile.marketing_emails}
+                onCheckedChange={(checked) =>
+                  setProfile({ ...profile, marketing_emails: checked })
+                }
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Account Status</CardTitle>
+            <CardDescription>View your account information</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center gap-2">
+              <BadgeCheck className="h-4 w-4 text-[#6E44FF]" />
+              <span className="text-sm">Student Account</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Clock className="h-4 w-4 text-[#6E44FF]" />
+              <span className="text-sm">Member since {new Date().getFullYear()}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <BellRing className="h-4 w-4 text-[#6E44FF]" />
+              <span className="text-sm">Notifications Active</span>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>
