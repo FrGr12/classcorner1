@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { MessageSquare, Edit } from "lucide-react";
+import { MessageSquare, Edit, Percent, Share2, Rocket } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -34,80 +34,105 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
       return;
     }
 
-    try {
-      // Here you would integrate with your messaging system
-      toast.promise(
-        // Replace this with actual API call
-        new Promise((resolve) => setTimeout(resolve, 1000)),
-        {
-          loading: "Sending message...",
-          success: "Message sent successfully",
-          error: "Failed to send message"
-        }
-      );
-      setMessage("");
-      setIsMessageDialogOpen(false);
-    } catch (error) {
-      toast.error("Failed to send message");
-      console.error("Error sending message:", error);
-    }
+    toast.promise(
+      // Replace this with actual API call
+      new Promise((resolve) => setTimeout(resolve, 1000)),
+      {
+        loading: "Sending message to participants...",
+        success: "Message sent successfully",
+        error: "Failed to send message. Please try again."
+      }
+    );
+
+    setMessage("");
+    setIsMessageDialogOpen(false);
   };
 
   const handleEditClass = () => {
-    try {
-      navigate(`/edit-course/${classId}`);
-    } catch (error) {
-      toast.error("Failed to navigate to edit page");
-      console.error("Navigation error:", error);
-    }
+    navigate(`/edit-course/${classId}`);
+  };
+
+  const handleOpenDiscount = () => {
+    setIsDiscountDialogOpen(true);
   };
 
   return (
-    <>
-      <div className="flex gap-2 items-center justify-start">
+    <div className="space-y-4">
+      <div className="flex flex-wrap gap-2 items-center">
         <Button 
           variant="outline" 
           size="sm"
+          className="flex items-center gap-2 min-w-[140px] justify-center"
           onClick={() => setIsMessageDialogOpen(true)}
         >
-          <MessageSquare className="h-4 w-4 mr-2" />
-          Message Participants
+          <MessageSquare className="h-4 w-4" />
+          Message
         </Button>
-
-        <CreateDiscountDialog 
-          courseId={classId} 
-          open={isDiscountDialogOpen}
-          onOpenChange={setIsDiscountDialogOpen}
-        />
-        
-        <InstantBoost courseId={classId} />
-        
-        <SocialShare courseId={classId} category={category} />
 
         <Button
           variant="outline"
           size="sm"
+          className="flex items-center gap-2 min-w-[140px] justify-center"
+          onClick={handleOpenDiscount}
+        >
+          <Percent className="h-4 w-4" />
+          Discount
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 min-w-[140px] justify-center"
           onClick={handleEditClass}
         >
-          <Edit className="h-4 w-4 mr-2" />
-          Edit Class
+          <Edit className="h-4 w-4" />
+          Edit
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 min-w-[140px] justify-center"
+          onClick={() => toast.success("Coming soon!")}
+        >
+          <Share2 className="h-4 w-4" />
+          Share
+        </Button>
+
+        <Button
+          variant="outline"
+          size="sm"
+          className="flex items-center gap-2 min-w-[140px] justify-center"
+          onClick={() => toast.success("Coming soon!")}
+        >
+          <Rocket className="h-4 w-4" />
+          Boost
         </Button>
       </div>
 
-      <Dialog open={isMessageDialogOpen} onOpenChange={setIsMessageDialogOpen}>
-        <DialogContent>
+      <CreateDiscountDialog 
+        courseId={classId} 
+        open={isDiscountDialogOpen}
+        onOpenChange={setIsDiscountDialogOpen}
+      />
+      
+      <Dialog 
+        open={isMessageDialogOpen} 
+        onOpenChange={setIsMessageDialogOpen}
+      >
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Message Participants</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-4">
-            <div className="border rounded-md p-3 bg-muted/50">
-              <p className="text-sm font-medium mb-2">Recipients:</p>
+            <div className="border rounded-lg p-4 bg-muted/50">
+              <p className="text-sm font-medium mb-2">Recipients ({mockParticipants.length})</p>
               <div className="flex flex-wrap gap-2">
                 {mockParticipants.map((participant) => (
                   <span 
                     key={participant.id}
-                    className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary"
+                    className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary"
                   >
                     {participant.name}
                   </span>
@@ -119,11 +144,11 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Type your message here..."
-              className="min-h-[150px]"
+              className="min-h-[150px] resize-none"
             />
           </div>
 
-          <DialogFooter>
+          <DialogFooter className="gap-2 sm:gap-0">
             <Button
               variant="outline"
               onClick={() => setIsMessageDialogOpen(false)}
@@ -136,7 +161,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 };
 
