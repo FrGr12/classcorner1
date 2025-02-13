@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Button } from "@/components/ui/button";
 import { Rocket, Tag } from "lucide-react";
 import CreateDiscountDialog from "../discounts/CreateDiscountDialog";
+import PurchaseBoostCredits from "./PurchaseBoostCredits";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -15,6 +16,7 @@ interface PromoteDialogProps {
 
 const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
   const [isDiscountOpen, setIsDiscountOpen] = useState(false);
+  const [isPurchaseOpen, setIsPurchaseOpen] = useState(false);
   const [boostCredits, setBoostCredits] = useState(0);
   const [isBoostLoading, setIsBoostLoading] = useState(false);
 
@@ -78,7 +80,7 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
         .single();
 
       if (!premiumFeatures || premiumFeatures.boost_credits <= 0) {
-        toast.error("No boost credits remaining");
+        setIsPurchaseOpen(true);
         return;
       }
 
@@ -119,6 +121,12 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
     toast.success("Discount created successfully");
   };
 
+  const handlePurchaseComplete = () => {
+    setIsPurchaseOpen(false);
+    // Refresh boost credits
+    fetchBoostCredits();
+  };
+
   if (!classId) return null;
 
   return (
@@ -151,7 +159,7 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
               variant="outline"
               className="flex items-center justify-start gap-2 h-20"
               onClick={handleBoost}
-              disabled={isBoostLoading || boostCredits <= 0}
+              disabled={isBoostLoading}
             >
               <Rocket className="h-5 w-5" />
               <div className="text-left flex-1">
@@ -166,7 +174,7 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
                     </span>
                   ) : (
                     <span className="text-amber-600">
-                      No credits available - Purchase credits to boost
+                      Click to purchase boost credits
                     </span>
                   )}
                 </div>
@@ -181,6 +189,12 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
         open={isDiscountOpen}
         onOpenChange={setIsDiscountOpen}
         onDiscountCreated={handleDiscountCreated}
+      />
+
+      <PurchaseBoostCredits
+        open={isPurchaseOpen}
+        onOpenChange={setIsPurchaseOpen}
+        onPurchaseComplete={handlePurchaseComplete}
       />
     </>
   );

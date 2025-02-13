@@ -114,6 +114,100 @@ export type Database = {
           },
         ]
       }
+      boost_analytics: {
+        Row: {
+          bookings_before: number | null
+          bookings_during: number | null
+          boost_id: number | null
+          created_at: string | null
+          id: number
+          inquiries_before: number | null
+          inquiries_during: number | null
+          revenue_before: number | null
+          revenue_during: number | null
+          updated_at: string | null
+          views_before: number | null
+          views_during: number | null
+        }
+        Insert: {
+          bookings_before?: number | null
+          bookings_during?: number | null
+          boost_id?: number | null
+          created_at?: string | null
+          id?: never
+          inquiries_before?: number | null
+          inquiries_during?: number | null
+          revenue_before?: number | null
+          revenue_during?: number | null
+          updated_at?: string | null
+          views_before?: number | null
+          views_during?: number | null
+        }
+        Update: {
+          bookings_before?: number | null
+          bookings_during?: number | null
+          boost_id?: number | null
+          created_at?: string | null
+          id?: never
+          inquiries_before?: number | null
+          inquiries_during?: number | null
+          revenue_before?: number | null
+          revenue_during?: number | null
+          updated_at?: string | null
+          views_before?: number | null
+          views_during?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boost_analytics_boost_id_fkey"
+            columns: ["boost_id"]
+            isOneToOne: false
+            referencedRelation: "course_boosts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      boost_credit_purchases: {
+        Row: {
+          amount: number
+          created_at: string | null
+          credits_added: boolean | null
+          id: number
+          payment_intent_id: string | null
+          payment_status: string | null
+          price: number
+          teacher_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string | null
+          credits_added?: boolean | null
+          id?: never
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          price: number
+          teacher_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string | null
+          credits_added?: boolean | null
+          id?: never
+          payment_intent_id?: string | null
+          payment_status?: string | null
+          price?: number
+          teacher_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boost_credit_purchases_teacher_id_fkey"
+            columns: ["teacher_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bulk_message_campaigns: {
         Row: {
           created_at: string
