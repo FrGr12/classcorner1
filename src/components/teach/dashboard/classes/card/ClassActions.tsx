@@ -36,11 +36,29 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
 
     try {
       // Here you would integrate with your messaging system
-      toast.success("Message sent successfully!");
+      toast.promise(
+        // Replace this with actual API call
+        new Promise((resolve) => setTimeout(resolve, 1000)),
+        {
+          loading: "Sending message...",
+          success: "Message sent successfully",
+          error: "Failed to send message"
+        }
+      );
       setMessage("");
       setIsMessageDialogOpen(false);
     } catch (error) {
       toast.error("Failed to send message");
+      console.error("Error sending message:", error);
+    }
+  };
+
+  const handleEditClass = () => {
+    try {
+      navigate(`/edit-course/${classId}`);
+    } catch (error) {
+      toast.error("Failed to navigate to edit page");
+      console.error("Navigation error:", error);
     }
   };
 
@@ -69,7 +87,7 @@ const ClassActions = ({ classId, category }: ClassActionsProps) => {
         <Button
           variant="outline"
           size="sm"
-          onClick={() => navigate(`/teach/classes/${classId}/edit`)}
+          onClick={handleEditClass}
         >
           <Edit className="h-4 w-4 mr-2" />
           Edit Class
