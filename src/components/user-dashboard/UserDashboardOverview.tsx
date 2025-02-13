@@ -136,17 +136,24 @@ const UserDashboardOverview = () => {
 
       if (error) throw error;
 
-      const formattedClasses = data.map(booking => ({
-        id: booking.courses.id,
-        title: booking.courses.title,
-        instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
-        price: booking.courses.price,
-        rating: 4.5,
-        images: booking.courses.course_images.map((img: any) => img.image_path),
-        level: "All Levels",
-        date: new Date(booking.course_sessions[0].start_time),
-        city: booking.courses.location
-      }));
+      const formattedClasses = data.map(booking => {
+        const sessionStartTime = booking.course_sessions?.[0]?.start_time;
+        if (!sessionStartTime) {
+          console.warn('Missing session start time for booking:', booking);
+        }
+
+        return {
+          id: booking.courses.id,
+          title: booking.courses.title,
+          instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
+          price: booking.courses.price,
+          rating: 4.5,
+          images: booking.courses.course_images.map((img: any) => img.image_path),
+          level: "All Levels",
+          date: sessionStartTime ? new Date(sessionStartTime) : new Date(),
+          city: booking.courses.location
+        };
+      });
 
       setUpcomingClasses(formattedClasses);
     } catch (error) {
