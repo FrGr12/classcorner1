@@ -2,9 +2,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.7.1";
 import { Stripe } from "https://esm.sh/stripe@12.6.0";
-import { Resend } from "npm:resend@2.0.0";
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
   apiVersion: "2023-10-16",
   httpClient: Stripe.createFetchHttpClient(),
@@ -12,8 +10,7 @@ const stripe = new Stripe(Deno.env.get("STRIPE_SECRET_KEY") || "", {
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
 serve(async (req) => {
@@ -33,12 +30,7 @@ serve(async (req) => {
       throw new Error("Stripe webhook secret not configured");
     }
 
-    const event = stripe.webhooks.constructEvent(
-      body,
-      signature,
-      webhookSecret
-    );
-
+    const event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     const supabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
@@ -61,41 +53,38 @@ serve(async (req) => {
       if (transactionError) throw transactionError;
 
       // Update booking status
-      const { data: booking, error: bookingError } = await supabaseClient
+      const { error: bookingError } = await supabaseClient
         .from("bookings")
         .update({
           payment_status: "paid",
           status: "confirmed"
         })
-        .eq("id", transaction.booking_id)
-        .select(`
-          id,
-          course:courses(
-            title,
-            instructor_id
-          ),
-          student:profiles!bookings_student_id_fkey(
-            email,
-            first_name
-          )
-        `)
-        .single();
+        .eq("id", transaction.booking_id);
 
       if (bookingError) throw bookingError;
 
       // Send confirmation email
-      await resend.emails.send({
-        from: "Lovable <bookings@yourdomain.com>",
-        to: booking.student.email,
-        subject: "Booking Confirmed - Payment Received",
-        html: `
-          <h1>Thank you for your payment!</h1>
-          <p>Dear ${booking.student.first_name},</p>
-          <p>Your payment for "${booking.course.title}" has been received and your booking is now confirmed.</p>
-          <p>You can view your receipt here: ${paymentIntent.charges.data[0]?.receipt_url}</p>
-          <p>We look forward to seeing you in class!</p>
-        `,
-      });
+      const response = await fetch(
+        `${Deno.env.get("SUPABASE_URL")}/functions/v1/send-payment-confirmation`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")}`,
+          },
+          body: JSON.stringify({
+            bookingId: transaction.booking_id,
+            paymentId: paymentIntent.id,
+            receiptUrl: paymentIntent.charges.data[0]?.receipt_url,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to send confirmation email");
+      }
+
+      console.log("Payment processed and confirmation email sent successfully");
     }
 
     return new Response(JSON.stringify({ received: true }), {
