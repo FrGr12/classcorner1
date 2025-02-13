@@ -31,7 +31,10 @@ const OnboardingAlert: FC = () => {
   const fetchOnboardingSteps = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user) {
+        navigate("/auth");
+        return;
+      }
 
       const { data, error } = await supabase
         .from('onboarding_steps')
@@ -39,8 +42,24 @@ const OnboardingAlert: FC = () => {
         .eq('user_id', user.id)
         .single();
 
-      if (error) throw error;
-      if (data) {
+      if (error) {
+        // If no record exists, create one
+        if (error.code === 'PGRST116') {
+          const { error: insertError } = await supabase
+            .from('onboarding_steps')
+            .insert([{ user_id: user.id }]);
+          
+          if (insertError) throw insertError;
+          
+          setSteps({
+            preferences_completed: false,
+            location_completed: false,
+            interests_completed: false
+          });
+        } else {
+          throw error;
+        }
+      } else if (data) {
         setSteps({
           preferences_completed: data.preferences_completed || false,
           location_completed: data.location_completed || false,
@@ -51,10 +70,46 @@ const OnboardingAlert: FC = () => {
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to load onboarding progress"
+        description: "Failed to load onboarding progress. Please try again."
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleStepClick = async (step: keyof OnboardingSteps, path: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Update the step in the database first
+      const { error } = await supabase
+        .from('onboarding_steps')
+        .update({ [step]: true })
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+
+      // Update local state
+      setSteps(prev => ({
+        ...prev,
+        [step]: true
+      }));
+
+      // Show success toast
+      toast({
+        title: "Progress Saved",
+        description: "Your preferences have been updated successfully."
+      });
+
+      // Navigate to the next step
+      navigate(path);
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update progress. Please try again."
+      });
     }
   };
 
@@ -85,7 +140,11 @@ const OnboardingAlert: FC = () => {
                 Step 1
               </Badge>
               <span>Update your preferences</span>
-              <Button variant="link" onClick={() => navigate("/dashboard/preferences")} className="text-blue-600">
+              <Button 
+                variant="link" 
+                onClick={() => handleStepClick('preferences_completed', "/dashboard/preferences")} 
+                className="text-blue-600"
+              >
                 Set Preferences <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -97,7 +156,11 @@ const OnboardingAlert: FC = () => {
                 Step 2
               </Badge>
               <span>Set your location</span>
-              <Button variant="link" onClick={() => navigate("/dashboard/location")} className="text-blue-600">
+              <Button 
+                variant="link" 
+                onClick={() => handleStepClick('location_completed', "/dashboard/location")} 
+                className="text-blue-600"
+              >
                 Update Location <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
@@ -109,7 +172,11 @@ const OnboardingAlert: FC = () => {
                 Step 3
               </Badge>
               <span>Choose your interests</span>
-              <Button variant="link" onClick={() => navigate("/dashboard/interests")} className="text-blue-600">
+              <Button 
+                variant="link" 
+                onClick={() => handleStepClick('interests_completed', "/dashboard/interests")} 
+                className="text-blue-600"
+              >
                 Select Interests <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
