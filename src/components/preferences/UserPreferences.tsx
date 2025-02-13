@@ -317,7 +317,7 @@ const UserPreferences = () => {
         disabled={saving}
         className="w-full bg-accent-purple hover:bg-accent-purple/90"
       >
-        {saving ? "Saving..." : "Save Preferences"}
+        {saving ? "Saving..." : "Profile & Settings"}
       </Button>
     </div>
   );
