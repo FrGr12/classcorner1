@@ -337,7 +337,7 @@ const UserPreferences = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-[180px_1fr] items-start gap-4">
+          <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
             <Label className="text-left flex items-center gap-2">
               <Bell className="w-4 h-4" />
               Interests
@@ -371,9 +371,15 @@ const UserPreferences = () => {
                 </SelectContent>
               </Select>
             </div>
+            <Button 
+              onClick={handleSave}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
           </div>
 
-          <div className="grid grid-cols-[180px_1fr] items-center gap-4">
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
             <Label className="text-left flex items-center gap-2">
               <MapPin className="w-4 h-4" />
               Location
@@ -395,6 +401,12 @@ const UserPreferences = () => {
                 ))}
               </SelectContent>
             </Select>
+            <Button 
+              onClick={handleSave}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
           </div>
 
           <div className="grid grid-cols-[180px_1fr] items-start gap-4">
