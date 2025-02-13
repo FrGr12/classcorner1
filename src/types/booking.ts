@@ -20,7 +20,7 @@ export interface Booking {
   original_session_id?: number;
   rescheduled_at?: string;
   feedback_submitted?: boolean;
-  course: {
+  course?: {
     title: string;
     instructor_id: string;
     location: string;

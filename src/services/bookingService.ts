@@ -40,7 +40,7 @@ export const createBooking = async (
           start_time
         )
       `)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     if (!data) throw new Error("Failed to create booking");
@@ -50,15 +50,15 @@ export const createBooking = async (
       .from('notification_logs')
       .insert([
         {
-          user_id: data.course.instructor_id,
+          user_id: data.course?.instructor_id,
           notification_type: 'new_booking',
-          content: `New booking received for ${data.course.title}`,
+          content: `New booking received for ${data.course?.title}`,
           status: 'pending',
           booking_id: data.id
         }
       ]);
 
-    return data as Booking;
+    return data as unknown as Booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to create booking");
     throw error;
@@ -87,12 +87,12 @@ export const getBookingById = async (bookingId: number): Promise<Booking> => {
         )
       `)
       .eq('id', bookingId)
-      .single();
+      .maybeSingle();
 
     if (error) throw error;
     if (!data) throw new Error("Booking not found");
 
-    return data as Booking;
+    return data as unknown as Booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to fetch booking");
     throw error;
@@ -130,9 +130,10 @@ export const rescheduleBooking = async (
       .from('bookings')
       .select('session_id')
       .eq('id', bookingId)
-      .single();
+      .maybeSingle();
 
     if (fetchError) throw fetchError;
+    if (!booking) throw new Error("Booking not found");
 
     const { error: updateError } = await supabase
       .from('bookings')
@@ -175,7 +176,7 @@ export const getUserBookings = async (): Promise<Booking[]> => {
     if (error) throw error;
     if (!data) return [];
 
-    return data as Booking[];
+    return data as unknown as Booking[];
   } catch (error: any) {
     toast.error(error.message || "Failed to fetch bookings");
     throw error;
