@@ -237,19 +237,24 @@ const UserPreferences = () => {
           <Bell className="w-4 h-4" />
           Interests
         </Label>
-        <div className="space-y-2">
-          <div className="flex flex-wrap gap-2">
-            {preferences?.interests.map((interest) => (
-              <Badge key={interest} variant="secondary" className="gap-1">
-                {interest}
-                <button
-                  onClick={() => handleRemoveInterest(interest)}
-                  className="ml-1 hover:text-destructive"
-                >
-                  <X className="h-3 w-3" />
-                </button>
-              </Badge>
-            ))}
+        <div className="space-y-4">
+          <div className="min-h-[40px] flex flex-wrap gap-2">
+            {preferences?.interests && preferences.interests.length > 0 ? (
+              preferences.interests.map((interest) => (
+                <Badge key={interest} variant="secondary" className="gap-1 text-sm py-1 px-2">
+                  {interest}
+                  <button
+                    onClick={() => handleRemoveInterest(interest)}
+                    className="ml-1 hover:text-destructive"
+                    aria-label={`Remove ${interest}`}
+                  >
+                    <X className="h-3 w-3" />
+                  </button>
+                </Badge>
+              ))
+            ) : (
+              <p className="text-sm text-muted-foreground">No interests selected yet</p>
+            )}
           </div>
           <div className="flex gap-2">
             <Select
