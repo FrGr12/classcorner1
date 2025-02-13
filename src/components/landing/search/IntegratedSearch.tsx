@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Search, MapPin, Calendar, X } from "lucide-react";
+import { Search, MapPin, Calendar, X, Star } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -12,37 +12,21 @@ import { Input } from "@/components/ui/input";
 import { useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { mockClasses } from "@/data/mockClasses";
+import { supabase } from "@/integrations/supabase/client";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useToast } from "@/hooks/use-toast";
 
 // Define categories for smart search
 const categories = [
-  "Pottery",
-  "Cooking",
-  "Baking",
-  "Painting & Art",
-  "Candle Making",
-  "Jewellery & Metal",
-  "Cocktail & Wine",
-  "Photography",
-  "Music & Dance",
-  "Wood Craft",
-  "Textile Craft",
-  "Paper Craft",
-  "Flower & Plants",
+  "Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making",
+  "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance",
+  "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"
 ];
-
-// Get all class titles from mockClasses
-const getAllClassTitles = () => {
-  const titles: string[] = [];
-  Object.values(mockClasses).forEach(classes => {
-    classes.forEach(classItem => {
-      titles.push(classItem.title);
-    });
-  });
-  return [...new Set(titles)]; // Remove duplicates
-};
 
 const IntegratedSearch = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchInput, setSearchInput] = useState("");
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [selectedLocations, setSelectedLocations] = useState<string[]>(["Everywhere"]);
@@ -50,8 +34,44 @@ const IntegratedSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [matchingCategories, setMatchingCategories] = useState<string[]>([]);
   const [matchingTitles, setMatchingTitles] = useState<string[]>([]);
+  const [userPreferences, setUserPreferences] = useState<{interests: string[], preferred_location: string | null}>();
+  const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
 
-  // Update matching categories and titles when search input changes
+  useEffect(() => {
+    fetchUserPreferences();
+  }, []);
+
+  const fetchUserPreferences = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('user_preferences')
+        .select('interests, preferred_location')
+        .eq('id', user.id)
+        .single();
+
+      if (error && error.code !== 'PGRST116') {
+        throw error;
+      }
+
+      if (data) {
+        setUserPreferences(data);
+        if (data.interests?.length > 0) {
+          setSelectedCategories(data.interests);
+        }
+        if (data.preferred_location) {
+          setSelectedLocations([data.preferred_location]);
+        }
+      }
+    } catch (error: any) {
+      console.error("Error fetching preferences:", error);
+    } finally {
+      setIsLoadingPreferences(false);
+    }
+  };
+
   useEffect(() => {
     if (searchInput) {
       // Match categories
@@ -65,21 +85,13 @@ const IntegratedSearch = () => {
         title.toLowerCase().includes(searchInput.toLowerCase())
       ).slice(0, 5); // Limit to 5 title suggestions
       setMatchingTitles(titleMatches);
-      
-      // If we have an exact category match, update selected categories
-      const exactMatch = categoryMatches.find(
-        category => category.toLowerCase() === searchInput.toLowerCase()
-      );
-      if (exactMatch) {
-        setSelectedCategories([exactMatch]);
-      }
     } else {
       setMatchingCategories([]);
       setMatchingTitles([]);
     }
   }, [searchInput]);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const params = new URLSearchParams();
     if (searchInput) params.set("q", searchInput);
     if (selectedCategories.length > 0) params.set("categories", selectedCategories.join(","));
@@ -87,6 +99,29 @@ const IntegratedSearch = () => {
       params.set("locations", selectedLocations.join(","));
     }
     if (selectedTime !== "Any week") params.set("time", selectedTime);
+
+    // Update user preferences if logged in
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { error } = await supabase
+          .from('user_preferences')
+          .upsert({
+            id: user.id,
+            interests: selectedCategories,
+            preferred_location: selectedLocations[0] === "Everywhere" ? null : selectedLocations[0]
+          });
+
+        if (error) throw error;
+
+        toast({
+          title: "Preferences Updated",
+          description: "Your search preferences have been saved for better recommendations.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error updating preferences:", error);
+    }
     
     navigate(`/browse?${params.toString()}`);
     setIsOpen(false);
@@ -127,6 +162,19 @@ const IntegratedSearch = () => {
                   className="w-full pl-10 py-6 text-base"
                 />
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                {!isLoadingPreferences && userPreferences?.interests?.length > 0 && (
+                  <div className="mt-2">
+                    <p className="text-sm text-neutral-600 mb-2">Your Interests:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {userPreferences.interests.map(interest => (
+                        <Badge key={interest} variant="secondary" className="gap-1">
+                          <Star className="w-3 h-3" />
+                          {interest}
+                        </Badge>
+                      ))}
+                    </div>
+                  </div>
+                )}
                 {(matchingCategories.length > 0 || matchingTitles.length > 0) && (
                   <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-md shadow-lg">
                     {matchingCategories.map((category) => (
@@ -190,6 +238,19 @@ const IntegratedSearch = () => {
               onKeyDown={handleInputKeyDown}
               className="border-0 bg-transparent focus-visible:ring-0 px-0 py-0 h-auto placeholder:text-neutral-500"
             />
+            {!isLoadingPreferences && userPreferences?.interests?.length > 0 && (
+              <div className="absolute top-full left-0 mt-2 w-full bg-white rounded-lg shadow-lg p-4 z-50">
+                <p className="text-sm text-neutral-600 mb-2">Your Interests:</p>
+                <div className="flex flex-wrap gap-2">
+                  {userPreferences.interests.map(interest => (
+                    <Badge key={interest} variant="secondary" className="gap-1">
+                      <Star className="w-3 h-3" />
+                      {interest}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+            )}
             {(matchingCategories.length > 0 || matchingTitles.length > 0) && (
               <div className="absolute z-10 w-full left-0 mt-2 bg-white border border-gray-200 rounded-md shadow-lg">
                 {matchingCategories.map((category) => (
@@ -242,5 +303,14 @@ const IntegratedSearch = () => {
   );
 };
 
-export default IntegratedSearch;
+const getAllClassTitles = () => {
+  const titles: string[] = [];
+  Object.values(mockClasses).forEach(classes => {
+    classes.forEach(classItem => {
+      titles.push(classItem.title);
+    });
+  });
+  return [...new Set(titles)]; // Remove duplicates
+};
 
+export default IntegratedSearch;
