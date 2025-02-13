@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,7 +41,6 @@ const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [selectedInterest, setSelectedInterest] = useState<string>("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -143,51 +141,127 @@ const UserPreferences = () => {
     }
   };
 
-  const handleAddInterest = () => {
-    if (!selectedInterest || !preferences) {
-      toast({
-        title: "No interest selected",
-        description: "Please select an interest to add.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    if (preferences.interests.includes(selectedInterest)) {
-      toast({
-        title: "Interest already added",
-        description: "This interest is already in your list.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setPreferences(prev => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        interests: [...prev.interests, selectedInterest]
-      };
-    });
-
-    // Save immediately after adding
-    handleSave();
-    setSelectedInterest(""); // Reset selection
-  };
-
-  const removeInterest = (interest: string) => {
-    if (!preferences) return;
+  const InterestsSection = () => {
+    const [selectedInterest, setSelectedInterest] = useState("");
     
-    setPreferences(prev => {
-      if (!prev) return prev;
-      return {
-        ...prev,
-        interests: prev.interests.filter(i => i !== interest)
+    const handleInterestChange = async (interest: string) => {
+      if (!preferences || interest === "") return;
+      
+      if (preferences.interests.includes(interest)) {
+        toast({
+          variant: "destructive",
+          title: "Already added",
+          description: "This interest is already in your list"
+        });
+        return;
+      }
+
+      const updatedPreferences = {
+        ...preferences,
+        interests: [...preferences.interests, interest]
       };
-    });
-    
-    // Save immediately after removing
-    handleSave();
+
+      const { error } = await supabase
+        .from("user_preferences")
+        .upsert({
+          id: preferences.id,
+          interests: updatedPreferences.interests,
+          preferred_location: preferences.preferred_location,
+          notification_preference: preferences.notification_preference
+        });
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to add interest"
+        });
+        return;
+      }
+
+      setPreferences(updatedPreferences);
+      setSelectedInterest("");
+      toast({
+        title: "Success",
+        description: "Interest added successfully"
+      });
+    };
+
+    const handleRemoveInterest = async (interestToRemove: string) => {
+      if (!preferences) return;
+
+      const updatedPreferences = {
+        ...preferences,
+        interests: preferences.interests.filter(i => i !== interestToRemove)
+      };
+
+      const { error } = await supabase
+        .from("user_preferences")
+        .upsert({
+          id: preferences.id,
+          interests: updatedPreferences.interests,
+          preferred_location: preferences.preferred_location,
+          notification_preference: preferences.notification_preference
+        });
+
+      if (error) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Failed to remove interest"
+        });
+        return;
+      }
+
+      setPreferences(updatedPreferences);
+      toast({
+        title: "Success",
+        description: "Interest removed successfully"
+      });
+    };
+
+    const availableCategories = categories.filter(
+      category => !preferences?.interests.includes(category)
+    );
+
+    return (
+      <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
+        <Label className="text-left flex items-center gap-2">
+          <Bell className="w-4 h-4" />
+          Interests
+        </Label>
+        <div className="space-y-2">
+          <div className="flex flex-wrap gap-2">
+            {preferences?.interests.map((interest) => (
+              <Badge key={interest} variant="secondary" className="gap-1">
+                {interest}
+                <button
+                  onClick={() => handleRemoveInterest(interest)}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </Badge>
+            ))}
+          </div>
+          <Select
+            value={selectedInterest}
+            onValueChange={handleInterestChange}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Add an interest" />
+            </SelectTrigger>
+            <SelectContent>
+              {availableCategories.map((category) => (
+                <SelectItem key={category} value={category}>
+                  {category}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+    );
   };
 
   if (loading) {
@@ -196,7 +270,8 @@ const UserPreferences = () => {
     </div>;
   }
 
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-left">Profile & Settings</h1>
@@ -293,52 +368,7 @@ const UserPreferences = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
-            <Label className="text-left flex items-center gap-2">
-              <Bell className="w-4 h-4" />
-              Interests
-            </Label>
-            <div className="space-y-2">
-              <div className="flex flex-wrap gap-2">
-                {preferences?.interests.map((interest) => (
-                  <Badge key={interest} variant="secondary" className="gap-1">
-                    {interest}
-                    <button
-                      onClick={() => removeInterest(interest)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
-                ))}
-              </div>
-              <Select
-                value={selectedInterest}
-                onValueChange={setSelectedInterest}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Add an interest" />
-                </SelectTrigger>
-                <SelectContent>
-                  {categories
-                    .filter((c) => !preferences?.interests.includes(c))
-                    .map((category) => (
-                      <SelectItem key={category} value={category}>
-                        {category}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <Button 
-              variant="outline"
-              className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10"
-              onClick={handleAddInterest}
-            >
-              Add
-            </Button>
-          </div>
-
+          <InterestsSection />
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
             <Label className="text-left flex items-center gap-2">
               <MapPin className="w-4 h-4" />
@@ -419,7 +449,8 @@ const UserPreferences = () => {
             </>}
         </Button>
       </div>
-    </div>;
+    </div>
+  );
 };
 
 export default UserPreferences;
