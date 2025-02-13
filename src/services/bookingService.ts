@@ -15,7 +15,7 @@ export const createBooking = async (
       throw new Error("You must be logged in to book a class");
     }
 
-    const { data: booking, error } = await supabase
+    const { data, error } = await supabase
       .from('bookings')
       .insert([
         {
@@ -31,33 +31,34 @@ export const createBooking = async (
       ])
       .select(`
         *,
-        course:courses(
+        course:courses!inner(
           title,
           instructor_id,
           location
         ),
-        session:course_sessions(
+        session:course_sessions!inner(
           start_time
         )
       `)
       .single();
 
     if (error) throw error;
-    
+    if (!data) throw new Error("Failed to create booking");
+
     // Create a notification for the instructor
     await supabase
       .from('notification_logs')
       .insert([
         {
-          user_id: booking.course.instructor_id,
+          user_id: data.course.instructor_id,
           notification_type: 'new_booking',
-          content: `New booking received for ${booking.course.title}`,
+          content: `New booking received for ${data.course.title}`,
           status: 'pending',
-          booking_id: booking.id
+          booking_id: data.id
         }
       ]);
 
-    return booking;
+    return data as Booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to create booking");
     throw error;
@@ -66,19 +67,19 @@ export const createBooking = async (
 
 export const getBookingById = async (bookingId: number): Promise<Booking> => {
   try {
-    const { data: booking, error } = await supabase
+    const { data, error } = await supabase
       .from('bookings')
       .select(`
         *,
-        course:courses(
+        course:courses!inner(
           title,
           instructor_id,
           location
         ),
-        session:course_sessions(
+        session:course_sessions!inner(
           start_time
         ),
-        profiles!bookings_student_id_fkey(
+        student:profiles!bookings_student_id_fkey(
           id,
           first_name,
           last_name,
@@ -89,7 +90,9 @@ export const getBookingById = async (bookingId: number): Promise<Booking> => {
       .single();
 
     if (error) throw error;
-    return booking;
+    if (!data) throw new Error("Booking not found");
+
+    return data as Booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to fetch booking");
     throw error;
@@ -157,11 +160,12 @@ export const getUserBookings = async (): Promise<Booking[]> => {
       .from('bookings')
       .select(`
         *,
-        course:courses(
+        course:courses!inner(
           title,
+          instructor_id,
           location
         ),
-        session:course_sessions(
+        session:course_sessions!inner(
           start_time
         )
       `)
@@ -169,7 +173,9 @@ export const getUserBookings = async (): Promise<Booking[]> => {
       .order('created_at', { ascending: false });
 
     if (error) throw error;
-    return data;
+    if (!data) return [];
+
+    return data as Booking[];
   } catch (error: any) {
     toast.error(error.message || "Failed to fetch bookings");
     throw error;
