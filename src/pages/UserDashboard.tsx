@@ -27,7 +27,6 @@ const UserDashboard = () => {
           <Route path="/matches" element={<UserMatches />} />
           <Route path="/saved" element={<UserSavedClasses />} />
           <Route path="/profile" element={<UserProfile />} />
-          <Route path="/preferences" element={<UserPreferences />} />
           <Route path="/reviews" element={<UserReviews />} />
           <Route path="/waitlist" element={<UserWaitlist />} />
           <Route path="/payments" element={<UserPayments />} />

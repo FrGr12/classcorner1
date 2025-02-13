@@ -52,8 +52,8 @@ const UserDashboardSidebar = () => {
       icon: Bookmark,
     },
     {
-      title: "Profile & Preferences",
-      href: "/student-dashboard/preferences",
+      title: "Profile & Settings",
+      href: "/student-dashboard/profile",
       icon: Settings,
     },
     {
