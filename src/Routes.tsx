@@ -14,6 +14,9 @@ import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import EditCourse from "@/pages/EditCourse";
 import UserDashboard from "@/pages/UserDashboard";
+import Payment from "@/pages/Payment";
+import PaymentFailed from "@/pages/PaymentFailed";
+import BookingConfirmation from "@/pages/BookingConfirmation";
 
 const router = createBrowserRouter([
   {
@@ -56,6 +59,18 @@ const router = createBrowserRouter([
   {
     path: "/edit-course/:id",
     element: <EditCourse />,
+  },
+  {
+    path: "/booking-confirmation",
+    element: <BookingConfirmation />,
+  },
+  {
+    path: "/payment",
+    element: <Payment />,
+  },
+  {
+    path: "/payment-failed",
+    element: <PaymentFailed />,
   },
   {
     path: "*",

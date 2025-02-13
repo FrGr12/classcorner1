@@ -8,6 +8,7 @@ import TeacherProfile from "@/pages/TeacherProfile";
 import TeacherContacts from "@/pages/TeacherContacts";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherStats from "@/components/teach/dashboard/TeacherStats";
+import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 
 const Dashboard = () => {
   return (
@@ -22,6 +23,7 @@ const Dashboard = () => {
           <Route path="/profile" element={<TeacherProfile />} />
           <Route path="/classes" element={<TeacherClasses />} />
           <Route path="/stats" element={<TeacherStats />} />
+          <Route path="/reviews" element={<TeacherReviews />} />
         </Routes>
       </main>
     </div>
