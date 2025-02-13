@@ -52,13 +52,36 @@ const UserPreferences = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
       
+      console.log("Fetching preferences for user:", user.id);
+      
       const { data: prefData, error: prefError } = await supabase
         .from("user_preferences")
         .select("*")
         .eq("id", user.id)
         .single();
         
-      if (prefError && prefError.code !== "PGRST116") throw prefError;
+      console.log("Preferences data:", prefData);
+      console.log("Preferences error:", prefError);
+
+      // If no preferences exist yet, create a new record
+      if (prefError && prefError.code === "PGRST116") {
+        const { data: newPrefData, error: createError } = await supabase
+          .from("user_preferences")
+          .insert({
+            id: user.id,
+            interests: [],
+            preferred_location: "",
+            notification_preference: "both"
+          })
+          .select()
+          .single();
+          
+        if (createError) throw createError;
+        console.log("Created new preferences:", newPrefData);
+        prefData = newPrefData;
+      } else if (prefError) {
+        throw prefError;
+      }
       
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
@@ -67,8 +90,10 @@ const UserPreferences = () => {
         .single();
         
       if (profileError) throw profileError;
+      
+      console.log("Profile data:", profileData);
 
-      setPreferences({
+      const preferencesData: UserPreferencesData = {
         id: user.id,
         interests: prefData?.interests || [],
         preferred_location: prefData?.preferred_location || "",
@@ -80,7 +105,10 @@ const UserPreferences = () => {
         last_name: profileData?.last_name || "",
         email: profileData?.email || "",
         phone: profileData?.phone || ""
-      });
+      };
+
+      console.log("Setting preferences:", preferencesData);
+      setPreferences(preferencesData);
     } catch (error: any) {
       console.error("Error fetching preferences:", error);
       toast({
