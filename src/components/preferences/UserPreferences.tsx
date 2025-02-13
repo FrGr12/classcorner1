@@ -19,7 +19,8 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { X, Save, User, Mail, Phone, CreditCard } from "lucide-react";
 
 const categories = [
   "Pottery",
@@ -58,6 +59,10 @@ interface UserPreferencesData {
   email_notifications: boolean;
   class_reminders: boolean;
   marketing_emails: boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
 }
 
 const UserPreferences = () => {
@@ -99,6 +104,10 @@ const UserPreferences = () => {
         email_notifications: profileData?.email_notifications ?? true,
         class_reminders: profileData?.class_reminders ?? true,
         marketing_emails: profileData?.marketing_emails ?? false,
+        first_name: profileData?.first_name || "",
+        last_name: profileData?.last_name || "",
+        email: profileData?.email || "",
+        phone: profileData?.phone || "",
       });
     } catch (error: any) {
       console.error("Error fetching preferences:", error);
@@ -155,6 +164,32 @@ const UserPreferences = () => {
     }
   };
 
+  const handleProfileSave = async (field: string, value: string) => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [field]: value })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Profile updated successfully.",
+      });
+    } catch (error: any) {
+      console.error("Error updating profile:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update profile",
+      });
+    }
+  };
+
   const addInterest = (interest: string) => {
     if (!preferences || preferences.interests.includes(interest)) return;
     setPreferences({
@@ -183,8 +218,8 @@ const UserPreferences = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Profile & Settings</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-left">Profile & Settings</h1>
+          <p className="text-sm text-muted-foreground text-left">
             Manage your personal information, preferences, and account settings
           </p>
         </div>
@@ -198,11 +233,108 @@ const UserPreferences = () => {
           ) : (
             <>
               <Save className="w-4 h-4 mr-2" />
-              Save Changes
+              Save All Changes
             </>
           )}
         </Button>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-left flex items-center gap-2">
+            <User className="w-5 h-5" />
+            Basic Information
+          </CardTitle>
+          <CardDescription className="text-left">
+            Manage your personal details and contact information
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+            <Label className="text-left">First Name</Label>
+            <Input
+              value={preferences?.first_name || ""}
+              onChange={(e) => setPreferences(prev => prev ? { ...prev, first_name: e.target.value } : null)}
+              placeholder="Enter your first name"
+            />
+            <Button 
+              onClick={() => handleProfileSave('first_name', preferences?.first_name || '')}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+            <Label className="text-left">Last Name</Label>
+            <Input
+              value={preferences?.last_name || ""}
+              onChange={(e) => setPreferences(prev => prev ? { ...prev, last_name: e.target.value } : null)}
+              placeholder="Enter your last name"
+            />
+            <Button 
+              onClick={() => handleProfileSave('last_name', preferences?.last_name || '')}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+            <Label className="text-left flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Email
+            </Label>
+            <Input
+              value={preferences?.email || ""}
+              onChange={(e) => setPreferences(prev => prev ? { ...prev, email: e.target.value } : null)}
+              placeholder="Enter your email"
+              type="email"
+            />
+            <Button 
+              onClick={() => handleProfileSave('email', preferences?.email || '')}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+            <Label className="text-left flex items-center gap-2">
+              <Phone className="w-4 h-4" />
+              Phone
+            </Label>
+            <Input
+              value={preferences?.phone || ""}
+              onChange={(e) => setPreferences(prev => prev ? { ...prev, phone: e.target.value } : null)}
+              placeholder="Enter your phone number"
+              type="tel"
+            />
+            <Button 
+              onClick={() => handleProfileSave('phone', preferences?.phone || '')}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+            >
+              Save
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+            <Label className="text-left flex items-center gap-2">
+              <CreditCard className="w-4 h-4" />
+              Payment Method
+            </Label>
+            <div className="text-sm text-muted-foreground">
+              No payment methods added
+            </div>
+            <Button 
+              variant="outline"
+              className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10"
+            >
+              Add
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>
