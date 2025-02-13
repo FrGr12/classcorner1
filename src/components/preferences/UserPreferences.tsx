@@ -162,6 +162,15 @@ const UserPreferences = () => {
     addInterest(selectedInterest);
   };
 
+  const removeInterest = (interest: string) => {
+    if (!preferences) return;
+    setPreferences({
+      ...preferences,
+      interests: preferences.interests.filter((i) => i !== interest),
+    });
+    handleSave();
+  };
+
   if (loading) {
     return <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
