@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +11,7 @@ import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import MatchInsights from "@/components/teach/crm/MatchInsights";
 
 const TeacherOverview = () => {
   const navigate = useNavigate();
@@ -96,6 +96,30 @@ const TeacherOverview = () => {
       <section className="w-full">
         <h2 className="text-xl font-semibold mb-4 text-left">Messages & Notifications</h2>
         <MessagesOverview />
+      </section>
+
+      <section className="w-full">
+        <h2 className="text-xl font-semibold mb-4 text-left">Course Matches & Potential Students</h2>
+        <Card className="mb-4">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0">
+            <CardTitle className="text-lg">Match Overview</CardTitle>
+            <Button 
+              variant="ghost" 
+              className="text-accent-purple hover:text-accent-purple/90"
+              onClick={() => navigate("/dashboard/classes")}
+            >
+              View All Classes
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </CardHeader>
+          <CardContent>
+            <p className="text-sm text-muted-foreground mb-6">
+              View potential students who match your courses based on their interests and location. 
+              Contact them directly or send batch notifications to increase bookings.
+            </p>
+            <MatchInsights />
+          </CardContent>
+        </Card>
       </section>
 
       <section className="w-full">

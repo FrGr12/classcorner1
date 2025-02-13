@@ -8,7 +8,6 @@ import TeacherProfile from "@/pages/TeacherProfile";
 import TeacherContacts from "@/pages/TeacherContacts";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherStats from "@/components/teach/dashboard/TeacherStats";
-import MatchInsights from "@/components/teach/crm/MatchInsights";
 
 const Dashboard = () => {
   return (
@@ -23,7 +22,6 @@ const Dashboard = () => {
           <Route path="/profile" element={<TeacherProfile />} />
           <Route path="/classes" element={<TeacherClasses />} />
           <Route path="/stats" element={<TeacherStats />} />
-          <Route path="/matches" element={<MatchInsights />} />
         </Routes>
       </main>
     </div>

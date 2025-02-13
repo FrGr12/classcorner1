@@ -9,7 +9,6 @@ import {
   Users,
   BookOpen,
   BarChart,
-  Target,
 } from "lucide-react";
 
 const DashboardHeader = () => {
@@ -30,11 +29,6 @@ const DashboardHeader = () => {
       title: "Create Class",
       href: "/dashboard/create-class",
       icon: PlusCircle,
-    },
-    {
-      title: "Matches",
-      href: "/dashboard/matches",
-      icon: Target,
     },
     {
       title: "Inbox",
