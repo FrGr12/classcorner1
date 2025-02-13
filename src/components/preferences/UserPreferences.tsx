@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +19,7 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
-import { X } from "lucide-react";
+import { X, Save } from "lucide-react";
 
 const categories = [
   "Pottery",
@@ -76,7 +75,6 @@ const UserPreferences = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch from user_preferences for interests and location
       const { data: prefData, error: prefError } = await supabase
         .from("user_preferences")
         .select("*")
@@ -85,7 +83,6 @@ const UserPreferences = () => {
 
       if (prefError && prefError.code !== "PGRST116") throw prefError;
 
-      // Fetch from profiles for notification settings
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("email_notifications, class_reminders, marketing_emails")
@@ -120,7 +117,6 @@ const UserPreferences = () => {
     
     setSaving(true);
     try {
-      // Update user_preferences
       const { error: prefError } = await supabase
         .from("user_preferences")
         .upsert({
@@ -132,7 +128,6 @@ const UserPreferences = () => {
 
       if (prefError) throw prefError;
 
-      // Update profiles
       const { error: profileError } = await supabase
         .from("profiles")
         .update({
@@ -186,8 +181,29 @@ const UserPreferences = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Profile & Preferences</h1>
-      
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold tracking-tight">Profile & Settings</h1>
+          <p className="text-sm text-muted-foreground">
+            Manage your personal information, preferences, and account settings
+          </p>
+        </div>
+        <Button 
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+        >
+          {saving ? (
+            "Saving..."
+          ) : (
+            <>
+              <Save className="w-4 h-4 mr-2" />
+              Save Changes
+            </>
+          )}
+        </Button>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Your Interests</CardTitle>
@@ -311,14 +327,6 @@ const UserPreferences = () => {
           </div>
         </CardContent>
       </Card>
-
-      <Button
-        onClick={handleSave}
-        disabled={saving}
-        className="w-full bg-accent-purple hover:bg-accent-purple/90"
-      >
-        {saving ? "Saving..." : "Profile & Settings"}
-      </Button>
     </div>
   );
 };
