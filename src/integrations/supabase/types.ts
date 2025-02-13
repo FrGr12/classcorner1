@@ -1722,6 +1722,44 @@ export type Database = {
         }
         Relationships: []
       }
+      user_course_preferences: {
+        Row: {
+          created_at: string | null
+          id: string
+          max_price: number | null
+          preferred_categories: string[] | null
+          preferred_locations: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          max_price?: number | null
+          preferred_categories?: string[] | null
+          preferred_locations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          max_price?: number | null
+          preferred_categories?: string[] | null
+          preferred_locations?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_course_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_preferences: {
         Row: {
           created_at: string
