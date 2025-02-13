@@ -22,6 +22,34 @@ interface ClassPreview {
   category?: string;
 }
 
+interface CourseImage {
+  image_path: string;
+}
+
+interface CourseProfile {
+  first_name: string;
+  last_name: string;
+}
+
+interface CourseSession {
+  start_time: string;
+}
+
+interface CourseData {
+  id: number;
+  title: string;
+  price: number;
+  location: string;
+  instructor_id: string;
+  course_images: CourseImage[];
+  profiles: CourseProfile[];
+}
+
+interface BookingData {
+  courses: CourseData;
+  course_sessions: CourseSession[];
+}
+
 const UserDashboardOverview = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -132,7 +160,8 @@ const UserDashboardOverview = () => {
           )
         `)
         .eq('student_id', user.id)
-        .eq('status', 'confirmed');
+        .eq('status', 'confirmed')
+        .returns<BookingData[]>();
 
       if (error) throw error;
 
@@ -148,7 +177,7 @@ const UserDashboardOverview = () => {
           instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
           price: booking.courses.price,
           rating: 4.5,
-          images: booking.courses.course_images.map((img: any) => img.image_path),
+          images: booking.courses.course_images.map(img => img.image_path),
           level: "All Levels",
           date: sessionStartTime ? new Date(sessionStartTime) : new Date(),
           city: booking.courses.location
