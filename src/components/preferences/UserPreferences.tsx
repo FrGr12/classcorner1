@@ -143,6 +143,10 @@ const UserPreferences = () => {
           email_notifications: preferences.email_notifications,
           class_reminders: preferences.class_reminders,
           marketing_emails: preferences.marketing_emails,
+          first_name: preferences.first_name,
+          last_name: preferences.last_name,
+          email: preferences.email,
+          phone: preferences.phone,
         })
         .eq("id", preferences.id);
 
@@ -223,20 +227,6 @@ const UserPreferences = () => {
             Manage your personal information, preferences, and account settings
           </p>
         </div>
-        <Button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-        >
-          {saving ? (
-            "Saving..."
-          ) : (
-            <>
-              <Save className="w-4 h-4 mr-2" />
-              Save All Changes
-            </>
-          )}
-        </Button>
       </div>
 
       <Card>
@@ -347,7 +337,7 @@ const UserPreferences = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
+          <div className="grid grid-cols-[180px_1fr] items-start gap-4">
             <Label className="text-left flex items-center gap-2">
               <Bell className="w-4 h-4" />
               Interests
@@ -381,15 +371,9 @@ const UserPreferences = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button 
-              onClick={() => handleSave()}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
-              Save
-            </Button>
           </div>
 
-          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
+          <div className="grid grid-cols-[180px_1fr] items-center gap-4">
             <Label className="text-left flex items-center gap-2">
               <MapPin className="w-4 h-4" />
               Location
@@ -411,22 +395,16 @@ const UserPreferences = () => {
                 ))}
               </SelectContent>
             </Select>
-            <Button 
-              onClick={() => handleSave()}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
-              Save
-            </Button>
           </div>
 
-          <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
+          <div className="grid grid-cols-[180px_1fr] items-start gap-4">
             <Label className="text-left flex items-center gap-2">
               <Bell className="w-4 h-4" />
               Notifications
             </Label>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 text-left">
                   <Label htmlFor="email-notifications">Email Notifications</Label>
                   <p className="text-sm text-muted-foreground">
                     Receive important updates via email
@@ -442,7 +420,7 @@ const UserPreferences = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 text-left">
                   <Label htmlFor="class-reminders">Class Reminders</Label>
                   <p className="text-sm text-muted-foreground">
                     Get reminders before your upcoming classes
@@ -458,7 +436,7 @@ const UserPreferences = () => {
               </div>
 
               <div className="flex items-center justify-between">
-                <div className="space-y-0.5">
+                <div className="space-y-0.5 text-left">
                   <Label htmlFor="marketing-emails">Marketing Communications</Label>
                   <p className="text-sm text-muted-foreground">
                     Receive updates about new classes and special offers
@@ -473,15 +451,27 @@ const UserPreferences = () => {
                 />
               </div>
             </div>
-            <Button 
-              onClick={() => handleSave()}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
-              Save
-            </Button>
           </div>
         </CardContent>
       </Card>
+
+      <div className="flex justify-end">
+        <Button 
+          onClick={handleSave}
+          disabled={saving}
+          className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+          size="lg"
+        >
+          {saving ? (
+            "Saving..."
+          ) : (
+            <>
+              <Save className="w-4 h-4 mr-2" />
+              Save All Changes
+            </>
+          )}
+        </Button>
+      </div>
     </div>
   );
 };
