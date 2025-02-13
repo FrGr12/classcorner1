@@ -115,7 +115,7 @@ const UserDashboardOverview = () => {
         .from('bookings')
         .select(`
           course_id,
-          courses (
+          courses:course_id (
             id,
             title,
             price,
@@ -181,12 +181,11 @@ const UserDashboardOverview = () => {
             title,
             price,
             location,
-            instructor_id,
-            images:course_images(image_path),
-            profiles:instructor_id (
+            instructor:profiles!instructor_id (
               first_name,
               last_name
-            )
+            ),
+            images:course_images(image_path)
           )
         `)
         .eq('user_id', user.id)
@@ -198,7 +197,7 @@ const UserDashboardOverview = () => {
       const formattedClasses = data.map(entry => ({
         id: entry.courses.id,
         title: entry.courses.title,
-        instructor: `${entry.courses.profiles.first_name} ${entry.courses.profiles.last_name}`,
+        instructor: `${entry.courses.instructor.first_name} ${entry.courses.instructor.last_name}`,
         price: entry.courses.price,
         rating: 4.5,
         images: entry.courses.images.map((img: any) => img.image_path),

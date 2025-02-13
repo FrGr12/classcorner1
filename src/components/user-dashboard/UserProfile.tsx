@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,10 +33,25 @@ import {
   AtSign
 } from "lucide-react";
 
+interface Profile {
+  first_name: string;
+  last_name: string;
+  username: string;
+  email: string;
+  phone: string;
+  location: string;
+  bio: string;
+  timezone: string;
+  email_notifications: boolean;
+  sms_notifications: boolean;
+  class_reminders: boolean;
+  marketing_emails: boolean;
+}
+
 const UserProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<Profile>({
     first_name: "",
     last_name: "",
     username: "",
