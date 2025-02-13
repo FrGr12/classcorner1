@@ -144,10 +144,17 @@ const UserPreferences = () => {
   const InterestsSection = () => {
     const [selectedInterest, setSelectedInterest] = useState("");
     
-    const handleInterestChange = async (interest: string) => {
-      if (!preferences || interest === "") return;
+    const handleAddInterest = async () => {
+      if (!preferences || !selectedInterest) {
+        toast({
+          variant: "destructive",
+          title: "No interest selected",
+          description: "Please select an interest to add"
+        });
+        return;
+      }
       
-      if (preferences.interests.includes(interest)) {
+      if (preferences.interests.includes(selectedInterest)) {
         toast({
           variant: "destructive",
           title: "Already added",
@@ -158,7 +165,7 @@ const UserPreferences = () => {
 
       const updatedPreferences = {
         ...preferences,
-        interests: [...preferences.interests, interest]
+        interests: [...preferences.interests, selectedInterest]
       };
 
       const { error } = await supabase
@@ -244,21 +251,30 @@ const UserPreferences = () => {
               </Badge>
             ))}
           </div>
-          <Select
-            value={selectedInterest}
-            onValueChange={handleInterestChange}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Add an interest" />
-            </SelectTrigger>
-            <SelectContent>
-              {availableCategories.map((category) => (
-                <SelectItem key={category} value={category}>
-                  {category}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <div className="flex gap-2">
+            <Select
+              value={selectedInterest}
+              onValueChange={setSelectedInterest}
+            >
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Select an interest" />
+              </SelectTrigger>
+              <SelectContent>
+                {availableCategories.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+            <Button 
+              onClick={handleAddInterest}
+              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+              disabled={!selectedInterest}
+            >
+              Add Interest
+            </Button>
+          </div>
         </div>
       </div>
     );
