@@ -93,6 +93,7 @@ const UserProfile = () => {
       if (error) throw error;
       if (data) {
         setProfile({
+          id: data.id,
           first_name: data.first_name || "",
           last_name: data.last_name || "",
           username: data.username || "",
@@ -105,6 +106,9 @@ const UserProfile = () => {
           sms_notifications: data.sms_notifications ?? false,
           class_reminders: data.class_reminders ?? true,
           marketing_emails: data.marketing_emails ?? false,
+          created_at: data.created_at || "",
+          updated_at: data.updated_at || "",
+          avatar_url: data.avatar_url
         });
       }
     } catch (error: any) {
@@ -124,7 +128,20 @@ const UserProfile = () => {
 
       const { error } = await supabase
         .from('profiles')
-        .update(profile)
+        .update({
+          first_name: profile.first_name,
+          last_name: profile.last_name,
+          username: profile.username,
+          email: profile.email,
+          phone: profile.phone,
+          location: profile.location,
+          bio: profile.bio,
+          timezone: profile.timezone,
+          email_notifications: profile.email_notifications,
+          sms_notifications: profile.sms_notifications,
+          class_reminders: profile.class_reminders,
+          marketing_emails: profile.marketing_emails,
+        })
         .eq('id', user.id);
 
       if (error) throw error;
