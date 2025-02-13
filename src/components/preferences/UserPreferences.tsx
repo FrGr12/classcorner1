@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -54,7 +55,7 @@ const cities = [
 interface UserPreferencesData {
   id: string;
   interests: string[];
-  preferred_locations: string[];
+  preferred_location: string;
   notification_preference: "email" | "in_app" | "both" | "none";
   email_notifications: boolean;
   class_reminders: boolean;
@@ -109,7 +110,7 @@ const UserPreferences = () => {
       setPreferences({
         id: user.id,
         interests: prefData?.interests || [],
-        preferred_locations: prefData?.preferred_locations || [],
+        preferred_location: prefData?.preferred_location || "",
         notification_preference: prefData?.notification_preference || "both",
         email_notifications: profileData?.email_notifications ?? true,
         class_reminders: profileData?.class_reminders ?? true,
@@ -141,7 +142,7 @@ const UserPreferences = () => {
         .upsert({
           id: preferences.id,
           interests: preferences.interests,
-          preferred_locations: preferences.preferred_locations,
+          preferred_location: preferences.preferred_location,
           notification_preference: preferences.notification_preference,
         });
 
@@ -196,22 +197,6 @@ const UserPreferences = () => {
     });
   };
 
-  const addLocation = (location: string) => {
-    if (!preferences || preferences.preferred_locations.includes(location)) return;
-    setPreferences({
-      ...preferences,
-      preferred_locations: [...preferences.preferred_locations, location],
-    });
-  };
-
-  const removeLocation = (location: string) => {
-    if (!preferences) return;
-    setPreferences({
-      ...preferences,
-      preferred_locations: preferences.preferred_locations.filter((l) => l !== location),
-    });
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -250,7 +235,7 @@ const UserPreferences = () => {
               placeholder="Enter your first name"
             />
             <Button 
-              onClick={() => handleProfileSave('first_name', preferences?.first_name || '')}
+              onClick={handleSave}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
             >
               Save
@@ -265,7 +250,7 @@ const UserPreferences = () => {
               placeholder="Enter your last name"
             />
             <Button 
-              onClick={() => handleProfileSave('last_name', preferences?.last_name || '')}
+              onClick={handleSave}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
             >
               Save
@@ -284,7 +269,7 @@ const UserPreferences = () => {
               type="email"
             />
             <Button 
-              onClick={() => handleProfileSave('email', preferences?.email || '')}
+              onClick={handleSave}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
             >
               Save
@@ -303,7 +288,7 @@ const UserPreferences = () => {
               type="tel"
             />
             <Button 
-              onClick={() => handleProfileSave('phone', preferences?.phone || '')}
+              onClick={handleSave}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
             >
               Save
@@ -381,40 +366,28 @@ const UserPreferences = () => {
             </Button>
           </div>
 
-          <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
+          <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
             <Label className="text-left flex items-center gap-2">
               <MapPin className="w-4 h-4" />
-              Locations
+              Location
             </Label>
-            <div className="space-y-2">
-              <div className="flex flex-wrap gap-2">
-                {preferences?.preferred_locations.map((location) => (
-                  <Badge key={location} variant="secondary" className="gap-1">
-                    {location}
-                    <button
-                      onClick={() => removeLocation(location)}
-                      className="ml-1 hover:text-destructive"
-                    >
-                      <X className="h-3 w-3" />
-                    </button>
-                  </Badge>
+            <Select
+              value={preferences?.preferred_location || ""}
+              onValueChange={(value) =>
+                setPreferences(prev => prev ? { ...prev, preferred_location: value } : null)
+              }
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="Select a city" />
+              </SelectTrigger>
+              <SelectContent>
+                {cities.map((city) => (
+                  <SelectItem key={city} value={city}>
+                    {city}
+                  </SelectItem>
                 ))}
-              </div>
-              <Select onValueChange={addLocation}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Add a location" />
-                </SelectTrigger>
-                <SelectContent>
-                  {cities
-                    .filter((city) => !preferences?.preferred_locations.includes(city))
-                    .map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                </SelectContent>
-              </Select>
-            </div>
+              </SelectContent>
+            </Select>
             <Button 
               onClick={handleSave}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
