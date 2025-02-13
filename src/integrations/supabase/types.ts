@@ -1407,6 +1407,7 @@ export type Database = {
           location: string | null
           marketing_emails: boolean | null
           notes: string | null
+          onboarding_completed: boolean | null
           phone: string | null
           portfolio_url: string | null
           preferred_contact_method: string | null
@@ -1441,6 +1442,7 @@ export type Database = {
           location?: string | null
           marketing_emails?: boolean | null
           notes?: string | null
+          onboarding_completed?: boolean | null
           phone?: string | null
           portfolio_url?: string | null
           preferred_contact_method?: string | null
@@ -1475,6 +1477,7 @@ export type Database = {
           location?: string | null
           marketing_emails?: boolean | null
           notes?: string | null
+          onboarding_completed?: boolean | null
           phone?: string | null
           portfolio_url?: string | null
           preferred_contact_method?: string | null
