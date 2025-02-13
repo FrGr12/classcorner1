@@ -54,6 +54,7 @@ const UserPreferences = () => {
       
       console.log("Fetching preferences for user:", user.id);
       
+      let userPreferences;
       const { data: prefData, error: prefError } = await supabase
         .from("user_preferences")
         .select("*")
@@ -61,7 +62,6 @@ const UserPreferences = () => {
         .single();
         
       console.log("Preferences data:", prefData);
-      console.log("Preferences error:", prefError);
 
       // If no preferences exist yet, create a new record
       if (prefError && prefError.code === "PGRST116") {
@@ -78,9 +78,11 @@ const UserPreferences = () => {
           
         if (createError) throw createError;
         console.log("Created new preferences:", newPrefData);
-        prefData = newPrefData;
+        userPreferences = newPrefData;
       } else if (prefError) {
         throw prefError;
+      } else {
+        userPreferences = prefData;
       }
       
       const { data: profileData, error: profileError } = await supabase
@@ -95,9 +97,9 @@ const UserPreferences = () => {
 
       const preferencesData: UserPreferencesData = {
         id: user.id,
-        interests: prefData?.interests || [],
-        preferred_location: prefData?.preferred_location || "",
-        notification_preference: prefData?.notification_preference || "both",
+        interests: userPreferences?.interests || [],
+        preferred_location: userPreferences?.preferred_location || "",
+        notification_preference: userPreferences?.notification_preference || "both",
         email_notifications: profileData?.email_notifications ?? true,
         class_reminders: profileData?.class_reminders ?? true,
         marketing_emails: profileData?.marketing_emails ?? false,
@@ -191,68 +193,71 @@ const UserPreferences = () => {
         return;
       }
 
-      const updatedPreferences = {
-        ...preferences,
-        interests: [...preferences.interests, selectedInterest]
-      };
+      try {
+        const newInterests = [selectedInterest, ...preferences.interests];
+        
+        const { error } = await supabase
+          .from("user_preferences")
+          .update({
+            interests: newInterests
+          })
+          .eq("id", preferences.id);
 
-      const { error } = await supabase
-        .from("user_preferences")
-        .upsert({
-          id: preferences.id,
-          interests: updatedPreferences.interests,
-          preferred_location: preferences.preferred_location,
-          notification_preference: preferences.notification_preference
+        if (error) throw error;
+
+        setPreferences({
+          ...preferences,
+          interests: newInterests
         });
-
-      if (error) {
+        
+        setSelectedInterest("");
+        
+        toast({
+          title: "Success",
+          description: "Interest added successfully"
+        });
+      } catch (error) {
+        console.error("Error adding interest:", error);
         toast({
           variant: "destructive",
           title: "Error",
           description: "Failed to add interest"
         });
-        return;
       }
-
-      setPreferences(updatedPreferences);
-      setSelectedInterest("");
-      toast({
-        title: "Success",
-        description: "Interest added successfully"
-      });
     };
 
     const handleRemoveInterest = async (interestToRemove: string) => {
       if (!preferences) return;
 
-      const updatedPreferences = {
-        ...preferences,
-        interests: preferences.interests.filter(i => i !== interestToRemove)
-      };
+      try {
+        const newInterests = preferences.interests.filter(i => i !== interestToRemove);
+        
+        const { error } = await supabase
+          .from("user_preferences")
+          .update({
+            interests: newInterests
+          })
+          .eq("id", preferences.id);
 
-      const { error } = await supabase
-        .from("user_preferences")
-        .upsert({
-          id: preferences.id,
-          interests: updatedPreferences.interests,
-          preferred_location: preferences.preferred_location,
-          notification_preference: preferences.notification_preference
+        if (error) throw error;
+
+        setPreferences({
+          ...preferences,
+          interests: newInterests
         });
 
-      if (error) {
+        toast({
+          title: "Success",
+          description: "Interest removed successfully"
+        });
+      } catch (error) {
+        console.error("Error removing interest:", error);
         toast({
           variant: "destructive",
           title: "Error",
           description: "Failed to remove interest"
         });
-        return;
       }
-
-      setPreferences(updatedPreferences);
-      toast({
-        title: "Success",
-        description: "Interest removed successfully"
-      });
     };
 
     const availableCategories = categories.filter(
