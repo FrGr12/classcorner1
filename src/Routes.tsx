@@ -16,6 +16,7 @@ import EditCourse from "@/pages/EditCourse";
 import UserDashboard from "@/pages/UserDashboard";
 import Payment from "@/pages/Payment";
 import PaymentFailed from "@/pages/PaymentFailed";
+import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 
 const router = createBrowserRouter([
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
   {
     path: "/payment",
     element: <Payment />,
+  },
+  {
+    path: "/payment-receipt",
+    element: <PaymentReceipt />,
   },
   {
     path: "/payment-failed",
