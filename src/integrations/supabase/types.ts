@@ -1339,6 +1339,53 @@ export type Database = {
         }
         Relationships: []
       }
+      payment_transactions: {
+        Row: {
+          amount: number
+          booking_id: number | null
+          created_at: string
+          currency: string
+          id: number
+          payment_status: string
+          receipt_url: string | null
+          stripe_client_secret: string | null
+          stripe_payment_intent_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          booking_id?: number | null
+          created_at?: string
+          currency?: string
+          id?: never
+          payment_status?: string
+          receipt_url?: string | null
+          stripe_client_secret?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          booking_id?: number | null
+          created_at?: string
+          currency?: string
+          id?: never
+          payment_status?: string
+          receipt_url?: string | null
+          stripe_client_secret?: string | null
+          stripe_payment_intent_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_transactions_booking_id_fkey"
+            columns: ["booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           account_type: string | null
