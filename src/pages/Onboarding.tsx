@@ -76,7 +76,8 @@ const Onboarding = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { error } = await supabase
+      // Update profile
+      const { error: profileError } = await supabase
         .from("profiles")
         .update({
           first_name: formData.firstName,
@@ -88,16 +89,30 @@ const Onboarding = () => {
         })
         .eq("id", user.id);
 
-      if (error) throw error;
+      if (profileError) throw profileError;
 
       // Create user preferences
-      await supabase
+      const { error: prefError } = await supabase
         .from("user_preferences")
         .upsert({
           id: user.id,
           interests: formData.interests,
           updated_at: new Date().toISOString(),
         });
+
+      if (prefError) throw prefError;
+
+      // Update onboarding steps
+      const { error: onboardingError } = await supabase
+        .from("onboarding_steps")
+        .upsert({
+          user_id: user.id,
+          preferences_completed: true,
+          location_completed: true,
+          interests_completed: formData.interests.length > 0,
+        });
+
+      if (onboardingError) throw onboardingError;
 
       toast({
         title: "Profile Updated",
