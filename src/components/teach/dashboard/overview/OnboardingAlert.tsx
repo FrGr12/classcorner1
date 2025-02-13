@@ -1,52 +1,116 @@
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowRight, CheckCircle2, AlertCircle, Loader2 } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
-interface OnboardingAlertProps {
-  steps: {
-    profileComplete: boolean;
-    firstClassCreated: boolean;
-  };
+interface OnboardingSteps {
+  preferences_completed: boolean;
+  location_completed: boolean;
+  interests_completed: boolean;
 }
 
-const OnboardingAlert: FC<OnboardingAlertProps> = ({ steps }) => {
+const OnboardingAlert: FC = () => {
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(true);
+  const [steps, setSteps] = useState<OnboardingSteps>({
+    preferences_completed: false,
+    location_completed: false,
+    interests_completed: false
+  });
 
-  if (steps.profileComplete && steps.firstClassCreated) {
+  useEffect(() => {
+    fetchOnboardingSteps();
+  }, []);
+
+  const fetchOnboardingSteps = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('onboarding_steps')
+        .select('*')
+        .eq('user_id', user.id)
+        .single();
+
+      if (error) throw error;
+      if (data) {
+        setSteps({
+          preferences_completed: data.preferences_completed || false,
+          location_completed: data.location_completed || false,
+          interests_completed: data.interests_completed || false
+        });
+      }
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to load onboarding progress"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <Alert variant="default" className="bg-blue-50 border-blue-200">
+        <Loader2 className="h-4 w-4 animate-spin text-blue-500" />
+        <AlertTitle className="text-blue-700">Loading...</AlertTitle>
+      </Alert>
+    );
+  }
+
+  // If all steps are completed, don't show the alert
+  if (steps.preferences_completed && steps.location_completed && steps.interests_completed) {
     return null;
   }
 
   return (
     <Alert variant="default" className="bg-blue-50 border-blue-200">
       <AlertCircle className="h-4 w-4 text-blue-500" />
-      <AlertTitle className="text-blue-700">Complete Your Teaching Profile</AlertTitle>
+      <AlertTitle className="text-blue-700">Complete Your Profile</AlertTitle>
       <AlertDescription className="text-blue-600">
         <div className="mt-2 space-y-3">
-          {!steps.profileComplete && (
+          {!steps.preferences_completed && (
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="bg-blue-100">
                 <CheckCircle2 className="h-3 w-3 mr-1" />
                 Step 1
               </Badge>
-              <span>Complete your profile</span>
-              <Button variant="link" onClick={() => navigate("/dashboard/profile")} className="text-blue-600">
-                Update Profile <ArrowRight className="ml-2 h-4 w-4" />
+              <span>Update your preferences</span>
+              <Button variant="link" onClick={() => navigate("/dashboard/preferences")} className="text-blue-600">
+                Set Preferences <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           )}
-          {!steps.firstClassCreated && (
+          {!steps.location_completed && (
             <div className="flex items-center gap-2">
               <Badge variant="secondary" className="bg-blue-100">
                 <CheckCircle2 className="h-3 w-3 mr-1" />
                 Step 2
               </Badge>
-              <span>Create your first class</span>
-              <Button variant="link" onClick={() => navigate("/dashboard/classes")} className="text-blue-600">
-                Create Class <ArrowRight className="ml-2 h-4 w-4" />
+              <span>Set your location</span>
+              <Button variant="link" onClick={() => navigate("/dashboard/location")} className="text-blue-600">
+                Update Location <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+            </div>
+          )}
+          {!steps.interests_completed && (
+            <div className="flex items-center gap-2">
+              <Badge variant="secondary" className="bg-blue-100">
+                <CheckCircle2 className="h-3 w-3 mr-1" />
+                Step 3
+              </Badge>
+              <span>Choose your interests</span>
+              <Button variant="link" onClick={() => navigate("/dashboard/interests")} className="text-blue-600">
+                Select Interests <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>
           )}

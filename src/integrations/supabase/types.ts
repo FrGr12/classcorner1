@@ -1989,6 +1989,13 @@ export type Database = {
         }
         Returns: number
       }
+      calculate_user_course_match: {
+        Args: {
+          user_preferences_record: unknown
+          course_record: unknown
+        }
+        Returns: number
+      }
       cleanup_expired_categories: {
         Args: Record<PropertyKey, never>
         Returns: undefined
