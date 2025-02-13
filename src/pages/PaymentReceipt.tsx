@@ -16,7 +16,10 @@ interface PaymentDetails {
   booking: {
     course: {
       title: string;
-      instructor: string;
+      instructor: {
+        first_name: string;
+        last_name: string;
+      };
       location: string;
     };
   };
@@ -54,7 +57,22 @@ const PaymentReceipt = () => {
           .single();
 
         if (error) throw error;
-        setPaymentDetails(data);
+
+        // Transform the data to match our interface
+        const transformedData: PaymentDetails = {
+          amount: data.amount,
+          created_at: data.created_at,
+          receipt_url: data.receipt_url,
+          booking: {
+            course: {
+              title: data.booking.course.title,
+              instructor: data.booking.course.instructor[0], // Get first instructor since it's returned as an array
+              location: data.booking.course.location
+            }
+          }
+        };
+
+        setPaymentDetails(transformedData);
       } catch (error) {
         console.error("Error fetching payment details:", error);
       } finally {
