@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -34,6 +35,7 @@ import {
 } from "lucide-react";
 
 interface Profile {
+  id: string;
   first_name: string;
   last_name: string;
   username: string;
@@ -46,12 +48,16 @@ interface Profile {
   sms_notifications: boolean;
   class_reminders: boolean;
   marketing_emails: boolean;
+  created_at: string;
+  updated_at: string;
+  avatar_url: string | null;
 }
 
 const UserProfile = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [profile, setProfile] = useState<Profile>({
+    id: "",
     first_name: "",
     last_name: "",
     username: "",
@@ -64,6 +70,9 @@ const UserProfile = () => {
     sms_notifications: false,
     class_reminders: true,
     marketing_emails: false,
+    created_at: "",
+    updated_at: "",
+    avatar_url: null
   });
 
   useEffect(() => {

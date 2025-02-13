@@ -1250,9 +1250,11 @@ export type Database = {
           account_type: string | null
           avatar_url: string | null
           bio: string | null
+          class_reminders: boolean | null
           contact_frequency: string | null
           created_at: string
           email: string | null
+          email_notifications: boolean | null
           expertise: string[] | null
           first_name: string | null
           hourly_rate: number | null
@@ -1262,12 +1264,14 @@ export type Database = {
           last_contacted: string | null
           last_name: string | null
           location: string | null
+          marketing_emails: boolean | null
           notes: string | null
           phone: string | null
           portfolio_url: string | null
           preferred_contact_method: string | null
           preferred_teaching_method: string | null
           search_text: string | null
+          sms_notifications: boolean | null
           social_media: Json | null
           tags: string[] | null
           teaching_experience: string | null
@@ -1280,9 +1284,11 @@ export type Database = {
           account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
+          class_reminders?: boolean | null
           contact_frequency?: string | null
           created_at?: string
           email?: string | null
+          email_notifications?: boolean | null
           expertise?: string[] | null
           first_name?: string | null
           hourly_rate?: number | null
@@ -1292,12 +1298,14 @@ export type Database = {
           last_contacted?: string | null
           last_name?: string | null
           location?: string | null
+          marketing_emails?: boolean | null
           notes?: string | null
           phone?: string | null
           portfolio_url?: string | null
           preferred_contact_method?: string | null
           preferred_teaching_method?: string | null
           search_text?: string | null
+          sms_notifications?: boolean | null
           social_media?: Json | null
           tags?: string[] | null
           teaching_experience?: string | null
@@ -1310,9 +1318,11 @@ export type Database = {
           account_type?: string | null
           avatar_url?: string | null
           bio?: string | null
+          class_reminders?: boolean | null
           contact_frequency?: string | null
           created_at?: string
           email?: string | null
+          email_notifications?: boolean | null
           expertise?: string[] | null
           first_name?: string | null
           hourly_rate?: number | null
@@ -1322,12 +1332,14 @@ export type Database = {
           last_contacted?: string | null
           last_name?: string | null
           location?: string | null
+          marketing_emails?: boolean | null
           notes?: string | null
           phone?: string | null
           portfolio_url?: string | null
           preferred_contact_method?: string | null
           preferred_teaching_method?: string | null
           search_text?: string | null
+          sms_notifications?: boolean | null
           social_media?: Json | null
           tags?: string[] | null
           teaching_experience?: string | null
