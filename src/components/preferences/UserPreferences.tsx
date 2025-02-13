@@ -65,6 +65,16 @@ interface UserPreferencesData {
   phone: string;
 }
 
+interface ProfileUpdateData {
+  email_notifications: boolean;
+  class_reminders: boolean;
+  marketing_emails: boolean;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}
+
 const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -137,17 +147,19 @@ const UserPreferences = () => {
 
       if (prefError) throw prefError;
 
+      const profileData: ProfileUpdateData = {
+        email_notifications: preferences.email_notifications,
+        class_reminders: preferences.class_reminders,
+        marketing_emails: preferences.marketing_emails,
+        first_name: preferences.first_name,
+        last_name: preferences.last_name,
+        email: preferences.email,
+        phone: preferences.phone,
+      };
+
       const { error: profileError } = await supabase
         .from("profiles")
-        .update({
-          email_notifications: preferences.email_notifications,
-          class_reminders: preferences.class_reminders,
-          marketing_emails: preferences.marketing_emails,
-          first_name: preferences.first_name,
-          last_name: preferences.last_name,
-          email: preferences.email,
-          phone: preferences.phone,
-        })
+        .update(profileData)
         .eq("id", preferences.id);
 
       if (profileError) throw profileError;
