@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -50,22 +51,25 @@ const UserPreferences = () => {
 
   const fetchPreferences = async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const {
-        data: prefData,
-        error: prefError
-      } = await supabase.from("user_preferences").select("*").eq("id", user.id).single();
+      
+      const { data: prefData, error: prefError } = await supabase
+        .from("user_preferences")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+        
       if (prefError && prefError.code !== "PGRST116") throw prefError;
-      const {
-        data: profileData,
-        error: profileError
-      } = await supabase.from("profiles").select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone").eq("id", user.id).single();
+      
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone")
+        .eq("id", user.id)
+        .single();
+        
       if (profileError) throw profileError;
+
       setPreferences({
         id: user.id,
         interests: prefData?.interests || [],
@@ -95,15 +99,17 @@ const UserPreferences = () => {
     if (!preferences) return;
     setSaving(true);
     try {
-      const {
-        error: prefError
-      } = await supabase.from("user_preferences").upsert({
-        id: preferences.id,
-        interests: preferences.interests,
-        preferred_location: preferences.preferred_location,
-        notification_preference: preferences.notification_preference
-      });
+      const { error: prefError } = await supabase
+        .from("user_preferences")
+        .upsert({
+          id: preferences.id,
+          interests: preferences.interests,
+          preferred_location: preferences.preferred_location,
+          notification_preference: preferences.notification_preference
+        });
+      
       if (prefError) throw prefError;
+
       const profileData: ProfileUpdateData = {
         email_notifications: preferences.email_notifications,
         class_reminders: preferences.class_reminders,
@@ -113,10 +119,14 @@ const UserPreferences = () => {
         email: preferences.email,
         phone: preferences.phone
       };
-      const {
-        error: profileError
-      } = await supabase.from("profiles").update(profileData).eq("id", preferences.id);
+
+      const { error: profileError } = await supabase
+        .from("profiles")
+        .update(profileData)
+        .eq("id", preferences.id);
+
       if (profileError) throw profileError;
+
       toast({
         title: "Success",
         description: "Your preferences have been saved."
@@ -133,25 +143,8 @@ const UserPreferences = () => {
     }
   };
 
-  const addInterest = (interest: string) => {
-    if (!preferences || preferences.interests.includes(interest)) {
-      toast({
-        title: "Interest already added",
-        description: "This interest is already in your list.",
-        variant: "destructive",
-      });
-      return;
-    }
-    setPreferences({
-      ...preferences,
-      interests: [...preferences.interests, interest],
-    });
-    handleSave();
-    setSelectedInterest(""); // Reset selection after adding
-  };
-
   const handleAddInterest = () => {
-    if (!selectedInterest) {
+    if (!selectedInterest || !preferences) {
       toast({
         title: "No interest selected",
         description: "Please select an interest to add.",
@@ -159,22 +152,48 @@ const UserPreferences = () => {
       });
       return;
     }
-    addInterest(selectedInterest);
+
+    if (preferences.interests.includes(selectedInterest)) {
+      toast({
+        title: "Interest already added",
+        description: "This interest is already in your list.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setPreferences(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        interests: [...prev.interests, selectedInterest]
+      };
+    });
+
+    // Save immediately after adding
+    handleSave();
+    setSelectedInterest(""); // Reset selection
   };
 
   const removeInterest = (interest: string) => {
     if (!preferences) return;
-    setPreferences({
-      ...preferences,
-      interests: preferences.interests.filter((i) => i !== interest),
+    
+    setPreferences(prev => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        interests: prev.interests.filter(i => i !== interest)
+      };
     });
+    
+    // Save immediately after removing
     handleSave();
   };
 
   if (loading) {
     return <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
-      </div>;
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
+    </div>;
   }
 
   return <div className="space-y-6">
