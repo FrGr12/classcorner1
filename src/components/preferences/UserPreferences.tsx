@@ -267,7 +267,7 @@ const UserPreferences = () => {
                 </SelectContent>
               </Select>
             </div>
-            <Button onClick={handleSave} className="bg-slate-50 text-secondary-DEFAULT">Add</Button>
+            <Button onClick={handleSave} className="text-secondary-DEFAULT bg-primary-foreground">Add</Button>
           </div>
 
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
