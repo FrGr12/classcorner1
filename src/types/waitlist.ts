@@ -1,3 +1,4 @@
+
 export interface WaitlistEntry {
   id: number;
   course_id: number;
