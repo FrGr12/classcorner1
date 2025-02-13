@@ -1,57 +1,16 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { X, Save, User, Mail, Phone, CreditCard, MapPin, Bell, Settings } from "lucide-react";
-
-const categories = [
-  "Pottery",
-  "Cooking",
-  "Baking",
-  "Painting & Art",
-  "Candle Making",
-  "Jewellery & Metal",
-  "Cocktail & Wine",
-  "Photography",
-  "Music & Dance",
-  "Wood Craft",
-  "Textile Craft",
-  "Paper Craft",
-  "Flower & Plants",
-];
-
-const cities = [
-  "Stockholm",
-  "Göteborg",
-  "Malmö",
-  "Uppsala",
-  "Västerås",
-  "Örebro",
-  "Linköping",
-  "Helsingborg",
-  "Jönköping",
-  "Norrköping",
-];
-
+const categories = ["Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making", "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance", "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"];
+const cities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Helsingborg", "Jönköping", "Norrköping"];
 interface UserPreferencesData {
   id: string;
   interests: string[];
@@ -65,7 +24,6 @@ interface UserPreferencesData {
   email: string;
   phone: string;
 }
-
 interface ProfileUpdateData {
   email_notifications: boolean;
   class_reminders: boolean;
@@ -75,38 +33,34 @@ interface ProfileUpdateData {
   email: string;
   phone: string;
 }
-
 const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
     fetchPreferences();
   }, []);
-
   const fetchPreferences = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) return;
-
-      const { data: prefData, error: prefError } = await supabase
-        .from("user_preferences")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
+      const {
+        data: prefData,
+        error: prefError
+      } = await supabase.from("user_preferences").select("*").eq("id", user.id).single();
       if (prefError && prefError.code !== "PGRST116") throw prefError;
-
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone")
-        .eq("id", user.id)
-        .single();
-
+      const {
+        data: profileData,
+        error: profileError
+      } = await supabase.from("profiles").select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone").eq("id", user.id).single();
       if (profileError) throw profileError;
-
       setPreferences({
         id: user.id,
         interests: prefData?.interests || [],
@@ -118,36 +72,32 @@ const UserPreferences = () => {
         first_name: profileData?.first_name || "",
         last_name: profileData?.last_name || "",
         email: profileData?.email || "",
-        phone: profileData?.phone || "",
+        phone: profileData?.phone || ""
       });
     } catch (error: any) {
       console.error("Error fetching preferences:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to load your preferences",
+        description: "Failed to load your preferences"
       });
     } finally {
       setLoading(false);
     }
   };
-
   const handleSave = async () => {
     if (!preferences) return;
-    
     setSaving(true);
     try {
-      const { error: prefError } = await supabase
-        .from("user_preferences")
-        .upsert({
-          id: preferences.id,
-          interests: preferences.interests,
-          preferred_location: preferences.preferred_location,
-          notification_preference: preferences.notification_preference,
-        });
-
+      const {
+        error: prefError
+      } = await supabase.from("user_preferences").upsert({
+        id: preferences.id,
+        interests: preferences.interests,
+        preferred_location: preferences.preferred_location,
+        notification_preference: preferences.notification_preference
+      });
       if (prefError) throw prefError;
-
       const profileData: ProfileUpdateData = {
         email_notifications: preferences.email_notifications,
         class_reminders: preferences.class_reminders,
@@ -155,58 +105,47 @@ const UserPreferences = () => {
         first_name: preferences.first_name,
         last_name: preferences.last_name,
         email: preferences.email,
-        phone: preferences.phone,
+        phone: preferences.phone
       };
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update(profileData)
-        .eq("id", preferences.id);
-
+      const {
+        error: profileError
+      } = await supabase.from("profiles").update(profileData).eq("id", preferences.id);
       if (profileError) throw profileError;
-
       toast({
         title: "Success",
-        description: "Your preferences have been saved.",
+        description: "Your preferences have been saved."
       });
     } catch (error: any) {
       console.error("Error saving preferences:", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Failed to save your preferences",
+        description: "Failed to save your preferences"
       });
     } finally {
       setSaving(false);
     }
   };
-
   const addInterest = (interest: string) => {
     if (!preferences || preferences.interests.includes(interest)) return;
     setPreferences({
       ...preferences,
-      interests: [...preferences.interests, interest],
+      interests: [...preferences.interests, interest]
     });
   };
-
   const removeInterest = (interest: string) => {
     if (!preferences) return;
     setPreferences({
       ...preferences,
-      interests: preferences.interests.filter((i) => i !== interest),
+      interests: preferences.interests.filter(i => i !== interest)
     });
   };
-
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
+    return <div className="flex items-center justify-center p-8">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-left">Profile & Settings</h1>
@@ -229,30 +168,22 @@ const UserPreferences = () => {
         <CardContent className="space-y-4">
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
             <Label className="text-left">First Name</Label>
-            <Input
-              value={preferences?.first_name || ""}
-              onChange={(e) => setPreferences(prev => prev ? { ...prev, first_name: e.target.value } : null)}
-              placeholder="Enter your first name"
-            />
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
+            <Input value={preferences?.first_name || ""} onChange={e => setPreferences(prev => prev ? {
+            ...prev,
+            first_name: e.target.value
+          } : null)} placeholder="Enter your first name" />
+            <Button onClick={handleSave} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90">
               Save
             </Button>
           </div>
 
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
             <Label className="text-left">Last Name</Label>
-            <Input
-              value={preferences?.last_name || ""}
-              onChange={(e) => setPreferences(prev => prev ? { ...prev, last_name: e.target.value } : null)}
-              placeholder="Enter your last name"
-            />
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
+            <Input value={preferences?.last_name || ""} onChange={e => setPreferences(prev => prev ? {
+            ...prev,
+            last_name: e.target.value
+          } : null)} placeholder="Enter your last name" />
+            <Button onClick={handleSave} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90">
               Save
             </Button>
           </div>
@@ -262,16 +193,11 @@ const UserPreferences = () => {
               <Mail className="w-4 h-4" />
               Email
             </Label>
-            <Input
-              value={preferences?.email || ""}
-              onChange={(e) => setPreferences(prev => prev ? { ...prev, email: e.target.value } : null)}
-              placeholder="Enter your email"
-              type="email"
-            />
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
+            <Input value={preferences?.email || ""} onChange={e => setPreferences(prev => prev ? {
+            ...prev,
+            email: e.target.value
+          } : null)} placeholder="Enter your email" type="email" />
+            <Button onClick={handleSave} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90">
               Save
             </Button>
           </div>
@@ -281,16 +207,11 @@ const UserPreferences = () => {
               <Phone className="w-4 h-4" />
               Phone
             </Label>
-            <Input
-              value={preferences?.phone || ""}
-              onChange={(e) => setPreferences(prev => prev ? { ...prev, phone: e.target.value } : null)}
-              placeholder="Enter your phone number"
-              type="tel"
-            />
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
+            <Input value={preferences?.phone || ""} onChange={e => setPreferences(prev => prev ? {
+            ...prev,
+            phone: e.target.value
+          } : null)} placeholder="Enter your phone number" type="tel" />
+            <Button onClick={handleSave} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90">
               Save
             </Button>
           </div>
@@ -303,10 +224,7 @@ const UserPreferences = () => {
             <div className="text-sm text-muted-foreground">
               No payment methods added
             </div>
-            <Button 
-              variant="outline"
-              className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10"
-            >
+            <Button variant="outline" className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10">
               Add
             </Button>
           </div>
@@ -331,39 +249,25 @@ const UserPreferences = () => {
             </Label>
             <div className="space-y-2">
               <div className="flex flex-wrap gap-2">
-                {preferences?.interests.map((interest) => (
-                  <Badge key={interest} variant="secondary" className="gap-1">
+                {preferences?.interests.map(interest => <Badge key={interest} variant="secondary" className="gap-1">
                     {interest}
-                    <button
-                      onClick={() => removeInterest(interest)}
-                      className="ml-1 hover:text-destructive"
-                    >
+                    <button onClick={() => removeInterest(interest)} className="ml-1 hover:text-destructive">
                       <X className="h-3 w-3" />
                     </button>
-                  </Badge>
-                ))}
+                  </Badge>)}
               </div>
               <Select onValueChange={addInterest}>
                 <SelectTrigger>
                   <SelectValue placeholder="Add an interest" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories
-                    .filter((c) => !preferences?.interests.includes(c))
-                    .map((category) => (
-                      <SelectItem key={category} value={category}>
+                  {categories.filter(c => !preferences?.interests.includes(c)).map(category => <SelectItem key={category} value={category}>
                         {category}
-                      </SelectItem>
-                    ))}
+                      </SelectItem>)}
                 </SelectContent>
               </Select>
             </div>
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
-              Save
-            </Button>
+            <Button onClick={handleSave} className="bg-slate-50 text-secondary-DEFAULT">Add</Button>
           </div>
 
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
@@ -371,27 +275,20 @@ const UserPreferences = () => {
               <MapPin className="w-4 h-4" />
               Location
             </Label>
-            <Select
-              value={preferences?.preferred_location || ""}
-              onValueChange={(value) =>
-                setPreferences(prev => prev ? { ...prev, preferred_location: value } : null)
-              }
-            >
+            <Select value={preferences?.preferred_location || ""} onValueChange={value => setPreferences(prev => prev ? {
+            ...prev,
+            preferred_location: value
+          } : null)}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a city" />
               </SelectTrigger>
               <SelectContent>
-                {cities.map((city) => (
-                  <SelectItem key={city} value={city}>
+                {cities.map(city => <SelectItem key={city} value={city}>
                     {city}
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
-            <Button 
-              onClick={handleSave}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-            >
+            <Button onClick={handleSave} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90">
               Save
             </Button>
           </div>
@@ -409,13 +306,10 @@ const UserPreferences = () => {
                     Receive important updates via email
                   </p>
                 </div>
-                <Switch
-                  id="email-notifications"
-                  checked={preferences?.email_notifications}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => prev ? { ...prev, email_notifications: checked } : null)
-                  }
-                />
+                <Switch id="email-notifications" checked={preferences?.email_notifications} onCheckedChange={checked => setPreferences(prev => prev ? {
+                ...prev,
+                email_notifications: checked
+              } : null)} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -425,13 +319,10 @@ const UserPreferences = () => {
                     Get reminders before your upcoming classes
                   </p>
                 </div>
-                <Switch
-                  id="class-reminders"
-                  checked={preferences?.class_reminders}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => prev ? { ...prev, class_reminders: checked } : null)
-                  }
-                />
+                <Switch id="class-reminders" checked={preferences?.class_reminders} onCheckedChange={checked => setPreferences(prev => prev ? {
+                ...prev,
+                class_reminders: checked
+              } : null)} />
               </div>
 
               <div className="flex items-center justify-between">
@@ -441,13 +332,10 @@ const UserPreferences = () => {
                     Receive updates about new classes and special offers
                   </p>
                 </div>
-                <Switch
-                  id="marketing-emails"
-                  checked={preferences?.marketing_emails}
-                  onCheckedChange={(checked) =>
-                    setPreferences(prev => prev ? { ...prev, marketing_emails: checked } : null)
-                  }
-                />
+                <Switch id="marketing-emails" checked={preferences?.marketing_emails} onCheckedChange={checked => setPreferences(prev => prev ? {
+                ...prev,
+                marketing_emails: checked
+              } : null)} />
               </div>
             </div>
           </div>
@@ -455,24 +343,13 @@ const UserPreferences = () => {
       </Card>
 
       <div className="flex justify-end">
-        <Button 
-          onClick={handleSave}
-          disabled={saving}
-          className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-          size="lg"
-        >
-          {saving ? (
-            "Saving..."
-          ) : (
-            <>
+        <Button onClick={handleSave} disabled={saving} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90" size="lg">
+          {saving ? "Saving..." : <>
               <Save className="w-4 h-4 mr-2" />
               Save All Changes
-            </>
-          )}
+            </>}
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default UserPreferences;
