@@ -19,13 +19,23 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
 
   useEffect(() => {
     const fetchBoostCredits = async () => {
+      // First get the current user
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      // Then fetch their premium features using teacher_id
       const { data, error } = await supabase
         .from('teacher_premium_features')
         .select('boost_credits')
-        .single();
+        .eq('teacher_id', user.id)
+        .maybeSingle();
 
       if (!error && data) {
         setBoostCredits(data.boost_credits);
+      } else {
+        console.error('Error fetching boost credits:', error);
+        // Set to 0 if no premium features found
+        setBoostCredits(0);
       }
     };
 
