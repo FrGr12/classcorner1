@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -114,7 +113,7 @@ const UserDashboardOverview = () => {
       const { data, error } = await supabase
         .from('bookings')
         .select(`
-          courses!inner (
+          courses (
             id,
             title,
             price,
@@ -122,14 +121,14 @@ const UserDashboardOverview = () => {
             instructor_id,
             course_images (
               image_path
+            ),
+            profiles (
+              first_name,
+              last_name
             )
           ),
-          course_sessions!inner (
+          course_sessions (
             start_time
-          ),
-          courses!inner.profiles!instructor_id (
-            first_name,
-            last_name
           )
         `)
         .eq('student_id', user.id)
@@ -140,12 +139,12 @@ const UserDashboardOverview = () => {
       const formattedClasses = data.map(booking => ({
         id: booking.courses.id,
         title: booking.courses.title,
-        instructor: `${booking.courses.profiles.first_name} ${booking.courses.profiles.last_name}`,
+        instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
         price: booking.courses.price,
         rating: 4.5,
         images: booking.courses.course_images.map((img: any) => img.image_path),
         level: "All Levels",
-        date: new Date(booking.course_sessions.start_time),
+        date: new Date(booking.course_sessions[0].start_time),
         city: booking.courses.location
       }));
 
@@ -175,7 +174,7 @@ const UserDashboardOverview = () => {
       const { data, error } = await supabase
         .from('waitlist_entries')
         .select(`
-          courses!inner (
+          courses (
             id,
             title,
             price,
@@ -184,7 +183,7 @@ const UserDashboardOverview = () => {
             course_images (
               image_path
             ),
-            profiles!instructor_id (
+            profiles (
               first_name,
               last_name
             )
@@ -198,7 +197,7 @@ const UserDashboardOverview = () => {
       const formattedClasses = data.map(entry => ({
         id: entry.courses.id,
         title: entry.courses.title,
-        instructor: `${entry.courses.profiles.first_name} ${entry.courses.profiles.last_name}`,
+        instructor: `${entry.courses.profiles[0].first_name} ${entry.courses.profiles[0].last_name}`,
         price: entry.courses.price,
         rating: 4.5,
         images: entry.courses.course_images.map((img: any) => img.image_path),
@@ -221,7 +220,7 @@ const UserDashboardOverview = () => {
       const { data, error } = await supabase
         .from('course_matches')
         .select(`
-          courses!inner (
+          courses (
             id,
             title,
             price,
@@ -230,7 +229,7 @@ const UserDashboardOverview = () => {
             course_images (
               image_path
             ),
-            profiles!instructor_id (
+            profiles (
               first_name,
               last_name
             )
@@ -245,7 +244,7 @@ const UserDashboardOverview = () => {
       const formattedClasses = data.map(match => ({
         id: match.courses.id,
         title: match.courses.title,
-        instructor: `${match.courses.profiles.first_name} ${match.courses.profiles.last_name}`,
+        instructor: `${match.courses.profiles[0].first_name} ${match.courses.profiles[0].last_name}`,
         price: match.courses.price,
         rating: 4.5,
         images: match.courses.course_images.map((img: any) => img.image_path),
