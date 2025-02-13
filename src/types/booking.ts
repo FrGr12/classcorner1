@@ -1,3 +1,4 @@
+
 export interface Booking {
   id: number;
   course_id: number;
@@ -17,9 +18,25 @@ export interface Booking {
   rescheduled_at?: string;
   course: {
     title: string;
+    instructor_id: string;
     location: string;
   };
   session?: {
     start_time: string | null;
   } | null;
+  student?: {
+    id: string;
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+}
+
+export interface CreateBookingInput {
+  course_id: number;
+  session_id: number;
+  special_requests?: string;
+  group_size?: number;
+  total_price: number;
+  booking_type?: string;
 }

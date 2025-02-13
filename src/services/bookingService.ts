@@ -1,12 +1,14 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ClassItem } from "@/types/class";
+import type { Booking, CreateBookingInput } from "@/types/booking";
 
 export const createBooking = async (
   classItem: ClassItem,
   sessionId: number,
   specialRequests?: string
-) => {
+): Promise<Booking> => {
   try {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
@@ -27,10 +29,34 @@ export const createBooking = async (
           special_requests: specialRequests
         }
       ])
-      .select()
+      .select(`
+        *,
+        course:courses(
+          title,
+          instructor_id,
+          location
+        ),
+        session:course_sessions(
+          start_time
+        )
+      `)
       .single();
 
     if (error) throw error;
+    
+    // Create a notification for the instructor
+    await supabase
+      .from('notification_logs')
+      .insert([
+        {
+          user_id: booking.course.instructor_id,
+          notification_type: 'new_booking',
+          content: `New booking received for ${booking.course.title}`,
+          status: 'pending',
+          booking_id: booking.id
+        }
+      ]);
+
     return booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to create booking");
@@ -38,7 +64,7 @@ export const createBooking = async (
   }
 };
 
-export const getBookingById = async (bookingId: number) => {
+export const getBookingById = async (bookingId: number): Promise<Booking> => {
   try {
     const { data: booking, error } = await supabase
       .from('bookings')
@@ -46,11 +72,17 @@ export const getBookingById = async (bookingId: number) => {
         *,
         course:courses(
           title,
-          location,
-          instructor_id
+          instructor_id,
+          location
         ),
         session:course_sessions(
           start_time
+        ),
+        profiles!bookings_student_id_fkey(
+          id,
+          first_name,
+          last_name,
+          email
         )
       `)
       .eq('id', bookingId)
@@ -60,6 +92,103 @@ export const getBookingById = async (bookingId: number) => {
     return booking;
   } catch (error: any) {
     toast.error(error.message || "Failed to fetch booking");
+    throw error;
+  }
+};
+
+export const cancelBooking = async (
+  bookingId: number, 
+  reason: string
+): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('bookings')
+      .update({
+        status: 'cancelled',
+        cancellation_reason: reason,
+        cancellation_date: new Date().toISOString()
+      })
+      .eq('id', bookingId);
+
+    if (error) throw error;
+    toast.success("Booking cancelled successfully");
+  } catch (error: any) {
+    toast.error(error.message || "Failed to cancel booking");
+    throw error;
+  }
+};
+
+export const rescheduleBooking = async (
+  bookingId: number,
+  newSessionId: number
+): Promise<void> => {
+  try {
+    const { data: booking, error: fetchError } = await supabase
+      .from('bookings')
+      .select('session_id')
+      .eq('id', bookingId)
+      .single();
+
+    if (fetchError) throw fetchError;
+
+    const { error: updateError } = await supabase
+      .from('bookings')
+      .update({
+        session_id: newSessionId,
+        original_session_id: booking.session_id,
+        rescheduled_at: new Date().toISOString()
+      })
+      .eq('id', bookingId);
+
+    if (updateError) throw updateError;
+    toast.success("Booking rescheduled successfully");
+  } catch (error: any) {
+    toast.error(error.message || "Failed to reschedule booking");
+    throw error;
+  }
+};
+
+export const getUserBookings = async (): Promise<Booking[]> => {
+  try {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) throw new Error("User not found");
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`
+        *,
+        course:courses(
+          title,
+          location
+        ),
+        session:course_sessions(
+          start_time
+        )
+      `)
+      .eq('student_id', user.id)
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return data;
+  } catch (error: any) {
+    toast.error(error.message || "Failed to fetch bookings");
+    throw error;
+  }
+};
+
+export const updateBookingPaymentStatus = async (
+  bookingId: number,
+  status: string
+): Promise<void> => {
+  try {
+    const { error } = await supabase
+      .from('bookings')
+      .update({ payment_status: status })
+      .eq('id', bookingId);
+
+    if (error) throw error;
+  } catch (error: any) {
+    toast.error(error.message || "Failed to update payment status");
     throw error;
   }
 };
