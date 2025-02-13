@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -315,9 +314,9 @@ const UserPreferences = () => {
       <Button
         onClick={handleSave}
         disabled={saving}
-        className="w-full bg-accent-purple hover:bg-accent-purple/90"
+        className="w-full"
       >
-        {saving ? "Saving..." : "Profile & Settings"}
+        {saving ? "Saving..." : "Save Preferences"}
       </Button>
     </div>
   );
