@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -186,7 +185,7 @@ const UserPreferences = () => {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold">Preferences</h1>
+      <h1 className="text-2xl font-bold">Profile & Preferences</h1>
       
       <Card>
         <CardHeader>
