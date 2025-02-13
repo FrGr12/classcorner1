@@ -41,13 +41,24 @@ const PurchaseBoostCredits = ({ open, onOpenChange, onPurchaseComplete }: Purcha
       if (purchaseError) throw purchaseError;
 
       // TODO: Integrate with your payment provider
-      // For now, we'll simulate a successful purchase
+      // For now, we'll simulate a successful purchase by directly updating credits
       
-      // Update teacher's boost credits
-      const { error: updateError } = await supabase.rpc('add_boost_credits', {
-        p_teacher_id: user.id,
-        p_amount: quantity
-      });
+      // Get current credits
+      const { data: currentFeatures, error: featureError } = await supabase
+        .from('teacher_premium_features')
+        .select('boost_credits')
+        .eq('teacher_id', user.id)
+        .single();
+
+      if (featureError) throw featureError;
+
+      // Update credits
+      const { error: updateError } = await supabase
+        .from('teacher_premium_features')
+        .update({ 
+          boost_credits: (currentFeatures?.boost_credits || 0) + quantity 
+        })
+        .eq('teacher_id', user.id);
 
       if (updateError) throw updateError;
 

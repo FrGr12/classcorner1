@@ -1,10 +1,9 @@
-
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Rocket, Tag } from "lucide-react";
 import CreateDiscountDialog from "../discounts/CreateDiscountDialog";
 import PurchaseBoostCredits from "./PurchaseBoostCredits";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -20,32 +19,32 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
   const [boostCredits, setBoostCredits] = useState(0);
   const [isBoostLoading, setIsBoostLoading] = useState(false);
 
+  const fetchBoostCredits = useCallback(async () => {
+    // First get the current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    // Then fetch their premium features using teacher_id
+    const { data, error } = await supabase
+      .from('teacher_premium_features')
+      .select('boost_credits')
+      .eq('teacher_id', user.id)
+      .maybeSingle();
+
+    if (!error && data) {
+      setBoostCredits(data.boost_credits);
+    } else {
+      console.error('Error fetching boost credits:', error);
+      // Set to 0 if no premium features found
+      setBoostCredits(0);
+    }
+  }, []);
+
   useEffect(() => {
-    const fetchBoostCredits = async () => {
-      // First get the current user
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      // Then fetch their premium features using teacher_id
-      const { data, error } = await supabase
-        .from('teacher_premium_features')
-        .select('boost_credits')
-        .eq('teacher_id', user.id)
-        .maybeSingle();
-
-      if (!error && data) {
-        setBoostCredits(data.boost_credits);
-      } else {
-        console.error('Error fetching boost credits:', error);
-        // Set to 0 if no premium features found
-        setBoostCredits(0);
-      }
-    };
-
     if (open) {
       fetchBoostCredits();
     }
-  }, [open]);
+  }, [open, fetchBoostCredits]);
 
   const handleBoost = async () => {
     if (!classId) return;
@@ -123,7 +122,6 @@ const PromoteDialog = ({ open, onOpenChange, classId }: PromoteDialogProps) => {
 
   const handlePurchaseComplete = () => {
     setIsPurchaseOpen(false);
-    // Refresh boost credits
     fetchBoostCredits();
   };
 
