@@ -41,9 +41,8 @@ const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const {
-    toast
-  } = useToast();
+  const [selectedInterest, setSelectedInterest] = useState<string>("");
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchPreferences();
@@ -135,19 +134,32 @@ const UserPreferences = () => {
   };
 
   const addInterest = (interest: string) => {
-    if (!preferences || preferences.interests.includes(interest)) return;
+    if (!preferences || preferences.interests.includes(interest)) {
+      toast({
+        title: "Interest already added",
+        description: "This interest is already in your list.",
+        variant: "destructive",
+      });
+      return;
+    }
     setPreferences({
       ...preferences,
       interests: [...preferences.interests, interest],
     });
+    handleSave();
+    setSelectedInterest(""); // Reset selection after adding
   };
 
-  const removeInterest = (interest: string) => {
-    if (!preferences) return;
-    setPreferences({
-      ...preferences,
-      interests: preferences.interests.filter(i => i !== interest)
-    });
+  const handleAddInterest = () => {
+    if (!selectedInterest) {
+      toast({
+        title: "No interest selected",
+        description: "Please select an interest to add.",
+        variant: "destructive",
+      });
+      return;
+    }
+    addInterest(selectedInterest);
   };
 
   if (loading) {
@@ -272,7 +284,10 @@ const UserPreferences = () => {
                   </Badge>
                 ))}
               </div>
-              <Select onValueChange={addInterest}>
+              <Select
+                value={selectedInterest}
+                onValueChange={setSelectedInterest}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Add an interest" />
                 </SelectTrigger>
@@ -290,6 +305,7 @@ const UserPreferences = () => {
             <Button 
               variant="outline"
               className="border-[#6E44FF] text-[#6E44FF] hover:bg-[#6E44FF]/10"
+              onClick={handleAddInterest}
             >
               Add
             </Button>
