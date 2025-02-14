@@ -28,6 +28,7 @@ const Navigation = () => {
   const [session, setSession] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
   const isHomePage = location.pathname === "/";
+  const isBrowsePage = location.pathname === "/browse";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -180,7 +181,7 @@ const Navigation = () => {
           <MobileMenu />
         </div>
         
-        <IntegratedSearch />
+        {!isBrowsePage && <IntegratedSearch />}
 
         <div className="hidden md:flex items-center gap-4 ml-auto">
           <Link 
@@ -254,4 +255,3 @@ const Navigation = () => {
 };
 
 export default Navigation;
-
