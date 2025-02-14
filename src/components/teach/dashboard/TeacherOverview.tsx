@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -103,25 +102,17 @@ const TeacherOverview = () => {
 
       <section className="grid gap-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold">Course Matches & Potential Students</h2>
+          <h2 className="text-xl font-semibold">Course Matches</h2>
           <Button 
             variant="ghost" 
             className="text-accent-purple hover:text-accent-purple/90"
             onClick={() => navigate("/dashboard/classes")}
           >
-            View All Classes
+            View All Matches
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
-        <Card>
-          <CardContent className="pt-6">
-            <p className="text-sm text-muted-foreground mb-6">
-              View potential students who match your courses based on their interests and location. 
-              Contact them directly or send batch notifications to increase bookings.
-            </p>
-            <MatchInsights />
-          </CardContent>
-        </Card>
+        <MatchInsights />
       </section>
 
       <section className="grid gap-6">
