@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -93,26 +94,27 @@ const TeacherOverview = () => {
       <WelcomeHeader />
       <DashboardMetrics metrics={metrics} />
       
-      <section className="w-full">
-        <h2 className="text-xl font-semibold mb-4 text-left">Messages & Notifications</h2>
+      <section className="grid gap-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Messages & Notifications</h2>
+        </div>
         <MessagesOverview />
       </section>
 
-      <section className="w-full">
-        <h2 className="text-xl font-semibold mb-4 text-left">Course Matches & Potential Students</h2>
-        <Card className="mb-4">
-          <CardHeader className="flex flex-row items-center justify-between space-y-0">
-            <CardTitle className="text-lg">Match Overview</CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple hover:text-accent-purple/90"
-              onClick={() => navigate("/dashboard/classes")}
-            >
-              View All Classes
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
+      <section className="grid gap-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Course Matches & Potential Students</h2>
+          <Button 
+            variant="ghost" 
+            className="text-accent-purple hover:text-accent-purple/90"
+            onClick={() => navigate("/dashboard/classes")}
+          >
+            View All Classes
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </div>
+        <Card>
+          <CardContent className="pt-6">
             <p className="text-sm text-muted-foreground mb-6">
               View potential students who match your courses based on their interests and location. 
               Contact them directly or send batch notifications to increase bookings.
@@ -122,17 +124,21 @@ const TeacherOverview = () => {
         </Card>
       </section>
 
-      <section className="w-full">
-        <h2 className="text-xl font-semibold mb-4 text-left">Upcoming Classes</h2>
+      <section className="grid gap-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Upcoming Classes</h2>
+        </div>
         <BookingsOverview />
       </section>
 
-      <section className="w-full">
-        <h2 className="text-xl font-semibold mb-4 text-left">Analytics Summary</h2>
+      <section className="grid gap-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Analytics Summary</h2>
+        </div>
         <AnalyticsSummary />
       </section>
 
-      <section className="w-full">
+      <section className="grid gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-xl">Recent Reviews & Testimonials</CardTitle>
