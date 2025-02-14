@@ -77,14 +77,14 @@ const Browse = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100">
       <Navigation />
-      <main className="pt-24 pb-16 container-padding">
-        <div className="max-w-5xl mx-auto">
+      <main className="pt-24 pb-16">
+        <div className="w-full px-4 sm:px-6 lg:px-8">
           {/* Search Section */}
-          <div className="glass-panel p-6 rounded-2xl shadow-sm mb-8">
+          <div className="glass-panel p-6 rounded-2xl shadow-sm mb-8 max-w-[1920px] mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Find Your Perfect Class</h1>
             <div className="space-y-4">
               {/* Search and Location */}
-              <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3">
+              <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                   <Input
@@ -124,7 +124,7 @@ const Browse = () => {
               </div>
 
               {/* Filters */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
                 {/* Category Filter */}
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
@@ -203,7 +203,7 @@ const Browse = () => {
               </div>
 
               {/* Price Range */}
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
+              <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 max-w-5xl mx-auto">
                 <h3 className="text-sm font-medium mb-4">Price Range</h3>
                 <div className="px-2">
                   <Slider
@@ -224,10 +224,12 @@ const Browse = () => {
           </div>
 
           {/* Results Grid */}
-          <ClassGrid 
-            category={selectedCategory === "all" ? null : selectedCategory} 
-            sortBy={sortBy}
-          />
+          <div className="max-w-[1920px] mx-auto">
+            <ClassGrid 
+              category={selectedCategory === "all" ? null : selectedCategory} 
+              sortBy={sortBy}
+            />
+          </div>
         </div>
       </main>
       <Footer />
