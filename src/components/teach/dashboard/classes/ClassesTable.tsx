@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
 import MessageDialog from "./dialogs/MessageDialog";
 import ShareDialog from "./dialogs/ShareDialog";
+import EditClassDialog from "./dialogs/EditClassDialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -32,6 +32,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
   const [filters, setFilters] = useState({
     title: "",
     date: "",
@@ -50,7 +51,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const handleEditClick = (classId: number, e: React.MouseEvent) => {
     e.stopPropagation();
-    navigate(`/edit-course/${classId}`);
+    setSelectedClassId(classId);
+    setIsEditOpen(true);
   };
 
   const handlePromote = (classId: number, e: React.MouseEvent) => {
@@ -76,6 +78,10 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
     }
     return format(date, 'PPP');
+  };
+
+  const handleEditSuccess = () => {
+    onAction('edit', selectedClassId!);
   };
 
   const ColumnFilter = ({ column }: { column: string }) => (
@@ -197,6 +203,13 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         open={isDetailsOpen}
         onOpenChange={setIsDetailsOpen}
         classId={selectedClassId}
+      />
+
+      <EditClassDialog 
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        classId={selectedClassId}
+        onSuccess={handleEditSuccess}
       />
     </>
   );
