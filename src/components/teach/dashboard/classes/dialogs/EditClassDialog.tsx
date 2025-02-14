@@ -153,7 +153,7 @@ const EditClassDialog = ({ open, onOpenChange, classId, onSuccess }: EditClassDi
       const { error } = await supabase
         .from('courses')
         .update({
-          status: 'cancelled'
+          status: 'archived' // Changed from 'cancelled' to 'archived'
         })
         .eq('id', classId);
 
