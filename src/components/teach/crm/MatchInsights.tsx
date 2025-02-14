@@ -7,7 +7,6 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Users } from "lucide-react";
 import {
@@ -93,7 +92,6 @@ const MatchInsights = () => {
 
       if (matchesError) throw matchesError;
 
-      // Update notification timestamp for matched users
       if (matches && matches.length > 0) {
         const { error: updateError } = await supabase
           .from('course_matches')
@@ -128,10 +126,6 @@ const MatchInsights = () => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <Users className="h-5 w-5" />
-          Course Match Insights
-        </CardTitle>
         <CardDescription>
           View and manage potential participants based on interests and location
         </CardDescription>
