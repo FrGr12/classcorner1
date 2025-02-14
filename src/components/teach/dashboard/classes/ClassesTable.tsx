@@ -71,6 +71,13 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     setIsShareOpen(true);
   };
 
+  const formatClassDate = (date: Date | Date[]): string => {
+    if (Array.isArray(date)) {
+      return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
+    }
+    return format(date, 'PPP');
+  };
+
   const ColumnFilter = ({ column }: { column: string }) => (
     <div className="flex items-center gap-2">
       <span>{column}</span>
@@ -119,7 +126,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               }}
             >
               <TableCell className="font-medium">{classItem.title}</TableCell>
-              <TableCell>{format(new Date(classItem.date), 'PPP')}</TableCell>
+              <TableCell>{formatClassDate(classItem.date)}</TableCell>
               <TableCell>{classItem.maxParticipants || '-'}</TableCell>
               <TableCell>0</TableCell>
               <TableCell>0</TableCell>
