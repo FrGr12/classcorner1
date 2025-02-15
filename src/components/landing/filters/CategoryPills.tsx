@@ -33,7 +33,7 @@ const CategoryPills = ({
 
   return (
     <div className="mb-4">
-      <div className="flex gap-4 pb-2 overflow-x-auto no-scrollbar">
+      <div className="flex gap-2 sm:gap-4 pb-2 overflow-x-auto no-scrollbar">
         {regularCategories.map((category) => {
           const Icon = category.icon;
           const colors = getCategoryColor(category.name);
@@ -44,9 +44,9 @@ const CategoryPills = ({
               key={category.name}
               onClick={() => onCategorySelect(category.name)}
               className={cn(
-                "flex flex-col items-center gap-2 px-5 py-3 rounded-xl transition-all duration-300",
+                "flex flex-col items-center gap-1.5 sm:gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-xl transition-all duration-300",
                 "ease-in-out transform hover:scale-105 whitespace-nowrap min-w-fit",
-                "shadow-md hover:shadow-lg",
+                "shadow-sm hover:shadow-md",
                 isSelected
                   ? "bg-[#6E44FF] text-white"
                   : `${colors.bg} text-neutral-800 ${colors.hover}`,
@@ -54,10 +54,10 @@ const CategoryPills = ({
               )}
             >
               <Icon className={cn(
-                "w-6 h-6 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
+                "w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
                 isSelected ? "text-white" : "group-hover:text-white"
               )} />
-              <span className="text-sm font-display tracking-wide">{category.name}</span>
+              <span className="text-xs sm:text-sm font-display tracking-wide">{category.name}</span>
             </button>
           );
         })}
@@ -67,4 +67,3 @@ const CategoryPills = ({
 };
 
 export default CategoryPills;
-
