@@ -112,26 +112,47 @@ const Categories = () => {
   ];
 
   return (
-    <section className="pt-6 sm:pt-8 bg-neutral-100 w-full">
-      <div className="px-3 sm:px-4 md:px-6 lg:px-8">
-        <div className="mt-8 text-neutral-600">
-          <CategoryPills
-            categories={allCategories}
-            selectedCategories={selectedCategories}
-            onCategorySelect={handleCategorySelect}
-          />
+    <section className="pt-4 sm:pt-6 md:pt-8 bg-neutral-100 w-full">
+      <div className="px-2 sm:px-3 md:px-6 lg:px-8">
+        <div className="mt-4 sm:mt-6 md:mt-8 text-neutral-600">
+          {/* Category Pills with improved mobile scrolling */}
+          <div className="overflow-x-auto scrollbar-hide -mx-2 px-2 sm:mx-0 sm:px-0">
+            <div className="inline-flex sm:flex w-auto sm:w-full">
+              <CategoryPills
+                categories={allCategories}
+                selectedCategories={selectedCategories}
+                onCategorySelect={handleCategorySelect}
+              />
+            </div>
+          </div>
         </div>
 
-        <div className="mt-12">
-          <ClassGrid 
-            category={selectedCategories.length === 1 ? selectedCategories[0] : null}
-            sortBy="recommended"
-            priceRange={[0, 200]} // Default price range
-            minRating={0} // Default minimum rating
-            isLoading={isLoading}
-          />
+        <div className="mt-6 sm:mt-8 md:mt-12">
+          {/* Adjusted grid spacing for mobile */}
+          <div className="max-w-[1920px] mx-auto">
+            <ClassGrid 
+              category={selectedCategories.length === 1 ? selectedCategories[0] : null}
+              sortBy="recommended"
+              priceRange={[0, 200]}
+              minRating={0}
+              isLoading={isLoading}
+            />
+          </div>
         </div>
       </div>
+
+      {/* Add mobile-specific styles */}
+      <style>{`
+        @media (max-width: 640px) {
+          .scrollbar-hide::-webkit-scrollbar {
+            display: none;
+          }
+          .scrollbar-hide {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+          }
+        }
+      `}</style>
     </section>
   );
 };
