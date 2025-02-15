@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -19,6 +18,8 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
+import { useToast } from "@/hooks/use-toast";
+import { useDebounce } from "@/hooks/use-debounce";
 
 const cities = [
   "New York", "Los Angeles", "Chicago", "San Francisco", 
@@ -41,6 +42,7 @@ const sortOptions = [
 ];
 
 const Browse = () => {
+  const { toast } = useToast();
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
@@ -49,16 +51,57 @@ const Browse = () => {
   const [date, setDate] = useState<Date | undefined>(
     searchParams.get("date") ? new Date(searchParams.get("date")!) : undefined
   );
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 200]);
-  const [minRating, setMinRating] = useState(0);
+  const [priceRange, setPriceRange] = useState<[number, number]>([
+    Number(searchParams.get("minPrice")) || 0,
+    Number(searchParams.get("maxPrice")) || 200
+  ]);
+  const [minRating, setMinRating] = useState(Number(searchParams.get("minRating")) || 0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const debouncedSearch = useDebounce(searchInput, 300);
+  const debouncedPriceRange = useDebounce(priceRange, 300);
+  const debouncedMinRating = useDebounce(minRating, 300);
+
+  useEffect(() => {
+    handleSearch();
+  }, [debouncedSearch, debouncedPriceRange, debouncedMinRating]);
 
   const handleSearch = () => {
-    const params = new URLSearchParams();
-    if (searchInput) params.set("q", searchInput);
-    if (selectedCity) params.set("city", selectedCity);
-    if (date) params.set("date", date.toISOString());
-    if (sortBy) params.set("sort", sortBy);
-    setSearchParams(params);
+    try {
+      setIsLoading(true);
+      const params = new URLSearchParams(searchParams);
+      
+      if (searchInput) params.set("q", searchInput);
+      else params.delete("q");
+      
+      if (selectedCity) params.set("city", selectedCity);
+      else params.delete("city");
+      
+      if (date) params.set("date", date.toISOString());
+      else params.delete("date");
+      
+      if (sortBy) params.set("sort", sortBy);
+      else params.delete("sort");
+      
+      if (priceRange[0] > 0) params.set("minPrice", priceRange[0].toString());
+      else params.delete("minPrice");
+      
+      if (priceRange[1] < 200) params.set("maxPrice", priceRange[1].toString());
+      else params.delete("maxPrice");
+      
+      if (minRating > 0) params.set("minRating", minRating.toString());
+      else params.delete("minRating");
+
+      setSearchParams(params, { replace: true });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Search failed",
+        description: "There was an error updating your search. Please try again.",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleSortChange = (value: string) => {
@@ -72,18 +115,27 @@ const Browse = () => {
     setPriceRange([value[0], value[1]] as [number, number]);
   };
 
+  const handleReset = () => {
+    setSelectedCategory("all");
+    setSearchInput("");
+    setSelectedCity("");
+    setSortBy("recommended");
+    setDate(undefined);
+    setPriceRange([0, 200]);
+    setMinRating(0);
+    setSearchParams({});
+  };
+
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100">
       <Navigation />
-      <main className="pt-24 pb-16">
+      <main className="pt-24 pb-16" role="main">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          {/* Search Section */}
           <div className="glass-panel p-6 rounded-2xl shadow-sm mb-8 max-w-[1920px] mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Find Your Perfect Class</h1>
             <div className="space-y-4">
-              {/* Search and Location */}
               <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
                 <div className="relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
@@ -93,16 +145,14 @@ const Browse = () => {
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="pl-10 h-12 border-neutral-200"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') handleSearch();
-                    }}
+                    aria-label="Search classes"
                   />
                 </div>
                 
                 <div className="relative">
                   <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
                   <Select value={selectedCity} onValueChange={setSelectedCity}>
-                    <SelectTrigger className="pl-10 h-12 border-neutral-200">
+                    <SelectTrigger className="pl-10 h-12 border-neutral-200" aria-label="Select city">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
                     <SelectContent>
@@ -118,14 +168,14 @@ const Browse = () => {
                 <Button 
                   onClick={handleSearch}
                   className="h-12 px-8 bg-accent-purple hover:bg-accent-purple/90"
+                  disabled={isLoading}
+                  aria-label="Search"
                 >
-                  Search
+                  {isLoading ? "Searching..." : "Search"}
                 </Button>
               </div>
 
-              {/* Filters */}
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
-                {/* Category Filter */}
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <Filter className="w-4 h-4" />
@@ -146,7 +196,6 @@ const Browse = () => {
                   </Select>
                 </div>
 
-                {/* Date Filter */}
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
@@ -175,7 +224,6 @@ const Browse = () => {
                   </Popover>
                 </div>
 
-                {/* Sort Options */}
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <SortIcon className="w-4 h-4" />
@@ -202,9 +250,19 @@ const Browse = () => {
                 </div>
               </div>
 
-              {/* Price Range */}
               <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 max-w-5xl mx-auto">
-                <h3 className="text-sm font-medium mb-4">Price Range</h3>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-sm font-medium">Price Range</h3>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    onClick={handleReset}
+                    className="text-xs text-neutral-500 hover:text-accent-purple"
+                    aria-label="Reset all filters"
+                  >
+                    Reset Filters
+                  </Button>
+                </div>
                 <div className="px-2">
                   <Slider
                     defaultValue={[0, 200]}
@@ -213,6 +271,7 @@ const Browse = () => {
                     value={priceRange}
                     onValueChange={handlePriceRangeChange}
                     className="mt-2"
+                    aria-label="Price range"
                   />
                   <div className="flex justify-between mt-2 text-sm text-neutral-600">
                     <span>${priceRange[0]}</span>
@@ -223,11 +282,13 @@ const Browse = () => {
             </div>
           </div>
 
-          {/* Results Grid */}
           <div className="max-w-[1920px] mx-auto">
             <ClassGrid 
               category={selectedCategory === "all" ? null : selectedCategory} 
               sortBy={sortBy}
+              priceRange={priceRange}
+              minRating={minRating}
+              isLoading={isLoading}
             />
           </div>
         </div>
