@@ -59,6 +59,7 @@ const crossFunctionalIcons = {
 const Categories = () => {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [crossFunctionalCategories, setCrossFunctionalCategories] = useState<{ name: string, count: string, icon: any }[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const fetchCrossFunctionalCategories = async () => {
@@ -122,7 +123,13 @@ const Categories = () => {
         </div>
 
         <div className="mt-12">
-          <ClassGrid category={selectedCategories.length === 1 ? selectedCategories[0] : null} />
+          <ClassGrid 
+            category={selectedCategories.length === 1 ? selectedCategories[0] : null}
+            sortBy="recommended"
+            priceRange={[0, 200]} // Default price range
+            minRating={0} // Default minimum rating
+            isLoading={isLoading}
+          />
         </div>
       </div>
     </section>
