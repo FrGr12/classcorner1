@@ -10,16 +10,29 @@ import { startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
 interface ClassGridProps {
   category: string | null;
   sortBy?: string;
+  priceRange: [number, number];  // Added this property
+  minRating: number;             // Added this property
+  isLoading: boolean;            // Added this property
 }
 
-const ClassGrid = ({ category, sortBy = "recommended" }: ClassGridProps) => {
+const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, isLoading }: ClassGridProps) => {
   const [displayCount, setDisplayCount] = useState(12);
   const ITEMS_PER_PAGE = 12;
 
-  // Filter classes based on category
-  const filteredClasses = category 
+  // Filter classes based on category and other filters
+  let filteredClasses = category 
     ? mockClasses[category] || []
     : Object.values(mockClasses).flat();
+
+  // Apply price range filter
+  filteredClasses = filteredClasses.filter(classItem => 
+    classItem.price >= priceRange[0] && classItem.price <= priceRange[1]
+  );
+
+  // Apply rating filter
+  filteredClasses = filteredClasses.filter(classItem => 
+    (classItem.rating || 0) >= minRating
+  );
 
   // Sort classes based on sortBy parameter
   const sortedClasses = [...filteredClasses].sort((a, b) => {
@@ -72,6 +85,14 @@ const ClassGrid = ({ category, sortBy = "recommended" }: ClassGridProps) => {
   const handleLoadMore = () => {
     setDisplayCount(prev => prev + ITEMS_PER_PAGE);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <div className="text-center text-gray-500">Loading classes...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
