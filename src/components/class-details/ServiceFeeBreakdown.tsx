@@ -30,7 +30,9 @@ const ServiceFeeBreakdown = ({ bookingAmount }: ServiceFeeBreakdownProps) => {
         .rpc('calculate_service_fees', { booking_amount: bookingAmount });
 
       if (!error && data) {
-        setFeeBreakdown(data as FeeBreakdown);
+        // Properly cast the returned data to FeeBreakdown
+        const fees = data as unknown as FeeBreakdown;
+        setFeeBreakdown(fees);
       }
     };
 
