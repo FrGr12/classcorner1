@@ -18,7 +18,7 @@ const ClassesTabs = ({ classes, onAction }: ClassesTabsProps) => {
         <TabsTrigger value="classes">Classes</TabsTrigger>
         <TabsTrigger value="attendance">Attendance</TabsTrigger>
         <TabsTrigger value="waitlist">Waitlist</TabsTrigger>
-        <TabsTrigger value="promotional">Promotional</TabsTrigger>
+        <TabsTrigger value="promotional">Performance</TabsTrigger>
       </TabsList>
 
       <TabsContent value="classes">

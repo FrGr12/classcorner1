@@ -325,6 +325,61 @@ export type Database = {
         }
         Relationships: []
       }
+      class_promotions: {
+        Row: {
+          amount_paid: number
+          course_id: number | null
+          created_at: string | null
+          end_date: string
+          id: number
+          promotion_type: string
+          start_date: string
+          status: string
+        }
+        Insert: {
+          amount_paid: number
+          course_id?: number | null
+          created_at?: string | null
+          end_date: string
+          id?: number
+          promotion_type: string
+          start_date: string
+          status?: string
+        }
+        Update: {
+          amount_paid?: number
+          course_id?: number | null
+          created_at?: string | null
+          end_date?: string
+          id?: number
+          promotion_type?: string
+          start_date?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_promotions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_promotions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "class_promotions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       communications: {
         Row: {
           assigned_to: string | null

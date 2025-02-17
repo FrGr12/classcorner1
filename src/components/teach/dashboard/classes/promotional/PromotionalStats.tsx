@@ -8,8 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
-  BarChart,
-  Bar,
+  LineChart,
+  Line,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -18,86 +18,147 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2 } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
-interface StatsData {
-  title: string;
+interface PromotionalMetrics {
+  date: string;
   views: number;
+  ctr: number;
   saves: number;
-  ad_clicks: number;
+  bookings: number;
+  matches: number;
 }
 
 const PromotionalStats = () => {
   const [loading, setLoading] = useState(true);
-  const [stats, setStats] = useState<StatsData[]>([]);
+  const [metrics, setMetrics] = useState<PromotionalMetrics[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchMetrics = async () => {
       try {
-        const { data, error } = await supabase
+        const { data: promotionalStats, error: statsError } = await supabase
           .from('course_promotional_stats')
           .select(`
             views,
             saves,
             ad_clicks,
-            courses (
-              title
+            created_at,
+            courses!inner (
+              title,
+              bookings (count)
             )
-          `);
+          `)
+          .order('created_at', { ascending: true });
 
-        if (error) throw error;
+        if (statsError) throw statsError;
 
-        const formattedStats = data.map(stat => ({
-          title: stat.courses.title,
-          views: stat.views,
-          saves: stat.saves,
-          ad_clicks: stat.ad_clicks
+        // Transform the data for the chart
+        const formattedMetrics = promotionalStats.map(stat => ({
+          date: new Date(stat.created_at).toLocaleDateString(),
+          views: stat.views || 0,
+          ctr: stat.ad_clicks ? ((stat.ad_clicks / stat.views) * 100).toFixed(1) : 0,
+          saves: stat.saves || 0,
+          bookings: stat.courses.bookings.count || 0,
+          matches: 0 // This will be implemented when match data is available
         }));
 
-        setStats(formattedStats);
-      } catch (error) {
-        console.error('Error fetching promotional stats:', error);
+        setMetrics(formattedMetrics);
+      } catch (err: any) {
+        console.error('Error fetching promotional metrics:', err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStats();
+    fetchMetrics();
   }, []);
 
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-accent-purple" />
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
       </div>
     );
   }
 
+  if (error) {
+    return (
+      <Alert variant="destructive">
+        <AlertCircle className="h-4 w-4" />
+        <AlertDescription>
+          Failed to load promotional metrics: {error}
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  const recommendations = [];
+  if (metrics.length > 0) {
+    const latestMetrics = metrics[metrics.length - 1];
+    if (latestMetrics.saves > latestMetrics.bookings * 3) {
+      recommendations.push(
+        "High save-to-booking ratio. Consider sending outreach messages to interested students."
+      );
+    }
+    if (latestMetrics.views > 0 && latestMetrics.ctr < 2) {
+      recommendations.push(
+        "Low click-through rate. A boost could help improve visibility."
+      );
+    }
+  }
+
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Promotional Performance</CardTitle>
-        <CardDescription>
-          Track views, saves, and ad engagement for your classes
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <div className="h-[400px] mt-4">
-          <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={stats}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="title" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Bar dataKey="views" fill="#8884d8" name="Views" />
-              <Bar dataKey="saves" fill="#82ca9d" name="Saves" />
-              <Bar dataKey="ad_clicks" fill="#ffc658" name="Ad Clicks" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Performance Overview</CardTitle>
+          <CardDescription>
+            Track your class engagement and promotional metrics
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="h-[400px] mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={metrics}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="date" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Line type="monotone" dataKey="views" stroke="#8884d8" name="Views" />
+                <Line type="monotone" dataKey="saves" stroke="#82ca9d" name="Saves" />
+                <Line type="monotone" dataKey="bookings" stroke="#ffc658" name="Bookings" />
+                <Line type="monotone" dataKey="ctr" stroke="#ff7300" name="CTR %" />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
+
+      {recommendations.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Recommendations</CardTitle>
+            <CardDescription>
+              Actionable insights to improve your class performance
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              {recommendations.map((recommendation, index) => (
+                <li key={index} className="flex items-start gap-2">
+                  <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
+                  <span>{recommendation}</span>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      )}
+    </div>
   );
 };
 
