@@ -67,7 +67,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
             ))}
             <TableHead className="text-center">Views</TableHead>
             <TableHead className="text-center">Saves</TableHead>
-            <TableHead className="text-center">Ad Clicks</TableHead>
+            <TableHead className="text-center">Clicks</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
