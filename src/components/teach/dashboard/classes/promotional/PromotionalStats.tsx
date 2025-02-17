@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -9,6 +8,8 @@ import PromotionalActions from "./components/PromotionalActions";
 import MetricsChart from "./components/MetricsChart";
 import Recommendations from "./components/Recommendations";
 import PromoteDialog from "../promote/PromoteDialog";
+
+type PromotionType = 'boost' | 'sponsor' | 'outreach';
 
 interface PromotionalMetrics {
   date: string;
@@ -33,6 +34,7 @@ const PromotionalStats = () => {
   const [classes, setClasses] = useState<ClassOption[]>([]);
   const [promoteDialogOpen, setPromoteDialogOpen] = useState(false);
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  const [promotionType, setPromotionType] = useState<PromotionType | undefined>();
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -107,30 +109,13 @@ const PromotionalStats = () => {
     fetchMetrics();
   }, [selectedClass, timeRange]);
 
-  const handleBoost = () => {
+  const handlePromotion = (type: PromotionType) => {
     if (selectedClass === "all") {
-      toast.error("Please select a specific class to boost");
+      toast.error("Please select a specific class first");
       return;
     }
     setSelectedClassId(parseInt(selectedClass, 10));
-    setPromoteDialogOpen(true);
-  };
-
-  const handleSponsor = () => {
-    if (selectedClass === "all") {
-      toast.error("Please select a specific class to sponsor");
-      return;
-    }
-    setSelectedClassId(parseInt(selectedClass, 10));
-    setPromoteDialogOpen(true);
-  };
-
-  const handleOutreach = () => {
-    if (selectedClass === "all") {
-      toast.error("Please select a specific class for outreach");
-      return;
-    }
-    setSelectedClassId(parseInt(selectedClass, 10));
+    setPromotionType(type);
     setPromoteDialogOpen(true);
   };
 
@@ -164,9 +149,9 @@ const PromotionalStats = () => {
           classes={classes}
         />
         <PromotionalActions
-          onBoost={handleBoost}
-          onSponsor={handleSponsor}
-          onOutreach={handleOutreach}
+          onBoost={() => handlePromotion('boost')}
+          onSponsor={() => handlePromotion('sponsor')}
+          onOutreach={() => handlePromotion('outreach')}
         />
       </div>
 
@@ -177,6 +162,7 @@ const PromotionalStats = () => {
         open={promoteDialogOpen}
         onOpenChange={setPromoteDialogOpen}
         classId={selectedClassId}
+        promotionType={promotionType}
       />
     </div>
   );

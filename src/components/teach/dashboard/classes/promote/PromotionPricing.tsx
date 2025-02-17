@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,6 +13,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface PromotionPricingProps {
   courseId: number;
+  promotionType?: 'boost' | 'sponsor' | 'outreach';
   onPromotionComplete?: () => void;
 }
 
@@ -32,7 +32,7 @@ const PROMOTION_PRICES = {
   }
 };
 
-const PromotionPricing = ({ courseId, onPromotionComplete }: PromotionPricingProps) => {
+const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: PromotionPricingProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSponsorClass = async (duration: "7days" | "14days") => {
@@ -95,97 +95,201 @@ const PromotionPricing = ({ courseId, onPromotionComplete }: PromotionPricingPro
     }
   };
 
-  return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Rocket className="h-5 w-5" />
-            Sponsored Listing
-          </CardTitle>
-          <CardDescription>
-            Feature your class at the top of search results
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleSponsorClass("7days")}
-            disabled={isLoading}
-          >
-            7 Days for ${PROMOTION_PRICES.sponsored["7days"]}
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleSponsorClass("14days")}
-            disabled={isLoading}
-          >
-            14 Days for ${PROMOTION_PRICES.sponsored["14days"]}
-          </Button>
-        </CardContent>
-      </Card>
+  const renderContent = () => {
+    switch (promotionType) {
+      case 'boost':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Rocket className="h-5 w-5" />
+                Boost Visibility
+              </CardTitle>
+              <CardDescription>
+                Increase visibility for a short period
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => handleBoostClass("24hours")}
+                disabled={isLoading}
+              >
+                24 Hours for ${PROMOTION_PRICES.boost["24hours"]}
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => handleBoostClass("48hours")}
+                disabled={isLoading}
+              >
+                48 Hours for ${PROMOTION_PRICES.boost["48hours"]}
+              </Button>
+            </CardContent>
+          </Card>
+        );
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <ArrowUp className="h-5 w-5" />
-            Boost Visibility
-          </CardTitle>
-          <CardDescription>
-            Increase visibility for a short period
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleBoostClass("24hours")}
-            disabled={isLoading}
-          >
-            24 Hours for ${PROMOTION_PRICES.boost["24hours"]}
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            onClick={() => handleBoostClass("48hours")}
-            disabled={isLoading}
-          >
-            48 Hours for ${PROMOTION_PRICES.boost["48hours"]}
-          </Button>
-        </CardContent>
-      </Card>
+      case 'sponsor':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <ArrowUp className="h-5 w-5" />
+                Sponsored Listing
+              </CardTitle>
+              <CardDescription>
+                Feature your class at the top of search results
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => handleSponsorClass("7days")}
+                disabled={isLoading}
+              >
+                7 Days for ${PROMOTION_PRICES.sponsored["7days"]}
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => handleSponsorClass("14days")}
+                disabled={isLoading}
+              >
+                14 Days for ${PROMOTION_PRICES.sponsored["14days"]}
+              </Button>
+            </CardContent>
+          </Card>
+        );
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
-            Student Outreach
-          </CardTitle>
-          <CardDescription>
-            Contact matched students directly
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button
-            variant="outline"
-            className="w-full"
-            disabled={isLoading}
-          >
-            Contact Student (${PROMOTION_PRICES.outreach.single})
-          </Button>
-          <Button
-            variant="outline"
-            className="w-full"
-            disabled={isLoading}
-          >
-            Bulk Contact - 10 Students (${PROMOTION_PRICES.outreach.bulk})
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
+      case 'outreach':
+        return (
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                Student Outreach
+              </CardTitle>
+              <CardDescription>
+                Contact matched students directly
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <Button
+                variant="outline"
+                className="w-full"
+                disabled={isLoading}
+              >
+                Contact Student (${PROMOTION_PRICES.outreach.single})
+              </Button>
+              <Button
+                variant="outline"
+                className="w-full"
+                disabled={isLoading}
+              >
+                Bulk Contact - 10 Students (${PROMOTION_PRICES.outreach.bulk})
+              </Button>
+            </CardContent>
+          </Card>
+        );
+
+      default:
+        return (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Rocket className="h-5 w-5" />
+                  Sponsored Listing
+                </CardTitle>
+                <CardDescription>
+                  Feature your class at the top of search results
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleSponsorClass("7days")}
+                  disabled={isLoading}
+                >
+                  7 Days for ${PROMOTION_PRICES.sponsored["7days"]}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleSponsorClass("14days")}
+                  disabled={isLoading}
+                >
+                  14 Days for ${PROMOTION_PRICES.sponsored["14days"]}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <ArrowUp className="h-5 w-5" />
+                  Boost Visibility
+                </CardTitle>
+                <CardDescription>
+                  Increase visibility for a short period
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleBoostClass("24hours")}
+                  disabled={isLoading}
+                >
+                  24 Hours for ${PROMOTION_PRICES.boost["24hours"]}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => handleBoostClass("48hours")}
+                  disabled={isLoading}
+                >
+                  48 Hours for ${PROMOTION_PRICES.boost["48hours"]}
+                </Button>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <MessageSquare className="h-5 w-5" />
+                  Student Outreach
+                </CardTitle>
+                <CardDescription>
+                  Contact matched students directly
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  Contact Student (${PROMOTION_PRICES.outreach.single})
+                </Button>
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  disabled={isLoading}
+                >
+                  Bulk Contact - 10 Students (${PROMOTION_PRICES.outreach.bulk})
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        );
+    }
+  };
+
+  return renderContent();
 };
 
 export default PromotionPricing;
