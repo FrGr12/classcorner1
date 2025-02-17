@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -46,12 +47,16 @@ const PromotionPricing = ({ courseIds, promotionType, onPromotionComplete }: Pro
       setIsLoading(true);
       const price = CREDIT_PRICES[amount as keyof typeof CREDIT_PRICES];
 
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
       const { error } = await supabase
         .from('boost_credit_purchases')
         .insert({
           amount,
           price,
-          payment_status: 'pending'
+          payment_status: 'pending',
+          teacher_id: user.id
         });
 
       if (error) throw error;
@@ -76,6 +81,10 @@ const PromotionPricing = ({ courseIds, promotionType, onPromotionComplete }: Pro
         return;
       }
 
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // Process the promotion action
       const { error } = await supabase
         .from('class_promotions')
         .insert(
@@ -84,13 +93,20 @@ const PromotionPricing = ({ courseIds, promotionType, onPromotionComplete }: Pro
             promotion_type: action,
             start_date: new Date().toISOString(),
             end_date: new Date(Date.now() + (duration === "24hours" ? 24 : 48) * 60 * 60 * 1000).toISOString(),
-            status: 'active'
+            status: 'active',
+            amount_paid: creditsNeeded
           }))
         );
 
       if (error) throw error;
 
-      await supabase.rpc('deduct_boost_credits', { amount: creditsNeeded });
+      // Update teacher's credit balance
+      const { error: updateError } = await supabase
+        .from('teacher_premium_features')
+        .update({ boost_credits: credits - creditsNeeded })
+        .eq('teacher_id', user.id);
+
+      if (updateError) throw updateError;
 
       toast.success(`Action completed successfully!`);
       refetchCredits();

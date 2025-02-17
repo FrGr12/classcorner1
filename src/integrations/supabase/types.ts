@@ -2111,6 +2111,12 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      deduct_boost_credits: {
+        Args: {
+          amount: number
+        }
+        Returns: undefined
+      }
       process_match_notifications: {
         Args: Record<PropertyKey, never>
         Returns: undefined
