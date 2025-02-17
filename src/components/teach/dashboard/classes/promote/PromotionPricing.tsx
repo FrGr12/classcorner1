@@ -42,9 +42,8 @@ const PromotionPricing = ({ courseId, onPromotionComplete }: PromotionPricingPro
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + (duration === "7days" ? 7 : 14));
 
-      // Use explicit type casting for the insert operation
       const { error } = await supabase
-        .from('class_promotions' as any)
+        .from('class_promotions')
         .insert({
           course_id: courseId,
           promotion_type: 'sponsored',
@@ -73,9 +72,8 @@ const PromotionPricing = ({ courseId, onPromotionComplete }: PromotionPricingPro
       const endDate = new Date();
       endDate.setHours(endDate.getHours() + (duration === "24hours" ? 24 : 48));
 
-      // Use explicit type casting for the insert operation
       const { error } = await supabase
-        .from('class_promotions' as any)
+        .from('class_promotions')
         .insert({
           course_id: courseId,
           promotion_type: 'boost',
