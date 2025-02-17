@@ -47,22 +47,29 @@ const PromotionalStats = () => {
             created_at,
             courses!inner (
               title,
-              bookings (count)
+              bookings:bookings(count)
             )
           `)
           .order('created_at', { ascending: true });
 
         if (statsError) throw statsError;
 
-        // Transform the data for the chart
-        const formattedMetrics = promotionalStats.map(stat => ({
-          date: new Date(stat.created_at).toLocaleDateString(),
-          views: stat.views || 0,
-          ctr: stat.ad_clicks ? ((stat.ad_clicks / stat.views) * 100).toFixed(1) : 0,
-          saves: stat.saves || 0,
-          bookings: stat.courses.bookings.count || 0,
-          matches: 0 // This will be implemented when match data is available
-        }));
+        // Transform the data for the chart with proper type handling
+        const formattedMetrics: PromotionalMetrics[] = promotionalStats.map(stat => {
+          const views = stat.views || 0;
+          const adClicks = stat.ad_clicks || 0;
+          // Calculate CTR as a number, not a string
+          const ctr = views > 0 ? (adClicks / views) * 100 : 0;
+
+          return {
+            date: new Date(stat.created_at).toLocaleDateString(),
+            views: views,
+            ctr: Number(ctr.toFixed(1)), // Convert to number with 1 decimal place
+            saves: stat.saves || 0,
+            bookings: stat.courses?.bookings[0]?.count || 0,
+            matches: 0 // This will be implemented when match data is available
+          };
+        });
 
         setMetrics(formattedMetrics);
       } catch (err: any) {
