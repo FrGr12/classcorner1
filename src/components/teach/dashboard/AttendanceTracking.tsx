@@ -25,12 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import type { AttendanceRecord } from "@/types/waitlist";
-
-interface Session {
-  id: number;
-  start_time: string;
-}
+import type { AttendanceRecord, Session } from "@/types/waitlist";
 
 const AttendanceTracking = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
@@ -63,8 +58,8 @@ const AttendanceTracking = () => {
         .order('start_time', { ascending: false });
 
       if (error) throw error;
-      setSessions(data);
-      if (data.length > 0) {
+      setSessions(data || []);
+      if (data && data.length > 0) {
         setSelectedSession(data[0].id);
       }
     } catch (error: any) {
@@ -80,7 +75,7 @@ const AttendanceTracking = () => {
 
   const fetchAttendanceRecords = async (sessionId: number) => {
     try {
-      // First, get the bookings for this session
+      // First get all bookings for this session
       const { data: bookings, error: bookingsError } = await supabase
         .from('bookings')
         .select(`
@@ -91,22 +86,24 @@ const AttendanceTracking = () => {
 
       if (bookingsError) throw bookingsError;
 
-      // Then get the attendance records
-      const { data: attendance, error: attendanceError } = await supabase
+      if (!bookings) return;
+
+      // Then get existing attendance records
+      const { data: existingRecords, error: recordsError } = await supabase
         .from('attendance_records')
         .select('*')
         .eq('session_id', sessionId);
 
-      if (attendanceError) throw attendanceError;
+      if (recordsError) throw recordsError;
 
-      // Combine the data
+      // Create/map attendance records
       const records: AttendanceRecord[] = bookings.map(booking => {
-        const existingRecord = attendance?.find(a => a.booking_id === booking.id);
+        const existingRecord = existingRecords?.find(r => r.booking_id === booking.id);
         return {
           id: existingRecord?.id || 0,
           booking_id: booking.id,
           session_id: sessionId,
-          attendance_status: existingRecord?.attendance_status || 'pending',
+          attendance_status: (existingRecord?.attendance_status || 'pending') as 'present' | 'absent' | 'pending',
           notes: existingRecord?.notes || null,
           marked_at: existingRecord?.marked_at || null,
           marked_by: existingRecord?.marked_by || null,
@@ -133,30 +130,32 @@ const AttendanceTracking = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const attendance = {
-        booking_id: bookingId,
-        session_id: selectedSession,
-        attendance_status: status,
-        marked_by: user.id,
-        marked_at: new Date().toISOString()
-      };
-
-      let query;
       if (recordId === 0) {
         // Insert new record
-        query = supabase
+        const { error } = await supabase
           .from('attendance_records')
-          .insert([attendance]);
+          .insert([{
+            booking_id: bookingId,
+            session_id: selectedSession,
+            attendance_status: status,
+            marked_by: user.id,
+            marked_at: new Date().toISOString()
+          }]);
+
+        if (error) throw error;
       } else {
         // Update existing record
-        query = supabase
+        const { error } = await supabase
           .from('attendance_records')
-          .update(attendance)
+          .update({
+            attendance_status: status,
+            marked_by: user.id,
+            marked_at: new Date().toISOString()
+          })
           .eq('id', recordId);
-      }
 
-      const { error } = await query;
-      if (error) throw error;
+        if (error) throw error;
+      }
 
       toast({
         title: "Success",

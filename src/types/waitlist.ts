@@ -30,13 +30,15 @@ export interface AttendanceRecord {
   marked_by: string | null;
   created_at: string;
   updated_at: string;
-  booking?: {
+  booking: {
     student: {
       first_name: string;
       last_name: string;
     };
   };
-  session?: {
-    start_time: string;
-  };
+}
+
+export interface Session {
+  id: number;
+  start_time: string;
 }
