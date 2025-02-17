@@ -25,21 +25,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-interface AttendanceRecord {
-  id: number;
-  booking_id: number;
-  session_id: number;
-  attendance_status: string;
-  notes: string;
-  student: {
-    first_name: string;
-    last_name: string;
-  };
-  session: {
-    start_time: string;
-  };
-}
+import type { AttendanceRecord } from "@/types/waitlist";
 
 interface Session {
   id: number;
@@ -94,19 +80,45 @@ const AttendanceTracking = () => {
 
   const fetchAttendanceRecords = async (sessionId: number) => {
     try {
-      const { data, error } = await supabase
-        .from('attendance_records')
+      // First, get the bookings for this session
+      const { data: bookings, error: bookingsError } = await supabase
+        .from('bookings')
         .select(`
-          *,
-          booking:bookings(
-            student:profiles(first_name, last_name)
-          ),
-          session:course_sessions(start_time)
+          id,
+          student:profiles(first_name, last_name)
         `)
         .eq('session_id', sessionId);
 
-      if (error) throw error;
-      setAttendanceRecords(data as any);
+      if (bookingsError) throw bookingsError;
+
+      // Then get the attendance records
+      const { data: attendance, error: attendanceError } = await supabase
+        .from('attendance_records')
+        .select('*')
+        .eq('session_id', sessionId);
+
+      if (attendanceError) throw attendanceError;
+
+      // Combine the data
+      const records: AttendanceRecord[] = bookings.map(booking => {
+        const existingRecord = attendance?.find(a => a.booking_id === booking.id);
+        return {
+          id: existingRecord?.id || 0,
+          booking_id: booking.id,
+          session_id: sessionId,
+          attendance_status: existingRecord?.attendance_status || 'pending',
+          notes: existingRecord?.notes || null,
+          marked_at: existingRecord?.marked_at || null,
+          marked_by: existingRecord?.marked_by || null,
+          created_at: existingRecord?.created_at || new Date().toISOString(),
+          updated_at: existingRecord?.updated_at || new Date().toISOString(),
+          booking: {
+            student: booking.student
+          }
+        };
+      });
+
+      setAttendanceRecords(records);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -116,16 +128,34 @@ const AttendanceTracking = () => {
     }
   };
 
-  const updateAttendance = async (recordId: number, status: string) => {
+  const updateAttendance = async (recordId: number, bookingId: number, status: 'present' | 'absent' | 'pending') => {
     try {
-      const { error } = await supabase
-        .from('attendance_records')
-        .update({
-          attendance_status: status,
-          marked_at: new Date().toISOString()
-        })
-        .eq('id', recordId);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
+      const attendance = {
+        booking_id: bookingId,
+        session_id: selectedSession,
+        attendance_status: status,
+        marked_by: user.id,
+        marked_at: new Date().toISOString()
+      };
+
+      let query;
+      if (recordId === 0) {
+        // Insert new record
+        query = supabase
+          .from('attendance_records')
+          .insert([attendance]);
+      } else {
+        // Update existing record
+        query = supabase
+          .from('attendance_records')
+          .update(attendance)
+          .eq('id', recordId);
+      }
+
+      const { error } = await query;
       if (error) throw error;
 
       toast({
@@ -183,19 +213,15 @@ const AttendanceTracking = () => {
           <TableHeader>
             <TableRow>
               <TableHead>Student</TableHead>
-              <TableHead>Session Date</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {attendanceRecords.map((record) => (
-              <TableRow key={record.id}>
+              <TableRow key={record.booking_id}>
                 <TableCell>
-                  {record.student?.first_name} {record.student?.last_name}
-                </TableCell>
-                <TableCell>
-                  {new Date(record.session.start_time).toLocaleString()}
+                  {record.booking?.student.first_name} {record.booking?.student.last_name}
                 </TableCell>
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
@@ -210,14 +236,14 @@ const AttendanceTracking = () => {
                     <Button
                       size="sm"
                       variant={record.attendance_status === 'present' ? 'default' : 'outline'}
-                      onClick={() => updateAttendance(record.id, 'present')}
+                      onClick={() => updateAttendance(record.id, record.booking_id, 'present')}
                     >
                       Present
                     </Button>
                     <Button
                       size="sm"
                       variant={record.attendance_status === 'absent' ? 'default' : 'outline'}
-                      onClick={() => updateAttendance(record.id, 'absent')}
+                      onClick={() => updateAttendance(record.id, record.booking_id, 'absent')}
                     >
                       Absent
                     </Button>
