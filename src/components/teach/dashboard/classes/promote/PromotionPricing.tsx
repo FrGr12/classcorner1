@@ -32,12 +32,34 @@ const PromotionPricing = ({ courseIds, promotionType, onPromotionComplete }: Pro
   const { data: credits, refetch: refetchCredits } = useQuery({
     queryKey: ['teacherCredits'],
     queryFn: async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("User not authenticated");
+
+      // First try to get existing record
       const { data: teacherFeatures, error } = await supabase
         .from('teacher_premium_features')
         .select('boost_credits')
-        .single();
+        .eq('teacher_id', user.id)
+        .maybeSingle();
       
       if (error) throw error;
+
+      // If no record exists, create one with default credits
+      if (!teacherFeatures) {
+        const { data: newFeatures, error: insertError } = await supabase
+          .from('teacher_premium_features')
+          .insert({
+            teacher_id: user.id,
+            boost_credits: 3, // Default starting credits
+            is_active: true
+          })
+          .select('boost_credits')
+          .single();
+
+        if (insertError) throw insertError;
+        return newFeatures.boost_credits;
+      }
+
       return teacherFeatures.boost_credits;
     }
   });
