@@ -4,9 +4,9 @@ import UserProfile from "@/components/user-dashboard/UserProfile";
 
 const TeacherProfile = () => {
   return (
-    <div className="space-y-8">
-      <TeacherCredits />
+    <div className="w-full space-y-8">
       <UserProfile />
+      <TeacherCredits />
     </div>
   );
 };
