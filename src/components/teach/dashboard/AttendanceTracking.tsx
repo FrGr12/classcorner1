@@ -86,34 +86,29 @@ const AttendanceTracking = () => {
 
       if (bookingsError) throw bookingsError;
 
-      if (!bookings) return;
+      if (!bookings) {
+        setAttendanceRecords([]);
+        return;
+      }
 
-      // Then get existing attendance records
-      const { data: existingRecords, error: recordsError } = await supabase
-        .from('attendance_records')
-        .select('*')
-        .eq('session_id', sessionId);
-
-      if (recordsError) throw recordsError;
-
-      // Create/map attendance records
-      const records: AttendanceRecord[] = bookings.map(booking => {
-        const existingRecord = existingRecords?.find(r => r.booking_id === booking.id);
-        return {
-          id: existingRecord?.id || 0,
-          booking_id: booking.id,
-          session_id: sessionId,
-          attendance_status: (existingRecord?.attendance_status || 'pending') as 'present' | 'absent' | 'pending',
-          notes: existingRecord?.notes || null,
-          marked_at: existingRecord?.marked_at || null,
-          marked_by: existingRecord?.marked_by || null,
-          created_at: existingRecord?.created_at || new Date().toISOString(),
-          updated_at: existingRecord?.updated_at || new Date().toISOString(),
-          booking: {
-            student: booking.student
+      // Map bookings to attendance records
+      const records: AttendanceRecord[] = bookings.map(booking => ({
+        id: 0, // New record
+        booking_id: booking.id,
+        session_id: sessionId,
+        attendance_status: 'pending',
+        notes: null,
+        marked_at: null,
+        marked_by: null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        booking: {
+          student: {
+            first_name: booking.student.first_name,
+            last_name: booking.student.last_name
           }
-        };
-      });
+        }
+      }));
 
       setAttendanceRecords(records);
     } catch (error: any) {
@@ -131,30 +126,26 @@ const AttendanceTracking = () => {
       if (!user) return;
 
       if (recordId === 0) {
-        // Insert new record
-        const { error } = await supabase
-          .from('attendance_records')
+        // Create a new booking record in the bookings table
+        const { data, error: bookingError } = await supabase
+          .from('bookings')
           .insert([{
-            booking_id: bookingId,
             session_id: selectedSession,
-            attendance_status: status,
-            marked_by: user.id,
-            marked_at: new Date().toISOString()
-          }]);
+            attendance_status: status
+          }])
+          .single();
 
-        if (error) throw error;
+        if (bookingError) throw bookingError;
       } else {
-        // Update existing record
-        const { error } = await supabase
-          .from('attendance_records')
+        // Update existing booking
+        const { error: updateError } = await supabase
+          .from('bookings')
           .update({
-            attendance_status: status,
-            marked_by: user.id,
-            marked_at: new Date().toISOString()
+            attendance_status: status
           })
-          .eq('id', recordId);
+          .eq('id', bookingId);
 
-        if (error) throw error;
+        if (updateError) throw updateError;
       }
 
       toast({
@@ -220,7 +211,7 @@ const AttendanceTracking = () => {
             {attendanceRecords.map((record) => (
               <TableRow key={record.booking_id}>
                 <TableCell>
-                  {record.booking?.student.first_name} {record.booking?.student.last_name}
+                  {record.booking.student.first_name} {record.booking.student.last_name}
                 </TableCell>
                 <TableCell>
                   <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
