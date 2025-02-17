@@ -4,6 +4,7 @@ import { ClassItem } from "@/types/class";
 import ClassesTabContent from "./ClassesTabContent";
 import AttendanceTracking from "../AttendanceTracking";
 import TeacherWaitlist from "@/pages/TeacherWaitlist";
+import PromotionalStats from "./promotional/PromotionalStats";
 
 interface ClassesTabsProps {
   classes: ClassItem[];
@@ -17,6 +18,7 @@ const ClassesTabs = ({ classes, onAction }: ClassesTabsProps) => {
         <TabsTrigger value="classes">Classes</TabsTrigger>
         <TabsTrigger value="attendance">Attendance</TabsTrigger>
         <TabsTrigger value="waitlist">Waitlist</TabsTrigger>
+        <TabsTrigger value="promotional">Promotional</TabsTrigger>
       </TabsList>
 
       <TabsContent value="classes">
@@ -29,6 +31,10 @@ const ClassesTabs = ({ classes, onAction }: ClassesTabsProps) => {
 
       <TabsContent value="waitlist">
         <TeacherWaitlist />
+      </TabsContent>
+
+      <TabsContent value="promotional">
+        <PromotionalStats />
       </TabsContent>
     </Tabs>
   );

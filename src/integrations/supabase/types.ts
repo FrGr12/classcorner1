@@ -906,6 +906,58 @@ export type Database = {
           },
         ]
       }
+      course_promotional_stats: {
+        Row: {
+          ad_clicks: number | null
+          course_id: number | null
+          created_at: string | null
+          id: number
+          saves: number | null
+          updated_at: string | null
+          views: number | null
+        }
+        Insert: {
+          ad_clicks?: number | null
+          course_id?: number | null
+          created_at?: string | null
+          id?: never
+          saves?: number | null
+          updated_at?: string | null
+          views?: number | null
+        }
+        Update: {
+          ad_clicks?: number | null
+          course_id?: number | null
+          created_at?: string | null
+          id?: never
+          saves?: number | null
+          updated_at?: string | null
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_promotional_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_promotional_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_promotional_stats_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       course_reviews: {
         Row: {
           course_id: number | null

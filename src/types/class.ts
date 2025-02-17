@@ -20,6 +20,9 @@ export interface ClassItem {
   duration?: string;
   shareCount?: number;
   lastShared?: string;
+  views?: number;
+  saves?: number;
+  adClicks?: number;
 }
 
 export interface ClassData {

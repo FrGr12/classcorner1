@@ -1,7 +1,7 @@
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown } from "lucide-react";
+import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown, Eye, BookmarkCheck, MousePointer } from "lucide-react";
 import { format } from "date-fns";
 import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
@@ -118,6 +118,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
             <TableHead><ColumnFilter column="Attendees" /></TableHead>
             <TableHead><ColumnFilter column="Waitlist" /></TableHead>
             <TableHead><ColumnFilter column="Paid" /></TableHead>
+            <TableHead className="text-center">Views</TableHead>
+            <TableHead className="text-center">Saves</TableHead>
+            <TableHead className="text-center">Ad Clicks</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -137,6 +140,24 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               <TableCell>0</TableCell>
               <TableCell>0</TableCell>
               <TableCell>0</TableCell>
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <Eye className="h-4 w-4 text-muted-foreground" />
+                  <span>{classItem.views || 0}</span>
+                </div>
+              </TableCell>
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <BookmarkCheck className="h-4 w-4 text-muted-foreground" />
+                  <span>{classItem.saves || 0}</span>
+                </div>
+              </TableCell>
+              <TableCell className="text-center">
+                <div className="flex items-center justify-center gap-1">
+                  <MousePointer className="h-4 w-4 text-muted-foreground" />
+                  <span>{classItem.adClicks || 0}</span>
+                </div>
+              </TableCell>
               <TableCell onClick={(e) => e.stopPropagation()}>
                 <div className="flex gap-2">
                   <Button
