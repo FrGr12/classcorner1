@@ -87,7 +87,8 @@ const PromotionalStats = () => {
           .order('created_at', { ascending: true });
 
         if (selectedClass !== "all") {
-          query = query.eq('course_id', selectedClass);
+          // Convert selectedClass to number before using in query
+          query = query.eq('course_id', parseInt(selectedClass, 10));
         }
 
         // Add time range filter
@@ -225,7 +226,7 @@ const PromotionalStats = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Performance Overview</CardTitle>
+          <CardTitle>Promotion Overview</CardTitle>
           <CardDescription>
             Track your class engagement and promotional metrics
           </CardDescription>
