@@ -1,34 +1,14 @@
+
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-import { supabase } from "@/integrations/supabase/client";
-import { Loader2, AlertCircle, Rocket, ArrowUp, MessageSquare } from "lucide-react";
+import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import PromotionalFilters from "./components/PromotionalFilters";
+import PromotionalActions from "./components/PromotionalActions";
+import MetricsChart from "./components/MetricsChart";
+import Recommendations from "./components/Recommendations";
+import PromoteDialog from "../promote/PromoteDialog";
 
 interface PromotionalMetrics {
   date: string;
@@ -173,126 +153,31 @@ const PromotionalStats = () => {
     );
   }
 
-  const recommendations = [];
-  if (metrics.length > 0) {
-    const latestMetrics = metrics[metrics.length - 1];
-    if (latestMetrics.saves > latestMetrics.bookings * 3) {
-      recommendations.push(
-        "High save-to-booking ratio. Consider sending outreach messages to interested students."
-      );
-    }
-    if (latestMetrics.views > 0 && latestMetrics.ctr < 2) {
-      recommendations.push(
-        "Low click-through rate. A boost could help improve visibility."
-      );
-    }
-  }
-
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row gap-4 justify-between">
-        <div className="flex gap-4">
-          <Select value={selectedClass} onValueChange={setSelectedClass}>
-            <SelectTrigger className="w-[200px]">
-              <SelectValue placeholder="Select class" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="all">All Classes</SelectItem>
-                {classes.map((cls) => (
-                  <SelectItem key={cls.id} value={cls.id.toString()}>
-                    {cls.title}
-                  </SelectItem>
-                ))}
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-
-          <Select value={timeRange} onValueChange={setTimeRange}>
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Time range" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectGroup>
-                <SelectItem value="7days">Last 7 days</SelectItem>
-                <SelectItem value="30days">Last 30 days</SelectItem>
-                <SelectItem value="90days">Last 90 days</SelectItem>
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex gap-2">
-          <Button 
-            onClick={handleBoost} 
-            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
-          >
-            <Rocket className="h-4 w-4" />
-            Boost
-          </Button>
-          <Button 
-            onClick={handleSponsor} 
-            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
-          >
-            <ArrowUp className="h-4 w-4" />
-            Sponsor
-          </Button>
-          <Button 
-            onClick={handleOutreach} 
-            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
-          >
-            <MessageSquare className="h-4 w-4" />
-            Outreach
-          </Button>
-        </div>
+        <PromotionalFilters
+          selectedClass={selectedClass}
+          setSelectedClass={setSelectedClass}
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
+          classes={classes}
+        />
+        <PromotionalActions
+          onBoost={handleBoost}
+          onSponsor={handleSponsor}
+          onOutreach={handleOutreach}
+        />
       </div>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Promotion Overview</CardTitle>
-          <CardDescription>
-            Track your class engagement and promotional metrics
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[400px] mt-4">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={metrics}>
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="date" />
-                <YAxis />
-                <Tooltip />
-                <Legend />
-                <Line type="monotone" dataKey="views" stroke="#8884d8" name="Views" />
-                <Line type="monotone" dataKey="saves" stroke="#82ca9d" name="Saves" />
-                <Line type="monotone" dataKey="bookings" stroke="#ffc658" name="Bookings" />
-                <Line type="monotone" dataKey="ctr" stroke="#ff7300" name="CTR %" />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+      <MetricsChart metrics={metrics} />
+      <Recommendations metrics={metrics} />
 
-      {recommendations.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Recommendations</CardTitle>
-            <CardDescription>
-              Actionable insights to improve your class performance
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <ul className="space-y-2">
-              {recommendations.map((recommendation, index) => (
-                <li key={index} className="flex items-start gap-2">
-                  <AlertCircle className="h-5 w-5 text-blue-500 mt-0.5" />
-                  <span>{recommendation}</span>
-                </li>
-              ))}
-            </ul>
-          </CardContent>
-        </Card>
-      )}
+      <PromoteDialog 
+        open={promoteDialogOpen}
+        onOpenChange={setPromoteDialogOpen}
+        classId={selectedClassId}
+      />
     </div>
   );
 };
