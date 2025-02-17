@@ -81,10 +81,7 @@ const AttendanceTracking = () => {
         .select(`
           id,
           student_id,
-          student:profiles!inner (
-            first_name,
-            last_name
-          )
+          student:profiles!inner(first_name, last_name)
         `)
         .eq('session_id', sessionId);
 
@@ -97,7 +94,9 @@ const AttendanceTracking = () => {
 
       // Map bookings to attendance records
       const records: AttendanceRecord[] = bookings.map(booking => {
-        const studentData = booking.student as { first_name: string; last_name: string };
+        // Ensure we get just the first student if it's an array
+        const studentData = Array.isArray(booking.student) ? booking.student[0] : booking.student;
+        
         return {
           id: 0, // New record
           booking_id: booking.id,
@@ -110,8 +109,8 @@ const AttendanceTracking = () => {
           updated_at: new Date().toISOString(),
           booking: {
             student: {
-              first_name: studentData.first_name,
-              last_name: studentData.last_name
+              first_name: studentData?.first_name || '',
+              last_name: studentData?.last_name || ''
             }
           }
         };
