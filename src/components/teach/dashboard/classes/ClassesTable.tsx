@@ -1,24 +1,16 @@
+
 import { ClassItem } from "@/types/class";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
-import { Edit, MessageSquare, ArrowUp, Share2, ChevronDown, Eye, BookmarkCheck, MousePointer } from "lucide-react";
 import { format } from "date-fns";
+import { useState } from "react";
+import ColumnFilter from "./table/ColumnFilter";
+import ClassActions from "./table/ClassActions";
+import StatsDisplay from "./table/StatsDisplay";
 import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
 import MessageDialog from "./dialogs/MessageDialog";
 import ShareDialog from "./dialogs/ShareDialog";
 import EditClassDialog from "./dialogs/EditClassDialog";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 
 interface ClassesTableProps {
   classes: ClassItem[];
@@ -26,7 +18,6 @@ interface ClassesTableProps {
 }
 
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
-  const navigate = useNavigate();
   const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
   const [isPromoteOpen, setIsPromoteOpen] = useState(false);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
@@ -49,30 +40,6 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     }));
   };
 
-  const handleEditClick = (classId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsEditOpen(true);
-  };
-
-  const handlePromote = (classId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsPromoteOpen(true);
-  };
-
-  const handleMessage = (classId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsMessageOpen(true);
-  };
-
-  const handleShare = (classId: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsShareOpen(true);
-  };
-
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
       return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
@@ -84,40 +51,20 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     onAction('edit', selectedClassId!);
   };
 
-  const ColumnFilter = ({ column }: { column: string }) => (
-    <div className="flex items-center gap-2">
-      <span>{column}</span>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <ChevronDown className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start" className="w-[200px]">
-          <div className="p-2">
-            <Input
-              placeholder={`Filter ${column.toLowerCase()}...`}
-              value={filters[column.toLowerCase() as keyof typeof filters]}
-              onChange={(e) => handleFilter(column.toLowerCase(), e.target.value)}
-              className="h-8"
-            />
-          </div>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    </div>
-  );
-
   return (
     <>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead><ColumnFilter column="Title" /></TableHead>
-            <TableHead><ColumnFilter column="Date" /></TableHead>
-            <TableHead><ColumnFilter column="Capacity" /></TableHead>
-            <TableHead><ColumnFilter column="Attendees" /></TableHead>
-            <TableHead><ColumnFilter column="Waitlist" /></TableHead>
-            <TableHead><ColumnFilter column="Paid" /></TableHead>
+            {Object.keys(filters).map((column) => (
+              <TableHead key={column}>
+                <ColumnFilter
+                  column={column.charAt(0).toUpperCase() + column.slice(1)}
+                  value={filters[column as keyof typeof filters]}
+                  onChange={(value) => handleFilter(column, value)}
+                />
+              </TableHead>
+            ))}
             <TableHead className="text-center">Views</TableHead>
             <TableHead className="text-center">Saves</TableHead>
             <TableHead className="text-center">Ad Clicks</TableHead>
@@ -140,62 +87,35 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               <TableCell>0</TableCell>
               <TableCell>0</TableCell>
               <TableCell>0</TableCell>
-              <TableCell className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <Eye className="h-4 w-4 text-muted-foreground" />
-                  <span>{classItem.views || 0}</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <BookmarkCheck className="h-4 w-4 text-muted-foreground" />
-                  <span>{classItem.saves || 0}</span>
-                </div>
-              </TableCell>
-              <TableCell className="text-center">
-                <div className="flex items-center justify-center gap-1">
-                  <MousePointer className="h-4 w-4 text-muted-foreground" />
-                  <span>{classItem.adClicks || 0}</span>
-                </div>
-              </TableCell>
+              <StatsDisplay
+                views={classItem.views || 0}
+                saves={classItem.saves || 0}
+                adClicks={classItem.adClicks || 0}
+              />
               <TableCell onClick={(e) => e.stopPropagation()}>
-                <div className="flex gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => handleEditClick(classItem.id, e)}
-                    className="bg-accent-purple hover:bg-accent-purple/90"
-                  >
-                    <Edit className="h-4 w-4 text-white" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => handleMessage(classItem.id, e)}
-                    className="bg-accent-purple hover:bg-accent-purple/90"
-                  >
-                    <MessageSquare className="h-4 w-4 text-white" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => handlePromote(classItem.id, e)}
-                    className="bg-accent-purple hover:bg-accent-purple/90"
-                  >
-                    <ArrowUp className="h-4 w-4 text-white" />
-                  </Button>
-
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    onClick={(e) => handleShare(classItem.id, e)}
-                    className="bg-accent-purple hover:bg-accent-purple/90"
-                  >
-                    <Share2 className="h-4 w-4 text-white" />
-                  </Button>
-                </div>
+                <ClassActions
+                  classId={classItem.id}
+                  onEdit={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsEditOpen(true);
+                  }}
+                  onMessage={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsMessageOpen(true);
+                  }}
+                  onPromote={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsPromoteOpen(true);
+                  }}
+                  onShare={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsShareOpen(true);
+                  }}
+                />
               </TableCell>
             </TableRow>
           ))}
