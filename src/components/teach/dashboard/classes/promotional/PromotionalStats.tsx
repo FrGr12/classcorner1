@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -52,6 +51,8 @@ const PromotionalStats = () => {
   const [selectedClass, setSelectedClass] = useState<string>("all");
   const [timeRange, setTimeRange] = useState<string>("7days");
   const [classes, setClasses] = useState<ClassOption[]>([]);
+  const [promoteDialogOpen, setPromoteDialogOpen] = useState(false);
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -87,11 +88,9 @@ const PromotionalStats = () => {
           .order('created_at', { ascending: true });
 
         if (selectedClass !== "all") {
-          // Convert selectedClass to number before using in query
           query = query.eq('course_id', parseInt(selectedClass, 10));
         }
 
-        // Add time range filter
         const now = new Date();
         const daysAgo = timeRange === "7days" ? 7 : timeRange === "30days" ? 30 : 90;
         const startDate = new Date(now.setDate(now.getDate() - daysAgo));
@@ -129,15 +128,30 @@ const PromotionalStats = () => {
   }, [selectedClass, timeRange]);
 
   const handleBoost = () => {
-    toast.info("Boost feature coming soon!");
+    if (selectedClass === "all") {
+      toast.error("Please select a specific class to boost");
+      return;
+    }
+    setSelectedClassId(parseInt(selectedClass, 10));
+    setPromoteDialogOpen(true);
   };
 
   const handleSponsor = () => {
-    toast.info("Sponsor feature coming soon!");
+    if (selectedClass === "all") {
+      toast.error("Please select a specific class to sponsor");
+      return;
+    }
+    setSelectedClassId(parseInt(selectedClass, 10));
+    setPromoteDialogOpen(true);
   };
 
   const handleOutreach = () => {
-    toast.info("Student outreach feature coming soon!");
+    if (selectedClass === "all") {
+      toast.error("Please select a specific class for outreach");
+      return;
+    }
+    setSelectedClassId(parseInt(selectedClass, 10));
+    setPromoteDialogOpen(true);
   };
 
   if (loading) {
@@ -209,15 +223,24 @@ const PromotionalStats = () => {
         </div>
 
         <div className="flex gap-2">
-          <Button onClick={handleBoost} className="gap-2">
+          <Button 
+            onClick={handleBoost} 
+            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
+          >
             <Rocket className="h-4 w-4" />
             Boost
           </Button>
-          <Button onClick={handleSponsor} className="gap-2">
+          <Button 
+            onClick={handleSponsor} 
+            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
+          >
             <ArrowUp className="h-4 w-4" />
             Sponsor
           </Button>
-          <Button onClick={handleOutreach} className="gap-2">
+          <Button 
+            onClick={handleOutreach} 
+            className="gap-2 bg-[#9b87f5] hover:bg-[#7e69ab]"
+          >
             <MessageSquare className="h-4 w-4" />
             Outreach
           </Button>
