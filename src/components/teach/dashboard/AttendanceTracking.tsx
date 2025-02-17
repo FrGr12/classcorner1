@@ -80,7 +80,8 @@ const AttendanceTracking = () => {
         .from('bookings')
         .select(`
           id,
-          student:profiles!bookings_student_id_fkey (
+          student_id,
+          student:profiles!inner (
             first_name,
             last_name
           )
@@ -95,23 +96,26 @@ const AttendanceTracking = () => {
       }
 
       // Map bookings to attendance records
-      const records: AttendanceRecord[] = bookings.map(booking => ({
-        id: 0, // New record
-        booking_id: booking.id,
-        session_id: sessionId,
-        attendance_status: 'pending',
-        notes: null,
-        marked_at: null,
-        marked_by: null,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-        booking: {
-          student: {
-            first_name: booking.student?.first_name || '',
-            last_name: booking.student?.last_name || ''
+      const records: AttendanceRecord[] = bookings.map(booking => {
+        const studentData = booking.student as { first_name: string; last_name: string };
+        return {
+          id: 0, // New record
+          booking_id: booking.id,
+          session_id: sessionId,
+          attendance_status: 'pending',
+          notes: null,
+          marked_at: null,
+          marked_by: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          booking: {
+            student: {
+              first_name: studentData.first_name,
+              last_name: studentData.last_name
+            }
           }
-        }
-      }));
+        };
+      });
 
       setAttendanceRecords(records);
     } catch (error: any) {
