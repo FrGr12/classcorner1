@@ -12,23 +12,35 @@ import { Rocket, ArrowUp, MessageSquare } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface PromotionPricingProps {
-  courseId: number;
+  courseId: number | null;
   promotionType?: 'boost' | 'sponsor' | 'outreach';
   onPromotionComplete?: () => void;
 }
 
 const PROMOTION_PRICES = {
   sponsored: {
-    "7days": 10,
-    "14days": 15
+    "7days": {
+      single: 10,
+      all: 25
+    },
+    "14days": {
+      single: 15,
+      all: 35
+    }
   },
   boost: {
-    "24hours": 5,
-    "48hours": 10
+    "24hours": {
+      single: 5,
+      all: 12
+    },
+    "48hours": {
+      single: 10,
+      all: 24
+    }
   },
   outreach: {
     single: 2,
-    bulk: 20 // for 10 students
+    bulk: 20
   }
 };
 
@@ -38,7 +50,10 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
   const handleSponsorClass = async (duration: "7days" | "14days") => {
     try {
       setIsLoading(true);
-      const amount = PROMOTION_PRICES.sponsored[duration];
+      const amount = courseId ? 
+        PROMOTION_PRICES.sponsored[duration].single : 
+        PROMOTION_PRICES.sponsored[duration].all;
+      
       const endDate = new Date();
       endDate.setDate(endDate.getDate() + (duration === "7days" ? 7 : 14));
 
@@ -55,7 +70,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
 
       if (error) throw error;
 
-      toast.success(`Class sponsored successfully for ${duration === "7days" ? "7" : "14"} days!`);
+      toast.success(`${courseId ? 'Class' : 'All classes'} sponsored successfully for ${duration === "7days" ? "7" : "14"} days!`);
       onPromotionComplete?.();
     } catch (error: any) {
       console.error('Error sponsoring class:', error);
@@ -68,7 +83,10 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
   const handleBoostClass = async (duration: "24hours" | "48hours") => {
     try {
       setIsLoading(true);
-      const amount = PROMOTION_PRICES.boost[duration];
+      const amount = courseId ? 
+        PROMOTION_PRICES.boost[duration].single : 
+        PROMOTION_PRICES.boost[duration].all;
+
       const endDate = new Date();
       endDate.setHours(endDate.getHours() + (duration === "24hours" ? 24 : 48));
 
@@ -85,7 +103,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
 
       if (error) throw error;
 
-      toast.success(`Class boosted successfully for ${duration === "24hours" ? "24" : "48"} hours!`);
+      toast.success(`${courseId ? 'Class' : 'All classes'} boosted successfully for ${duration === "24hours" ? "24" : "48"} hours!`);
       onPromotionComplete?.();
     } catch (error: any) {
       console.error('Error boosting class:', error);
@@ -106,7 +124,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 Boost Visibility
               </CardTitle>
               <CardDescription>
-                Increase visibility for a short period
+                {courseId ? "Increase visibility for your class" : "Boost all your classes"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -116,7 +134,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 onClick={() => handleBoostClass("24hours")}
                 disabled={isLoading}
               >
-                24 Hours for ${PROMOTION_PRICES.boost["24hours"]}
+                24 Hours for ${courseId ? PROMOTION_PRICES.boost["24hours"].single : PROMOTION_PRICES.boost["24hours"].all}
               </Button>
               <Button
                 variant="outline"
@@ -124,7 +142,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 onClick={() => handleBoostClass("48hours")}
                 disabled={isLoading}
               >
-                48 Hours for ${PROMOTION_PRICES.boost["48hours"]}
+                48 Hours for ${courseId ? PROMOTION_PRICES.boost["48hours"].single : PROMOTION_PRICES.boost["48hours"].all}
               </Button>
             </CardContent>
           </Card>
@@ -139,7 +157,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 Sponsored Listing
               </CardTitle>
               <CardDescription>
-                Feature your class at the top of search results
+                {courseId ? "Feature your class at the top" : "Feature all your classes at the top"}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -149,7 +167,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 onClick={() => handleSponsorClass("7days")}
                 disabled={isLoading}
               >
-                7 Days for ${PROMOTION_PRICES.sponsored["7days"]}
+                7 Days for ${courseId ? PROMOTION_PRICES.sponsored["7days"].single : PROMOTION_PRICES.sponsored["7days"].all}
               </Button>
               <Button
                 variant="outline"
@@ -157,7 +175,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
                 onClick={() => handleSponsorClass("14days")}
                 disabled={isLoading}
               >
-                14 Days for ${PROMOTION_PRICES.sponsored["14days"]}
+                14 Days for ${courseId ? PROMOTION_PRICES.sponsored["14days"].single : PROMOTION_PRICES.sponsored["14days"].all}
               </Button>
             </CardContent>
           </Card>
@@ -195,97 +213,7 @@ const PromotionPricing = ({ courseId, promotionType, onPromotionComplete }: Prom
         );
 
       default:
-        return (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Rocket className="h-5 w-5" />
-                  Sponsored Listing
-                </CardTitle>
-                <CardDescription>
-                  Feature your class at the top of search results
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleSponsorClass("7days")}
-                  disabled={isLoading}
-                >
-                  7 Days for ${PROMOTION_PRICES.sponsored["7days"]}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleSponsorClass("14days")}
-                  disabled={isLoading}
-                >
-                  14 Days for ${PROMOTION_PRICES.sponsored["14days"]}
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <ArrowUp className="h-5 w-5" />
-                  Boost Visibility
-                </CardTitle>
-                <CardDescription>
-                  Increase visibility for a short period
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleBoostClass("24hours")}
-                  disabled={isLoading}
-                >
-                  24 Hours for ${PROMOTION_PRICES.boost["24hours"]}
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => handleBoostClass("48hours")}
-                  disabled={isLoading}
-                >
-                  48 Hours for ${PROMOTION_PRICES.boost["48hours"]}
-                </Button>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <MessageSquare className="h-5 w-5" />
-                  Student Outreach
-                </CardTitle>
-                <CardDescription>
-                  Contact matched students directly
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  Contact Student (${PROMOTION_PRICES.outreach.single})
-                </Button>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  disabled={isLoading}
-                >
-                  Bulk Contact - 10 Students (${PROMOTION_PRICES.outreach.bulk})
-                </Button>
-              </CardContent>
-            </Card>
-          </div>
-        );
+        return null;
     }
   };
 

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Loader2, AlertCircle } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -111,11 +110,7 @@ const PromotionalStats = () => {
   }, [selectedClass, timeRange]);
 
   const handlePromotion = (type: PromotionType) => {
-    if (selectedClass === "all") {
-      toast.error("Please select a specific class first");
-      return;
-    }
-    setSelectedClassId(parseInt(selectedClass, 10));
+    setSelectedClassId(selectedClass !== "all" ? parseInt(selectedClass, 10) : null);
     setPromotionType(type);
     setPromoteDialogOpen(true);
   };

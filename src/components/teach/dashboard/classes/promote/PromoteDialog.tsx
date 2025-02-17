@@ -10,19 +10,19 @@ interface PromoteDialogProps {
 }
 
 const PromoteDialog = ({ open, onOpenChange, classId, promotionType }: PromoteDialogProps) => {
-  if (!classId) return null;
-
   const getTitleAndDescription = () => {
+    const scope = classId ? "Your Class" : "All Classes";
+    
     switch (promotionType) {
       case 'boost':
         return {
-          title: "Boost Your Class",
-          description: "Increase your class visibility for a short period"
+          title: `Boost ${scope}`,
+          description: `Increase visibility for ${classId ? "your class" : "all your classes"} for a short period`
         };
       case 'sponsor':
         return {
-          title: "Sponsor Your Class",
-          description: "Feature your class at the top of search results"
+          title: `Sponsor ${scope}`,
+          description: `Feature ${classId ? "your class" : "all your classes"} at the top of search results`
         };
       case 'outreach':
         return {
@@ -31,8 +31,8 @@ const PromoteDialog = ({ open, onOpenChange, classId, promotionType }: PromoteDi
         };
       default:
         return {
-          title: "Promote Your Class",
-          description: "Choose how you want to promote your class"
+          title: "Promote Your Classes",
+          description: "Choose how you want to promote your classes"
         };
     }
   };
