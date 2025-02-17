@@ -8,6 +8,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
   LineChart,
   Line,
   XAxis,
@@ -18,8 +26,10 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, AlertCircle } from "lucide-react";
+import { Loader2, AlertCircle, Rocket, ArrowUp, MessageSquare } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface PromotionalMetrics {
   date: string;
@@ -30,15 +40,38 @@ interface PromotionalMetrics {
   matches: number;
 }
 
+interface ClassOption {
+  id: number;
+  title: string;
+}
+
 const PromotionalStats = () => {
   const [loading, setLoading] = useState(true);
   const [metrics, setMetrics] = useState<PromotionalMetrics[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [selectedClass, setSelectedClass] = useState<string>("all");
+  const [timeRange, setTimeRange] = useState<string>("7days");
+  const [classes, setClasses] = useState<ClassOption[]>([]);
+
+  useEffect(() => {
+    const fetchClasses = async () => {
+      const { data, error } = await supabase
+        .from('courses')
+        .select('id, title')
+        .order('created_at', { ascending: false });
+
+      if (!error && data) {
+        setClasses(data);
+      }
+    };
+
+    fetchClasses();
+  }, []);
 
   useEffect(() => {
     const fetchMetrics = async () => {
       try {
-        const { data: promotionalStats, error: statsError } = await supabase
+        let query = supabase
           .from('course_promotional_stats')
           .select(`
             views,
@@ -46,28 +79,39 @@ const PromotionalStats = () => {
             ad_clicks,
             created_at,
             courses!inner (
+              id,
               title,
               bookings:bookings(count)
             )
           `)
           .order('created_at', { ascending: true });
 
+        if (selectedClass !== "all") {
+          query = query.eq('course_id', selectedClass);
+        }
+
+        // Add time range filter
+        const now = new Date();
+        const daysAgo = timeRange === "7days" ? 7 : timeRange === "30days" ? 30 : 90;
+        const startDate = new Date(now.setDate(now.getDate() - daysAgo));
+        query = query.gte('created_at', startDate.toISOString());
+
+        const { data: promotionalStats, error: statsError } = await query;
+
         if (statsError) throw statsError;
 
-        // Transform the data for the chart with proper type handling
         const formattedMetrics: PromotionalMetrics[] = promotionalStats.map(stat => {
           const views = stat.views || 0;
           const adClicks = stat.ad_clicks || 0;
-          // Calculate CTR as a number, not a string
           const ctr = views > 0 ? (adClicks / views) * 100 : 0;
 
           return {
             date: new Date(stat.created_at).toLocaleDateString(),
             views: views,
-            ctr: Number(ctr.toFixed(1)), // Convert to number with 1 decimal place
+            ctr: Number(ctr.toFixed(1)),
             saves: stat.saves || 0,
             bookings: stat.courses?.bookings[0]?.count || 0,
-            matches: 0 // This will be implemented when match data is available
+            matches: 0
           };
         });
 
@@ -81,7 +125,19 @@ const PromotionalStats = () => {
     };
 
     fetchMetrics();
-  }, []);
+  }, [selectedClass, timeRange]);
+
+  const handleBoost = () => {
+    toast.info("Boost feature coming soon!");
+  };
+
+  const handleSponsor = () => {
+    toast.info("Sponsor feature coming soon!");
+  };
+
+  const handleOutreach = () => {
+    toast.info("Student outreach feature coming soon!");
+  };
 
   if (loading) {
     return (
@@ -119,6 +175,54 @@ const PromotionalStats = () => {
 
   return (
     <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between">
+        <div className="flex gap-4">
+          <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <SelectTrigger className="w-[200px]">
+              <SelectValue placeholder="Select class" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="all">All Classes</SelectItem>
+                {classes.map((cls) => (
+                  <SelectItem key={cls.id} value={cls.id.toString()}>
+                    {cls.title}
+                  </SelectItem>
+                ))}
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+
+          <Select value={timeRange} onValueChange={setTimeRange}>
+            <SelectTrigger className="w-[150px]">
+              <SelectValue placeholder="Time range" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectItem value="7days">Last 7 days</SelectItem>
+                <SelectItem value="30days">Last 30 days</SelectItem>
+                <SelectItem value="90days">Last 90 days</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="flex gap-2">
+          <Button onClick={handleBoost} className="gap-2">
+            <Rocket className="h-4 w-4" />
+            Boost
+          </Button>
+          <Button onClick={handleSponsor} className="gap-2">
+            <ArrowUp className="h-4 w-4" />
+            Sponsor
+          </Button>
+          <Button onClick={handleOutreach} className="gap-2">
+            <MessageSquare className="h-4 w-4" />
+            Outreach
+          </Button>
+        </div>
+      </div>
+
       <Card>
         <CardHeader>
           <CardTitle>Performance Overview</CardTitle>
