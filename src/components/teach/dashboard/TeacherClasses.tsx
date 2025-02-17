@@ -3,10 +3,13 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Plus, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { mockClasses } from "@/data/mockClasses";
 import ClassesTable from "./classes/ClassesTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AttendanceTracking from "./AttendanceTracking";
+import TeacherWaitlist from "@/pages/TeacherWaitlist";
 
 const TeacherClasses = () => {
   const navigate = useNavigate();
@@ -68,17 +71,35 @@ const TeacherClasses = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Your Classes</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ClassesTable 
-            classes={allClasses}
-            onAction={handleAction}
-          />
-        </CardContent>
-      </Card>
+      <Tabs defaultValue="classes" className="space-y-4">
+        <TabsList>
+          <TabsTrigger value="classes">Classes</TabsTrigger>
+          <TabsTrigger value="attendance">Attendance</TabsTrigger>
+          <TabsTrigger value="waitlist">Waitlist</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="classes">
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Classes</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ClassesTable 
+                classes={allClasses}
+                onAction={handleAction}
+              />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="attendance">
+          <AttendanceTracking />
+        </TabsContent>
+
+        <TabsContent value="waitlist">
+          <TeacherWaitlist />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
