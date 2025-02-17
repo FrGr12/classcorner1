@@ -75,12 +75,15 @@ const AttendanceTracking = () => {
 
   const fetchAttendanceRecords = async (sessionId: number) => {
     try {
-      // First get all bookings for this session
+      // First get all bookings for this session with student info
       const { data: bookings, error: bookingsError } = await supabase
         .from('bookings')
         .select(`
           id,
-          student:profiles(first_name, last_name)
+          student:profiles!bookings_student_id_fkey (
+            first_name,
+            last_name
+          )
         `)
         .eq('session_id', sessionId);
 
@@ -104,8 +107,8 @@ const AttendanceTracking = () => {
         updated_at: new Date().toISOString(),
         booking: {
           student: {
-            first_name: booking.student.first_name,
-            last_name: booking.student.last_name
+            first_name: booking.student?.first_name || '',
+            last_name: booking.student?.last_name || ''
           }
         }
       }));
