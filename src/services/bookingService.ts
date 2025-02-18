@@ -104,6 +104,19 @@ export const cancelBooking = async (
   reason: string
 ): Promise<void> => {
   try {
+    // Get booking details first to check cancellation eligibility
+    const booking = await getBookingById(bookingId);
+    if (!booking.session?.start_time) {
+      throw new Error("Invalid booking session time");
+    }
+
+    const sessionDate = new Date(booking.session.start_time);
+    const now = new Date();
+    const hoursUntilSession = (sessionDate.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+    // Check if eligible for refund (more than 48 hours before class)
+    const isRefundEligible = hoursUntilSession > 48;
+
     const { error } = await supabase
       .from('bookings')
       .update({
@@ -114,7 +127,34 @@ export const cancelBooking = async (
       .eq('id', bookingId);
 
     if (error) throw error;
-    toast.success("Booking cancelled successfully");
+
+    // If eligible for refund, update payment status
+    if (isRefundEligible) {
+      const { error: refundError } = await supabase
+        .from('bookings')
+        .update({
+          payment_status: 'refunded'
+        })
+        .eq('id', bookingId);
+
+      if (refundError) throw refundError;
+      toast.success("Booking cancelled with full refund");
+    } else {
+      toast.success("Booking cancelled without refund (within 48-hour window)");
+    }
+
+    // Notify instructor about cancellation
+    await supabase
+      .from('notification_logs')
+      .insert([
+        {
+          user_id: booking.course?.instructor_id,
+          notification_type: 'booking_cancelled',
+          content: `Booking cancelled for ${booking.course?.title}`,
+          status: 'pending',
+          booking_id: bookingId
+        }
+      ]);
   } catch (error: any) {
     toast.error(error.message || "Failed to cancel booking");
     throw error;
