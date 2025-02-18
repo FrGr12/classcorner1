@@ -483,6 +483,102 @@ export type Database = {
           },
         ]
       }
+      community_events: {
+        Row: {
+          created_at: string
+          description: string
+          end_time: string
+          event_type: string
+          id: number
+          is_virtual: boolean | null
+          location: string | null
+          max_participants: number | null
+          organizer_id: string | null
+          start_time: string
+          status: string
+          timezone: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          end_time: string
+          event_type: string
+          id?: number
+          is_virtual?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          organizer_id?: string | null
+          start_time: string
+          status?: string
+          timezone: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          end_time?: string
+          event_type?: string
+          id?: number
+          is_virtual?: boolean | null
+          location?: string | null
+          max_participants?: number | null
+          organizer_id?: string | null
+          start_time?: string
+          status?: string
+          timezone?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      community_resources: {
+        Row: {
+          author_id: string | null
+          category: string
+          created_at: string
+          description: string
+          downloads: number | null
+          file_path: string | null
+          id: number
+          resource_type: string
+          tags: string[] | null
+          title: string
+          updated_at: string
+          url: string | null
+        }
+        Insert: {
+          author_id?: string | null
+          category: string
+          created_at?: string
+          description: string
+          downloads?: number | null
+          file_path?: string | null
+          id?: number
+          resource_type: string
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          url?: string | null
+        }
+        Update: {
+          author_id?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          downloads?: number | null
+          file_path?: string | null
+          id?: number
+          resource_type?: string
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          url?: string | null
+        }
+        Relationships: []
+      }
       contact_notes: {
         Row: {
           contact_id: string | null
@@ -1228,6 +1324,38 @@ export type Database = {
         }
         Relationships: []
       }
+      event_registrations: {
+        Row: {
+          created_at: string
+          event_id: number | null
+          id: number
+          registration_status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          event_id?: number | null
+          id?: number
+          registration_status?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          event_id?: number | null
+          id?: number
+          registration_status?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "community_events"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       follow_up_tasks: {
         Row: {
           assigned_to: string | null
@@ -1774,6 +1902,41 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: []
+      }
+      resource_ratings: {
+        Row: {
+          comment: string | null
+          created_at: string
+          id: number
+          rating: number | null
+          resource_id: number | null
+          user_id: string | null
+        }
+        Insert: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          rating?: number | null
+          resource_id?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          comment?: string | null
+          created_at?: string
+          id?: number
+          rating?: number | null
+          resource_id?: number | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_ratings_resource_id_fkey"
+            columns: ["resource_id"]
+            isOneToOne: false
+            referencedRelation: "community_resources"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       student_metrics: {
         Row: {
