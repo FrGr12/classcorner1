@@ -18,6 +18,7 @@ import Payment from "@/pages/Payment";
 import PaymentFailed from "@/pages/PaymentFailed";
 import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
+import Community from "@/pages/Community";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 
@@ -127,6 +128,14 @@ const router = createBrowserRouter([
           <PaymentFailed />
         </ErrorBoundary>
       </AuthGuard>
+    ),
+  },
+  {
+    path: "/community",
+    element: (
+      <ErrorBoundary>
+        <Community />
+      </ErrorBoundary>
     ),
   },
   {
