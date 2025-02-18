@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { 
@@ -12,6 +11,8 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { CreatePostDialog } from "./CreatePostDialog";
+import { CommentSection } from "./CommentSection";
 
 interface CommunityHomeProps {
   topic?: string;
@@ -190,10 +191,7 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
            category ? `Posts in ${category.replace(/-/g, ' ')}` :
            'Popular Posts'}
         </h2>
-        <Button variant="outline" size="sm">
-          <PlusCircle className="w-4 h-4 mr-2" />
-          New Post
-        </Button>
+        <CreatePostDialog />
       </div>
 
       {filteredPosts.map((post) => (
@@ -271,6 +269,11 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
           No posts found for this {topic ? 'topic' : 'category'}
         </div>
       )}
+
+      {/* Add CommentSection component where needed */}
+      {/* This is a placeholder - in a real implementation, you'd show comments 
+          when a specific post is selected */}
+      {/* <CommentSection postId={selectedPostId} comments={postComments} /> */}
     </div>
   );
 };
