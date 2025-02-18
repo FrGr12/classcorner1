@@ -102,7 +102,7 @@ const Community = () => {
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
             <div className="space-y-6">
               <div className="space-y-1">
-                <h3 className="px-3 py-2 text-base font-bold">Categories</h3>
+                <h3 className="px-3 py-2 text-base font-bold text-left">Categories</h3>
                 <nav className="space-y-1">
                   {[{
                   name: "All",
@@ -135,7 +135,7 @@ const Community = () => {
                   name: "Fashion",
                   count: "10.5K"
                 }].map(categoryItem => <button key={categoryItem.name} onClick={() => handleCategoryClick(categoryItem.name)} className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg ${category === categoryItem.name.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''}`}>
-                      <span>{categoryItem.name}</span>
+                      <span className="text-left">{categoryItem.name}</span>
                       <span className="text-muted-foreground text-xs">{categoryItem.count}</span>
                     </button>)}
                 </nav>
