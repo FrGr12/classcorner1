@@ -13,6 +13,9 @@ import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { CreatePostDialog } from "./CreatePostDialog";
 import { CommentSection } from "./CommentSection";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/supabase";
+import { useToast } from "@/components/ui/use-toast";
 
 interface CommunityHomeProps {
   topic?: string;
@@ -133,6 +136,25 @@ const posts = [
 
 const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
   const navigate = useNavigate();
+  const [isAdmin, setIsAdmin] = useState(false);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    checkAdminStatus();
+  }, []);
+
+  const checkAdminStatus = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (user) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('user_type')
+        .eq('id', user.id)
+        .single();
+      
+      setIsAdmin(profile?.user_type === 'admin');
+    }
+  };
 
   const filteredPosts = posts.filter(post => {
     if (topic) {
@@ -167,6 +189,7 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
           <h2 className="text-xl font-semibold">
             {resource.replace(/-/g, ' ')}
           </h2>
+          {isAdmin && <CreateResourceDialog />}
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

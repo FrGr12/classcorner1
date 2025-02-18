@@ -1518,6 +1518,51 @@ export type Database = {
           },
         ]
       }
+      learning_resources: {
+        Row: {
+          author_id: string
+          category: string
+          content: string
+          created_at: string | null
+          description: string
+          id: number
+          is_admin: boolean | null
+          published_date: string | null
+          read_time: string | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          author_id: string
+          category: string
+          content: string
+          created_at?: string | null
+          description: string
+          id?: number
+          is_admin?: boolean | null
+          published_date?: string | null
+          read_time?: string | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          author_id?: string
+          category?: string
+          content?: string
+          created_at?: string | null
+          description?: string
+          id?: number
+          is_admin?: boolean | null
+          published_date?: string | null
+          read_time?: string | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
       marketing_campaigns: {
         Row: {
           campaign_type: string
@@ -2506,7 +2551,7 @@ export type Database = {
         | "advanced_course"
         | "family_friendly"
       notification_preference: "email" | "in_app" | "both" | "none"
-      user_type: "student" | "teacher"
+      user_type: "student" | "teacher" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
