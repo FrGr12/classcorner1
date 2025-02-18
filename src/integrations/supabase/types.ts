@@ -1771,6 +1771,74 @@ export type Database = {
           },
         ]
       }
+      post_comments: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: number
+          post_id: number
+          updated_at: string
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: number
+          post_id: number
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: number
+          post_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      posts: {
+        Row: {
+          author_id: string
+          content: string
+          created_at: string
+          id: number
+          tags: string[] | null
+          title: string
+          updated_at: string
+          votes: number | null
+        }
+        Insert: {
+          author_id: string
+          content: string
+          created_at?: string
+          id?: number
+          tags?: string[] | null
+          title: string
+          updated_at?: string
+          votes?: number | null
+        }
+        Update: {
+          author_id?: string
+          content?: string
+          created_at?: string
+          id?: number
+          tags?: string[] | null
+          title?: string
+          updated_at?: string
+          votes?: number | null
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           account_type: string | null

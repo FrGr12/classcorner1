@@ -52,8 +52,8 @@ export function CreatePostDialog() {
     const { error } = await supabase
       .from('posts')
       .insert({
-        title,
-        content,
+        title: title.trim(),
+        content: content.trim(),
         tags,
       });
 

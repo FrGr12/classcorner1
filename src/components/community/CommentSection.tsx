@@ -39,13 +39,22 @@ export function CommentSection({ postId, comments: initialComments }: CommentSec
     }
 
     setIsLoading(true);
-    const { data, error } = await supabase
+    const { data: newComment, error } = await supabase
       .from('post_comments')
       .insert({
         post_id: postId,
         content: newComment.trim(),
       })
-      .select('*, author:profiles(first_name, last_name)')
+      .select(`
+        id,
+        content,
+        author_id,
+        created_at,
+        author:profiles (
+          first_name,
+          last_name
+        )
+      `)
       .single();
 
     setIsLoading(false);
@@ -59,13 +68,15 @@ export function CommentSection({ postId, comments: initialComments }: CommentSec
       return;
     }
 
-    setComments([...comments, data]);
-    setNewComment("");
-    
-    toast({
-      title: "Success",
-      description: "Comment posted successfully!",
-    });
+    if (newComment) {
+      setComments([...comments, newComment as Comment]);
+      setNewComment("");
+      
+      toast({
+        title: "Success",
+        description: "Comment posted successfully!",
+      });
+    }
   };
 
   return (
