@@ -69,7 +69,7 @@ const CommunityHome = ({ topic, category, resource, posts }: CommunityHomeProps)
         <h2 className="text-xl font-semibold">
           {topic ? `Posts about ${topic.replace(/-/g, ' ')}` :
            category ? `Posts in ${category.replace(/-/g, ' ')}` :
-           'Popular Posts'}
+           'Latest Posts'}
         </h2>
         <CreatePostDialog />
       </div>
