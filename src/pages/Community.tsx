@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -69,10 +70,6 @@ const Community = () => {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  const handleTopicClick = (topicName: string) => {
-    navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
-  };
-
   const handleCategoryClick = (categoryName: string) => {
     navigate(`/community/category/${categoryName.toLowerCase().replace(/ /g, '-')}`);
   };
@@ -108,30 +105,6 @@ const Community = () => {
         <div className="container mx-auto py-8 px-4">
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
             <div className="space-y-6">
-              <div className="space-y-1">
-                <h3 className="font-medium px-3 py-2">Popular Topics</h3>
-                <nav className="space-y-1">
-                  {[
-                    "Studio Setup",
-                    "Tool Recommendations",
-                    "Material Sourcing",
-                    "Technique Showcase",
-                    "Business Tips",
-                    "Community Events"
-                  ].map((topicName) => (
-                    <button
-                      key={topicName}
-                      onClick={() => handleTopicClick(topicName)}
-                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg ${
-                        topic === topicName.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
-                      }`}
-                    >
-                      {topicName}
-                    </button>
-                  ))}
-                </nav>
-              </div>
-
               <div className="space-y-1">
                 <h3 className="font-medium px-3 py-2">Categories</h3>
                 <nav className="space-y-1">
