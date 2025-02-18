@@ -9,10 +9,6 @@ import { Loader2, AlertTriangle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,6 +19,12 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+import BasicInfoSection from "./edit-course/BasicInfoSection";
+import LocationCategorySection from "./edit-course/LocationCategorySection";
+import PricingCapacitySection from "./edit-course/PricingCapacitySection";
+import WaitlistSection from "./edit-course/WaitlistSection";
+import SchedulingSection from "./edit-course/SchedulingSection";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
@@ -75,7 +77,6 @@ const EditCourseForm = ({ initialData }: EditCourseFormProps) => {
       setIsLoading(true);
       toast.loading("Updating your course...");
 
-      // Update course details
       const { error: courseError } = await supabase
         .from("courses")
         .update({
@@ -92,7 +93,6 @@ const EditCourseForm = ({ initialData }: EditCourseFormProps) => {
 
       if (courseError) throw courseError;
 
-      // Update session timing
       if (initialData.course_sessions?.[0]?.id) {
         const combinedDateTime = new Date(`${values.startDate}T${values.startTime}`);
         
@@ -144,87 +144,11 @@ const EditCourseForm = ({ initialData }: EditCourseFormProps) => {
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" {...form.register("title")} />
-            </div>
-
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea id="description" {...form.register("description")} />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="category">Category</Label>
-                <Input id="category" {...form.register("category")} />
-              </div>
-
-              <div>
-                <Label htmlFor="location">Location</Label>
-                <Input id="location" {...form.register("location")} />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="price">Price</Label>
-                <Input id="price" type="number" {...form.register("price")} />
-              </div>
-
-              <div>
-                <Label htmlFor="maxParticipants">Maximum Participants</Label>
-                <Input 
-                  id="maxParticipants" 
-                  type="number" 
-                  {...form.register("maxParticipants")} 
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="startDate">Start Date</Label>
-                <Input 
-                  id="startDate" 
-                  type="date" 
-                  {...form.register("startDate")} 
-                />
-              </div>
-
-              <div>
-                <Label htmlFor="startTime">Start Time</Label>
-                <Input 
-                  id="startTime" 
-                  type="time" 
-                  {...form.register("startTime")} 
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="waitlistEnabled">Enable Waitlist</Label>
-                <Switch 
-                  id="waitlistEnabled"
-                  checked={form.watch("waitlistEnabled")}
-                  onCheckedChange={(checked) => form.setValue("waitlistEnabled", checked)}
-                />
-              </div>
-
-              {form.watch("waitlistEnabled") && (
-                <div>
-                  <Label htmlFor="maxWaitlistSize">Maximum Waitlist Size</Label>
-                  <Input 
-                    id="maxWaitlistSize" 
-                    type="number" 
-                    {...form.register("maxWaitlistSize")} 
-                  />
-                </div>
-              )}
-            </div>
-          </div>
+          <BasicInfoSection form={form} />
+          <LocationCategorySection form={form} />
+          <PricingCapacitySection form={form} />
+          <SchedulingSection form={form} />
+          <WaitlistSection form={form} />
 
           <div className="flex justify-between gap-4">
             <Button
