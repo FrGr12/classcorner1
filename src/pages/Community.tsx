@@ -69,7 +69,7 @@ const Community = () => {
       if (topic) {
         query = query.contains('tags', [topic]);
       }
-      if (category) {
+      if (category && category !== 'all') { // Only filter by category if it's not 'all'
         query = query.eq('category', category);
       }
       if (searchQuery) {
