@@ -38,7 +38,7 @@ export function PostCard({
                   {tag}
                 </Badge>)}
             </div>
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="text-sm text-muted-foreground line-clamp-2 text-left">
               {post.content}
             </p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
