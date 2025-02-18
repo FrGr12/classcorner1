@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FileText, Book, Video, Plus, Star } from "lucide-react";
+import { FileText, Book, Video, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 interface Resource {
@@ -30,7 +30,14 @@ const CommunityResources = () => {
           .order('created_at', { ascending: false });
         
         if (error) throw error;
-        setResources(data || []);
+        
+        // Add type assertion to ensure data matches our interface
+        const typedResources = (data || []).map(resource => ({
+          ...resource,
+          resource_type: resource.resource_type as 'guide' | 'template' | 'video' | 'document'
+        }));
+        
+        setResources(typedResources);
       } catch (error) {
         console.error('Error fetching resources:', error);
       } finally {

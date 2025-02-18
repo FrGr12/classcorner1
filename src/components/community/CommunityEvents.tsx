@@ -33,7 +33,15 @@ const CommunityEvents = () => {
           .order('start_time', { ascending: true });
 
         if (error) throw error;
-        setEvents(data || []);
+        
+        // Add type assertion to ensure data matches our interface
+        const typedEvents = (data || []).map(event => ({
+          ...event,
+          event_type: event.event_type as 'webinar' | 'workshop' | 'meetup' | 'other',
+          status: event.status as 'upcoming' | 'ongoing' | 'completed' | 'cancelled'
+        }));
+        
+        setEvents(typedEvents);
       } catch (error) {
         console.error('Error fetching events:', error);
       } finally {
