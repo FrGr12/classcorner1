@@ -1278,6 +1278,118 @@ export type Database = {
           },
         ]
       }
+      forum_categories: {
+        Row: {
+          created_at: string
+          description: string | null
+          icon: string | null
+          id: number
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: number
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          icon?: string | null
+          id?: number
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      forum_discussions: {
+        Row: {
+          author_id: string | null
+          category_id: number | null
+          content: string
+          created_at: string
+          id: number
+          last_reply_at: string
+          pinned: boolean | null
+          title: string
+          updated_at: string
+          views: number | null
+        }
+        Insert: {
+          author_id?: string | null
+          category_id?: number | null
+          content: string
+          created_at?: string
+          id?: number
+          last_reply_at?: string
+          pinned?: boolean | null
+          title: string
+          updated_at?: string
+          views?: number | null
+        }
+        Update: {
+          author_id?: string | null
+          category_id?: number | null
+          content?: string
+          created_at?: string
+          id?: number
+          last_reply_at?: string
+          pinned?: boolean | null
+          title?: string
+          updated_at?: string
+          views?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_discussions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "forum_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      forum_replies: {
+        Row: {
+          author_id: string | null
+          content: string
+          created_at: string
+          discussion_id: number | null
+          id: number
+          updated_at: string
+        }
+        Insert: {
+          author_id?: string | null
+          content: string
+          created_at?: string
+          discussion_id?: number | null
+          id?: number
+          updated_at?: string
+        }
+        Update: {
+          author_id?: string | null
+          content?: string
+          created_at?: string
+          discussion_id?: number | null
+          id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "forum_replies_discussion_id_fkey"
+            columns: ["discussion_id"]
+            isOneToOne: false
+            referencedRelation: "forum_discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       marketing_campaigns: {
         Row: {
           campaign_type: string
@@ -1636,6 +1748,30 @@ export type Database = {
           updated_at?: string
           user_type?: Database["public"]["Enums"]["user_type"]
           username?: string | null
+        }
+        Relationships: []
+      }
+      reputation_points: {
+        Row: {
+          created_at: string
+          id: number
+          points: number | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          points?: number | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          points?: number | null
+          updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
