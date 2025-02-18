@@ -12,6 +12,7 @@ interface GroupMember {
   group_id: number;
   user_id: string;
   joined_at: string;
+  role: string;
   profiles: {
     id: string;
     first_name: string | null;
@@ -43,7 +44,11 @@ export default function GroupPage() {
       const { data, error } = await supabase
         .from('group_members')
         .select(`
-          *,
+          id,
+          group_id,
+          user_id,
+          joined_at,
+          role,
           profiles:user_id (
             id,
             first_name,
@@ -54,7 +59,7 @@ export default function GroupPage() {
         .eq('group_id', parseInt(id!));
 
       if (error) throw error;
-      return data;
+      return data as GroupMember[];
     }
   });
 
