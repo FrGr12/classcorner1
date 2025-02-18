@@ -1,12 +1,14 @@
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
-import { ArrowLeft, Clock, MapPin, Users, Star } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, Users, Star, Info } from "lucide-react";
 import { createBooking } from "@/services/bookingService";
 import { toast } from "sonner";
 import CancellationDialog from "@/components/class-details/CancellationDialog";
@@ -79,6 +81,14 @@ const BookingConfirmation = () => {
         </Button>
 
         <h1 className="text-3xl font-bold mb-8">Booking Confirmation</h1>
+
+        <Alert className="mb-6">
+          <Info className="h-4 w-4" />
+          <AlertDescription>
+            Our flexible refund policy: Get a full refund if you cancel more than 48 hours before the class. 
+            No refunds are available within 48 hours of the class start time.
+          </AlertDescription>
+        </Alert>
         
         <div className="glass-panel rounded-xl p-8 mb-8">
           <div className="space-y-6">
@@ -142,6 +152,13 @@ const BookingConfirmation = () => {
               <span className="font-medium">Price</span>
               <span className="text-xl font-semibold">${classItem.price}</span>
             </div>
+
+            <Alert variant="outline" className="mt-4">
+              <AlertDescription className="text-sm">
+                By proceeding with this booking, you acknowledge our cancellation policy. 
+                Cancellations made more than 48 hours before the class start time are eligible for a full refund.
+              </AlertDescription>
+            </Alert>
           </CardContent>
           <CardFooter className="flex gap-4 pt-6">
             <Button 
