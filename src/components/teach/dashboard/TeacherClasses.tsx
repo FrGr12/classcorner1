@@ -18,20 +18,19 @@ const TeacherClasses = () => {
           navigate(`/dashboard/classes/${classId}/edit`);
           break;
         case "message":
-          toast.success("Opening message composer...");
+          toast("Opening message composer...");
           break;
         case "boost":
           if (!classId) {
             throw new Error("Class ID is required to boost a class");
           }
-          toast.success("Boost feature coming soon!");
+          toast("Boost feature coming soon!");
           break;
         case "cancel":
           if (!classId) {
             throw new Error("Class ID is required to cancel a class");
           }
-          toast({
-            title: "Class cancelled successfully",
+          toast("Class cancelled successfully", {
             description: "All registered students will be notified automatically."
           });
           break;
