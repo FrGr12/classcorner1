@@ -1,22 +1,11 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { 
-  PlusCircle,
-  ArrowUp,
-  MessageCircle,
-  Bookmark,
-  FileText,
-  Book,
-  ExternalLink
-} from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { useNavigate } from "react-router-dom";
-import { CreatePostDialog } from "./CreatePostDialog";
-import { CommentSection } from "./CommentSection";
 import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { CreatePostDialog } from "./CreatePostDialog";
 import { CreateResourceDialog } from "@/components/admin/CreateResourceDialog";
+import { ResourceCard } from "./resources/ResourceCard";
+import { PostCard } from "./posts/PostCard";
 
 interface CommunityHomeProps {
   topic?: string;
@@ -194,52 +183,11 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredResources.map((resource) => (
-            <Card 
-              key={resource.id} 
-              className="hover:shadow-md transition-shadow cursor-pointer"
-              onClick={() => handlePostClick(resource.id)}
-            >
-              <CardContent className="p-6">
-                <div className="space-y-4">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center gap-2">
-                      {resource.type === "Guide" ? (
-                        <Book className="h-5 w-5 text-accent-purple" />
-                      ) : (
-                        <FileText className="h-5 w-5 text-accent-purple" />
-                      )}
-                      <Badge variant="outline">{resource.type}</Badge>
-                    </div>
-                    <Badge className="bg-accent-lavender text-primary">
-                      {resource.category}
-                    </Badge>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-semibold text-lg mb-2 hover:text-accent-purple cursor-pointer group flex items-center gap-2">
-                      {resource.title}
-                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {resource.description}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
-                    <span>{resource.author}</span>
-                    <div className="flex items-center gap-2">
-                      <span>{resource.readTime}</span>
-                      <span>•</span>
-                      <span>{new Date(resource.publishedDate).toLocaleDateString('en-US', {
-                        year: 'numeric',
-                        month: 'short',
-                        day: 'numeric'
-                      })}</span>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+            <ResourceCard
+              key={resource.id}
+              resource={resource}
+              onClick={handlePostClick}
+            />
           ))}
         </div>
       </div>
@@ -258,73 +206,12 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
       </div>
 
       {filteredPosts.map((post) => (
-        <Card 
-          key={post.id} 
-          className="hover:bg-accent/5 transition-colors cursor-pointer"
-          onClick={() => handlePostClick(post.id)}
-        >
-          <CardContent className="p-6">
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center gap-1">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  className="h-8 w-8 p-0"
-                  onClick={(e) => {
-                    e.stopPropagation(); // Prevent post click when voting
-                  }}
-                >
-                  <ArrowUp className="h-4 w-4" />
-                </Button>
-                <span className="text-sm font-medium">{post.votes}</span>
-              </div>
-              <div className="flex-1 space-y-2">
-                <h3 className="font-semibold hover:text-accent-purple">
-                  {post.title}
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {post.tags.map((tag) => (
-                    <Badge 
-                      key={tag.name} 
-                      className={`${tag.color} hover:opacity-90 cursor-pointer transition-opacity`}
-                      onClick={(e) => {
-                        e.stopPropagation(); // Prevent post click when clicking tag
-                        handleTagClick(tag.name);
-                      }}
-                    >
-                      {tag.name}
-                    </Badge>
-                  ))}
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  {post.content}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span className="text-xs">Posted by {post.author}</span>
-                  <span>•</span>
-                  <button 
-                    className="flex items-center gap-1 hover:text-accent-purple"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent post click when clicking comments
-                    }}
-                  >
-                    <MessageCircle className="h-4 w-4" />
-                    {post.comments} comments
-                  </button>
-                  <button 
-                    className="flex items-center gap-1 hover:text-accent-purple"
-                    onClick={(e) => {
-                      e.stopPropagation(); // Prevent post click when clicking save
-                    }}
-                  >
-                    <Bookmark className="h-4 w-4" />
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <PostCard
+          key={post.id}
+          post={post}
+          onPostClick={handlePostClick}
+          onTagClick={handleTagClick}
+        />
       ))}
 
       {filteredPosts.length === 0 && !resource && (
@@ -332,11 +219,6 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
           No posts found for this {topic ? 'topic' : 'category'}
         </div>
       )}
-
-      {/* Add CommentSection component where needed */}
-      {/* This is a placeholder - in a real implementation, you'd show comments 
-          when a specific post is selected */}
-      {/* <CommentSection postId={selectedPostId} comments={postComments} /> */}
     </div>
   );
 };
