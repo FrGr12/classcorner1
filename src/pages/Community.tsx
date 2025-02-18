@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery } from "@tanstack/react-query";
@@ -60,6 +59,7 @@ const Community = () => {
       };
     },
     getNextPageParam: (lastPage) => lastPage.nextPage,
+    initialPageParam: 0,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
@@ -86,7 +86,7 @@ const Community = () => {
       <div className="min-h-screen bg-background pt-24">
         <Navigation />
         <div className="container mx-auto py-8 px-4">
-          <p className="text-red-500">Error loading posts: {error.message}</p>
+          <p className="text-red-500">Error loading posts: {(error as Error).message}</p>
         </div>
       </div>
     );
@@ -96,7 +96,6 @@ const Community = () => {
     <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
-        {/* Community Header */}
         <div className="border-b bg-card">
           <div className="container mx-auto py-6 px-4">
             <h1 className="text-4xl font-bold mb-2">Community</h1>
@@ -106,12 +105,9 @@ const Community = () => {
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="container mx-auto py-8 px-4">
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
-            {/* Left Sidebar */}
             <div className="space-y-6">
-              {/* Topics */}
               <div className="space-y-1">
                 <h3 className="font-medium px-3 py-2">Popular Topics</h3>
                 <nav className="space-y-1">
@@ -136,7 +132,6 @@ const Community = () => {
                 </nav>
               </div>
 
-              {/* Categories */}
               <div className="space-y-1">
                 <h3 className="font-medium px-3 py-2">Categories</h3>
                 <nav className="space-y-1">
@@ -166,7 +161,6 @@ const Community = () => {
                 </nav>
               </div>
 
-              {/* Resources */}
               <div className="space-y-1">
                 <h3 className="font-medium px-3 py-2">Learning Resources</h3>
                 <nav className="space-y-1">
@@ -192,7 +186,6 @@ const Community = () => {
               </div>
             </div>
 
-            {/* Main Content */}
             <main>
               <div className="max-w-2xl mx-auto mb-8">
                 <div className="relative">

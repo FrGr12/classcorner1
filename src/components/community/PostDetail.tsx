@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -21,12 +20,13 @@ export default function PostDetail() {
       const { data, error } = await supabase
         .from('posts')
         .select('*')
-        .eq('id', id)
+        .eq('id', parseInt(id || '0', 10))
         .single();
       
       if (error) throw error;
       return data as Post;
-    }
+    },
+    enabled: !!id
   });
 
   const { data: comments, isLoading: commentsLoading } = useQuery({
@@ -35,12 +35,13 @@ export default function PostDetail() {
       const { data, error } = await supabase
         .from('post_comments')
         .select('*')
-        .eq('post_id', id)
+        .eq('post_id', parseInt(id || '0', 10))
         .order('created_at', { ascending: true });
       
       if (error) throw error;
       return data as Comment[];
-    }
+    },
+    enabled: !!id
   });
 
   if (postError) {

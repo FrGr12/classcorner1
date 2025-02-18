@@ -27,3 +27,7 @@ export interface PostVote {
   vote_type: -1 | 1;
   created_at: string;
 }
+
+export type PostWithComments = Post & {
+  comments?: Comment[];
+};
