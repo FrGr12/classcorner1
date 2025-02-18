@@ -18,6 +18,7 @@ import Payment from "@/pages/Payment";
 import PaymentFailed from "@/pages/PaymentFailed";
 import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 const router = createBrowserRouter([
   {
@@ -51,31 +52,59 @@ const router = createBrowserRouter([
   },
   {
     path: "/dashboard/*",
-    element: <Dashboard />,
+    element: (
+      <AuthGuard>
+        <Dashboard />
+      </AuthGuard>
+    ),
   },
   {
     path: "/student-dashboard/*",
-    element: <UserDashboard />,
+    element: (
+      <AuthGuard>
+        <UserDashboard />
+      </AuthGuard>
+    ),
   },
   {
     path: "/edit-course/:id",
-    element: <EditCourse />,
+    element: (
+      <AuthGuard>
+        <EditCourse />
+      </AuthGuard>
+    ),
   },
   {
     path: "/booking-confirmation",
-    element: <BookingConfirmation />,
+    element: (
+      <AuthGuard>
+        <BookingConfirmation />
+      </AuthGuard>
+    ),
   },
   {
     path: "/payment",
-    element: <Payment />,
+    element: (
+      <AuthGuard>
+        <Payment />
+      </AuthGuard>
+    ),
   },
   {
     path: "/payment-receipt",
-    element: <PaymentReceipt />,
+    element: (
+      <AuthGuard>
+        <PaymentReceipt />
+      </AuthGuard>
+    ),
   },
   {
     path: "/payment-failed",
-    element: <PaymentFailed />,
+    element: (
+      <AuthGuard>
+        <PaymentFailed />
+      </AuthGuard>
+    ),
   },
   {
     path: "*",
