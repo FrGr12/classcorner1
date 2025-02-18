@@ -8,6 +8,13 @@ import {
   Bookmark
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
+
+interface CommunityHomeProps {
+  topic?: string;
+  category?: string;
+  resource?: string;
+}
 
 // Mock data for demonstration
 const posts = [
@@ -61,18 +68,40 @@ const posts = [
   }
 ];
 
-const CommunityHome = () => {
+const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
+  const navigate = useNavigate();
+
+  // Filter posts based on route parameters
+  const filteredPosts = posts.filter(post => {
+    if (topic) {
+      return post.tags.some(tag => tag.name.toLowerCase().replace(/ /g, '-') === topic);
+    }
+    if (category) {
+      return post.tags.some(tag => tag.name.toLowerCase().replace(/ /g, '-') === category);
+    }
+    return true;
+  });
+
+  const handleTagClick = (tagName: string) => {
+    navigate(`/community/category/${tagName.toLowerCase().replace(/ /g, '-')}`);
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">Popular Posts</h2>
+        <h2 className="text-xl font-semibold">
+          {topic ? `Posts about ${topic.replace(/-/g, ' ')}` :
+           category ? `Posts in ${category.replace(/-/g, ' ')}` :
+           resource ? `${resource.replace(/-/g, ' ')}` :
+           'Popular Posts'}
+        </h2>
         <Button variant="outline" size="sm">
           <PlusCircle className="w-4 h-4 mr-2" />
           New Post
         </Button>
       </div>
 
-      {posts.map((post) => (
+      {filteredPosts.map((post) => (
         <Card key={post.id} className="hover:bg-accent/5 transition-colors">
           <CardContent className="p-6">
             <div className="flex gap-4">
@@ -91,6 +120,7 @@ const CommunityHome = () => {
                     <Badge 
                       key={tag.name} 
                       className={`${tag.color} hover:opacity-90 cursor-pointer transition-opacity`}
+                      onClick={() => handleTagClick(tag.name)}
                     >
                       {tag.name}
                     </Badge>
@@ -116,6 +146,12 @@ const CommunityHome = () => {
           </CardContent>
         </Card>
       ))}
+
+      {filteredPosts.length === 0 && (
+        <div className="text-center py-8 text-muted-foreground">
+          No posts found for this {topic ? 'topic' : category ? 'category' : 'resource'}
+        </div>
+      )}
     </div>
   );
 };

@@ -1,14 +1,30 @@
 
 import { useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import CommunityHome from "@/components/community/CommunityHome";
 import Navigation from "@/components/landing/Navigation";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 
 const Community = () => {
+  const navigate = useNavigate();
+  const { topic, category, resource } = useParams();
+
   useEffect(() => {
     document.title = "Community - Craftscape";
   }, []);
+
+  const handleTopicClick = (topicName: string) => {
+    navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
+  };
+
+  const handleCategoryClick = (categoryName: string) => {
+    navigate(`/community/category/${categoryName.toLowerCase().replace(/ /g, '-')}`);
+  };
+
+  const handleResourceClick = (resourceName: string) => {
+    navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
+  };
 
   return (
     <>
@@ -40,12 +56,15 @@ const Community = () => {
                     "Technique Showcase",
                     "Business Tips",
                     "Community Events"
-                  ].map((topic) => (
+                  ].map((topicName) => (
                     <button
-                      key={topic}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg"
+                      key={topicName}
+                      onClick={() => handleTopicClick(topicName)}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg ${
+                        topic === topicName.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
+                      }`}
                     >
-                      {topic}
+                      {topicName}
                     </button>
                   ))}
                 </nav>
@@ -69,7 +88,10 @@ const Community = () => {
                   ].map((category) => (
                     <button
                       key={category.name}
-                      className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg"
+                      onClick={() => handleCategoryClick(category.name)}
+                      className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg ${
+                        category === category.name.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
+                      }`}
                     >
                       <span>{category.name}</span>
                       <span className="text-muted-foreground text-xs">{category.count}</span>
@@ -89,12 +111,15 @@ const Community = () => {
                     "Tool Reviews",
                     "Project Ideas",
                     "Expert Tips"
-                  ].map((resource) => (
+                  ].map((resourceName) => (
                     <button
-                      key={resource}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg"
+                      key={resourceName}
+                      onClick={() => handleResourceClick(resourceName)}
+                      className={`w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg ${
+                        resource === resourceName.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
+                      }`}
                     >
-                      {resource}
+                      {resourceName}
                     </button>
                   ))}
                 </nav>
@@ -112,7 +137,7 @@ const Community = () => {
                   />
                 </div>
               </div>
-              <CommunityHome />
+              <CommunityHome topic={topic} category={category} resource={resource} />
             </main>
           </div>
         </div>

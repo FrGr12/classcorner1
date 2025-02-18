@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -132,6 +131,30 @@ const router = createBrowserRouter([
   },
   {
     path: "/community",
+    element: (
+      <ErrorBoundary>
+        <Community />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/topic/:topic",
+    element: (
+      <ErrorBoundary>
+        <Community />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/category/:category",
+    element: (
+      <ErrorBoundary>
+        <Community />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/resource/:resource",
     element: (
       <ErrorBoundary>
         <Community />
