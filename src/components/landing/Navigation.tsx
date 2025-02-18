@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDown, BookOpen, Users, School, Menu, X } from "lucide-react";
+import { ArrowLeft, ChevronDown, BookOpen, Users, School, Menu } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -90,6 +90,13 @@ const Navigation = () => {
             onClick={() => setIsOpen(false)}
           >
             About
+          </Link>
+          <Link 
+            to="/community" 
+            className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
+            onClick={() => setIsOpen(false)}
+          >
+            Community
           </Link>
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
             <Link 
@@ -189,6 +196,12 @@ const Navigation = () => {
             className="text-xs text-primary hover:text-accent-purple transition-colors"
           >
             About
+          </Link>
+          <Link 
+            to="/community" 
+            className="text-xs text-primary hover:text-accent-purple transition-colors"
+          >
+            Community
           </Link>
           
           <DropdownMenu>
