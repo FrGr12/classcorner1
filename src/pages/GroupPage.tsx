@@ -7,6 +7,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
+interface GroupMember {
+  id: number;
+  group_id: number;
+  user_id: string;
+  joined_at: string;
+  profiles: {
+    id: string;
+    first_name: string | null;
+    last_name: string | null;
+    avatar_url: string | null;
+  } | null;
+}
+
 export default function GroupPage() {
   const { id } = useParams();
 
@@ -16,7 +29,7 @@ export default function GroupPage() {
       const { data, error } = await supabase
         .from('community_groups')
         .select('*')
-        .eq('id', id)
+        .eq('id', parseInt(id!))
         .single();
 
       if (error) throw error;
@@ -24,7 +37,7 @@ export default function GroupPage() {
     }
   });
 
-  const { data: members, isLoading: isLoadingMembers } = useQuery({
+  const { data: members, isLoading: isLoadingMembers } = useQuery<GroupMember[]>({
     queryKey: ['group-members', id],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -38,7 +51,7 @@ export default function GroupPage() {
             avatar_url
           )
         `)
-        .eq('group_id', id);
+        .eq('group_id', parseInt(id!));
 
       if (error) throw error;
       return data;
@@ -87,10 +100,10 @@ export default function GroupPage() {
                 {members?.map((member) => (
                   <div key={member.id} className="flex items-center gap-4 p-4 rounded-lg border">
                     <Avatar>
-                      <AvatarImage src={member.profiles?.avatar_url} />
+                      <AvatarImage src={member.profiles?.avatar_url || undefined} />
                       <AvatarFallback>
-                        {member.profiles?.first_name?.[0]}
-                        {member.profiles?.last_name?.[0]}
+                        {member.profiles?.first_name?.[0] || ''}
+                        {member.profiles?.last_name?.[0] || ''}
                       </AvatarFallback>
                     </Avatar>
                     <div>
