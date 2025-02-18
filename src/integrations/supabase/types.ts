@@ -1851,34 +1851,72 @@ export type Database = {
           },
         ]
       }
+      post_votes: {
+        Row: {
+          created_at: string
+          post_id: number
+          user_id: string
+          vote_type: number
+        }
+        Insert: {
+          created_at?: string
+          post_id: number
+          user_id: string
+          vote_type: number
+        }
+        Update: {
+          created_at?: string
+          post_id?: number
+          user_id?: string
+          vote_type?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "post_votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       posts: {
         Row: {
           author_id: string
+          category: string | null
           content: string
           created_at: string
           id: number
+          search_vector: unknown | null
           tags: string[] | null
           title: string
+          topic: string | null
           updated_at: string
           votes: number | null
         }
         Insert: {
           author_id: string
+          category?: string | null
           content: string
           created_at?: string
           id?: number
+          search_vector?: unknown | null
           tags?: string[] | null
           title: string
+          topic?: string | null
           updated_at?: string
           votes?: number | null
         }
         Update: {
           author_id?: string
+          category?: string | null
           content?: string
           created_at?: string
           id?: number
+          search_vector?: unknown | null
           tags?: string[] | null
           title?: string
+          topic?: string | null
           updated_at?: string
           votes?: number | null
         }
