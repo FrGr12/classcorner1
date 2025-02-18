@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -23,6 +22,7 @@ import PostDetail from "@/components/community/PostDetail";
 import Groups from "@/pages/Groups";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
+import GroupPage from "@/pages/GroupPage";
 
 const router = createBrowserRouter([
   {
@@ -153,6 +153,14 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <Groups />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/groups/:id",
+    element: (
+      <ErrorBoundary>
+        <GroupPage />
       </ErrorBoundary>
     ),
   },
