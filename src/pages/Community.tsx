@@ -1,18 +1,73 @@
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import CommunityHome from "@/components/community/CommunityHome";
 import Navigation from "@/components/landing/Navigation";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { Post } from "@/types/community";
+import { useInView } from "react-intersection-observer";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const POSTS_PER_PAGE = 10;
 
 const Community = () => {
   const navigate = useNavigate();
   const { topic, category, resource } = useParams();
+  const [searchQuery, setSearchQuery] = useState("");
+  const { ref, inView } = useInView();
 
   useEffect(() => {
     document.title = "Community - Craftscape";
   }, []);
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading,
+    error
+  } = useInfiniteQuery({
+    queryKey: ['posts', topic, category, searchQuery],
+    queryFn: async ({ pageParam = 0 }) => {
+      let query = supabase
+        .from('posts')
+        .select('*', { count: 'exact' });
+
+      if (topic) {
+        query = query.eq('topic', topic);
+      }
+      if (category) {
+        query = query.eq('category', category);
+      }
+      if (searchQuery) {
+        query = query.textSearch('search_vector', searchQuery);
+      }
+
+      const { data, error, count } = await query
+        .order('created_at', { ascending: false })
+        .range(pageParam * POSTS_PER_PAGE, (pageParam + 1) * POSTS_PER_PAGE - 1);
+
+      if (error) throw error;
+
+      return {
+        posts: data as Post[],
+        totalCount: count || 0,
+        nextPage: data.length === POSTS_PER_PAGE ? pageParam + 1 : undefined
+      };
+    },
+    getNextPageParam: (lastPage) => lastPage.nextPage,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+  });
+
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleTopicClick = (topicName: string) => {
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
@@ -25,6 +80,17 @@ const Community = () => {
   const handleResourceClick = (resourceName: string) => {
     navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
   };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background pt-24">
+        <Navigation />
+        <div className="container mx-auto py-8 px-4">
+          <p className="text-red-500">Error loading posts: {error.message}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -134,10 +200,36 @@ const Community = () => {
                   <Input 
                     placeholder="Search posts, communities, or resources..." 
                     className="pl-9 w-full"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                   />
                 </div>
               </div>
-              <CommunityHome topic={topic} category={category} resource={resource} />
+
+              {isLoading ? (
+                <div className="space-y-4">
+                  {[...Array(3)].map((_, i) => (
+                    <Skeleton key={i} className="h-32 w-full" />
+                  ))}
+                </div>
+              ) : (
+                <>
+                  <CommunityHome
+                    topic={topic}
+                    category={category}
+                    resource={resource}
+                    posts={data?.pages.flatMap(page => page.posts) || []}
+                  />
+                  {isFetchingNextPage && (
+                    <div className="mt-4 space-y-4">
+                      {[...Array(2)].map((_, i) => (
+                        <Skeleton key={i} className="h-32 w-full" />
+                      ))}
+                    </div>
+                  )}
+                  <div ref={ref} className="h-10" />
+                </>
+              )}
             </main>
           </div>
         </div>

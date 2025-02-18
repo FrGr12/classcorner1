@@ -1,3 +1,4 @@
+
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -18,6 +19,7 @@ import PaymentFailed from "@/pages/PaymentFailed";
 import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 import Community from "@/pages/Community";
+import PostDetail from "@/components/community/PostDetail";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 
@@ -134,6 +136,14 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <Community />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/post/:id",
+    element: (
+      <ErrorBoundary>
+        <PostDetail />
       </ErrorBoundary>
     ),
   },
