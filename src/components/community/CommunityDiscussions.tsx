@@ -11,8 +11,7 @@ import {
   Clock,
   School,
   Megaphone,
-  HelpCircle,
-  Tool 
+  HelpCircle
 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -82,10 +81,9 @@ const CommunityDiscussions = () => {
       megaphone: Megaphone,
       'help-circle': HelpCircle,
       users: Users,
-      tool: Tool,
     };
     const IconComponent = icons[iconName];
-    return IconComponent ? <IconComponent className="h-5 w-5" /> : null;
+    return IconComponent ? <IconComponent className="h-5 w-5" /> : <MessageSquare className="h-5 w-5" />;
   };
 
   const formatDate = (date: string) => {
