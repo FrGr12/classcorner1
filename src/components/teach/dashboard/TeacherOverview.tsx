@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import MatchInsights from "@/components/teach/crm/MatchInsights";
+import LoadingState from "@/components/user-dashboard/LoadingState";
 
 const TeacherOverview = () => {
   const navigate = useNavigate();
@@ -24,6 +26,8 @@ const TeacherOverview = () => {
   });
 
   const [recentReviews, setRecentReviews] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingReviews, setIsLoadingReviews] = useState(true);
 
   useEffect(() => {
     fetchTeacherMetrics();
@@ -32,6 +36,7 @@ const TeacherOverview = () => {
 
   const fetchTeacherMetrics = async () => {
     try {
+      setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -57,11 +62,14 @@ const TeacherOverview = () => {
         title: "Error",
         description: "Failed to load dashboard metrics"
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const fetchRecentReviews = async () => {
     try {
+      setIsLoadingReviews(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
@@ -85,8 +93,20 @@ const TeacherOverview = () => {
         title: "Error",
         description: "Failed to load recent reviews"
       });
+    } finally {
+      setIsLoadingReviews(false);
     }
   };
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <LoadingState />
+        <LoadingState />
+        <LoadingState />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-8">
@@ -143,24 +163,28 @@ const TeacherOverview = () => {
             </Button>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {recentReviews.length > 0 ? (
-                recentReviews.map((review) => (
-                  <TestimonialCard
-                    key={review.id}
-                    name={`${review.profiles.first_name} ${review.profiles.last_name}`}
-                    date={new Date(review.created_at).toLocaleDateString()}
-                    rating={review.rating}
-                    comment={review.review_text}
-                    avatarUrl={review.profiles.avatar_url}
-                  />
-                ))
-              ) : (
-                <p className="text-muted-foreground col-span-3 text-center py-8">
-                  No reviews yet. As you teach more classes, your students' testimonials will appear here.
-                </p>
-              )}
-            </div>
+            {isLoadingReviews ? (
+              <LoadingState />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {recentReviews.length > 0 ? (
+                  recentReviews.map((review) => (
+                    <TestimonialCard
+                      key={review.id}
+                      name={`${review.profiles.first_name} ${review.profiles.last_name}`}
+                      date={new Date(review.created_at).toLocaleDateString()}
+                      rating={review.rating}
+                      comment={review.review_text}
+                      avatarUrl={review.profiles.avatar_url}
+                    />
+                  ))
+                ) : (
+                  <p className="text-muted-foreground col-span-3 text-center py-8">
+                    No reviews yet. As you teach more classes, your students' testimonials will appear here.
+                  </p>
+                )}
+              </div>
+            )}
           </CardContent>
         </Card>
       </section>

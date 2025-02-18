@@ -1,12 +1,40 @@
-
 import { FC } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Users, Calendar, DollarSign, Star, TrendingUp, LineChart, BarChart2, PieChart, Download, Filter } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+
+const LoadingState = () => {
+  return (
+    <div className="flex items-center justify-center h-24 bg-gray-100 rounded-lg">
+      <p>Loading...</p>
+    </div>
+  );
+};
 
 const TeacherStats = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="space-y-8">
+        <LoadingState />
+        <LoadingState />
+        <LoadingState />
+      </div>
+    );
+  }
+
   const currentHour = new Date().getHours();
   let greeting = "Good morning";
   
