@@ -534,6 +534,48 @@ export type Database = {
         }
         Relationships: []
       }
+      community_groups: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          description: string | null
+          id: number
+          member_count: number | null
+          name: string
+          region: string | null
+          rules: string[] | null
+          topic: string | null
+          type: Database["public"]["Enums"]["group_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: number
+          member_count?: number | null
+          name: string
+          region?: string | null
+          rules?: string[] | null
+          topic?: string | null
+          type?: Database["public"]["Enums"]["group_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          description?: string | null
+          id?: number
+          member_count?: number | null
+          name?: string
+          region?: string | null
+          rules?: string[] | null
+          topic?: string | null
+          type?: Database["public"]["Enums"]["group_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       community_resources: {
         Row: {
           author_id: string | null
@@ -1514,6 +1556,38 @@ export type Database = {
             columns: ["discussion_id"]
             isOneToOne: false
             referencedRelation: "forum_discussions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          group_id: number | null
+          id: number
+          joined_at: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          group_id?: number | null
+          id?: number
+          joined_at?: string
+          role?: string
+          user_id?: string | null
+        }
+        Update: {
+          group_id?: number | null
+          id?: number
+          joined_at?: string
+          role?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "community_groups"
             referencedColumns: ["id"]
           },
         ]
@@ -2588,6 +2662,7 @@ export type Database = {
         | "beginner_friendly"
         | "advanced_course"
         | "family_friendly"
+      group_type: "open" | "private"
       notification_preference: "email" | "in_app" | "both" | "none"
       user_type: "student" | "teacher" | "admin"
     }
