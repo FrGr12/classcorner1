@@ -5,7 +5,10 @@ import {
   PlusCircle,
   ArrowUp,
   MessageCircle,
-  Bookmark
+  Bookmark,
+  FileText,
+  Book,
+  ExternalLink
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
@@ -16,7 +19,38 @@ interface CommunityHomeProps {
   resource?: string;
 }
 
-// Mock data for demonstration
+// Mock data for resources
+const resources = [
+  {
+    id: 1,
+    title: "Complete Guide to Pottery Techniques",
+    description: "A comprehensive guide covering all essential pottery techniques, from hand-building to wheel throwing.",
+    type: "Guide",
+    category: "Pottery",
+    readTime: "15 min read",
+    author: "Craftscape Team"
+  },
+  {
+    id: 2,
+    title: "Photography Equipment Essentials",
+    description: "Learn about the fundamental equipment needed to start your photography journey.",
+    type: "Tutorial",
+    category: "Photography",
+    readTime: "12 min read",
+    author: "Craftscape Team"
+  },
+  {
+    id: 3,
+    title: "Setting Up Your Home Studio",
+    description: "Expert advice on creating the perfect creative space at home, including lighting and organization tips.",
+    type: "Guide",
+    category: "Studio Setup",
+    readTime: "20 min read",
+    author: "Craftscape Team"
+  }
+];
+
+// Mock data for posts
 const posts = [
   {
     id: 1,
@@ -71,7 +105,6 @@ const posts = [
 const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
   const navigate = useNavigate();
 
-  // Filter posts based on route parameters
   const filteredPosts = posts.filter(post => {
     if (topic) {
       return post.tags.some(tag => tag.name.toLowerCase().replace(/ /g, '-') === topic);
@@ -82,9 +115,72 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
     return true;
   });
 
+  const filteredResources = resources.filter(res => {
+    if (resource) {
+      return res.type.toLowerCase().replace(/ /g, '-') === resource;
+    }
+    return true;
+  });
+
   const handleTagClick = (tagName: string) => {
     navigate(`/community/category/${tagName.toLowerCase().replace(/ /g, '-')}`);
   };
+
+  const handlePostClick = (postId: number) => {
+    // In the future, this will navigate to the post detail page
+    navigate(`/community/post/${postId}`);
+  };
+
+  if (resource) {
+    return (
+      <div className="space-y-4">
+        <div className="flex justify-between items-center">
+          <h2 className="text-xl font-semibold">
+            {resource.replace(/-/g, ' ')}
+          </h2>
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {filteredResources.map((resource) => (
+            <Card key={resource.id} className="hover:shadow-md transition-shadow">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="flex items-start justify-between">
+                    <div className="flex items-center gap-2">
+                      {resource.type === "Guide" ? (
+                        <Book className="h-5 w-5 text-accent-purple" />
+                      ) : (
+                        <FileText className="h-5 w-5 text-accent-purple" />
+                      )}
+                      <Badge variant="outline">{resource.type}</Badge>
+                    </div>
+                    <Badge className="bg-accent-lavender text-primary">
+                      {resource.category}
+                    </Badge>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-semibold text-lg mb-2 hover:text-accent-purple cursor-pointer group flex items-center gap-2">
+                      {resource.title}
+                      <ExternalLink className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {resource.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
+                    <span>{resource.author}</span>
+                    <span>{resource.readTime}</span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-4">
@@ -92,7 +188,6 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
         <h2 className="text-xl font-semibold">
           {topic ? `Posts about ${topic.replace(/-/g, ' ')}` :
            category ? `Posts in ${category.replace(/-/g, ' ')}` :
-           resource ? `${resource.replace(/-/g, ' ')}` :
            'Popular Posts'}
         </h2>
         <Button variant="outline" size="sm">
@@ -102,17 +197,28 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
       </div>
 
       {filteredPosts.map((post) => (
-        <Card key={post.id} className="hover:bg-accent/5 transition-colors">
+        <Card 
+          key={post.id} 
+          className="hover:bg-accent/5 transition-colors cursor-pointer"
+          onClick={() => handlePostClick(post.id)}
+        >
           <CardContent className="p-6">
             <div className="flex gap-4">
               <div className="flex flex-col items-center gap-1">
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  className="h-8 w-8 p-0"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent post click when voting
+                  }}
+                >
                   <ArrowUp className="h-4 w-4" />
                 </Button>
                 <span className="text-sm font-medium">{post.votes}</span>
               </div>
               <div className="flex-1 space-y-2">
-                <h3 className="font-semibold hover:text-accent-purple cursor-pointer">
+                <h3 className="font-semibold hover:text-accent-purple">
                   {post.title}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -120,7 +226,10 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
                     <Badge 
                       key={tag.name} 
                       className={`${tag.color} hover:opacity-90 cursor-pointer transition-opacity`}
-                      onClick={() => handleTagClick(tag.name)}
+                      onClick={(e) => {
+                        e.stopPropagation(); // Prevent post click when clicking tag
+                        handleTagClick(tag.name);
+                      }}
                     >
                       {tag.name}
                     </Badge>
@@ -132,11 +241,21 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground">
                   <span className="text-xs">Posted by {post.author}</span>
                   <span>•</span>
-                  <button className="flex items-center gap-1 hover:text-accent-purple">
+                  <button 
+                    className="flex items-center gap-1 hover:text-accent-purple"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent post click when clicking comments
+                    }}
+                  >
                     <MessageCircle className="h-4 w-4" />
                     {post.comments} comments
                   </button>
-                  <button className="flex items-center gap-1 hover:text-accent-purple">
+                  <button 
+                    className="flex items-center gap-1 hover:text-accent-purple"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Prevent post click when clicking save
+                    }}
+                  >
                     <Bookmark className="h-4 w-4" />
                     Save
                   </button>
@@ -147,9 +266,9 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
         </Card>
       ))}
 
-      {filteredPosts.length === 0 && (
+      {filteredPosts.length === 0 && !resource && (
         <div className="text-center py-8 text-muted-foreground">
-          No posts found for this {topic ? 'topic' : category ? 'category' : 'resource'}
+          No posts found for this {topic ? 'topic' : 'category'}
         </div>
       )}
     </div>
