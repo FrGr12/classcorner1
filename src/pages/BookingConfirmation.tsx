@@ -153,7 +153,7 @@ const BookingConfirmation = () => {
               <span className="text-xl font-semibold">${classItem.price}</span>
             </div>
 
-            <Alert variant="outline" className="mt-4">
+            <Alert>
               <AlertDescription className="text-sm">
                 By proceeding with this booking, you acknowledge our cancellation policy. 
                 Cancellations made more than 48 hours before the class start time are eligible for a full refund.
