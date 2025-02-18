@@ -29,7 +29,9 @@ const resources = [
     type: "Guide",
     category: "Pottery",
     readTime: "15 min read",
-    author: "Craftscape Team"
+    author: "Craftscape Team",
+    content: "Learn the fundamentals of pottery in this comprehensive guide. From selecting the right clay to mastering basic techniques, this guide will help you start your pottery journey with confidence.",
+    publishedDate: "2024-02-15"
   },
   {
     id: 2,
@@ -38,7 +40,9 @@ const resources = [
     type: "Tutorial",
     category: "Photography",
     readTime: "12 min read",
-    author: "Craftscape Team"
+    author: "Craftscape Team",
+    content: "Discover what equipment you really need to start photography. We'll cover cameras, lenses, and essential accessories without breaking the bank.",
+    publishedDate: "2024-02-14"
   },
   {
     id: 3,
@@ -47,7 +51,31 @@ const resources = [
     type: "Guide",
     category: "Studio Setup",
     readTime: "20 min read",
-    author: "Craftscape Team"
+    author: "Craftscape Team",
+    content: "Transform any space into a functional art studio with our comprehensive guide to studio setup, organization, and essential equipment.",
+    publishedDate: "2024-02-13"
+  },
+  {
+    id: 4,
+    title: "Digital Photography Post-Processing",
+    description: "Master the art of photo editing with this comprehensive tutorial on post-processing techniques.",
+    type: "Tutorial",
+    category: "Photography",
+    readTime: "25 min read",
+    author: "Craftscape Team",
+    content: "Learn professional photo editing techniques using industry-standard software. From basic adjustments to advanced color grading.",
+    publishedDate: "2024-02-12"
+  },
+  {
+    id: 5,
+    title: "Sustainable Art Supplies Guide",
+    description: "A comprehensive guide to eco-friendly art materials and sustainable creative practices.",
+    type: "Guide",
+    category: "Sustainability",
+    readTime: "18 min read",
+    author: "Craftscape Team",
+    content: "Discover how to make your art practice more environmentally friendly with our guide to sustainable materials and techniques.",
+    publishedDate: "2024-02-11"
   }
 ];
 
@@ -143,7 +171,11 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {filteredResources.map((resource) => (
-            <Card key={resource.id} className="hover:shadow-md transition-shadow">
+            <Card 
+              key={resource.id} 
+              className="hover:shadow-md transition-shadow cursor-pointer"
+              onClick={() => handlePostClick(resource.id)}
+            >
               <CardContent className="p-6">
                 <div className="space-y-4">
                   <div className="flex items-start justify-between">
@@ -172,7 +204,15 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
 
                   <div className="flex items-center justify-between text-sm text-muted-foreground pt-4 border-t">
                     <span>{resource.author}</span>
-                    <span>{resource.readTime}</span>
+                    <div className="flex items-center gap-2">
+                      <span>{resource.readTime}</span>
+                      <span>•</span>
+                      <span>{new Date(resource.publishedDate).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'short',
+                        day: 'numeric'
+                      })}</span>
+                    </div>
                   </div>
                 </div>
               </CardContent>
