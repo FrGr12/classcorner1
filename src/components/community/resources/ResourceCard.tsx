@@ -3,17 +3,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Book, FileText, ExternalLink } from "lucide-react";
 
+export interface Resource {
+  id: number;
+  title: string;
+  description: string;
+  type: string;
+  category: string;
+  readTime: string;
+  author: string;
+  publishedDate: string;
+}
+
 interface ResourceCardProps {
-  resource: {
-    id: number;
-    title: string;
-    description: string;
-    type: string;
-    category: string;
-    readTime: string;
-    author: string;
-    publishedDate: string;
-  };
+  resource: Resource;
   onClick: (id: number) => void;
 }
 

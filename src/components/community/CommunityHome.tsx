@@ -1,9 +1,10 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { CreatePostDialog } from "./CreatePostDialog";
 import { CreateResourceDialog } from "@/components/admin/CreateResourceDialog";
-import { ResourceCard } from "./resources/ResourceCard";
+import { ResourceCard, Resource } from "./resources/ResourceCard";
 import { PostCard } from "./posts/PostCard";
 import { Post } from "@/types/community";
 
@@ -36,13 +37,27 @@ const CommunityHome = ({ topic, category, resource, posts }: CommunityHomeProps)
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((resource) => (
-            <ResourceCard
-              key={resource.id}
-              resource={resource}
-              onClick={handlePostClick}
-            />
-          ))}
+          {posts.map((post) => {
+            // Transform Post into Resource format
+            const resource: Resource = {
+              id: post.id,
+              title: post.title,
+              description: post.content,
+              type: post.topic || "Article",
+              category: post.category || "General",
+              readTime: "5 min read", // Default value since Post doesn't have this
+              author: post.author_id,
+              publishedDate: post.created_at
+            };
+
+            return (
+              <ResourceCard
+                key={post.id}
+                resource={resource}
+                onClick={handlePostClick}
+              />
+            );
+          })}
         </div>
       </div>
     );
