@@ -49,7 +49,7 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profiles:user_id (
+          profiles (
             id,
             first_name,
             last_name,
@@ -59,7 +59,7 @@ export default function GroupPage() {
         .eq('group_id', parseInt(id!));
 
       if (error) throw error;
-      return data as GroupMember[];
+      return data as unknown as GroupMember[];
     }
   });
 
