@@ -8,7 +8,7 @@ import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
-import { ArrowLeft, Clock, MapPin, Users, Star, Info } from "lucide-react";
+import { ArrowLeft, Clock, MapPin, Users, Star, Info, Loader2 } from "lucide-react";
 import { createBooking } from "@/services/bookingService";
 import { toast } from "sonner";
 import CancellationDialog from "@/components/class-details/CancellationDialog";
@@ -23,45 +23,65 @@ const BookingConfirmation = () => {
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isCancellationOpen, setIsCancellationOpen] = useState(false);
   const [booking, setBooking] = useState<Booking | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Redirect if no class data
   if (!classItem) {
-    navigate("/");
+    navigate("/browse", { 
+      replace: true,
+      state: { error: "No class selected. Please choose a class first." }
+    });
     return null;
   }
 
   const handleProceedToPayment = async () => {
     try {
+      setIsSubmitting(true);
+      
       if (!classItem.sessionId) {
         throw new Error("Session ID is required");
       }
 
-      const booking = await createBooking(classItem, classItem.sessionId);
+      const newBooking = await createBooking(classItem, classItem.sessionId);
+      setBooking(newBooking); // Store booking for cancellation/reschedule
+      
       navigate("/payment", { 
         state: { 
           classItem,
-          bookingId: booking.id
+          bookingId: newBooking.id
         }
       });
     } catch (error: any) {
       toast.error(error.message || "Failed to create booking");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleGoBack = () => {
-    navigate(`/class/${classItem.category}/${classItem.id}`);
+    if (classItem.id && classItem.category) {
+      navigate(`/class/${classItem.category}/${classItem.id}`);
+    } else {
+      navigate("/browse");
+    }
   };
 
   const formatClassDateTime = (date: Date | Date[]) => {
-    if (Array.isArray(date)) {
+    try {
+      if (Array.isArray(date)) {
+        return {
+          date: format(new Date(date[0]), "MMMM d, yyyy"),
+          time: format(new Date(date[0]), "h:mm a")
+        };
+      }
       return {
-        date: format(date[0], "MMMM d, yyyy"),
-        time: format(date[0], "h:mm a")
+        date: format(new Date(date), "MMMM d, yyyy"),
+        time: format(new Date(date), "h:mm a")
       };
+    } catch (error) {
+      console.error("Date formatting error:", error);
+      return { date: "Invalid date", time: "Invalid time" };
     }
-    return {
-      date: format(date, "MMMM d, yyyy"),
-      time: format(date, "h:mm a")
-    };
   };
 
   const dateTime = formatClassDateTime(classItem.date);
@@ -160,30 +180,43 @@ const BookingConfirmation = () => {
               </AlertDescription>
             </Alert>
           </CardContent>
-          <CardFooter className="flex gap-4 pt-6">
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => setIsCancellationOpen(true)}
-              className="w-full text-base"
-            >
-              Cancel
-            </Button>
-            <Button 
-              variant="outline"
-              size="lg"
-              onClick={() => setIsRescheduleOpen(true)}
-              className="w-full text-base"
-            >
-              Reschedule
-            </Button>
-            <Button 
-              onClick={handleProceedToPayment} 
-              size="lg"
-              className="w-full text-base"
-            >
-              Proceed to Payment
-            </Button>
+          <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6">
+            {booking ? (
+              <>
+                <Button 
+                  variant="outline" 
+                  size="lg"
+                  onClick={() => setIsCancellationOpen(true)}
+                  className="w-full text-base"
+                >
+                  Cancel Booking
+                </Button>
+                <Button 
+                  variant="outline"
+                  size="lg"
+                  onClick={() => setIsRescheduleOpen(true)}
+                  className="w-full text-base"
+                >
+                  Reschedule
+                </Button>
+              </>
+            ) : (
+              <Button 
+                onClick={handleProceedToPayment} 
+                size="lg"
+                className="w-full text-base"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  "Proceed to Payment"
+                )}
+              </Button>
+            )}
           </CardFooter>
         </Card>
 
