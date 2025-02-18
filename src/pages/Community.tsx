@@ -22,7 +22,6 @@ const Community = () => {
   const [showAllTopics, setShowAllTopics] = useState(false);
   const { ref, inView } = useInView();
 
-  // Fetch groups data
   const { data: groupsData } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
@@ -36,7 +35,6 @@ const Community = () => {
     },
   });
 
-  // Fetch topics with their post counts
   const { data: topicsData } = useQuery({
     queryKey: ['topics'],
     queryFn: async () => {
@@ -46,7 +44,6 @@ const Community = () => {
       } = await supabase.from('posts').select('tags').not('tags', 'is', null);
       if (error) throw error;
 
-      // Count occurrences of each tag
       const tagCounts = data.reduce((acc: Record<string, number>, post) => {
         post.tags?.forEach(tag => {
           acc[tag] = (acc[tag] || 0) + 1;
@@ -54,7 +51,6 @@ const Community = () => {
         return acc;
       }, {});
 
-      // Convert to array and sort by count
       return Object.entries(tagCounts).map(([name, count]) => ({
         name,
         count
@@ -81,7 +77,6 @@ const Community = () => {
         query = query.contains('tags', [topic]);
       }
       if (category && category !== 'all') {
-        // Only filter by category if it's not 'all'
         query = query.eq('category', category);
       }
       if (searchQuery) {
@@ -103,7 +98,7 @@ const Community = () => {
     },
     getNextPageParam: lastPage => lastPage.nextPage,
     initialPageParam: 0,
-    staleTime: 1000 * 60 * 5 // 5 minutes
+    staleTime: 1000 * 60 * 5
   });
 
   useEffect(() => {
@@ -125,7 +120,7 @@ const Community = () => {
   };
 
   const handleGroupClick = (groupId: number) => {
-    navigate(`/community/group/${groupId}`);
+    navigate('/community/groups');
   };
 
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
@@ -203,12 +198,12 @@ const Community = () => {
               <div className="space-y-1">
                 <div className="px-3 py-2 flex items-center justify-between">
                   <h3 className="font-medium">Groups</h3>
-                  <Button variant="outline" size="sm" onClick={() => navigate('/community/groups/create')}>
-                    Create
+                  <Button variant="outline" size="sm" onClick={() => navigate('/community/groups')}>
+                    View All
                   </Button>
                 </div>
                 <nav className="space-y-1">
-                  {groupsData?.map((group) => (
+                  {groupsData?.slice(0, 5).map((group) => (
                     <button
                       key={group.id}
                       onClick={() => handleGroupClick(group.id)}

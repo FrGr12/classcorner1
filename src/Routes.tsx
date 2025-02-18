@@ -20,6 +20,7 @@ import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 import Community from "@/pages/Community";
 import PostDetail from "@/components/community/PostDetail";
+import Groups from "@/pages/Groups";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 
@@ -144,6 +145,14 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <PostDetail />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/groups",
+    element: (
+      <ErrorBoundary>
+        <Groups />
       </ErrorBoundary>
     ),
   },
