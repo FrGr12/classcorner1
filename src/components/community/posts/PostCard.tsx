@@ -27,7 +27,7 @@ export function PostCard({
             <span className="text-sm font-medium">{post.votes}</span>
           </div>
           <div className="flex-1 space-y-2">
-            <h3 className="font-semibold hover:text-accent-purple text-left">
+            <h3 className="font-semibold text-left text-slate-950">
               {post.title}
             </h3>
             <div className="flex flex-wrap gap-2">
