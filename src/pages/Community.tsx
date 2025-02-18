@@ -85,16 +85,16 @@ const Community = () => {
                     { name: "Floral Design", count: "15.4K" },
                     { name: "Calligraphy", count: "12.8K" },
                     { name: "Fashion", count: "10.5K" }
-                  ].map((category) => (
+                  ].map((categoryItem) => (
                     <button
-                      key={category.name}
-                      onClick={() => handleCategoryClick(category.name)}
+                      key={categoryItem.name}
+                      onClick={() => handleCategoryClick(categoryItem.name)}
                       className={`w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg ${
-                        category === category.name.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
+                        category === categoryItem.name.toLowerCase().replace(/ /g, '-') ? 'bg-accent' : ''
                       }`}
                     >
-                      <span>{category.name}</span>
-                      <span className="text-muted-foreground text-xs">{category.count}</span>
+                      <span>{categoryItem.name}</span>
+                      <span className="text-muted-foreground text-xs">{categoryItem.count}</span>
                     </button>
                   ))}
                 </nav>
