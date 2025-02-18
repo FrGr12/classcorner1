@@ -31,10 +31,10 @@ export function PostCard({
               {post.title}
             </h3>
             <div className="flex flex-wrap gap-2">
-              {post.tags.map(tag => <Badge key={tag} className="hover:opacity-90 cursor-pointer" onClick={e => {
+              {post.tags.map(tag => <Badge key={tag} onClick={e => {
               e.stopPropagation();
               onTagClick(tag);
-            }}>
+            }} className="hover:opacity-90 cursor-pointer bg-accent-purple">
                   {tag}
                 </Badge>)}
             </div>
