@@ -19,6 +19,7 @@ import PaymentFailed from "@/pages/PaymentFailed";
 import PaymentReceipt from "@/pages/PaymentReceipt";
 import BookingConfirmation from "@/pages/BookingConfirmation";
 import AuthGuard from "@/components/auth/AuthGuard";
+import ErrorBoundary from "@/components/error/ErrorBoundary";
 
 const router = createBrowserRouter([
   {
@@ -44,17 +45,27 @@ const router = createBrowserRouter([
   },
   {
     path: "/browse",
-    element: <Browse />,
+    element: (
+      <ErrorBoundary>
+        <Browse />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/class/:category/:id",
-    element: <ClassDetails />,
+    element: (
+      <ErrorBoundary>
+        <ClassDetails />
+      </ErrorBoundary>
+    ),
   },
   {
     path: "/dashboard/*",
     element: (
       <AuthGuard>
-        <Dashboard />
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -62,7 +73,9 @@ const router = createBrowserRouter([
     path: "/student-dashboard/*",
     element: (
       <AuthGuard>
-        <UserDashboard />
+        <ErrorBoundary>
+          <UserDashboard />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -70,7 +83,9 @@ const router = createBrowserRouter([
     path: "/edit-course/:id",
     element: (
       <AuthGuard>
-        <EditCourse />
+        <ErrorBoundary>
+          <EditCourse />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -78,7 +93,9 @@ const router = createBrowserRouter([
     path: "/booking-confirmation",
     element: (
       <AuthGuard>
-        <BookingConfirmation />
+        <ErrorBoundary>
+          <BookingConfirmation />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -86,7 +103,9 @@ const router = createBrowserRouter([
     path: "/payment",
     element: (
       <AuthGuard>
-        <Payment />
+        <ErrorBoundary>
+          <Payment />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -94,7 +113,9 @@ const router = createBrowserRouter([
     path: "/payment-receipt",
     element: (
       <AuthGuard>
-        <PaymentReceipt />
+        <ErrorBoundary>
+          <PaymentReceipt />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
@@ -102,7 +123,9 @@ const router = createBrowserRouter([
     path: "/payment-failed",
     element: (
       <AuthGuard>
-        <PaymentFailed />
+        <ErrorBoundary>
+          <PaymentFailed />
+        </ErrorBoundary>
       </AuthGuard>
     ),
   },
