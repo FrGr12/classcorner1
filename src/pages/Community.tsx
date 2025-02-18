@@ -198,36 +198,35 @@ const Community = () => {
                 </nav>
               </div>
 
-              {showAllTopics && (
-                <>
-                  <Separator />
-                  <div className="space-y-1">
-                    <div className="px-3 py-2 flex items-center justify-between">
-                      <h3 className="font-medium">Groups</h3>
-                      <Button variant="outline" size="sm" onClick={() => navigate('/community/groups/create')}>
-                        Create
-                      </Button>
-                    </div>
-                    <nav className="space-y-1">
-                      {groupsData?.map((group) => (
-                        <button
-                          key={group.id}
-                          onClick={() => handleGroupClick(group.id)}
-                          className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Users className="h-4 w-4 text-muted-foreground" />
-                            <span>{group.name}</span>
-                          </div>
-                          <span className="text-muted-foreground text-xs">
-                            {group.type === 'private' ? '🔒' : null}
-                          </span>
-                        </button>
-                      ))}
-                    </nav>
-                  </div>
-                </>
-              )}
+              <Separator />
+              
+              <div className="space-y-1">
+                <div className="px-3 py-2 flex items-center justify-between">
+                  <h3 className="font-medium">Groups</h3>
+                  <Button variant="outline" size="sm" onClick={() => navigate('/community/groups/create')}>
+                    Create
+                  </Button>
+                </div>
+                <nav className="space-y-1">
+                  {groupsData?.map((group) => (
+                    <button
+                      key={group.id}
+                      onClick={() => handleGroupClick(group.id)}
+                      className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg"
+                    >
+                      <div className="flex items-center gap-2">
+                        <Users className="h-4 w-4 text-muted-foreground" />
+                        <span>{group.name}</span>
+                      </div>
+                      <span className="text-muted-foreground text-xs">
+                        {group.type === 'private' ? '🔒' : null}
+                      </span>
+                    </button>
+                  ))}
+                </nav>
+              </div>
+
+              <Separator />
 
               <div className="space-y-1">
                 <h3 className="px-3 py-2 text-left text-base font-semibold">Learning Resources</h3>
