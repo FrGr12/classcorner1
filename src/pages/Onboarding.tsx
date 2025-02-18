@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { UserType } from "@/types/user";
 
 const Onboarding = () => {
   const navigate = useNavigate();
@@ -22,7 +22,7 @@ const Onboarding = () => {
     lastName: "",
     bio: "",
     phone: "",
-    userType: "student" as "student" | "teacher",
+    userType: "student" as UserType,
     interests: [] as string[],
   });
 
@@ -182,7 +182,7 @@ const Onboarding = () => {
               <Label htmlFor="userType">I want to</Label>
               <Select
                 value={formData.userType}
-                onValueChange={(value: "student" | "teacher") => 
+                onValueChange={(value: UserType) => 
                   setFormData(prev => ({ ...prev, userType: value }))
                 }
               >

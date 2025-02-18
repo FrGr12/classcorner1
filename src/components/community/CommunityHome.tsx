@@ -14,8 +14,9 @@ import { useNavigate } from "react-router-dom";
 import { CreatePostDialog } from "./CreatePostDialog";
 import { CommentSection } from "./CommentSection";
 import { useState, useEffect } from "react";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
+import { CreateResourceDialog } from "@/components/admin/CreateResourceDialog";
 
 interface CommunityHomeProps {
   topic?: string;
@@ -178,7 +179,6 @@ const CommunityHome = ({ topic, category, resource }: CommunityHomeProps) => {
   };
 
   const handlePostClick = (postId: number) => {
-    // In the future, this will navigate to the post detail page
     navigate(`/community/post/${postId}`);
   };
 
