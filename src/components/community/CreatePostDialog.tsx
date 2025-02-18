@@ -48,6 +48,17 @@ export function CreatePostDialog() {
       return;
     }
 
+    // Get the current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to create a post",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
     const { error } = await supabase
       .from('posts')
@@ -55,6 +66,8 @@ export function CreatePostDialog() {
         title: title.trim(),
         content: content.trim(),
         tags,
+        author_id: user.id,
+        votes: 0
       });
 
     setIsLoading(false);

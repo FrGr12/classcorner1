@@ -24,12 +24,12 @@ interface CommentSectionProps {
 
 export function CommentSection({ postId, comments: initialComments }: CommentSectionProps) {
   const [comments, setComments] = useState<Comment[]>(initialComments);
-  const [newComment, setNewComment] = useState("");
+  const [commentText, setCommentText] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
   const handleSubmitComment = async () => {
-    if (!newComment.trim()) {
+    if (!commentText.trim()) {
       toast({
         title: "Error",
         description: "Please write a comment first",
@@ -38,28 +38,32 @@ export function CommentSection({ postId, comments: initialComments }: CommentSec
       return;
     }
 
+    // Get the current user
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "You must be logged in to comment",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setIsLoading(true);
-    const { data: newComment, error } = await supabase
+
+    // First create the comment
+    const { data: insertedComment, error: insertError } = await supabase
       .from('post_comments')
       .insert({
         post_id: postId,
-        content: newComment.trim(),
+        content: commentText.trim(),
+        author_id: user.id
       })
-      .select(`
-        id,
-        content,
-        author_id,
-        created_at,
-        author:profiles (
-          first_name,
-          last_name
-        )
-      `)
+      .select()
       .single();
 
-    setIsLoading(false);
-
-    if (error) {
+    if (insertError || !insertedComment) {
+      setIsLoading(false);
       toast({
         title: "Error",
         description: "Failed to post comment. Please try again.",
@@ -68,15 +72,40 @@ export function CommentSection({ postId, comments: initialComments }: CommentSec
       return;
     }
 
-    if (newComment) {
-      setComments([...comments, newComment as Comment]);
-      setNewComment("");
-      
+    // Then fetch the author details
+    const { data: authorData, error: authorError } = await supabase
+      .from('profiles')
+      .select('first_name, last_name')
+      .eq('id', user.id)
+      .single();
+
+    setIsLoading(false);
+
+    if (authorError || !authorData) {
       toast({
-        title: "Success",
-        description: "Comment posted successfully!",
+        title: "Error",
+        description: "Failed to load author details.",
+        variant: "destructive",
       });
+      return;
     }
+
+    // Combine the comment data with author details
+    const newCommentWithAuthor: Comment = {
+      ...insertedComment,
+      author: {
+        first_name: authorData.first_name,
+        last_name: authorData.last_name
+      }
+    };
+
+    setComments([...comments, newCommentWithAuthor]);
+    setCommentText("");
+    
+    toast({
+      title: "Success",
+      description: "Comment posted successfully!",
+    });
   };
 
   return (
@@ -104,8 +133,8 @@ export function CommentSection({ postId, comments: initialComments }: CommentSec
       <div className="space-y-2">
         <Textarea
           placeholder="Write a comment..."
-          value={newComment}
-          onChange={(e) => setNewComment(e.target.value)}
+          value={commentText}
+          onChange={(e) => setCommentText(e.target.value)}
         />
         <div className="flex justify-end">
           <Button onClick={handleSubmitComment} disabled={isLoading}>
