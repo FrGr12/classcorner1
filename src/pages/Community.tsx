@@ -29,13 +29,26 @@ const Community = () => {
           <div className="grid gap-6 md:grid-cols-[300px_1fr]">
             {/* Left Sidebar */}
             <div className="space-y-6">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                <Input 
-                  placeholder="Search communities" 
-                  className="pl-9"
-                />
+              {/* Topics */}
+              <div className="space-y-1">
+                <h3 className="font-medium px-3 py-2">Popular Topics</h3>
+                <nav className="space-y-1">
+                  {[
+                    "Studio Setup",
+                    "Tool Recommendations",
+                    "Material Sourcing",
+                    "Technique Showcase",
+                    "Business Tips",
+                    "Community Events"
+                  ].map((topic) => (
+                    <button
+                      key={topic}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg"
+                    >
+                      {topic}
+                    </button>
+                  ))}
+                </nav>
               </div>
 
               {/* Categories */}
@@ -86,32 +99,19 @@ const Community = () => {
                   ))}
                 </nav>
               </div>
-
-              {/* Topics */}
-              <div className="space-y-1">
-                <h3 className="font-medium px-3 py-2">Popular Topics</h3>
-                <nav className="space-y-1">
-                  {[
-                    "Studio Setup",
-                    "Tool Recommendations",
-                    "Material Sourcing",
-                    "Technique Showcase",
-                    "Business Tips",
-                    "Community Events"
-                  ].map((topic) => (
-                    <button
-                      key={topic}
-                      className="w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg"
-                    >
-                      {topic}
-                    </button>
-                  ))}
-                </nav>
-              </div>
             </div>
 
             {/* Main Content */}
             <main>
+              <div className="max-w-2xl mx-auto mb-8">
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input 
+                    placeholder="Search posts, communities, or resources..." 
+                    className="pl-9 w-full"
+                  />
+                </div>
+              </div>
               <CommunityHome />
             </main>
           </div>
