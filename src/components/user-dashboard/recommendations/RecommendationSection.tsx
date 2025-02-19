@@ -37,7 +37,10 @@ export const RecommendationSection = () => {
             category,
             instructor_id,
             images:course_images(image_path),
-            profiles:profiles!courses_instructor_id_fkey(first_name, last_name)
+            instructor:profiles!courses_instructor_id_fkey (
+              first_name,
+              last_name
+            )
           )
         `)
         .eq('user_id', user.id)
@@ -50,7 +53,7 @@ export const RecommendationSection = () => {
       const formattedRecommendations = matchData?.map(item => ({
         id: item.course.id,
         title: item.course.title,
-        instructor: `${item.course.profiles.first_name} ${item.course.profiles.last_name}`,
+        instructor: `${item.course.instructor.first_name} ${item.course.instructor.last_name}`,
         price: item.course.price,
         rating: 4.5, // We should fetch actual rating
         images: item.course.images.map((img: any) => img.image_path),
@@ -81,11 +84,7 @@ export const RecommendationSection = () => {
       // Get waitlisted courses categories
       const { data: waitlistData, error: waitlistError } = await supabase
         .from('waitlist_entries')
-        .select(`
-          courses (
-            category
-          )
-        `)
+        .select('courses(id, category)')
         .eq('user_id', user.id)
         .eq('status', 'waiting');
 
@@ -94,6 +93,7 @@ export const RecommendationSection = () => {
       // Get alternative classes in same categories
       if (waitlistData && waitlistData.length > 0) {
         const categories = waitlistData.map(entry => entry.courses.category);
+        const waitlistedIds = waitlistData.map(entry => entry.courses.id);
         
         const { data: alternativeData, error: alternativeError } = await supabase
           .from('courses')
@@ -107,14 +107,14 @@ export const RecommendationSection = () => {
             course_images (
               image_path
             ),
-            profiles!courses_instructor_id_fkey (
+            instructor:profiles!courses_instructor_id_fkey (
               first_name,
               last_name
             )
           `)
           .in('category', categories)
           .eq('status', 'published')
-          .not('id', 'in', waitlistData.map(w => w.courses.id))
+          .not('id', 'in', waitlistedIds)
           .limit(4);
 
         if (alternativeError) throw alternativeError;
@@ -122,7 +122,7 @@ export const RecommendationSection = () => {
         const formattedAlternatives = alternativeData?.map(course => ({
           id: course.id,
           title: course.title,
-          instructor: `${course.profiles.first_name} ${course.profiles.last_name}`,
+          instructor: `${course.instructor.first_name} ${course.instructor.last_name}`,
           price: course.price,
           rating: 4.5,
           images: course.course_images.map((img: any) => img.image_path),
