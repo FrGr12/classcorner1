@@ -24,32 +24,32 @@ const IntegratedSearch = () => {
   } = useSearchLogic();
 
   const handleSearch = async () => {
-    // Create a new URLSearchParams object
-    const params = new URLSearchParams();
+    await updatePreferences();
+
+    let queryString = '';
+    const searchParams = [];
     
-    // Only add parameters if they have values
     if (searchInput.trim()) {
-      params.set("q", encodeURIComponent(searchInput.trim()));
+      searchParams.push(`q=${encodeURIComponent(searchInput.trim())}`);
     }
     
     if (selectedCategories.length > 0) {
-      params.set("categories", selectedCategories.join(","));
+      searchParams.push(`categories=${encodeURIComponent(selectedCategories.join(","))}`);
     }
     
     if (selectedLocations.length > 0 && !selectedLocations.includes("Everywhere")) {
-      params.set("locations", selectedLocations.join(","));
+      searchParams.push(`locations=${encodeURIComponent(selectedLocations.join(","))}`);
     }
     
     if (selectedTime !== "Any week") {
-      params.set("time", encodeURIComponent(selectedTime));
+      searchParams.push(`time=${encodeURIComponent(selectedTime)}`);
     }
 
-    await updatePreferences();
+    if (searchParams.length > 0) {
+      queryString = `?${searchParams.join('&')}`;
+    }
     
-    // Create the URL string with the search parameters
-    const searchPath = `/browse${params.toString() ? `?${params.toString()}` : ''}`;
-    
-    navigate(searchPath);
+    navigate(`/browse${queryString}`);
     setIsOpen(false);
   };
 
