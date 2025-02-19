@@ -20,6 +20,8 @@ import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
 import { useDebounce } from "@/hooks/use-debounce";
+import { mockClasses } from "@/data/mockClasses";
+import { Badge } from "@/components/ui/badge";
 
 const cities = [
   "New York", "Los Angeles", "Chicago", "San Francisco", 
@@ -46,6 +48,11 @@ const Browse = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [searchInput, setSearchInput] = useState(searchParams.get("q") || "");
+  const [searchSuggestions, setSearchSuggestions] = useState<{
+    categories: string[];
+    classes: string[];
+  }>({ categories: [], classes: [] });
+  const [showSuggestions, setShowSuggestions] = useState(false);
   const [selectedCity, setSelectedCity] = useState(searchParams.get("city") || "");
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "recommended");
   const [date, setDate] = useState<Date | undefined>(
@@ -62,6 +69,34 @@ const Browse = () => {
   const debouncedSearch = useDebounce(searchInput, 300);
   const debouncedPriceRange = useDebounce(priceRange, 300);
   const debouncedMinRating = useDebounce(minRating, 300);
+
+  useEffect(() => {
+    if (searchInput.trim()) {
+      const input = searchInput.toLowerCase();
+      
+      const matchingCategories = categories.filter(category =>
+        category.toLowerCase().includes(input)
+      );
+
+      const allClasses = Object.values(mockClasses).flat();
+      const matchingClasses = allClasses
+        .filter(classItem => 
+          classItem.title.toLowerCase().includes(input) ||
+          classItem.category.toLowerCase().includes(input)
+        )
+        .map(classItem => classItem.title)
+        .slice(0, 5);
+
+      setSearchSuggestions({
+        categories: matchingCategories,
+        classes: matchingClasses
+      });
+      setShowSuggestions(true);
+    } else {
+      setSearchSuggestions({ categories: [], classes: [] });
+      setShowSuggestions(false);
+    }
+  }, [searchInput]);
 
   const handleDateRangeChange = (value: string) => {
     setDateRange(value);
@@ -180,6 +215,15 @@ const Browse = () => {
 
   const formatPrice = (value: number) => `$${value}`;
 
+  const handleSuggestionClick = (type: 'category' | 'class', value: string) => {
+    setSearchInput(value);
+    if (type === 'category') {
+      setSelectedCategory(value);
+    }
+    setShowSuggestions(false);
+    handleSearch();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100">
       <Navigation />
@@ -196,9 +240,48 @@ const Browse = () => {
                     placeholder="What do you want to learn?"
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
+                    onFocus={() => setShowSuggestions(true)}
                     className="pl-10 h-12 border-neutral-200"
                     aria-label="Search classes"
                   />
+                  {showSuggestions && (searchSuggestions.categories.length > 0 || searchSuggestions.classes.length > 0) && (
+                    <div className="absolute z-50 w-full mt-1 bg-white border border-neutral-200 rounded-md shadow-lg max-h-[300px] overflow-y-auto">
+                      {searchSuggestions.categories.length > 0 && (
+                        <div className="p-2">
+                          <h3 className="text-xs font-medium text-neutral-500 mb-2">Categories</h3>
+                          <div className="space-y-1">
+                            {searchSuggestions.categories.map((category) => (
+                              <div
+                                key={category}
+                                className="px-3 py-2 hover:bg-neutral-50 rounded-md cursor-pointer flex items-center gap-2"
+                                onClick={() => handleSuggestionClick('category', category)}
+                              >
+                                <Filter className="w-4 h-4 text-neutral-400" />
+                                <span>{category}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                      {searchSuggestions.classes.length > 0 && (
+                        <div className="p-2 border-t border-neutral-100">
+                          <h3 className="text-xs font-medium text-neutral-500 mb-2">Classes</h3>
+                          <div className="space-y-1">
+                            {searchSuggestions.classes.map((className) => (
+                              <div
+                                key={className}
+                                className="px-3 py-2 hover:bg-neutral-50 rounded-md cursor-pointer flex items-center gap-2"
+                                onClick={() => handleSuggestionClick('class', className)}
+                              >
+                                <Sparkles className="w-4 h-4 text-neutral-400" />
+                                <span>{className}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
                 
                 <div className="relative">
