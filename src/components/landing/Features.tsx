@@ -16,6 +16,10 @@ const Features = () => {
     points: ["Simple Class Creation", "Flexible Scheduling", "Student Management"]
   }];
 
+  const handleTeachClick = () => {
+    navigate('/dashboard/create-class');
+  };
+
   return <section className="py-24">
       <div className="container-padding">
         <div className="text-center mb-16">
@@ -42,13 +46,13 @@ const Features = () => {
               </ul>
               <div className="mt-8 flex gap-4">
                 <button 
-                  onClick={() => navigate('/browse')} 
+                  onClick={() => index === 0 ? navigate('/browse') : handleTeachClick()} 
                   className="button-primary"
                 >
                   {index === 0 ? "Find your next class" : "Start Teaching"}
                 </button>
                 <button 
-                  onClick={() => navigate(index === 0 ? '/about' : '/teach')}
+                  onClick={() => navigate('/dashboard')}
                   className="px-6 py-3 text-neutral-600 hover:text-primary transition-colors"
                 >
                   Learn More
