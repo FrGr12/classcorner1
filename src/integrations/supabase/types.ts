@@ -1322,7 +1322,11 @@ export type Database = {
           auto_send_waitlist_notification: boolean | null
           base_price_group: number | null
           base_price_private: number | null
+          booking_deadline_hours: number | null
+          cancellation_policy: string | null
           category: string
+          class_format: string | null
+          class_requirements: string[] | null
           created_at: string
           description: string
           duration: string | null
@@ -1334,18 +1338,23 @@ export type Database = {
           learning_outcomes: string[] | null
           location: string
           materials_included: string | null
+          materials_provided: string[] | null
           max_group_size: number | null
           max_participants: number | null
           max_waitlist_size: number | null
           min_group_size: number | null
+          min_participants: number | null
           payment_timing: string | null
+          prerequisites: string[] | null
           price: number
           private_bookings_enabled: boolean | null
           search_vector: unknown | null
           setup_instructions: string | null
           share_count: number | null
+          skill_level: string | null
           status: Database["public"]["Enums"]["course_status"] | null
           tags: string[] | null
+          target_audience: string[] | null
           title: string
           updated_at: string
           waitlist_enabled: boolean | null
@@ -1356,7 +1365,11 @@ export type Database = {
           auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
+          booking_deadline_hours?: number | null
+          cancellation_policy?: string | null
           category: string
+          class_format?: string | null
+          class_requirements?: string[] | null
           created_at?: string
           description: string
           duration?: string | null
@@ -1368,18 +1381,23 @@ export type Database = {
           learning_outcomes?: string[] | null
           location: string
           materials_included?: string | null
+          materials_provided?: string[] | null
           max_group_size?: number | null
           max_participants?: number | null
           max_waitlist_size?: number | null
           min_group_size?: number | null
+          min_participants?: number | null
           payment_timing?: string | null
+          prerequisites?: string[] | null
           price: number
           private_bookings_enabled?: boolean | null
           search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
+          skill_level?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
+          target_audience?: string[] | null
           title: string
           updated_at?: string
           waitlist_enabled?: boolean | null
@@ -1390,7 +1408,11 @@ export type Database = {
           auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
+          booking_deadline_hours?: number | null
+          cancellation_policy?: string | null
           category?: string
+          class_format?: string | null
+          class_requirements?: string[] | null
           created_at?: string
           description?: string
           duration?: string | null
@@ -1402,18 +1424,23 @@ export type Database = {
           learning_outcomes?: string[] | null
           location?: string
           materials_included?: string | null
+          materials_provided?: string[] | null
           max_group_size?: number | null
           max_participants?: number | null
           max_waitlist_size?: number | null
           min_group_size?: number | null
+          min_participants?: number | null
           payment_timing?: string | null
+          prerequisites?: string[] | null
           price?: number
           private_bookings_enabled?: boolean | null
           search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
+          skill_level?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
+          target_audience?: string[] | null
           title?: string
           updated_at?: string
           waitlist_enabled?: boolean | null
