@@ -20,17 +20,26 @@ import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader
 import CreateClassActions from "@/components/teach/create-class/CreateClassActions";
 
 const formSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  price: z.coerce.number().min(0, "Price must be a positive number"),
-  minParticipants: z.coerce.number().min(0, "Minimum participants must be 0 or greater"),
-  maxParticipants: z.coerce.number().min(0, "Maximum participants must be 0 or greater"),
-  location: z.string().min(1, "Location is required"),
+  title: z.string().min(3, "Title must be at least 3 characters long"),
+  description: z.string()
+    .min(50, "Description must be at least 50 characters long")
+    .max(2000, "Description must not exceed 2000 characters"),
+  price: z.coerce
+    .number()
+    .min(0, "Price must be 0 or greater")
+    .max(10000, "Price must not exceed 10000"),
+  minParticipants: z.coerce
+    .number()
+    .min(0, "Minimum participants must be 0 or greater")
+    .max(100, "Minimum participants must not exceed 100"),
+  maxParticipants: z.coerce
+    .number()
+    .min(0, "Maximum participants must be 0 or greater")
+    .max(100, "Maximum participants must not exceed 100"),
+  location: z.string().min(3, "Location must be at least 3 characters long"),
   category: z.string().min(1, "Category is required"),
-  date: z.string().optional(),
-  time: z.string().optional(),
   whatToBring: z.array(z.string()).default([]),
-  learningOutcomes: z.array(z.string()).default([]),
+  learningOutcomes: z.array(z.string()).min(1, "At least one learning outcome is required"),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -55,6 +64,7 @@ const CreateClass = () => {
       whatToBring: [],
       learningOutcomes: [],
     },
+    mode: "onChange"
   });
 
   useEffect(() => {
@@ -85,6 +95,22 @@ const CreateClass = () => {
 
       if (!userData.user) {
         toast.error("You must be logged in to create a class");
+        return;
+      }
+
+      if (images.length === 0) {
+        toast.error("Please add at least one image for your class");
+        return;
+      }
+
+      if (sessions.length === 0) {
+        toast.error("Please add at least one session for your class");
+        return;
+      }
+
+      // Validate max participants is greater than min participants
+      if (data.maxParticipants > 0 && data.minParticipants > data.maxParticipants) {
+        toast.error("Maximum participants must be greater than minimum participants");
         return;
       }
 
@@ -126,30 +152,28 @@ const CreateClass = () => {
         if (sessionsError) throw sessionsError;
       }
 
-      // Upload images if any
-      if (images.length > 0) {
-        for (let i = 0; i < images.length; i++) {
-          const image = images[i];
-          const fileExt = image.name.split('.').pop();
-          const filePath = `${course.id}/${Math.random()}.${fileExt}`;
-          
-          const { error: uploadError } = await supabase.storage
-            .from('course-images')
-            .upload(filePath, image);
+      // Upload images
+      for (let i = 0; i < images.length; i++) {
+        const image = images[i];
+        const fileExt = image.name.split('.').pop();
+        const filePath = `${course.id}/${Math.random()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('course-images')
+          .upload(filePath, image);
 
-          if (uploadError) throw uploadError;
+        if (uploadError) throw uploadError;
 
-          // Insert image reference
-          const { error: imageError } = await supabase
-            .from('course_images')
-            .insert({
-              course_id: course.id,
-              image_path: filePath,
-              display_order: i
-            });
+        // Insert image reference
+        const { error: imageError } = await supabase
+          .from('course_images')
+          .insert({
+            course_id: course.id,
+            image_path: filePath,
+            display_order: i
+          });
 
-          if (imageError) throw imageError;
-        }
+        if (imageError) throw imageError;
       }
 
       toast.success("Class published successfully!");
@@ -178,7 +202,7 @@ const CreateClass = () => {
       const { error: courseError } = await supabase
         .from('courses')
         .insert({
-          title: formData.title,
+          title: formData.title || "Untitled Class",
           description: formData.description,
           price: formData.price,
           max_participants: formData.maxParticipants,
@@ -204,17 +228,17 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
       <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
 
       <Form {...form}>
         <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Basic Information</h2>
             <BasicInfoSection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">What to Bring and Learning Outcomes</h2>
             <div className="space-y-6">
               <BringItemsSection form={form} />
@@ -222,28 +246,32 @@ const CreateClass = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
             <LocationCategorySection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
             <PricingCapacitySection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Add Images</h2>
             <ImagesSection images={images} setImages={setImages} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-4 sm:p-6">
             <h2 className="text-xl font-semibold mb-6 text-left">Add Sessions</h2>
             <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
-          <CreateClassActions isSubmitting={isSubmitting} onSaveDraft={saveDraft} />
+          <CreateClassActions
+            isSubmitting={isSubmitting}
+            onSaveDraft={saveDraft}
+            isValid={form.formState.isValid}
+          />
         </form>
       </Form>
     </div>
