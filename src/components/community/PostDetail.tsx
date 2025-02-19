@@ -10,6 +10,7 @@ import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 import { toast } from "sonner";
+import LoadingState from "@/components/user-dashboard/LoadingState";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -112,6 +113,7 @@ export default function PostDetail() {
             <Skeleton className="h-8 w-3/4" />
             <Skeleton className="h-4 w-1/4" />
             <Skeleton className="h-32 w-full" />
+            <LoadingState />
           </div>
         ) : post ? (
           <div className="space-y-6">
@@ -159,6 +161,7 @@ export default function PostDetail() {
                 <div className="space-y-4">
                   <Skeleton className="h-20 w-full" />
                   <Skeleton className="h-20 w-full" />
+                  <LoadingState />
                 </div>
               ) : comments?.length === 0 ? (
                 <p className="text-muted-foreground text-center py-8">
