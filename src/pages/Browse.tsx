@@ -128,6 +128,8 @@ const Browse = () => {
 
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
 
+  const formatPrice = (value: number) => `$${value}`;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-neutral-50 to-neutral-100">
       <Navigation />
@@ -226,21 +228,27 @@ const Browse = () => {
 
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <div className="flex justify-between items-center mb-3">
-                    <h3 className="text-sm font-medium">Price Range</h3>
+                    <h3 className="text-sm font-medium flex items-center gap-2">
+                      <span className="w-4 h-4 text-accent-purple">$</span>
+                      Price Range
+                    </h3>
+                    <span className="text-xs text-neutral-500">
+                      {formatPrice(priceRange[0])} - {formatPrice(priceRange[1])}
+                    </span>
                   </div>
                   <div className="px-2">
                     <Slider
                       defaultValue={[0, 200]}
                       max={200}
-                      step={10}
+                      step={5}
                       value={priceRange}
                       onValueChange={handlePriceRangeChange}
                       className="mt-2"
                       aria-label="Price range"
                     />
-                    <div className="flex justify-between mt-2 text-sm text-neutral-600">
-                      <span>${priceRange[0]}</span>
-                      <span>${priceRange[1]}</span>
+                    <div className="flex justify-between mt-2">
+                      <span className="text-xs text-neutral-500">$0</span>
+                      <span className="text-xs text-neutral-500">$200+</span>
                     </div>
                   </div>
                 </div>
