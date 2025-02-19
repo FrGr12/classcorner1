@@ -8,6 +8,7 @@ import { ArrowRight, Users, CalendarDays, Star, Clock } from "lucide-react";
 import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import ClassCard from "@/components/landing/ClassCard";
+import UserRecommendations from "./UserRecommendations";
 
 interface ClassPreview {
   id: number;
@@ -375,6 +376,8 @@ const UserDashboardOverview = () => {
           </CardContent>
         </Card>
       </div>
+
+      <UserRecommendations />
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <Card>
