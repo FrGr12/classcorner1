@@ -226,6 +226,34 @@ const CreateClass = () => {
       const { error: courseError } = await supabase
         .from('courses')
         .insert({
+          title: formData.title || '',
+          description: formData.description || '',
+          price: formData.price || 0,
+          min_participants: formData.minParticipants,
+          max_participants: formData.maxParticipants,
+          location: formData.location || '',
+          category: formData.category || '',
+          instructor_id: userData.user.id,
+          what_to_bring: formData.whatToBring,
+          materials_provided: formData.materialsProvided,
+          prerequisites: formData.prerequisites,
+          learning_outcomes: formData.learningOutcomes,
+          group_bookings_enabled: formData.groupBookingsEnabled,
+          private_bookings_enabled: formData.privateBookingsEnabled,
+          base_price_group: formData.basePriceGroup,
+          base_price_private: formData.basePricePrivate,
+          min_group_size: formData.minGroupSize,
+          max_group_size: formData.maxGroupSize,
+          waitlist_enabled: formData.waitlistEnabled,
+          max_waitlist_size: formData.maxWaitlistSize,
+          auto_promote_from_waitlist: formData.autoPromoteFromWaitlist,
+          cancellation_policy: formData.cancellationPolicy,
+          payment_timing: formData.paymentTiming,
+          skill_level: formData.skillLevel,
+          class_format: formData.classFormat,
+          class_requirements: formData.classRequirements,
+          target_audience: formData.targetAudience,
+          setup_instructions: formData.setupInstructions,
           status: 'draft'
         });
 
