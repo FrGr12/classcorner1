@@ -31,10 +31,10 @@ const PromotionalFilters = ({
   return (
     <div className="flex gap-4">
       <Select value={selectedClass} onValueChange={setSelectedClass}>
-        <SelectTrigger className="w-[200px]">
+        <SelectTrigger className="w-[200px] bg-white">
           <SelectValue placeholder="Select class" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           <SelectGroup>
             <SelectItem value="all">All Classes</SelectItem>
             {classes.map((cls) => (
@@ -47,10 +47,10 @@ const PromotionalFilters = ({
       </Select>
 
       <Select value={timeRange} onValueChange={setTimeRange}>
-        <SelectTrigger className="w-[150px]">
+        <SelectTrigger className="w-[150px] bg-white">
           <SelectValue placeholder="Time range" />
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="bg-white">
           <SelectGroup>
             <SelectItem value="7days">Last 7 days</SelectItem>
             <SelectItem value="30days">Last 30 days</SelectItem>

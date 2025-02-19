@@ -64,7 +64,7 @@ const PromoteDialog = ({ open, onOpenChange, classId, promotionType }: PromoteDi
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[800px]">
+      <DialogContent className="sm:max-w-[800px] bg-white">
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
@@ -84,10 +84,10 @@ const PromoteDialog = ({ open, onOpenChange, classId, promotionType }: PromoteDi
                 }
               }}
             >
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Choose classes to promote" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="bg-white">
                 <SelectGroup>
                   <SelectLabel>Classes</SelectLabel>
                   <SelectItem value="all">All Classes</SelectItem>
