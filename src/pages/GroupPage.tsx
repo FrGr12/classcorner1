@@ -58,7 +58,7 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profiles:profiles!user_id(
+          profiles (
             id,
             first_name,
             last_name,
