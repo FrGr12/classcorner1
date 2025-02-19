@@ -25,7 +25,6 @@ const FollowedTeachers = () => {
       const { data, error } = await supabase
         .from('teacher_follows')
         .select(`
-          teacher_id,
           profiles:teacher_id (
             id,
             first_name,
@@ -37,7 +36,13 @@ const FollowedTeachers = () => {
         .eq('status', 'active');
 
       if (error) throw error;
-      setTeachers(data.map(d => d.profiles));
+      
+      // Extract the profiles data and filter out any null values
+      const teacherData = data
+        .map(item => item.profiles)
+        .filter((profile): profile is TeacherInfo => profile !== null);
+      
+      setTeachers(teacherData);
     } catch (error) {
       console.error('Error fetching followed teachers:', error);
     }
