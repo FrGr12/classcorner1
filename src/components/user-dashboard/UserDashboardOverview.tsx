@@ -9,26 +9,6 @@ import ReviewsSection from "./overview/ReviewsSection";
 import UserRecommendations from "./UserRecommendations";
 import FollowedTeachers from "./FollowedTeachers";
 
-interface BookingData {
-  courses: {
-    id: number;
-    title: string;
-    price: number;
-    location: string;
-    instructor_id: string;
-    course_images: {
-      image_path: string;
-    }[];
-    profiles: {
-      first_name: string;
-      last_name: string;
-    }[];
-  };
-  course_sessions: {
-    start_time: string;
-  }[];
-}
-
 const UserDashboardOverview = () => {
   const { toast } = useToast();
   const [metrics, setMetrics] = useState({
@@ -163,7 +143,6 @@ const UserDashboardOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Implement saved classes fetching when the feature is ready
       setSavedClasses([]);
     } catch (error) {
       console.error('Error fetching saved classes:', error);
