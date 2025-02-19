@@ -39,8 +39,10 @@ export default function PostDetail() {
     },
     enabled: !!postId && !isNaN(postId),
     retry: false,
-    onError: (error) => {
-      toast.error(error instanceof Error ? error.message : "Failed to load post");
+    meta: {
+      onError: (error: Error) => {
+        toast.error(error.message || "Failed to load post");
+      }
     }
   });
 
