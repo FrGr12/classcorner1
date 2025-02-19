@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +7,13 @@ import { useToast } from "@/hooks/use-toast";
 import ClassCard from "@/components/landing/ClassCard";
 import { Loader2 } from "lucide-react";
 import type { ClassItem } from "@/types/class";
+
+interface InstructorProfile {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone: string;
+}
 
 export const RecommendationSection = () => {
   const [recommendations, setRecommendations] = useState<ClassItem[]>([]);
@@ -50,7 +58,7 @@ export const RecommendationSection = () => {
       if (matchError) throw matchError;
 
       const formattedRecommendations = matchData?.map(item => {
-        const instructor = item.course.instructor;
+        const instructor = item.course.instructor as InstructorProfile;
         return {
           id: item.course.id,
           title: item.course.title,
@@ -125,7 +133,7 @@ export const RecommendationSection = () => {
         if (alternativeError) throw alternativeError;
 
         const formattedAlternatives = alternativeData?.map(course => {
-          const instructor = course.instructor;
+          const instructor = course.instructor as InstructorProfile;
           return {
             id: course.id,
             title: course.title,
