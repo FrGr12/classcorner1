@@ -69,7 +69,9 @@ const ClassCard = ({
   const handleCardClick = () => {
     if (id) {
       const displayCategory = determineCategory(title, category);
-      navigate(`/class/${displayCategory}/${id}`);
+      // Ensure category is URL-safe by replacing spaces and special characters
+      const safeCategory = displayCategory.replace(/[^a-zA-Z0-9-]/g, '-').toLowerCase();
+      navigate(`/class/${safeCategory}/${id}`);
     } else {
       console.warn('No ID provided for class card:', title);
     }
