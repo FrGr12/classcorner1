@@ -12,7 +12,7 @@ interface Message {
   sent_at: string;
   instructor_id: string;
   student_id: string;
-  profiles: {
+  sender_profile: {
     first_name: string | null;
     last_name: string | null;
     avatar_url: string | null;
@@ -40,11 +40,13 @@ export default function MessageThread({ recipientId, courseId }: MessageThreadPr
   const { data: messages = [] } = useQuery({
     queryKey: ['messages', recipientId, courseId],
     queryFn: async () => {
+      if (!currentUserId) return [];
+      
       const query = supabase
         .from('communications')
         .select(`
           *,
-          profiles!communications_instructor_id_fkey (
+          sender_profile:profiles!communications_instructor_id_fkey(
             first_name,
             last_name,
             avatar_url
@@ -60,7 +62,12 @@ export default function MessageThread({ recipientId, courseId }: MessageThreadPr
       const { data, error } = await query;
       
       if (error) throw error;
-      return data as Message[];
+      
+      // Transform the data to match our Message interface
+      return (data as any[]).map(msg => ({
+        ...msg,
+        profiles: msg.sender_profile
+      })) as Message[];
     },
     enabled: !!currentUserId
   });
@@ -76,10 +83,10 @@ export default function MessageThread({ recipientId, courseId }: MessageThreadPr
             }`}
           >
             <Avatar className="h-8 w-8">
-              <AvatarImage src={message.profiles?.avatar_url || undefined} />
+              <AvatarImage src={message.sender_profile?.avatar_url || undefined} />
               <AvatarFallback>
-                {message.profiles?.first_name?.[0] || ''}
-                {message.profiles?.last_name?.[0] || ''}
+                {message.sender_profile?.first_name?.[0] || ''}
+                {message.sender_profile?.last_name?.[0] || ''}
               </AvatarFallback>
             </Avatar>
             <div
