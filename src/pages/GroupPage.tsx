@@ -58,7 +58,7 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profiles (
+          profiles:user_id (
             id,
             first_name,
             last_name,
@@ -68,7 +68,7 @@ export default function GroupPage() {
         .eq('group_id', groupId);
 
       if (error) throw error;
-      return (membersData || []) as GroupMember[];
+      return membersData;
     },
     enabled: !!groupId && !isNaN(groupId)
   });
