@@ -48,6 +48,14 @@ const ClassDetails = () => {
     });
   };
 
+  const handleShowQuestion = () => {
+    // Find the dialog by its button and click it
+    const questionButton = document.querySelector('[data-question-trigger]') as HTMLButtonElement;
+    if (questionButton) {
+      questionButton.click();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
@@ -73,7 +81,7 @@ const ClassDetails = () => {
             <PreparationInfo />
           </div>
           <LocationInfo classItem={classItem} />
-          <InstructorInfo classItem={classItem} />
+          <InstructorInfo classItem={classItem} onShowQuestion={handleShowQuestion} />
           <div className="w-full">
             <ImageCarousel images={classItem.images} title={classItem.title} variant="small" />
           </div>
