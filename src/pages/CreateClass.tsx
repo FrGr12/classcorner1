@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -9,6 +8,7 @@ import { Form } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Session } from "@/types/session";
 import { supabase } from "@/integrations/supabase/client";
+
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
 import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
 import PricingCapacitySection from "@/components/teach/course-form/PricingCapacitySection";
@@ -23,14 +23,38 @@ const formSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
   price: z.coerce.number().min(0, "Price must be a positive number"),
+  groupBookingsEnabled: z.boolean().default(false),
+  privateBookingsEnabled: z.boolean().default(false),
+  basePriceGroup: z.coerce.number().optional(),
+  basePricePrivate: z.coerce.number().optional(),
+  minGroupSize: z.coerce.number().optional(),
+  maxGroupSize: z.coerce.number().optional(),
   minParticipants: z.coerce.number().min(0, "Minimum participants must be 0 or greater"),
   maxParticipants: z.coerce.number().min(0, "Maximum participants must be 0 or greater"),
+  waitlistEnabled: z.boolean().default(false),
+  maxWaitlistSize: z.coerce.number().optional(),
+  autoPromoteFromWaitlist: z.boolean().default(false),
   location: z.string().min(1, "Location is required"),
   category: z.string().min(1, "Category is required"),
-  date: z.string().optional(),
-  time: z.string().optional(),
+  schedule: z.array(z.object({
+    date: z.string(),
+    time: z.string(),
+    duration: z.string(),
+    isRecurring: z.boolean(),
+    recurrencePattern: z.string().optional(),
+    recurrenceEndDate: z.string().optional()
+  })).min(1, "At least one session is required"),
   whatToBring: z.array(z.string()).default([]),
+  materialsProvided: z.array(z.string()).default([]),
+  prerequisites: z.array(z.string()).default([]),
   learningOutcomes: z.array(z.string()).default([]),
+  cancellationPolicy: z.string().optional(),
+  paymentTiming: z.string().optional(),
+  skillLevel: z.string().default("beginner"),
+  classFormat: z.string().default("in_person"),
+  classRequirements: z.array(z.string()).default([]),
+  targetAudience: z.array(z.string()).default([]),
+  setupInstructions: z.string().optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -48,12 +72,22 @@ const CreateClass = () => {
       title: "",
       description: "",
       price: 0,
-      minParticipants: 0,
-      maxParticipants: 0,
+      minParticipants: 1,
+      maxParticipants: 10,
       location: "",
       category: "",
       whatToBring: [],
       learningOutcomes: [],
+      materialsProvided: [],
+      prerequisites: [],
+      groupBookingsEnabled: false,
+      privateBookingsEnabled: false,
+      waitlistEnabled: false,
+      skillLevel: "beginner",
+      classFormat: "in_person",
+      classRequirements: [],
+      targetAudience: [],
+      schedule: [],
     },
   });
 
@@ -88,19 +122,37 @@ const CreateClass = () => {
         return;
       }
 
-      // Insert course data
       const { data: course, error: courseError } = await supabase
         .from('courses')
         .insert({
           title: data.title,
           description: data.description,
           price: data.price,
+          min_participants: data.minParticipants,
           max_participants: data.maxParticipants,
           location: data.location,
           category: data.category,
           instructor_id: userData.user.id,
           what_to_bring: data.whatToBring,
+          materials_provided: data.materialsProvided,
+          prerequisites: data.prerequisites,
           learning_outcomes: data.learningOutcomes,
+          group_bookings_enabled: data.groupBookingsEnabled,
+          private_bookings_enabled: data.privateBookingsEnabled,
+          base_price_group: data.basePriceGroup,
+          base_price_private: data.basePricePrivate,
+          min_group_size: data.minGroupSize,
+          max_group_size: data.maxGroupSize,
+          waitlist_enabled: data.waitlistEnabled,
+          max_waitlist_size: data.maxWaitlistSize,
+          auto_promote_from_waitlist: data.autoPromoteFromWaitlist,
+          cancellation_policy: data.cancellationPolicy,
+          payment_timing: data.paymentTiming,
+          skill_level: data.skillLevel,
+          class_format: data.classFormat,
+          class_requirements: data.classRequirements,
+          target_audience: data.targetAudience,
+          setup_instructions: data.setupInstructions,
           status: 'published'
         })
         .select()
@@ -108,15 +160,13 @@ const CreateClass = () => {
 
       if (courseError) throw courseError;
 
-      // Insert sessions
-      if (sessions.length > 0) {
-        const formattedSessions = sessions.map(session => ({
+      if (data.schedule.length > 0) {
+        const formattedSessions = data.schedule.map(session => ({
           course_id: course.id,
-          start_time: session.start.toISOString(),
+          start_time: new Date(`${session.date}T${session.time}`).toISOString(),
           is_recurring: session.isRecurring,
           recurrence_pattern: session.recurrencePattern,
-          recurrence_end_date: session.recurrenceEndDate?.toISOString(),
-          recurrence_count: session.recurrenceCount
+          recurrence_end_date: session.recurrenceEndDate ? new Date(session.recurrenceEndDate).toISOString() : null
         }));
 
         const { error: sessionsError } = await supabase
@@ -126,7 +176,6 @@ const CreateClass = () => {
         if (sessionsError) throw sessionsError;
       }
 
-      // Upload images if any
       if (images.length > 0) {
         for (let i = 0; i < images.length; i++) {
           const image = images[i];
@@ -139,7 +188,6 @@ const CreateClass = () => {
 
           if (uploadError) throw uploadError;
 
-          // Insert image reference
           const { error: imageError } = await supabase
             .from('course_images')
             .insert({
@@ -152,7 +200,7 @@ const CreateClass = () => {
         }
       }
 
-      toast.success("Class published successfully!");
+      toast.success("Class created successfully!");
       navigate("/dashboard/classes");
     } catch (error) {
       console.error("Error creating class:", error);
@@ -178,15 +226,6 @@ const CreateClass = () => {
       const { error: courseError } = await supabase
         .from('courses')
         .insert({
-          title: formData.title,
-          description: formData.description,
-          price: formData.price,
-          max_participants: formData.maxParticipants,
-          location: formData.location,
-          category: formData.category,
-          instructor_id: userData.user.id,
-          what_to_bring: formData.whatToBring,
-          learning_outcomes: formData.learningOutcomes,
           status: 'draft'
         });
 
@@ -238,8 +277,7 @@ const CreateClass = () => {
           </Card>
 
           <Card className="p-6">
-            <h2 className="text-xl font-semibold mb-6 text-left">Add Sessions</h2>
-            <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
+            <h2 className="text-xl font-semibold mb-6 text-left">Schedule & Sessions</h2>
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
