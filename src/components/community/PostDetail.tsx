@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -13,36 +14,61 @@ export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [userVote, setUserVote] = useState<number>(0);
+  
+  // Convert and validate ID
+  const postId = id ? parseInt(id) : null;
 
   const { data: post, isLoading: postLoading, error: postError } = useQuery({
-    queryKey: ['post', id],
+    queryKey: ['post', postId],
     queryFn: async () => {
+      if (!postId || isNaN(postId)) {
+        throw new Error("Invalid post ID");
+      }
+
       const { data, error } = await supabase
         .from('posts')
         .select('*')
-        .eq('id', parseInt(id || '0', 10))
+        .eq('id', postId)
         .single();
       
       if (error) throw error;
       return data as Post;
     },
-    enabled: !!id
+    enabled: !!postId && !isNaN(postId)
   });
 
   const { data: comments, isLoading: commentsLoading } = useQuery({
-    queryKey: ['post-comments', id],
+    queryKey: ['post-comments', postId],
     queryFn: async () => {
+      if (!postId || isNaN(postId)) {
+        throw new Error("Invalid post ID");
+      }
+
       const { data, error } = await supabase
         .from('post_comments')
         .select('*')
-        .eq('post_id', parseInt(id || '0', 10))
+        .eq('post_id', postId)
         .order('created_at', { ascending: true });
       
       if (error) throw error;
       return data as Comment[];
     },
-    enabled: !!id
+    enabled: !!postId && !isNaN(postId)
   });
+
+  if (!postId || isNaN(postId)) {
+    return (
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Invalid Post</h2>
+          <p className="text-muted-foreground mb-4">This post doesn't exist or the ID is invalid.</p>
+          <Button onClick={() => navigate('/community')}>
+            Back to Community
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (postError) {
     return (
