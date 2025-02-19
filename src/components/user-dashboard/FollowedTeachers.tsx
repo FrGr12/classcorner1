@@ -40,7 +40,13 @@ const FollowedTeachers = () => {
       // Extract the profiles data and filter out any null values
       const teacherData = data
         .map(item => item.profiles)
-        .filter((profile): profile is TeacherInfo => profile !== null);
+        .filter((item): item is TeacherInfo => 
+          item !== null && 
+          typeof item === 'object' &&
+          'id' in item &&
+          'first_name' in item &&
+          'last_name' in item
+        );
       
       setTeachers(teacherData);
     } catch (error) {
