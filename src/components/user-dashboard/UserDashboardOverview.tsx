@@ -8,6 +8,7 @@ import { ArrowRight, Users, CalendarDays, Star, Clock } from "lucide-react";
 import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
 import ClassCard from "@/components/landing/ClassCard";
+import RecommendationSection from "./recommendations/RecommendationSection";
 
 interface ClassPreview {
   id: number;
@@ -195,7 +196,6 @@ const UserDashboardOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Implement saved classes fetching when the feature is ready
       setSavedClasses([]);
     } catch (error) {
       console.error('Error fetching saved classes:', error);
@@ -330,6 +330,7 @@ const UserDashboardOverview = () => {
   return (
     <div className="space-y-8">
       <h2 className="text-xl font-semibold mb-4 text-left">Highlights</h2>
+      
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-accent-purple text-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -375,6 +376,8 @@ const UserDashboardOverview = () => {
           </CardContent>
         </Card>
       </div>
+
+      <RecommendationSection />
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <Card>
