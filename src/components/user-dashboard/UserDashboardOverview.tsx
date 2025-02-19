@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -7,6 +8,26 @@ import ClassSection from "./overview/ClassSection";
 import NotificationSection from "./overview/NotificationSection";
 import ReviewsSection from "./overview/ReviewsSection";
 import UserRecommendations from "./UserRecommendations";
+
+interface BookingData {
+  courses: {
+    id: number;
+    title: string;
+    price: number;
+    location: string;
+    instructor_id: string;
+    course_images: {
+      image_path: string;
+    }[];
+    profiles: {
+      first_name: string;
+      last_name: string;
+    }[];
+  };
+  course_sessions: {
+    start_time: string;
+  }[];
+}
 
 const UserDashboardOverview = () => {
   const { toast } = useToast();
