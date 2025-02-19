@@ -57,7 +57,7 @@ const CategoryPills = ({
                 "w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
                 isSelected ? "text-white" : "group-hover:text-white"
               )} />
-              <span className="text-xs sm:text-sm font-display tracking-wide">{category.name}</span>
+              <span className="text-xs sm:text-sm font-grandstander tracking-wide">{category.name}</span>
             </button>
           );
         })}
