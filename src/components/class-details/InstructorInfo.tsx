@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Mail, Phone, UserPlus, UserMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -18,7 +18,7 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
   const checkFollowStatus = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
+      if (!user || !classItem.instructor_id) return;
 
       const { data } = await supabase
         .from('teacher_follows')
@@ -41,6 +41,15 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
         toast({
           title: "Authentication required",
           description: "Please sign in to follow instructors",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      if (!classItem.instructor_id) {
+        toast({
+          title: "Error",
+          description: "Instructor ID not found",
           variant: "destructive"
         });
         return;
@@ -93,8 +102,7 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
     }
   };
 
-  // Check initial follow status
-  useState(() => {
+  useEffect(() => {
     checkFollowStatus();
   }, [classItem.instructor_id]);
 
@@ -121,20 +129,21 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
               <Phone className="h-4 w-4" />
               Call
             </Button>
+            <Button 
+              variant={isFollowing ? "outline" : "default"}
+              size="sm"
+              className={`gap-2 ${isFollowing ? 'text-accent-purple border-accent-purple hover:bg-accent-purple/10' : 'bg-accent-purple hover:bg-accent-purple/90'}`}
+              onClick={handleFollowToggle}
+              disabled={isLoading}
+            >
+              {isFollowing ? (
+                <UserMinus className="h-4 w-4" />
+              ) : (
+                <UserPlus className="h-4 w-4" />
+              )}
+              {isLoading ? "Loading..." : isFollowing ? "Following" : "Follow"}
+            </Button>
           </div>
-          <Button 
-            variant={isFollowing ? "outline" : "default"}
-            className={`gap-2 w-full ${isFollowing ? 'text-accent-purple border-accent-purple hover:bg-accent-purple/10' : 'bg-accent-purple hover:bg-accent-purple/90'}`}
-            onClick={handleFollowToggle}
-            disabled={isLoading}
-          >
-            {isFollowing ? (
-              <UserMinus className="h-4 w-4" />
-            ) : (
-              <UserPlus className="h-4 w-4" />
-            )}
-            {isLoading ? "Loading..." : isFollowing ? "Following" : "Follow"}
-          </Button>
         </div>
       </div>
     </section>
