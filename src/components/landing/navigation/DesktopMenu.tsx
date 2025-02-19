@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, School, BookOpen, Users } from "lucide-react";
 import {
@@ -24,6 +24,16 @@ export function DesktopMenu({
   handleAuthClick,
   loading,
 }: DesktopMenuProps) {
+  const navigate = useNavigate();
+
+  const handleTeachClick = () => {
+    if (!session) {
+      navigate('/auth', { state: { returnUrl: '/dashboard/create-class' } });
+    } else {
+      navigate('/dashboard/create-class');
+    }
+  };
+
   return (
     <div className="hidden md:flex items-center gap-4 ml-auto">
       <Link 
@@ -42,13 +52,13 @@ export function DesktopMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-sm">
           <DropdownMenuItem asChild>
-            <Link to="/teach" className="flex items-center hover:text-accent-purple">
+            <button onClick={handleTeachClick} className="flex items-center w-full hover:text-accent-purple">
               <School className="mr-2 h-4 w-4" />
               <span>Start Teaching</span>
-            </Link>
+            </button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/resources" className="flex items-center hover:text-accent-purple">
+            <Link to="/community/resource/tutorials" className="flex items-center hover:text-accent-purple">
               <BookOpen className="mr-2 h-4 w-4" />
               <span>Resources</span>
             </Link>

@@ -2,7 +2,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, School, BookOpen, Users } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -23,6 +23,17 @@ export function MobileMenu({
   handleAuthClick,
   loading,
 }: MobileMenuProps) {
+  const navigate = useNavigate();
+
+  const handleTeachClick = () => {
+    setIsOpen(false);
+    if (!session) {
+      navigate('/auth', { state: { returnUrl: '/dashboard/create-class' } });
+    } else {
+      navigate('/dashboard/create-class');
+    }
+  };
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -43,16 +54,15 @@ export function MobileMenu({
             Community
           </Link>
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
-            <Link 
-              to="/teach" 
-              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
-              onClick={() => setIsOpen(false)}
+            <button 
+              onClick={handleTeachClick} 
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors text-left"
             >
               <School className="h-4 w-4" />
               <span>Start Teaching</span>
-            </Link>
+            </button>
             <Link 
-              to="/resources" 
+              to="/community/resource/tutorials" 
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
               onClick={() => setIsOpen(false)}
             >
