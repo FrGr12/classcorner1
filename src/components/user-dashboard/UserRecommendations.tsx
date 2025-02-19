@@ -49,7 +49,7 @@ const UserRecommendations = () => {
 
       if (error) throw error;
 
-      const formattedRecommendations = matchedCourses?.map(item => ({
+      const formattedRecommendations: ClassItem[] = (matchedCourses || []).map(item => ({
         id: item.courses.id,
         title: item.courses.title,
         description: item.courses.description,
@@ -57,7 +57,7 @@ const UserRecommendations = () => {
         instructor: `${item.courses.profiles[0]?.first_name || ''} ${item.courses.profiles[0]?.last_name || ''}`,
         instructor_id: item.courses.instructor_id,
         rating: 4.5,
-        images: item.courses.course_images.map(img => img.image_path),
+        images: item.courses.course_images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
         city: item.courses.location,
@@ -65,7 +65,7 @@ const UserRecommendations = () => {
         interestScore: item.interest_score,
         locationScore: item.location_score,
         trendingScore: item.trending_score
-      })) || [];
+      }));
 
       setRecommendations(formattedRecommendations);
     } catch (error) {

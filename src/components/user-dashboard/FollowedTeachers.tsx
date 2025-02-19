@@ -13,10 +13,6 @@ interface TeacherInfo {
   expertise: string[];
 }
 
-type TeacherResponse = {
-  profiles: TeacherInfo | null;
-};
-
 const FollowedTeachers = () => {
   const [teachers, setTeachers] = useState<TeacherInfo[]>([]);
   const { toast } = useToast();
@@ -29,7 +25,7 @@ const FollowedTeachers = () => {
       const { data, error } = await supabase
         .from('teacher_follows')
         .select(`
-          profiles:teacher_id (
+          teacher:teacher_id (
             id,
             first_name,
             last_name,
@@ -41,9 +37,9 @@ const FollowedTeachers = () => {
 
       if (error) throw error;
       
-      const teacherData = (data as TeacherResponse[])
-        .map(item => item.profiles)
-        .filter((profile): profile is TeacherInfo => profile !== null);
+      const teacherData = data
+        .map(item => item.teacher)
+        .filter((teacher): teacher is TeacherInfo => teacher !== null);
       
       setTeachers(teacherData);
     } catch (error) {

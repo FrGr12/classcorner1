@@ -135,22 +135,21 @@ const UserDashboardOverview = () => {
           )
         `)
         .eq('student_id', user.id)
-        .eq('status', 'confirmed')
-        .returns<BookingData[]>();
+        .eq('status', 'confirmed');
 
       if (!data) return;
 
-      const formattedClasses = data.map(booking => ({
-        id: booking.courses.id,
-        title: booking.courses.title,
-        instructor: `${booking.courses.profiles[0]?.first_name} ${booking.courses.profiles[0]?.last_name}`,
-        instructor_id: booking.courses.instructor_id,
-        price: booking.courses.price,
+      const formattedClasses: ClassItem[] = data.map(item => ({
+        id: item.courses.id,
+        title: item.courses.title,
+        instructor: `${item.courses.profiles[0]?.first_name} ${item.courses.profiles[0]?.last_name}`,
+        instructor_id: item.courses.instructor_id,
+        price: item.courses.price,
         rating: 4.5,
-        images: booking.courses.course_images.map(img => img.image_path),
+        images: item.courses.course_images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
-        city: booking.courses.location
+        city: item.courses.location
       }));
 
       setUpcomingClasses(formattedClasses);
