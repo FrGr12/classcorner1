@@ -23,12 +23,17 @@ import Groups from "@/pages/Groups";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 import GroupPage from "@/pages/GroupPage";
+import About from "@/pages/About";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Index />,
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/about",
+    element: <About />,
   },
   {
     path: "/auth",
