@@ -1,16 +1,17 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Post, Comment } from "@/types/community";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, MessageCircle, ArrowUp, ArrowDown } from "lucide-react";
-import { format } from "date-fns";
+import { ArrowLeft } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 import { toast } from "sonner";
 import LoadingState from "@/components/user-dashboard/LoadingState";
+import { PostContent } from "./post/PostContent";
+import { Comments } from "./post/Comments";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
@@ -116,79 +117,17 @@ export default function PostDetail() {
             <LoadingState />
           </div>
         ) : post ? (
-          <div className="space-y-6">
-            <div className="space-y-2">
-              <h1 className="text-2xl font-bold">{post.title}</h1>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <span>Posted by {post.author_id}</span>
-                <span>•</span>
-                <span>{format(new Date(post.created_at), 'PPp')}</span>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="flex flex-col items-center gap-1">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={userVote === 1 ? "text-accent-purple" : ""}
-                  onClick={() => setUserVote(prev => prev === 1 ? 0 : 1)}
-                >
-                  <ArrowUp className="h-4 w-4" />
-                </Button>
-                <span className="text-sm font-medium">{post.votes}</span>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className={userVote === -1 ? "text-accent-purple" : ""}
-                  onClick={() => setUserVote(prev => prev === -1 ? 0 : -1)}
-                >
-                  <ArrowDown className="h-4 w-4" />
-                </Button>
-              </div>
-
-              <div className="flex-1">
-                <p className="whitespace-pre-wrap">{post.content}</p>
-              </div>
-            </div>
-
-            <div className="mt-8">
-              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
-                <MessageCircle className="h-5 w-5" />
-                Comments
-              </h2>
-              {commentsLoading ? (
-                <div className="space-y-4">
-                  <Skeleton className="h-20 w-full" />
-                  <Skeleton className="h-20 w-full" />
-                  <LoadingState />
-                </div>
-              ) : comments?.length === 0 ? (
-                <p className="text-muted-foreground text-center py-8">
-                  No comments yet. Be the first to share your thoughts!
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {comments?.map((comment) => (
-                    <div
-                      key={comment.id}
-                      className="p-4 border rounded-lg bg-white shadow-sm"
-                    >
-                      <div className="flex items-center gap-2 mb-2">
-                        <span className="text-sm font-medium">
-                          {comment.author_id}
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          {format(new Date(comment.created_at), 'PPp')}
-                        </span>
-                      </div>
-                      <p>{comment.content}</p>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
+          <>
+            <PostContent
+              post={post}
+              userVote={userVote}
+              onVoteChange={setUserVote}
+            />
+            <Comments
+              comments={comments}
+              isLoading={commentsLoading}
+            />
+          </>
         ) : null}
       </div>
     </ErrorBoundary>
