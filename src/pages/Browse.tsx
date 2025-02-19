@@ -157,7 +157,7 @@ const Browse = () => {
                     <SelectTrigger className="pl-10 h-12 border-neutral-200" aria-label="Select city">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border rounded-md shadow-md">
                       {cities.map((city) => (
                         <SelectItem key={city} value={city.toLowerCase()}>
                           {city}
@@ -187,7 +187,7 @@ const Browse = () => {
                     <SelectTrigger className="border-neutral-200">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border rounded-md shadow-md">
                       <SelectItem value="all">All Categories</SelectItem>
                       {categories.map((category) => (
                         <SelectItem key={category} value={category}>
@@ -215,7 +215,7 @@ const Browse = () => {
                         {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 bg-white border rounded-md shadow-md" align="start">
                       <CalendarComponent
                         mode="single"
                         selected={date}
@@ -262,7 +262,7 @@ const Browse = () => {
                     <SelectTrigger className="border-neutral-200">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white border rounded-md shadow-md">
                       {sortOptions.map((option) => {
                         const Icon = option.icon;
                         return (
