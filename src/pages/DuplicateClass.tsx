@@ -55,6 +55,7 @@ const DuplicateClass = () => {
       whatToBring: [],
       learningOutcomes: [],
     },
+    mode: "onChange"
   });
 
   useEffect(() => {
@@ -204,7 +205,7 @@ const DuplicateClass = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="w-full max-w-2xl mx-auto">
       <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
 
       <Form {...form}>
@@ -243,7 +244,11 @@ const DuplicateClass = () => {
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
-          <CreateClassActions isSubmitting={isSubmitting} onSaveDraft={saveDraft} />
+          <CreateClassActions
+            isSubmitting={isSubmitting}
+            onSaveDraft={saveDraft}
+            isValid={form.formState.isValid}
+          />
         </form>
       </Form>
     </div>
