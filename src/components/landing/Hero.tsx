@@ -1,31 +1,38 @@
-import { motion } from "framer-motion";
+
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { OnboardingQuiz } from "./quiz/OnboardingQuiz";
+
 const Hero = () => {
-  return <header className="relative container-padding md:py-12 lg:py-16 py-[70px]">
-      <div className="max-w-4xl mx-auto text-center relative z-10">
-        <motion.h1 className="text-4xl sm:text-5xl md:text-6xl font-display mb-6 leading-tight tracking-tight text-accent-purple" initial={{
-        opacity: 0,
-        y: 20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.5
-      }}>
-          Discover and Book Amazing Classes
-        </motion.h1>
-        <motion.p className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto px-4 leading-relaxed" initial={{
-        opacity: 0,
-        y: 20
-      }} animate={{
-        opacity: 1,
-        y: 0
-      }} transition={{
-        duration: 0.5,
-        delay: 0.1
-      }}>
-          Find the perfect class to learn something new, meet amazing people, and unlock your creativity.
-        </motion.p>
+  const [showQuiz, setShowQuiz] = useState(false);
+
+  return (
+    <div className="relative isolate px-6 pt-14 lg:px-8">
+      <div className="mx-auto max-w-4xl py-32 sm:py-48 lg:py-56">
+        {!showQuiz ? (
+          <div className="text-center">
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
+              Discover and Book Amazing Local Classes
+            </h1>
+            <p className="mt-6 text-lg leading-8 text-gray-600">
+              Join a community of learners and creators. Find the perfect class to explore your interests and develop new skills.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Button 
+                size="lg"
+                className="bg-accent-purple hover:bg-accent-purple/90"
+                onClick={() => setShowQuiz(true)}
+              >
+                Find Your Perfect Class
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <OnboardingQuiz />
+        )}
       </div>
-    </header>;
+    </div>
+  );
 };
+
 export default Hero;
