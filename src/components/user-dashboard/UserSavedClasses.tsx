@@ -20,6 +20,22 @@ interface SavedClass {
   city: string;
 }
 
+interface CourseData {
+  courses: {
+    id: number;
+    title: string;
+    description: string;
+    price: number;
+    location: string;
+    instructor_id: string;
+    course_images: { image_path: string }[];
+    profiles: {
+      first_name: string;
+      last_name: string;
+    }[];
+  };
+}
+
 const UserSavedClasses = () => {
   const [savedClasses, setSavedClasses] = useState<SavedClass[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,7 +74,7 @@ const UserSavedClasses = () => {
 
       if (error) throw error;
 
-      const formattedClasses = savedCourses?.map(item => ({
+      const formattedClasses = (savedCourses as CourseData[])?.map(item => ({
         id: item.courses.id,
         title: item.courses.title,
         description: item.courses.description,

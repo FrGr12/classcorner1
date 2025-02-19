@@ -827,6 +827,7 @@ export type Database = {
         Row: {
           course_id: number | null
           id: number
+          is_saved: boolean | null
           last_viewed_section: string | null
           user_id: string | null
           view_duration: number | null
@@ -835,6 +836,7 @@ export type Database = {
         Insert: {
           course_id?: number | null
           id?: never
+          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
@@ -843,6 +845,7 @@ export type Database = {
         Update: {
           course_id?: number | null
           id?: never
+          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
