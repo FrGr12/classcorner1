@@ -1,5 +1,5 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import Navigation from "@/components/landing/Navigation";
@@ -23,23 +23,32 @@ interface GroupMember {
 
 export default function GroupPage() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  
+  // Validate id is a number
+  const groupId = id ? parseInt(id, 10) : null;
+  if (!groupId || isNaN(groupId)) {
+    navigate('/community/groups');
+    return null;
+  }
 
   const { data: group, isLoading: isLoadingGroup } = useQuery({
-    queryKey: ['group', id],
+    queryKey: ['group', groupId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('community_groups')
         .select('*')
-        .eq('id', parseInt(id!))
+        .eq('id', groupId)
         .single();
 
       if (error) throw error;
       return data;
-    }
+    },
+    enabled: !!groupId && !isNaN(groupId)
   });
 
   const { data: members, isLoading: isLoadingMembers } = useQuery<GroupMember[]>({
-    queryKey: ['group-members', id],
+    queryKey: ['group-members', groupId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('group_members')
@@ -49,26 +58,48 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profiles (
+          profiles:user_id (
             id,
             first_name,
             last_name,
             avatar_url
           )
         `)
-        .eq('group_id', parseInt(id!));
+        .eq('group_id', groupId);
 
       if (error) throw error;
-      return data as unknown as GroupMember[];
-    }
+      return data as GroupMember[];
+    },
+    enabled: !!groupId && !isNaN(groupId)
   });
 
   if (isLoadingGroup) {
-    return <div>Loading...</div>;
+    return (
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-background pt-24">
+          <div className="container mx-auto py-8 px-4">
+            <div className="animate-pulse">
+              <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+            </div>
+          </div>
+        </div>
+      </>
+    );
   }
 
   if (!group) {
-    return <div>Group not found</div>;
+    return (
+      <>
+        <Navigation />
+        <div className="min-h-screen bg-background pt-24">
+          <div className="container mx-auto py-8 px-4">
+            <h1 className="text-2xl font-bold">Group not found</h1>
+          </div>
+        </div>
+      </>
+    );
   }
 
   return (
@@ -115,7 +146,7 @@ export default function GroupPage() {
                       <p className="font-medium">
                         {member.profiles?.first_name} {member.profiles?.last_name}
                       </p>
-                      <p className="text-sm text-muted-foreground">Member</p>
+                      <p className="text-sm text-muted-foreground">{member.role}</p>
                     </div>
                   </div>
                 ))}
