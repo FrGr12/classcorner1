@@ -27,10 +27,11 @@ const FAQSection = () => {
   const { data: faqs, isLoading } = useQuery({
     queryKey: ['faqs', id],
     queryFn: async () => {
+      const courseId = parseInt(id!, 10); // Convert string id to number
       const { data, error } = await supabase
         .from('course_faqs')
         .select('*')
-        .eq('course_id', id)
+        .eq('course_id', courseId)
         .order('display_order');
 
       if (error) throw error;
@@ -48,16 +49,15 @@ const FAQSection = () => {
 
     setIsSubmitting(true);
     try {
+      const courseId = parseInt(id!, 10); // Convert string id to number
       const { error } = await supabase
         .from('faq_questions')
-        .insert([
-          {
-            course_id: id,
-            student_id: user.id,
-            question: "How can I help you with this class?",
-            status: 'pending'
-          }
-        ]);
+        .insert({
+          course_id: courseId,
+          student_id: user.id,
+          question: "How can I help you with this class?",
+          status: 'pending'
+        });
 
       if (error) throw error;
       toast.success("Question submitted successfully");
