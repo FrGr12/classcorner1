@@ -9,15 +9,16 @@ import { ArrowLeft, MessageCircle, ArrowUp, ArrowDown } from "lucide-react";
 import { format } from "date-fns";
 import { Skeleton } from "@/components/ui/skeleton";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
+import { toast } from "sonner";
 
 export default function PostDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [userVote, setUserVote] = useState<number>(0);
   
-  // Convert and validate ID
+  // Convert and validate ID with error handling
   const postId = id ? parseInt(id) : null;
-
+  
   const { data: post, isLoading: postLoading, error: postError } = useQuery({
     queryKey: ['post', postId],
     queryFn: async () => {
@@ -29,12 +30,18 @@ export default function PostDetail() {
         .from('posts')
         .select('*')
         .eq('id', postId)
-        .single();
+        .maybeSingle();
       
       if (error) throw error;
+      if (!data) throw new Error("Post not found");
+      
       return data as Post;
     },
-    enabled: !!postId && !isNaN(postId)
+    enabled: !!postId && !isNaN(postId),
+    retry: false,
+    onError: (error) => {
+      toast.error(error instanceof Error ? error.message : "Failed to load post");
+    }
   });
 
   const { data: comments, isLoading: commentsLoading } = useQuery({
@@ -72,8 +79,16 @@ export default function PostDetail() {
 
   if (postError) {
     return (
-      <div className="p-4">
-        <p className="text-red-500">Error loading post: {postError.message}</p>
+      <div className="container mx-auto py-8 px-4">
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-2">Error Loading Post</h2>
+          <p className="text-muted-foreground mb-4">
+            {postError instanceof Error ? postError.message : "Failed to load post"}
+          </p>
+          <Button onClick={() => navigate('/community')}>
+            Back to Community
+          </Button>
+        </div>
       </div>
     );
   }
@@ -134,20 +149,25 @@ export default function PostDetail() {
             </div>
 
             <div className="mt-8">
-              <h2 className="text-lg font-semibold mb-4">Comments</h2>
+              <h2 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                <MessageCircle className="h-5 w-5" />
+                Comments
+              </h2>
               {commentsLoading ? (
                 <div className="space-y-4">
                   <Skeleton className="h-20 w-full" />
                   <Skeleton className="h-20 w-full" />
                 </div>
               ) : comments?.length === 0 ? (
-                <p className="text-muted-foreground">No comments yet.</p>
+                <p className="text-muted-foreground text-center py-8">
+                  No comments yet. Be the first to share your thoughts!
+                </p>
               ) : (
                 <div className="space-y-4">
                   {comments?.map((comment) => (
                     <div
                       key={comment.id}
-                      className="p-4 border rounded-lg"
+                      className="p-4 border rounded-lg bg-white shadow-sm"
                     >
                       <div className="flex items-center gap-2 mb-2">
                         <span className="text-sm font-medium">
