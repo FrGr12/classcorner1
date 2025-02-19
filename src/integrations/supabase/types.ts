@@ -325,6 +325,64 @@ export type Database = {
         }
         Relationships: []
       }
+      class_materials: {
+        Row: {
+          course_id: number | null
+          created_at: string | null
+          description: string | null
+          estimated_cost: number | null
+          id: number
+          name: string
+          optional: boolean | null
+          provided_by_instructor: boolean | null
+          quantity_needed: number | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          id?: never
+          name: string
+          optional?: boolean | null
+          provided_by_instructor?: boolean | null
+          quantity_needed?: number | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string | null
+          description?: string | null
+          estimated_cost?: number | null
+          id?: never
+          name?: string
+          optional?: boolean | null
+          provided_by_instructor?: boolean | null
+          quantity_needed?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_materials_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_materials_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "class_materials_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       class_promotions: {
         Row: {
           amount_paid: number
@@ -373,6 +431,64 @@ export type Database = {
           },
           {
             foreignKeyName: "class_promotions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
+      class_schedule_patterns: {
+        Row: {
+          course_id: number | null
+          created_at: string | null
+          day_of_week: number[] | null
+          end_time: string
+          id: number
+          recurrence_ends_at: string | null
+          recurring_type: string | null
+          start_time: string
+          updated_at: string | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string | null
+          day_of_week?: number[] | null
+          end_time: string
+          id?: never
+          recurrence_ends_at?: string | null
+          recurring_type?: string | null
+          start_time: string
+          updated_at?: string | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string | null
+          day_of_week?: number[] | null
+          end_time?: string
+          id?: never
+          recurrence_ends_at?: string | null
+          recurring_type?: string | null
+          start_time?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_schedule_patterns_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_schedule_patterns_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "class_schedule_patterns_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "teacher_revenue_insights"

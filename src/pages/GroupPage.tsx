@@ -47,10 +47,10 @@ export default function GroupPage() {
     enabled: !!groupId && !isNaN(groupId)
   });
 
-  const { data: members, isLoading: isLoadingMembers } = useQuery<GroupMember[]>({
+  const { data: members = [], isLoading: isLoadingMembers } = useQuery({
     queryKey: ['group-members', groupId],
     queryFn: async () => {
-      const { data: membersData, error } = await supabase
+      const { data, error } = await supabase
         .from('group_members')
         .select(`
           id,
@@ -58,7 +58,7 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profiles:user_id (
+          profiles:profiles!user_id(
             id,
             first_name,
             last_name,
@@ -68,7 +68,7 @@ export default function GroupPage() {
         .eq('group_id', groupId);
 
       if (error) throw error;
-      return membersData;
+      return data as GroupMember[];
     },
     enabled: !!groupId && !isNaN(groupId)
   });
