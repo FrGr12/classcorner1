@@ -1,7 +1,6 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
 
 interface SearchSuggestionsProps {
   isLoadingPreferences: boolean;
@@ -23,19 +22,6 @@ export const SearchSuggestions = ({
   onCategorySelect,
   onTitleSelect
 }: SearchSuggestionsProps) => {
-  if (isLoadingPreferences) {
-    return (
-      <div className="mt-2 space-y-2">
-        <Skeleton className="h-4 w-24" />
-        <div className="flex flex-wrap gap-2">
-          {[1, 2, 3].map((i) => (
-            <Skeleton key={i} className="h-6 w-20" />
-          ))}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <>
       {!isLoadingPreferences && userPreferences?.interests?.length > 0 && (

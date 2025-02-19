@@ -1,11 +1,14 @@
+
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
+
 const About = () => {
-  return <div className="min-h-screen bg-neutral-50">
+  return (
+    <div className="min-h-screen bg-neutral-50">
       <Navigation />
       <main className="container mx-auto px-4 py-24">
         <div className="max-w-4xl mx-auto space-y-12">
-          <section className="py-[25px]">
+          <section>
             <h1 className="text-4xl font-display font-semibold mb-6">About ClassCorner</h1>
             <p className="text-lg text-neutral-600 leading-relaxed">
               ClassCorner is a platform that connects passionate instructors with eager learners, 
@@ -67,6 +70,8 @@ const About = () => {
         </div>
       </main>
       <Footer />
-    </div>;
+    </div>
+  );
 };
+
 export default About;

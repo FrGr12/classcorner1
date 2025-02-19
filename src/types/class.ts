@@ -3,7 +3,6 @@ export interface ClassItem {
   id: number;
   title: string;
   instructor: string;
-  instructor_id: string;  // Added this field
   price: number;
   rating: number;
   images: string[];
@@ -29,3 +28,4 @@ export interface ClassItem {
 export interface ClassData {
   [key: string]: ClassItem[];
 }
+

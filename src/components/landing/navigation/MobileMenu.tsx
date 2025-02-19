@@ -2,7 +2,7 @@
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { Menu, School, BookOpen, Users } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -23,17 +23,6 @@ export function MobileMenu({
   handleAuthClick,
   loading,
 }: MobileMenuProps) {
-  const navigate = useNavigate();
-
-  const handleTeachClick = () => {
-    setIsOpen(false);
-    if (!session) {
-      navigate('/auth', { state: { returnUrl: '/dashboard/create-class' } });
-    } else {
-      navigate('/dashboard/create-class');
-    }
-  };
-
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -47,6 +36,13 @@ export function MobileMenu({
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
           <Link 
+            to="/about" 
+            className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
+            onClick={() => setIsOpen(false)}
+          >
+            About
+          </Link>
+          <Link 
             to="/community" 
             className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
             onClick={() => setIsOpen(false)}
@@ -54,15 +50,16 @@ export function MobileMenu({
             Community
           </Link>
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
-            <button 
-              onClick={handleTeachClick} 
-              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors text-left"
+            <Link 
+              to="/teach" 
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => setIsOpen(false)}
             >
               <School className="h-4 w-4" />
               <span>Start Teaching</span>
-            </button>
+            </Link>
             <Link 
-              to="/community/resource/tutorials" 
+              to="/resources" 
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
               onClick={() => setIsOpen(false)}
             >

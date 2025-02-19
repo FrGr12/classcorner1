@@ -13,7 +13,7 @@ interface GroupMember {
   user_id: string;
   joined_at: string;
   role: string;
-  profile: {
+  profiles: {
     id: string;
     first_name: string | null;
     last_name: string | null;
@@ -58,7 +58,7 @@ export default function GroupPage() {
           user_id,
           joined_at,
           role,
-          profile:user_id (
+          profiles (
             id,
             first_name,
             last_name,
@@ -68,7 +68,7 @@ export default function GroupPage() {
         .eq('group_id', groupId);
 
       if (error) throw error;
-      return (membersData || []) as unknown as GroupMember[];
+      return (membersData || []) as GroupMember[];
     },
     enabled: !!groupId && !isNaN(groupId)
   });
@@ -136,15 +136,15 @@ export default function GroupPage() {
                 {members?.map((member) => (
                   <div key={member.id} className="flex items-center gap-4 p-4 rounded-lg border">
                     <Avatar>
-                      <AvatarImage src={member.profile?.avatar_url || undefined} />
+                      <AvatarImage src={member.profiles?.avatar_url || undefined} />
                       <AvatarFallback>
-                        {member.profile?.first_name?.[0] || ''}
-                        {member.profile?.last_name?.[0] || ''}
+                        {member.profiles?.first_name?.[0] || ''}
+                        {member.profiles?.last_name?.[0] || ''}
                       </AvatarFallback>
                     </Avatar>
                     <div>
                       <p className="font-medium">
-                        {member.profile?.first_name} {member.profile?.last_name}
+                        {member.profiles?.first_name} {member.profiles?.last_name}
                       </p>
                       <p className="text-sm text-muted-foreground">{member.role}</p>
                     </div>

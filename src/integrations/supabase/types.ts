@@ -827,7 +827,6 @@ export type Database = {
         Row: {
           course_id: number | null
           id: number
-          is_saved: boolean | null
           last_viewed_section: string | null
           user_id: string | null
           view_duration: number | null
@@ -836,7 +835,6 @@ export type Database = {
         Insert: {
           course_id?: number | null
           id?: never
-          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
@@ -845,7 +843,6 @@ export type Database = {
         Update: {
           course_id?: number | null
           id?: never
-          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
@@ -2420,33 +2417,6 @@ export type Database = {
           },
         ]
       }
-      teacher_follows: {
-        Row: {
-          created_at: string
-          id: string
-          status: Database["public"]["Enums"]["follow_status"]
-          student_id: string
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          status?: Database["public"]["Enums"]["follow_status"]
-          student_id: string
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          status?: Database["public"]["Enums"]["follow_status"]
-          student_id?: string
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       teacher_metrics: {
         Row: {
           avg_rating: number | null
@@ -2793,7 +2763,6 @@ export type Database = {
         | "beginner_friendly"
         | "advanced_course"
         | "family_friendly"
-      follow_status: "pending" | "active" | "blocked"
       group_type: "open" | "private"
       notification_preference: "email" | "in_app" | "both" | "none"
       user_type: "student" | "teacher" | "admin"
