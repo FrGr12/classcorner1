@@ -175,7 +175,7 @@ const Browse = () => {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-5xl mx-auto">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <Filter className="w-4 h-4" />
@@ -225,6 +225,27 @@ const Browse = () => {
                 </div>
 
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-sm font-medium">Price Range</h3>
+                  </div>
+                  <div className="px-2">
+                    <Slider
+                      defaultValue={[0, 200]}
+                      max={200}
+                      step={10}
+                      value={priceRange}
+                      onValueChange={handlePriceRangeChange}
+                      className="mt-2"
+                      aria-label="Price range"
+                    />
+                    <div className="flex justify-between mt-2 text-sm text-neutral-600">
+                      <span>${priceRange[0]}</span>
+                      <span>${priceRange[1]}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <SortIcon className="w-4 h-4" />
                     Sort By
@@ -250,34 +271,16 @@ const Browse = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 max-w-5xl mx-auto">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium">Price Range</h3>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    onClick={handleReset}
-                    className="text-xs text-neutral-500 hover:text-accent-purple"
-                    aria-label="Reset all filters"
-                  >
-                    Reset Filters
-                  </Button>
-                </div>
-                <div className="px-2">
-                  <Slider
-                    defaultValue={[0, 200]}
-                    max={200}
-                    step={10}
-                    value={priceRange}
-                    onValueChange={handlePriceRangeChange}
-                    className="mt-2"
-                    aria-label="Price range"
-                  />
-                  <div className="flex justify-between mt-2 text-sm text-neutral-600">
-                    <span>${priceRange[0]}</span>
-                    <span>${priceRange[1]}</span>
-                  </div>
-                </div>
+              <div className="flex justify-end max-w-5xl mx-auto">
+                <Button 
+                  variant="ghost" 
+                  size="sm" 
+                  onClick={handleReset}
+                  className="text-xs text-neutral-500 hover:text-accent-purple"
+                  aria-label="Reset all filters"
+                >
+                  Reset Filters
+                </Button>
               </div>
             </div>
           </div>
