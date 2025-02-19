@@ -5,6 +5,16 @@ import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 interface InstructorInfoProps {
   classItem: ClassItem;
@@ -13,6 +23,9 @@ interface InstructorInfoProps {
 const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
+  const [privateMessage, setPrivateMessage] = useState("");
   const { toast } = useToast();
 
   const checkFollowStatus = async () => {
@@ -102,6 +115,50 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
     }
   };
 
+  const handlePrivateRequest = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast({
+          title: "Authentication required",
+          description: "Please sign in to request a private class",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Insert message into communications table
+      const { error: messageError } = await supabase
+        .from("communications")
+        .insert({
+          student_id: user.id,
+          instructor_id: classItem.instructor_id,
+          course_id: classItem.id,
+          message_content: privateMessage,
+          message_type: "private_request",
+          status: "pending"
+        });
+
+      if (messageError) throw messageError;
+
+      toast({
+        title: "Success",
+        description: "Private class request sent successfully"
+      });
+      setIsMessageOpen(false);
+      setPrivateMessage("");
+    } catch (error) {
+      console.error('Error sending private request:', error);
+      toast({
+        title: "Error",
+        description: "Failed to send private class request"
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     checkFollowStatus();
   }, [classItem.instructor_id]);
@@ -121,18 +178,18 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
             and helping students discover their artistic potential.
           </p>
           <div className="flex gap-2">
-            <Button variant="outline" className="gap-2">
+            <Button 
+              variant="outline" 
+              className="gap-2"
+              onClick={() => setIsContactDialogOpen(true)}
+            >
               <Mail className="h-4 w-4" />
-              Email
-            </Button>
-            <Button variant="outline" className="gap-2">
-              <Phone className="h-4 w-4" />
-              Call
+              Contact
             </Button>
             <Button 
-              variant={isFollowing ? "outline" : "default"}
+              variant={isFollowing ? "default" : "outline"}
               size="sm"
-              className={`gap-2 ${isFollowing ? 'text-accent-purple border-accent-purple hover:bg-accent-purple/10' : 'bg-accent-purple hover:bg-accent-purple/90'}`}
+              className={`gap-2 ${isFollowing ? 'bg-accent-purple hover:bg-accent-purple/90' : 'border-accent-purple text-accent-purple hover:bg-accent-purple/10'}`}
               onClick={handleFollowToggle}
               disabled={isLoading}
             >
@@ -146,6 +203,80 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
           </div>
         </div>
       </div>
+
+      {/* Contact Dialog */}
+      <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Contact Instructor</DialogTitle>
+            <DialogDescription>
+              Get in touch with the instructor through your preferred method.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-4">
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => {
+                window.location.href = `mailto:${classItem.instructorEmail}`;
+                setIsContactDialogOpen(false);
+              }}
+            >
+              <Mail className="h-4 w-4 mr-2" />
+              Send Email
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full justify-start"
+              onClick={() => {
+                window.location.href = `tel:${classItem.instructorPhone}`;
+                setIsContactDialogOpen(false);
+              }}
+            >
+              <Phone className="h-4 w-4 mr-2" />
+              Call
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Private Class Request Dialog */}
+      <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Request Private Class</DialogTitle>
+            <DialogDescription>
+              Send a message to the instructor requesting a private class session.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="message">Message</Label>
+              <Textarea
+                id="message"
+                placeholder="Tell the instructor about your private class request..."
+                value={privateMessage}
+                onChange={(e) => setPrivateMessage(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsMessageOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePrivateRequest}
+              disabled={isLoading || !privateMessage.trim()}
+            >
+              Send Request
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
