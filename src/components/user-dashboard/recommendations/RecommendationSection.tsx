@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,7 +23,6 @@ export const RecommendationSection = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Get personalized recommendations based on course_matches
       const { data: matchData, error: matchError } = await supabase
         .from('course_matches')
         .select(`
@@ -51,22 +49,24 @@ export const RecommendationSection = () => {
 
       if (matchError) throw matchError;
 
-      // Format the data to match ClassItem type
-      const formattedRecommendations = matchData?.map(item => ({
-        id: item.course.id,
-        title: item.course.title,
-        instructor: `${item.course.instructor?.first_name || ''} ${item.course.instructor?.last_name || ''}`,
-        instructor_id: item.course.instructor_id,
-        price: item.course.price,
-        rating: 4.5, // We should fetch actual rating
-        images: item.course.images.map((img: any) => img.image_path),
-        level: "All Levels",
-        category: item.course.category,
-        date: new Date(),
-        city: item.course.location,
-        instructorEmail: item.course.instructor?.email,
-        instructorPhone: item.course.instructor?.phone
-      }));
+      const formattedRecommendations = matchData?.map(item => {
+        const instructor = item.course.instructor;
+        return {
+          id: item.course.id,
+          title: item.course.title,
+          instructor: instructor ? `${instructor.first_name} ${instructor.last_name}` : 'Unknown Instructor',
+          instructor_id: item.course.instructor_id,
+          price: item.course.price,
+          rating: 4.5,
+          images: item.course.images.map((img: any) => img.image_path),
+          level: "All Levels",
+          category: item.course.category,
+          date: new Date(),
+          city: item.course.location,
+          instructorEmail: instructor?.email,
+          instructorPhone: instructor?.phone
+        };
+      });
 
       setRecommendations(formattedRecommendations || []);
     } catch (error) {
@@ -86,7 +86,6 @@ export const RecommendationSection = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Get waitlisted courses categories
       const { data: waitlistData, error: waitlistError } = await supabase
         .from('waitlist_entries')
         .select('courses(id, category)')
@@ -95,7 +94,6 @@ export const RecommendationSection = () => {
 
       if (waitlistError) throw waitlistError;
 
-      // Get alternative classes in same categories
       if (waitlistData && waitlistData.length > 0) {
         const categories = waitlistData.map(entry => entry.courses.category);
         const waitlistedIds = waitlistData.map(entry => entry.courses.id);
@@ -126,21 +124,24 @@ export const RecommendationSection = () => {
 
         if (alternativeError) throw alternativeError;
 
-        const formattedAlternatives = alternativeData?.map(course => ({
-          id: course.id,
-          title: course.title,
-          instructor: `${course.instructor?.first_name || ''} ${course.instructor?.last_name || ''}`,
-          instructor_id: course.instructor_id,
-          price: course.price,
-          rating: 4.5,
-          images: course.course_images.map((img: any) => img.image_path),
-          level: "All Levels",
-          category: course.category,
-          date: new Date(),
-          city: course.location,
-          instructorEmail: course.instructor?.email,
-          instructorPhone: course.instructor?.phone
-        }));
+        const formattedAlternatives = alternativeData?.map(course => {
+          const instructor = course.instructor;
+          return {
+            id: course.id,
+            title: course.title,
+            instructor: instructor ? `${instructor.first_name} ${instructor.last_name}` : 'Unknown Instructor',
+            instructor_id: course.instructor_id,
+            price: course.price,
+            rating: 4.5,
+            images: course.course_images.map((img: any) => img.image_path),
+            level: "All Levels",
+            category: course.category,
+            date: new Date(),
+            city: course.location,
+            instructorEmail: instructor?.email,
+            instructorPhone: instructor?.phone
+          };
+        });
 
         setAlternativeClasses(formattedAlternatives || []);
       }
