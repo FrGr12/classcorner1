@@ -1,22 +1,22 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ClassCard from "./ClassCard";
 import { mockClasses } from "@/data/mockClasses";
 import { ClassItem } from "@/types/class";
-import { Button } from "@/components/ui/button";
-import { ChevronDown } from "lucide-react";
 import { startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
+import { useInView } from "react-intersection-observer";
 
 interface ClassGridProps {
   category: string | null;
   sortBy?: string;
-  priceRange: [number, number];  // Added this property
-  minRating: number;             // Added this property
-  isLoading: boolean;            // Added this property
+  priceRange: [number, number];
+  minRating: number;
+  isLoading: boolean;
 }
 
 const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, isLoading }: ClassGridProps) => {
   const [displayCount, setDisplayCount] = useState(12);
+  const { ref, inView } = useInView();
   const ITEMS_PER_PAGE = 12;
 
   // Filter classes based on category and other filters
@@ -82,9 +82,11 @@ const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, is
   const displayedClasses = sortedClasses.slice(0, displayCount);
   const hasMoreClasses = sortedClasses.length > displayCount;
 
-  const handleLoadMore = () => {
-    setDisplayCount(prev => prev + ITEMS_PER_PAGE);
-  };
+  useEffect(() => {
+    if (inView && hasMoreClasses && !isLoading) {
+      setDisplayCount(prevCount => prevCount + ITEMS_PER_PAGE);
+    }
+  }, [inView, hasMoreClasses, isLoading]);
 
   if (isLoading) {
     return (
@@ -119,17 +121,11 @@ const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, is
       </div>
 
       {hasMoreClasses && (
-        <div className="flex flex-col items-center space-y-2 sm:space-y-4 mt-4 sm:mt-8">
-          <p className="text-base sm:text-lg text-gray-700 font-medium px-4 text-center">
-            Continue exploring amazing classes
-          </p>
-          <Button 
-            onClick={handleLoadMore}
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white flex items-center gap-2 w-full sm:w-auto justify-center px-4 sm:px-6"
-          >
-            View More Classes
-            <ChevronDown className="h-4 w-4" />
-          </Button>
+        <div 
+          ref={ref}
+          className="h-10 flex items-center justify-center"
+        >
+          {isLoading && <div className="text-gray-500">Loading more classes...</div>}
         </div>
       )}
     </div>

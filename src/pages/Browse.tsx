@@ -88,7 +88,7 @@ const Browse = () => {
     }
     
     setDate(newDate);
-    handleSearch(newDate);
+    handleSearch();
   };
 
   useEffect(() => {
