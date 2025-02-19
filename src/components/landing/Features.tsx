@@ -52,7 +52,7 @@ const Features = () => {
                   {index === 0 ? "Find your next class" : "Start Teaching"}
                 </button>
                 <button 
-                  onClick={() => navigate('/dashboard')}
+                  onClick={() => navigate('/community')}
                   className="px-6 py-3 text-neutral-600 hover:text-primary transition-colors"
                 >
                   Learn More
