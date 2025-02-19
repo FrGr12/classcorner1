@@ -1,9 +1,10 @@
 
-import { Mail, Phone, UserPlus, UserMinus } from "lucide-react";
+import { Mail, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { useTeacherFollow } from "@/hooks/useTeacherFollow";
 import { useEffect } from "react";
+import FollowButton from "./FollowButton";
 
 interface InstructorInfoProps {
   classItem: ClassItem;
@@ -40,24 +41,15 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
               <Phone className="h-4 w-4" />
               Call
             </Button>
-            <Button
-              variant={isFollowing ? "destructive" : "default"}
-              onClick={toggleFollow}
-              disabled={isLoading}
-              className="gap-2"
-            >
-              {isFollowing ? (
-                <>
-                  <UserMinus className="h-4 w-4" />
-                  Unfollow
-                </>
-              ) : (
-                <>
-                  <UserPlus className="h-4 w-4" />
-                  Follow
-                </>
-              )}
-            </Button>
+            <FollowButton
+              instructor={{
+                name: classItem.instructor,
+                avatar: ""
+              }}
+              isFollowing={isFollowing}
+              onToggleFollow={toggleFollow}
+              isLoading={isLoading}
+            />
           </div>
         </div>
       </div>
