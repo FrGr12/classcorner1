@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -119,7 +120,7 @@ const UserDashboardOverview = () => {
 
       if (!data) return;
 
-      const formattedClasses: ClassItem[] = data.map(item => ({
+      const formattedClasses = data.map(item => ({
         id: item.courses.id,
         title: item.courses.title,
         instructor: `${item.courses.profiles[0]?.first_name} ${item.courses.profiles[0]?.last_name}`,
@@ -130,7 +131,7 @@ const UserDashboardOverview = () => {
         level: "All Levels",
         date: new Date(),
         city: item.courses.location
-      }));
+      })) as ClassItem[];
 
       setUpcomingClasses(formattedClasses);
     } catch (error) {
@@ -181,13 +182,14 @@ const UserDashboardOverview = () => {
         id: entry.courses.id,
         title: entry.courses.title,
         instructor: `${entry.courses.profiles[0].first_name} ${entry.courses.profiles[0].last_name}`,
+        instructor_id: entry.courses.instructor_id,
         price: entry.courses.price,
         rating: 4.5,
         images: entry.courses.course_images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
         city: entry.courses.location
-      }));
+      })) as ClassItem[];
 
       setWaitlistedClasses(formattedClasses);
     } catch (error) {
@@ -228,13 +230,14 @@ const UserDashboardOverview = () => {
         id: match.courses.id,
         title: match.courses.title,
         instructor: `${match.courses.profiles[0].first_name} ${match.courses.profiles[0].last_name}`,
+        instructor_id: match.courses.instructor_id,
         price: match.courses.price,
         rating: 4.5,
         images: match.courses.course_images.map((img: any) => img.image_path),
         level: "All Levels",
         date: new Date(),
         city: match.courses.location
-      }));
+      })) as ClassItem[];
 
       setMatchedClasses(formattedClasses);
     } catch (error) {

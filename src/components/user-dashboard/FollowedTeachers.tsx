@@ -13,6 +13,10 @@ interface TeacherInfo {
   expertise: string[];
 }
 
+interface TeacherResponse {
+  teacher: TeacherInfo;
+}
+
 const FollowedTeachers = () => {
   const [teachers, setTeachers] = useState<TeacherInfo[]>([]);
   const { toast } = useToast();
@@ -25,7 +29,7 @@ const FollowedTeachers = () => {
       const { data, error } = await supabase
         .from('teacher_follows')
         .select(`
-          teacher:teacher_id (
+          teacher:profiles!teacher_follows_teacher_id_fkey (
             id,
             first_name,
             last_name,
@@ -37,7 +41,7 @@ const FollowedTeachers = () => {
 
       if (error) throw error;
       
-      const teacherData = data
+      const teacherData = (data as TeacherResponse[])
         .map(item => item.teacher)
         .filter((teacher): teacher is TeacherInfo => teacher !== null);
       
