@@ -306,7 +306,7 @@ const Browse = () => {
                             onSelect={(newDate) => {
                               setDate(newDate);
                               setDateRange("specific");
-                              handleSearch(newDate);
+                              handleSearch();
                             }}
                             initialFocus
                           />
