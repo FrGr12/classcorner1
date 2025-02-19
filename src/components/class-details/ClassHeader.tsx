@@ -1,4 +1,3 @@
-
 import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -28,6 +27,8 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
   const [privateMessage, setPrivateMessage] = useState("");
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
+  const [isQuestionDialogOpen, setIsQuestionDialogOpen] = useState(false);
+  const [question, setQuestion] = useState("");
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -74,7 +75,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         return;
       }
 
-      // Insert message into communications table
       const { error: messageError } = await supabase
         .from("communications")
         .insert({
@@ -110,7 +110,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
       }
 
       if (isFollowing) {
-        // Unfollow
         await supabase
           .from("teacher_follows")
           .delete()
@@ -119,7 +118,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         
         toast.success("Instructor unfollowed");
       } else {
-        // Follow
         await supabase
           .from("teacher_follows")
           .insert({
@@ -135,6 +133,52 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
     } catch (error) {
       console.error("Error toggling follow:", error);
       toast.error("Failed to update follow status");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAskQuestion = async () => {
+    try {
+      setIsLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        toast.error("Please sign in to ask a question");
+        navigate("/auth", { state: { returnTo: window.location.pathname } });
+        return;
+      }
+
+      const { error: questionError } = await supabase
+        .from("communications")
+        .insert({
+          student_id: user.id,
+          instructor_id: classItem.instructor_id,
+          course_id: classItem.id,
+          message_content: question,
+          message_type: "question",
+          status: "pending"
+        });
+
+      if (questionError) throw questionError;
+
+      const { error: notificationError } = await supabase
+        .from("notification_logs")
+        .insert({
+          user_id: classItem.instructor_id,
+          notification_type: "question",
+          content: `New question from a student about ${classItem.title}`,
+          status: "pending",
+          reference_id: classItem.id.toString()
+        });
+
+      if (notificationError) throw notificationError;
+
+      toast.success("Your question has been sent to the instructor");
+      setIsQuestionDialogOpen(false);
+      setQuestion("");
+    } catch (error) {
+      console.error('Error sending question:', error);
+      toast.error("Failed to send question");
     } finally {
       setIsLoading(false);
     }
@@ -224,7 +268,7 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
               <Button
                 variant="outline"
                 className="w-full md:w-auto"
-                onClick={handleQuestion}
+                onClick={() => setIsQuestionDialogOpen(true)}
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask a Question
@@ -305,6 +349,44 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
               Call
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Question Dialog - Now shared between Header and InstructorInfo */}
+      <Dialog open={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Ask a Question</DialogTitle>
+            <DialogDescription>
+              Send your question to the instructor. They'll be notified and will respond to you directly.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="question">Your Question</Label>
+              <Textarea
+                id="question"
+                placeholder="What would you like to know about this class?"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                className="min-h-[100px]"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsQuestionDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleAskQuestion}
+              disabled={isLoading || !question.trim()}
+            >
+              Send Question
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

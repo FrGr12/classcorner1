@@ -17,16 +17,15 @@ import { Textarea } from "@/components/ui/textarea";
 
 interface InstructorInfoProps {
   classItem: ClassItem;
+  onShowQuestion: () => void;
 }
 
-const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
+const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
-  const [isQuestionDialogOpen, setIsQuestionDialogOpen] = useState(false);
   const [privateMessage, setPrivateMessage] = useState("");
-  const [question, setQuestion] = useState("");
   const { toast } = useToast();
 
   const checkFollowStatus = async () => {
@@ -157,61 +156,6 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
     }
   };
 
-  const handleAskQuestion = async () => {
-    try {
-      setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        toast({
-          title: "Authentication required",
-          description: "Please sign in to ask a question",
-          variant: "destructive"
-        });
-        return;
-      }
-
-      const { error: questionError } = await supabase
-        .from("communications")
-        .insert({
-          student_id: user.id,
-          instructor_id: classItem.instructor_id,
-          course_id: classItem.id,
-          message_content: question,
-          message_type: "question",
-          status: "pending"
-        });
-
-      if (questionError) throw questionError;
-
-      const { error: notificationError } = await supabase
-        .from("notification_logs")
-        .insert({
-          user_id: classItem.instructor_id,
-          notification_type: "question",
-          content: `New question from a student about ${classItem.title}`,
-          status: "pending",
-          reference_id: classItem.id.toString()
-        });
-
-      if (notificationError) throw notificationError;
-
-      toast({
-        title: "Success",
-        description: "Your question has been sent to the instructor"
-      });
-      setIsQuestionDialogOpen(false);
-      setQuestion("");
-    } catch (error) {
-      console.error('Error sending question:', error);
-      toast({
-        title: "Error",
-        description: "Failed to send question"
-      });
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   useEffect(() => {
     checkFollowStatus();
   }, [classItem.instructor_id]);
@@ -256,7 +200,7 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
             <Button
               variant="outline"
               className="gap-2"
-              onClick={() => setIsQuestionDialogOpen(true)}
+              onClick={onShowQuestion}
             >
               <MessageCircle className="h-4 w-4" />
               Ask a Question
@@ -265,7 +209,6 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
         </div>
       </div>
 
-      {/* Contact Dialog */}
       <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -301,45 +244,6 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Question Dialog */}
-      <Dialog open={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Ask a Question</DialogTitle>
-            <DialogDescription>
-              Send your question to the instructor. They'll be notified and will respond to you directly.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="question">Your Question</Label>
-              <Textarea
-                id="question"
-                placeholder="What would you like to know about this class?"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-                className="min-h-[100px]"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setIsQuestionDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleAskQuestion}
-              disabled={isLoading || !question.trim()}
-            >
-              Send Question
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Private Class Request Dialog */}
       <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

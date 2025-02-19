@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -58,11 +57,14 @@ export const RecommendationSection = () => {
       if (matchError) throw matchError;
 
       const formattedRecommendations = matchData?.map(item => {
-        const instructor = item.course.instructor as InstructorProfile;
+        const instructorData = Array.isArray(item.course.instructor) 
+          ? item.course.instructor[0] 
+          : item.course.instructor as InstructorProfile;
+
         return {
           id: item.course.id,
           title: item.course.title,
-          instructor: instructor ? `${instructor.first_name} ${instructor.last_name}` : 'Unknown Instructor',
+          instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
           instructor_id: item.course.instructor_id,
           price: item.course.price,
           rating: 4.5,
@@ -71,8 +73,8 @@ export const RecommendationSection = () => {
           category: item.course.category,
           date: new Date(),
           city: item.course.location,
-          instructorEmail: instructor?.email,
-          instructorPhone: instructor?.phone
+          instructorEmail: instructorData?.email,
+          instructorPhone: instructorData?.phone
         };
       });
 
@@ -133,11 +135,14 @@ export const RecommendationSection = () => {
         if (alternativeError) throw alternativeError;
 
         const formattedAlternatives = alternativeData?.map(course => {
-          const instructor = course.instructor as InstructorProfile;
+          const instructorData = Array.isArray(course.instructor) 
+            ? course.instructor[0] 
+            : course.instructor as InstructorProfile;
+
           return {
             id: course.id,
             title: course.title,
-            instructor: instructor ? `${instructor.first_name} ${instructor.last_name}` : 'Unknown Instructor',
+            instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
             instructor_id: course.instructor_id,
             price: course.price,
             rating: 4.5,
@@ -146,8 +151,8 @@ export const RecommendationSection = () => {
             category: course.category,
             date: new Date(),
             city: course.location,
-            instructorEmail: instructor?.email,
-            instructorPhone: instructor?.phone
+            instructorEmail: instructorData?.email,
+            instructorPhone: instructorData?.phone
           };
         });
 
