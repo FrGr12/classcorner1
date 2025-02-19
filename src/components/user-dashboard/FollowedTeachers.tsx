@@ -13,6 +13,10 @@ interface TeacherInfo {
   expertise: string[];
 }
 
+type TeacherResponse = {
+  profiles: TeacherInfo | null;
+};
+
 const FollowedTeachers = () => {
   const [teachers, setTeachers] = useState<TeacherInfo[]>([]);
   const { toast } = useToast();
@@ -37,16 +41,9 @@ const FollowedTeachers = () => {
 
       if (error) throw error;
       
-      // Extract the profiles data and filter out any null values
-      const teacherData = data
+      const teacherData = (data as TeacherResponse[])
         .map(item => item.profiles)
-        .filter((item): item is TeacherInfo => 
-          item !== null && 
-          typeof item === 'object' &&
-          'id' in item &&
-          'first_name' in item &&
-          'last_name' in item
-        );
+        .filter((profile): profile is TeacherInfo => profile !== null);
       
       setTeachers(teacherData);
     } catch (error) {

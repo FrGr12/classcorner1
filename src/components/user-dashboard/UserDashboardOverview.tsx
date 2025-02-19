@@ -116,7 +116,7 @@ const UserDashboardOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      const { data, error } = await supabase
+      const { data } = await supabase
         .from('bookings')
         .select(`
           courses (
@@ -132,35 +132,26 @@ const UserDashboardOverview = () => {
               first_name,
               last_name
             )
-          ),
-          course_sessions (
-            start_time
           )
         `)
         .eq('student_id', user.id)
         .eq('status', 'confirmed')
         .returns<BookingData[]>();
 
-      if (error) throw error;
+      if (!data) return;
 
-      const formattedClasses = data.map(booking => {
-        const sessionStartTime = booking.course_sessions?.[0]?.start_time;
-        if (!sessionStartTime) {
-          console.warn('Missing session start time for booking:', booking);
-        }
-
-        return {
-          id: booking.courses.id,
-          title: booking.courses.title,
-          instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
-          price: booking.courses.price,
-          rating: 4.5,
-          images: booking.courses.course_images.map(img => img.image_path),
-          level: "All Levels",
-          date: sessionStartTime ? new Date(sessionStartTime) : new Date(),
-          city: booking.courses.location
-        };
-      });
+      const formattedClasses = data.map(booking => ({
+        id: booking.courses.id,
+        title: booking.courses.title,
+        instructor: `${booking.courses.profiles[0]?.first_name} ${booking.courses.profiles[0]?.last_name}`,
+        instructor_id: booking.courses.instructor_id,
+        price: booking.courses.price,
+        rating: 4.5,
+        images: booking.courses.course_images.map(img => img.image_path),
+        level: "All Levels",
+        date: new Date(),
+        city: booking.courses.location
+      }));
 
       setUpcomingClasses(formattedClasses);
     } catch (error) {

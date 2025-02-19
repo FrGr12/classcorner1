@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Lightbulb } from "lucide-react";
@@ -21,7 +20,6 @@ const UserRecommendations = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Fetch recommended courses based on AI match scores
       const { data: matchedCourses, error } = await supabase
         .from('course_matches')
         .select(`
@@ -51,13 +49,13 @@ const UserRecommendations = () => {
 
       if (error) throw error;
 
-      // Format the courses data
       const formattedRecommendations = matchedCourses?.map(item => ({
         id: item.courses.id,
         title: item.courses.title,
         description: item.courses.description,
         price: item.courses.price,
         instructor: `${item.courses.profiles[0]?.first_name || ''} ${item.courses.profiles[0]?.last_name || ''}`,
+        instructor_id: item.courses.instructor_id,
         rating: 4.5,
         images: item.courses.course_images.map(img => img.image_path),
         level: "All Levels",
