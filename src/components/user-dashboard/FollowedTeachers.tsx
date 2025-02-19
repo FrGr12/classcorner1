@@ -10,11 +10,14 @@ interface TeacherInfo {
   id: string;
   first_name: string;
   last_name: string;
-  expertise: string[];
+  expertise: string[] | null;
 }
 
-interface TeacherResponse {
-  teacher: TeacherInfo;
+interface TeacherFollow {
+  id: string;
+  student_id: string;
+  teacher_id: string;
+  profiles: TeacherInfo;
 }
 
 const FollowedTeachers = () => {
@@ -26,10 +29,14 @@ const FollowedTeachers = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      // Join with profiles table directly to get teacher information
       const { data, error } = await supabase
         .from('teacher_follows')
         .select(`
-          teacher:profiles!teacher_follows_teacher_id_fkey (
+          id,
+          student_id,
+          teacher_id,
+          profiles:teacher_id (
             id,
             first_name,
             last_name,
@@ -40,11 +47,12 @@ const FollowedTeachers = () => {
         .eq('status', 'active');
 
       if (error) throw error;
-      
-      const teacherData = (data as TeacherResponse[])
-        .map(item => item.teacher)
+
+      // Extract teacher profiles from the joined data
+      const teacherData = (data as TeacherFollow[])
+        .map(item => item.profiles)
         .filter((teacher): teacher is TeacherInfo => teacher !== null);
-      
+
       setTeachers(teacherData);
     } catch (error) {
       console.error('Error fetching followed teachers:', error);
@@ -56,11 +64,13 @@ const FollowedTeachers = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      await supabase
+      const { error } = await supabase
         .from('teacher_follows')
         .delete()
         .eq('student_id', user.id)
         .eq('teacher_id', teacherId);
+
+      if (error) throw error;
 
       setTeachers(teachers.filter(t => t.id !== teacherId));
       toast({
