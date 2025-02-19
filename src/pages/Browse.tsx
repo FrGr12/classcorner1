@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import ClassGrid from "@/components/landing/ClassGrid";
 import Footer from "@/components/landing/Footer";
-import { Search, MapPin, Calendar, Filter, Sparkles, TrendingUp, Clock, Star } from "lucide-react";
+import { Search, MapPin, Calendar, Filter, Sparkles, TrendingUp, Clock, Star, ChevronDown } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
-import { format } from "date-fns";
+import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addDays } from "date-fns";
 import { Slider } from "@/components/ui/slider";
 import { cn } from "@/lib/utils";
 import { useToast } from "@/hooks/use-toast";
@@ -51,6 +51,7 @@ const Browse = () => {
   const [date, setDate] = useState<Date | undefined>(
     searchParams.get("date") ? new Date(searchParams.get("date")!) : undefined
   );
+  const [dateRange, setDateRange] = useState<string>("any");
   const [priceRange, setPriceRange] = useState<[number, number]>([
     Number(searchParams.get("minPrice")) || 0,
     Number(searchParams.get("maxPrice")) || 200
@@ -61,6 +62,34 @@ const Browse = () => {
   const debouncedSearch = useDebounce(searchInput, 300);
   const debouncedPriceRange = useDebounce(priceRange, 300);
   const debouncedMinRating = useDebounce(minRating, 300);
+
+  const handleDateRangeChange = (value: string) => {
+    setDateRange(value);
+    let newDate: Date | undefined;
+    
+    switch (value) {
+      case "any":
+        newDate = undefined;
+        break;
+      case "this-week":
+        newDate = startOfWeek(new Date(), { weekStartsOn: 1 });
+        break;
+      case "next-week":
+        newDate = startOfWeek(addDays(new Date(), 7), { weekStartsOn: 1 });
+        break;
+      case "this-month":
+        newDate = startOfMonth(new Date());
+        break;
+      case "next-month":
+        newDate = startOfMonth(addDays(new Date(), 30));
+        break;
+      default:
+        newDate = date;
+    }
+    
+    setDate(newDate);
+    handleSearch(newDate);
+  };
 
   useEffect(() => {
     handleSearch();
@@ -121,9 +150,30 @@ const Browse = () => {
     setSelectedCity("");
     setSortBy("recommended");
     setDate(undefined);
+    setDateRange("any");
     setPriceRange([0, 200]);
     setMinRating(0);
     setSearchParams({});
+  };
+
+  const getDateButtonText = () => {
+    if (date) {
+      return format(date, 'EEE, MMM d');
+    }
+    switch (dateRange) {
+      case "any":
+        return "Any date";
+      case "this-week":
+        return "This week";
+      case "next-week":
+        return "Next week";
+      case "this-month":
+        return "This month";
+      case "next-month":
+        return "Next month";
+      default:
+        return "Select dates";
+    }
   };
 
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
@@ -208,20 +258,60 @@ const Browse = () => {
                       <Button 
                         variant="outline" 
                         className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !date && "text-neutral-500"
+                          "w-full justify-between text-left font-normal",
+                          !date && !dateRange && "text-neutral-500"
                         )}
                       >
-                        {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
+                        <span>{getDateButtonText()}</span>
+                        <ChevronDown className="h-4 w-4 opacity-50" />
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0 bg-white border rounded-md shadow-md" align="start">
-                      <CalendarComponent
-                        mode="single"
-                        selected={date}
-                        onSelect={setDate}
-                        initialFocus
-                      />
+                    <PopoverContent className="w-auto p-4 bg-white border rounded-md shadow-md" align="start">
+                      <div className="space-y-4">
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            variant={dateRange === "any" ? "default" : "outline"}
+                            className="w-full"
+                            onClick={() => handleDateRangeChange("any")}
+                          >
+                            Any date
+                          </Button>
+                          <Button
+                            variant={dateRange === "this-week" ? "default" : "outline"}
+                            className="w-full"
+                            onClick={() => handleDateRangeChange("this-week")}
+                          >
+                            This week
+                          </Button>
+                          <Button
+                            variant={dateRange === "next-week" ? "default" : "outline"}
+                            className="w-full"
+                            onClick={() => handleDateRangeChange("next-week")}
+                          >
+                            Next week
+                          </Button>
+                          <Button
+                            variant={dateRange === "this-month" ? "default" : "outline"}
+                            className="w-full"
+                            onClick={() => handleDateRangeChange("this-month")}
+                          >
+                            This month
+                          </Button>
+                        </div>
+                        <div className="border-t pt-4">
+                          <p className="text-sm text-neutral-500 mb-2">Or pick a specific date</p>
+                          <CalendarComponent
+                            mode="single"
+                            selected={date}
+                            onSelect={(newDate) => {
+                              setDate(newDate);
+                              setDateRange("specific");
+                              handleSearch(newDate);
+                            }}
+                            initialFocus
+                          />
+                        </div>
+                      </div>
                     </PopoverContent>
                   </Popover>
                 </div>
