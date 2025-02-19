@@ -24,6 +24,8 @@ export interface ClassItem {
   views?: number;
   saves?: number;
   adClicks?: number;
+  instructorEmail?: string;
+  instructorPhone?: string;
 }
 
 export interface ClassData {

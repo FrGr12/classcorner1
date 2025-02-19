@@ -39,7 +39,9 @@ export const RecommendationSection = () => {
             images:course_images(image_path),
             instructor:profiles!courses_instructor_id_fkey (
               first_name,
-              last_name
+              last_name,
+              email,
+              phone
             )
           )
         `)
@@ -53,14 +55,17 @@ export const RecommendationSection = () => {
       const formattedRecommendations = matchData?.map(item => ({
         id: item.course.id,
         title: item.course.title,
-        instructor: `${item.course.instructor.first_name} ${item.course.instructor.last_name}`,
+        instructor: `${item.course.instructor?.first_name || ''} ${item.course.instructor?.last_name || ''}`,
+        instructor_id: item.course.instructor_id,
         price: item.course.price,
         rating: 4.5, // We should fetch actual rating
         images: item.course.images.map((img: any) => img.image_path),
         level: "All Levels",
         category: item.course.category,
         date: new Date(),
-        city: item.course.location
+        city: item.course.location,
+        instructorEmail: item.course.instructor?.email,
+        instructorPhone: item.course.instructor?.phone
       }));
 
       setRecommendations(formattedRecommendations || []);
@@ -109,7 +114,9 @@ export const RecommendationSection = () => {
             ),
             instructor:profiles!courses_instructor_id_fkey (
               first_name,
-              last_name
+              last_name,
+              email,
+              phone
             )
           `)
           .in('category', categories)
@@ -122,14 +129,17 @@ export const RecommendationSection = () => {
         const formattedAlternatives = alternativeData?.map(course => ({
           id: course.id,
           title: course.title,
-          instructor: `${course.instructor.first_name} ${course.instructor.last_name}`,
+          instructor: `${course.instructor?.first_name || ''} ${course.instructor?.last_name || ''}`,
+          instructor_id: course.instructor_id,
           price: course.price,
           rating: 4.5,
           images: course.course_images.map((img: any) => img.image_path),
           level: "All Levels",
           category: course.category,
           date: new Date(),
-          city: course.location
+          city: course.location,
+          instructorEmail: course.instructor?.email,
+          instructorPhone: course.instructor?.phone
         }));
 
         setAlternativeClasses(formattedAlternatives || []);
