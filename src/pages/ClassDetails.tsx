@@ -14,6 +14,7 @@ import LocationInfo from "@/components/class-details/LocationInfo";
 import InstructorInfo from "@/components/class-details/InstructorInfo";
 import TestimonialSection from "@/components/class-details/TestimonialSection";
 import PolicyInfo from "@/components/class-details/PolicyInfo";
+import FAQSection from "@/components/class-details/FAQSection";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
@@ -77,6 +78,7 @@ const ClassDetails = () => {
             <ImageCarousel images={classItem.images} title={classItem.title} variant="small" />
           </div>
           <TestimonialSection />
+          <FAQSection />
           <PolicyInfo />
         </div>
       </main>
@@ -87,4 +89,3 @@ const ClassDetails = () => {
 };
 
 export default ClassDetails;
-

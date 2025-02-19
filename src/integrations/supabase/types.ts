@@ -985,6 +985,58 @@ export type Database = {
           },
         ]
       }
+      course_faqs: {
+        Row: {
+          answer: string
+          course_id: number | null
+          created_at: string
+          display_order: number | null
+          id: number
+          question: string
+          updated_at: string
+        }
+        Insert: {
+          answer: string
+          course_id?: number | null
+          created_at?: string
+          display_order?: number | null
+          id?: number
+          question: string
+          updated_at?: string
+        }
+        Update: {
+          answer?: string
+          course_id?: number | null
+          created_at?: string
+          display_order?: number | null
+          id?: number
+          question?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "course_faqs_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "course_faqs_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "course_faqs_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+        ]
+      }
       course_images: {
         Row: {
           course_id: number | null
@@ -1395,6 +1447,55 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "community_events"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      faq_questions: {
+        Row: {
+          course_id: number | null
+          created_at: string
+          id: number
+          question: string
+          status: string | null
+          student_id: string | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          question: string
+          status?: string | null
+          student_id?: string | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string
+          id?: number
+          question?: string
+          status?: string | null
+          student_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "faq_questions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "faq_questions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "faq_questions_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
           },
         ]
       }
