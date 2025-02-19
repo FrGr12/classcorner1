@@ -1,13 +1,22 @@
 
-import { Mail, Phone } from "lucide-react";
+import { Mail, Phone, UserPlus, UserMinus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
+import { useTeacherFollow } from "@/hooks/useTeacherFollow";
+import { useEffect } from "react";
 
 interface InstructorInfoProps {
   classItem: ClassItem;
 }
 
 const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
+  const { isFollowing, isLoading, toggleFollow, checkFollowStatus } = 
+    useTeacherFollow(classItem.instructor_id);
+
+  useEffect(() => {
+    checkFollowStatus();
+  }, []);
+
   return (
     <section className="glass-panel rounded-xl p-8">
       <h2 className="text-2xl font-bold mb-6 text-left">About the Instructor</h2>
@@ -30,6 +39,24 @@ const InstructorInfo = ({ classItem }: InstructorInfoProps) => {
             <Button variant="outline" className="gap-2">
               <Phone className="h-4 w-4" />
               Call
+            </Button>
+            <Button
+              variant={isFollowing ? "destructive" : "default"}
+              onClick={toggleFollow}
+              disabled={isLoading}
+              className="gap-2"
+            >
+              {isFollowing ? (
+                <>
+                  <UserMinus className="h-4 w-4" />
+                  Unfollow
+                </>
+              ) : (
+                <>
+                  <UserPlus className="h-4 w-4" />
+                  Follow
+                </>
+              )}
             </Button>
           </div>
         </div>

@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -8,6 +7,7 @@ import ClassSection from "./overview/ClassSection";
 import NotificationSection from "./overview/NotificationSection";
 import ReviewsSection from "./overview/ReviewsSection";
 import UserRecommendations from "./UserRecommendations";
+import FollowedTeachers from "./FollowedTeachers";
 
 interface BookingData {
   courses: {
@@ -283,6 +283,10 @@ const UserDashboardOverview = () => {
 
       <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <NotificationSection />
+        <FollowedTeachers />
+      </div>
+
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
         <ClassSection
           title="Upcoming Classes"
           classes={upcomingClasses}
