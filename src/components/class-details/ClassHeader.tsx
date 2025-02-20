@@ -1,3 +1,4 @@
+
 import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -269,6 +270,7 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
                 variant="outline"
                 className="w-full md:w-auto"
                 onClick={() => setIsQuestionDialogOpen(true)}
+                data-question-trigger
               >
                 <MessageCircle className="h-4 w-4 mr-2" />
                 Ask a Question

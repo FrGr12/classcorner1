@@ -1,3 +1,4 @@
+
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
