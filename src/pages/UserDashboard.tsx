@@ -1,5 +1,5 @@
 
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import UserDashboardHeader from "@/components/user-dashboard/UserDashboardHeader";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserHome from "@/components/user-dashboard/UserHome";
@@ -20,7 +20,8 @@ const UserDashboard = () => {
       <UserDashboardHeader />
       <main className="flex-1 p-4 md:p-6 overflow-auto">
         <Routes>
-          <Route path="/" element={<UserDashboardOverview />} />
+          <Route index element={<Navigate to="/student-dashboard/overview" replace />} />
+          <Route path="/overview" element={<UserDashboardOverview />} />
           <Route path="/bookings" element={<UserBookings />} />
           <Route path="/messages" element={<UserMessages />} />
           <Route path="/notifications" element={<UserNotifications />} />
