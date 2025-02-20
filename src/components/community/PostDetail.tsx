@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
@@ -20,7 +19,6 @@ export default function PostDetail() {
   const [newComment, setNewComment] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Get current user session
   const [session, setSession] = useState<any>(null);
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -150,23 +148,21 @@ export default function PostDetail() {
             <div className="mt-8">
               <h2 className="text-lg font-semibold mb-4 text-left">Comments</h2>
               
-              {session && (
-                <form onSubmit={handleSubmitComment} className="mb-6 space-y-4">
-                  <Textarea
-                    placeholder="Write a comment..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    className="min-h-[100px]"
-                  />
-                  <Button 
-                    type="submit" 
-                    className="bg-accent-purple hover:bg-accent-purple/90"
-                    disabled={isSubmitting}
-                  >
-                    {isSubmitting ? 'Posting...' : 'Post Comment'}
-                  </Button>
-                </form>
-              )}
+              <form onSubmit={handleSubmitComment} className="mb-6 space-y-4">
+                <Textarea
+                  placeholder={session ? "Write a comment..." : "Please log in to comment"}
+                  value={newComment}
+                  onChange={(e) => setNewComment(e.target.value)}
+                  className="min-h-[100px]"
+                />
+                <Button 
+                  type="submit" 
+                  className="bg-accent-purple hover:bg-accent-purple/90"
+                  disabled={isSubmitting || !session}
+                >
+                  {isSubmitting ? 'Posting...' : !session ? 'Log in to Comment' : 'Post Comment'}
+                </Button>
+              </form>
 
               {commentsLoading ? (
                 <div className="space-y-4">
