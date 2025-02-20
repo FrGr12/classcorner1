@@ -117,6 +117,16 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/dashboard/create-class",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <CreateClass />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
     path: "/dashboard/*",
     element: (
       <AuthGuard>
