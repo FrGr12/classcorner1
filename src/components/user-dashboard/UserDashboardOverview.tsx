@@ -23,34 +23,6 @@ interface ClassPreview {
   category?: string;
 }
 
-interface CourseImage {
-  image_path: string;
-}
-
-interface CourseProfile {
-  first_name: string;
-  last_name: string;
-}
-
-interface CourseSession {
-  start_time: string;
-}
-
-interface CourseData {
-  id: number;
-  title: string;
-  price: number;
-  location: string;
-  instructor_id: string;
-  course_images: CourseImage[];
-  profiles: CourseProfile[];
-}
-
-interface BookingData {
-  courses: CourseData;
-  course_sessions: CourseSession[];
-}
-
 const UserDashboardOverview = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -63,17 +35,13 @@ const UserDashboardOverview = () => {
 
   const [recentReviews, setRecentReviews] = useState<any[]>([]);
   const [upcomingClasses, setUpcomingClasses] = useState<ClassPreview[]>([]);
-  const [savedClasses, setSavedClasses] = useState<ClassPreview[]>([]);
   const [waitlistedClasses, setWaitlistedClasses] = useState<ClassPreview[]>([]);
-  const [matchedClasses, setMatchedClasses] = useState<ClassPreview[]>([]);
 
   useEffect(() => {
     fetchStudentMetrics();
     fetchRecentReviews();
     fetchUpcomingClasses();
-    fetchSavedClasses();
     fetchWaitlistedClasses();
-    fetchMatchedClasses();
   }, []);
 
   const fetchStudentMetrics = async () => {
@@ -191,17 +159,6 @@ const UserDashboardOverview = () => {
     }
   };
 
-  const fetchSavedClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      setSavedClasses([]);
-    } catch (error) {
-      console.error('Error fetching saved classes:', error);
-    }
-  };
-
   const fetchWaitlistedClasses = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
@@ -248,90 +205,9 @@ const UserDashboardOverview = () => {
     }
   };
 
-  const fetchMatchedClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('course_matches')
-        .select(`
-          courses (
-            id,
-            title,
-            price,
-            location,
-            instructor_id,
-            course_images (
-              image_path
-            ),
-            profiles (
-              first_name,
-              last_name
-            )
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('match_score', { ascending: false })
-        .limit(3);
-
-      if (error) throw error;
-
-      const formattedClasses = data.map(match => ({
-        id: match.courses.id,
-        title: match.courses.title,
-        instructor: `${match.courses.profiles[0].first_name} ${match.courses.profiles[0].last_name}`,
-        price: match.courses.price,
-        rating: 4.5,
-        images: match.courses.course_images.map((img: any) => img.image_path),
-        level: "All Levels",
-        date: new Date(),
-        city: match.courses.location
-      }));
-
-      setMatchedClasses(formattedClasses);
-    } catch (error) {
-      console.error('Error fetching matched classes:', error);
-    }
-  };
-
-  const renderClassSection = (
-    title: string,
-    classes: ClassPreview[],
-    emptyMessage: string,
-    viewAllPath: string
-  ) => (
-    <Card>
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle>{title}</CardTitle>
-        <Button 
-          variant="ghost" 
-          className="text-accent-purple"
-          onClick={() => navigate(viewAllPath)}
-        >
-          View All
-          <ArrowRight className="ml-2 h-4 w-4" />
-        </Button>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {classes.length > 0 ? (
-          classes.map(classItem => (
-            <ClassCard key={classItem.id} {...classItem} />
-          ))
-        ) : (
-          <p className="text-muted-foreground text-center py-4">
-            {emptyMessage}
-          </p>
-        )}
-      </CardContent>
-    </Card>
-  );
-
   return (
     <div className="space-y-8">
-      <h2 className="text-xl font-semibold mb-4 text-left">Highlights</h2>
-      
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-1 lg:grid-cols-4">
         <Card className="bg-accent-purple text-white">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-lg font-medium">Total Classes</CardTitle>
@@ -377,92 +253,112 @@ const UserDashboardOverview = () => {
         </Card>
       </div>
 
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Notifications</CardTitle>
+          <Button 
+            variant="ghost" 
+            className="text-accent-purple"
+            onClick={() => navigate("/student-dashboard/notifications")}
+          >
+            View All
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <NotificationCenter limit={5} />
+        </CardContent>
+      </Card>
+
       <RecommendationSection />
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Notifications</CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/notifications")}
-            >
-              View All
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <NotificationCenter limit={5} />
-          </CardContent>
-        </Card>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Upcoming Classes</CardTitle>
+          <Button 
+            variant="ghost" 
+            className="text-accent-purple"
+            onClick={() => navigate("/student-dashboard/bookings")}
+          >
+            View All Classes
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {upcomingClasses.length > 0 ? (
+              upcomingClasses.map((classItem) => (
+                <ClassCard key={classItem.id} {...classItem} />
+              ))
+            ) : (
+              <p className="text-muted-foreground col-span-3 text-center py-8">
+                No upcoming classes scheduled
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-        {renderClassSection(
-          "Upcoming Classes",
-          upcomingClasses,
-          "No upcoming classes scheduled",
-          "/student-dashboard/bookings"
-        )}
-      </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Waitlisted Classes</CardTitle>
+          <Button 
+            variant="ghost" 
+            className="text-accent-purple"
+            onClick={() => navigate("/student-dashboard/waitlist")}
+          >
+            View All Waitlisted
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {waitlistedClasses.length > 0 ? (
+              waitlistedClasses.map((classItem) => (
+                <ClassCard key={classItem.id} {...classItem} />
+              ))
+            ) : (
+              <p className="text-muted-foreground col-span-3 text-center py-8">
+                You're not on any waitlists
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
 
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        {renderClassSection(
-          "Waitlisted Classes",
-          waitlistedClasses,
-          "You're not on any waitlists",
-          "/student-dashboard/waitlist"
-        )}
-
-        {renderClassSection(
-          "Saved Classes",
-          savedClasses,
-          "No saved classes yet",
-          "/student-dashboard/saved"
-        )}
-      </div>
-
-      <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
-        {renderClassSection(
-          "Recommended Classes",
-          matchedClasses,
-          "No recommendations yet",
-          "/student-dashboard/matches"
-        )}
-
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle>Reviews</CardTitle>
-            <Button 
-              variant="ghost" 
-              className="text-accent-purple"
-              onClick={() => navigate("/student-dashboard/reviews")}
-            >
-              View All Reviews
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 gap-4">
-              {recentReviews.length > 0 ? (
-                recentReviews.map((review) => (
-                  <TestimonialCard
-                    key={review.id}
-                    name={review.courses.title}
-                    date={new Date(review.created_at).toLocaleDateString()}
-                    rating={review.rating}
-                    comment={review.review_text}
-                    avatarUrl={null}
-                  />
-                ))
-              ) : (
-                <p className="text-muted-foreground text-center py-8">
-                  No reviews yet. After taking classes, your reviews will appear here.
-                </p>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle>Your Reviews</CardTitle>
+          <Button 
+            variant="ghost" 
+            className="text-accent-purple"
+            onClick={() => navigate("/student-dashboard/reviews")}
+          >
+            View All Reviews
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recentReviews.length > 0 ? (
+              recentReviews.map((review) => (
+                <TestimonialCard
+                  key={review.id}
+                  name={review.courses.title}
+                  date={new Date(review.created_at).toLocaleDateString()}
+                  rating={review.rating}
+                  comment={review.review_text}
+                  avatarUrl={null}
+                />
+              ))
+            ) : (
+              <p className="text-muted-foreground col-span-3 text-center py-8">
+                No reviews yet. After taking classes, your reviews will appear here.
+              </p>
+            )}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
