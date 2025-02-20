@@ -107,6 +107,16 @@ const router = createBrowserRouter([
     ),
   },
   {
+    path: "/dashboard",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
     path: "/dashboard/*",
     element: (
       <AuthGuard>
@@ -117,11 +127,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/create-class",
+    path: "/student-dashboard",
     element: (
       <AuthGuard>
         <ErrorBoundary>
-          <CreateClass />
+          <UserDashboard />
         </ErrorBoundary>
       </AuthGuard>
     ),
