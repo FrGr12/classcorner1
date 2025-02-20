@@ -192,7 +192,10 @@ export const RecommendationSection = () => {
       )}
 
       {recommendations.length === 0 && alternativeClasses.length === 0 && (
-        <SectionWrapper title="Recommendations">
+        <SectionWrapper 
+          title="Recommendations"
+          viewAllLink="/student-dashboard/recommendations"
+        >
           <div className="text-center py-8">
             <p className="text-muted-foreground">
               No recommendations available yet. Try browsing more classes or updating your preferences.
