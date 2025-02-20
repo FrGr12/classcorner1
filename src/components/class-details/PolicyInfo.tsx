@@ -1,15 +1,7 @@
-
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
-
 const PolicyInfo = () => {
-  return (
-    <section className="glass-panel rounded-xl p-8">
+  return <section className="glass-panel rounded-xl p-8">
       <h2 className="text-2xl font-bold mb-6 text-left">Class Policies</h2>
       <div className="space-y-6 text-neutral-600">
         <div>
@@ -26,7 +18,7 @@ const PolicyInfo = () => {
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <div className="bg-neutral-50 p-4 rounded-lg space-y-2 text-left">
+          <div className="p-4 rounded-lg space-y-2 text-left bg-slate-50">
             <p className="font-medium">Our flexible refund policy:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li className="text-left">
@@ -93,8 +85,6 @@ const PolicyInfo = () => {
           <p className="text-left">One-on-one instruction available upon request. Contact for pricing and availability.</p>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default PolicyInfo;
