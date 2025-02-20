@@ -18,7 +18,7 @@ const PolicyInfo = () => {
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <div className="p-4 rounded-lg space-y-2 text-left bg-slate-50">
+          <div className="p-4 rounded-lg space-y-2 text-left bg-primary-foreground">
             <p className="font-medium">Our flexible refund policy:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li className="text-left">
