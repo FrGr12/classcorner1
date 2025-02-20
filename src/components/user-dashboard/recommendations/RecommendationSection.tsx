@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import ClassCard from "@/components/landing/ClassCard";
 import { Loader2 } from "lucide-react";
+import SectionWrapper from "../overview/SectionWrapper";
+import ClassesGrid from "../overview/ClassesGrid";
 import type { ClassItem } from "@/types/class";
 
 interface InstructorProfile {
@@ -174,47 +173,37 @@ export const RecommendationSection = () => {
   return (
     <div className="space-y-6">
       {recommendations.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Recommended For You</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {recommendations.map((recommendation) => (
-                <ClassCard key={recommendation.id} {...recommendation} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <SectionWrapper
+          title="Recommended For You"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <ClassesGrid
+            classes={recommendations}
+            emptyMessage="No recommendations available yet"
+          />
+        </SectionWrapper>
       )}
 
       {alternativeClasses.length > 0 && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Similar Classes You Might Like</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {alternativeClasses.map((classItem) => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        <SectionWrapper
+          title="Similar Classes You Might Like"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <ClassesGrid
+            classes={alternativeClasses}
+            emptyMessage="No similar classes found"
+          />
+        </SectionWrapper>
       )}
 
       {recommendations.length === 0 && alternativeClasses.length === 0 && (
-        <Card>
-          <CardContent className="p-8 text-center">
-            <p className="text-muted-foreground">No recommendations available yet. Try browsing more classes or updating your preferences.</p>
-            <Button 
-              className="mt-4"
-              onClick={() => window.location.href = '/browse'}
-            >
-              Browse Classes
-            </Button>
-          </CardContent>
-        </Card>
+        <SectionWrapper title="Recommendations">
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">
+              No recommendations available yet. Try browsing more classes or updating your preferences.
+            </p>
+          </div>
+        </SectionWrapper>
       )}
     </div>
   );
