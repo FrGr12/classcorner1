@@ -33,16 +33,6 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
 
   const handleBooking = async (date: Date) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        // Save booking data before redirecting to auth
-        saveBookingToStorage(date);
-        toast.info("Please log in to continue with your booking");
-        navigate("/auth", { state: { returnTo: window.location.pathname } });
-        return;
-      }
-
       // Get the session ID for the selected date
       const { data: session, error: sessionError } = await supabase
         .from('course_sessions')
