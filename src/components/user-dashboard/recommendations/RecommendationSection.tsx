@@ -1,10 +1,11 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2 } from "lucide-react";
 import SectionWrapper from "../overview/SectionWrapper";
 import ClassesGrid from "../overview/ClassesGrid";
-import type { ClassItem } from "@/types/class";
+import type { ClassPreview } from "@/types/class";
 
 interface InstructorProfile {
   first_name: string;
@@ -14,8 +15,8 @@ interface InstructorProfile {
 }
 
 export const RecommendationSection = () => {
-  const [recommendations, setRecommendations] = useState<ClassItem[]>([]);
-  const [alternativeClasses, setAlternativeClasses] = useState<ClassItem[]>([]);
+  const [recommendations, setRecommendations] = useState<ClassPreview[]>([]);
+  const [alternativeClasses, setAlternativeClasses] = useState<ClassPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
@@ -64,16 +65,13 @@ export const RecommendationSection = () => {
           id: item.course.id,
           title: item.course.title,
           instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
-          instructor_id: item.course.instructor_id,
           price: item.course.price,
           rating: 4.5,
           images: item.course.images.map((img: any) => img.image_path),
           level: "All Levels",
           category: item.course.category,
           date: new Date(),
-          city: item.course.location,
-          instructorEmail: instructorData?.email,
-          instructorPhone: instructorData?.phone
+          city: item.course.location
         };
       });
 
@@ -142,16 +140,13 @@ export const RecommendationSection = () => {
             id: course.id,
             title: course.title,
             instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
-            instructor_id: course.instructor_id,
             price: course.price,
             rating: 4.5,
             images: course.course_images.map((img: any) => img.image_path),
             level: "All Levels",
             category: course.category,
             date: new Date(),
-            city: course.location,
-            instructorEmail: instructorData?.email,
-            instructorPhone: instructorData?.phone
+            city: course.location
           };
         });
 

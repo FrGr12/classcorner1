@@ -7,7 +7,7 @@ import MetricsCards from "./overview/MetricsCards";
 import SectionWrapper from "./overview/SectionWrapper";
 import ReviewsSection from "./overview/ReviewsSection";
 import ClassesGrid from "./overview/ClassesGrid";
-import { DashboardMetrics, BookingData } from "@/types/dashboard";
+import { DashboardMetrics } from "@/types/dashboard";
 import { ClassPreview } from "@/types/class";
 
 const UserDashboardOverview = () => {
@@ -21,13 +21,11 @@ const UserDashboardOverview = () => {
 
   const [recentReviews, setRecentReviews] = useState<any[]>([]);
   const [upcomingClasses, setUpcomingClasses] = useState<ClassPreview[]>([]);
-  const [waitlistedClasses, setWaitlistedClasses] = useState<ClassPreview[]>([]);
 
   useEffect(() => {
     fetchStudentMetrics();
     fetchRecentReviews();
     fetchUpcomingClasses();
-    fetchWaitlistedClasses();
   }, []);
 
   const fetchStudentMetrics = async () => {
@@ -145,52 +143,6 @@ const UserDashboardOverview = () => {
     }
   };
 
-  const fetchWaitlistedClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('waitlist_entries')
-        .select(`
-          courses (
-            id,
-            title,
-            price,
-            location,
-            instructor_id,
-            course_images (
-              image_path
-            ),
-            profiles (
-              first_name,
-              last_name
-            )
-          )
-        `)
-        .eq('user_id', user.id)
-        .eq('status', 'waiting');
-
-      if (error) throw error;
-
-      const formattedClasses = data.map(entry => ({
-        id: entry.courses.id,
-        title: entry.courses.title,
-        instructor: `${entry.courses.profiles[0].first_name} ${entry.courses.profiles[0].last_name}`,
-        price: entry.courses.price,
-        rating: 4.5,
-        images: entry.courses.course_images.map((img: any) => img.image_path),
-        level: "All Levels",
-        date: new Date(),
-        city: entry.courses.location
-      }));
-
-      setWaitlistedClasses(formattedClasses);
-    } catch (error) {
-      console.error('Error fetching waitlisted classes:', error);
-    }
-  };
-
   return (
     <div className="space-y-8">
       <MetricsCards metrics={metrics} />
@@ -211,16 +163,6 @@ const UserDashboardOverview = () => {
         <ClassesGrid 
           classes={upcomingClasses} 
           emptyMessage="No upcoming classes scheduled" 
-        />
-      </SectionWrapper>
-
-      <SectionWrapper 
-        title="Waitlisted Classes" 
-        viewAllLink="/student-dashboard/waitlist"
-      >
-        <ClassesGrid 
-          classes={waitlistedClasses} 
-          emptyMessage="You're not on any waitlists" 
         />
       </SectionWrapper>
 
