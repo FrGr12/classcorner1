@@ -47,81 +47,68 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="minParticipants"
-          render={({ field }) => (
-            <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-              <FormLabel className="text-sm font-medium text-primary">Minimum Participants</FormLabel>
-              <div className="flex items-center gap-4">
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="minParticipants"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-sm font-medium text-primary">Minimum Participants</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
-                    min="0"
+                    min="1"
                     className="bg-white border-neutral-200"
-                    disabled={field.value === 0}
-                    {...field} 
-                  />
-                </FormControl>
-                <div className="flex items-center gap-2">
-                  <Switch 
-                    checked={field.value === 0}
-                    onCheckedChange={(checked) => {
-                      form.setValue('minParticipants', checked ? 0 : 1);
+                    {...field}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value)) {
+                        field.onChange(value);
+                        // Ensure max is not less than min
+                        const maxValue = form.getValues('maxParticipants');
+                        if (maxValue < value) {
+                          form.setValue('maxParticipants', value);
+                        }
+                      }
                     }}
                   />
-                  <span className="text-sm text-neutral-600">No minimum</span>
-                </div>
-              </div>
-              <Button 
-                type="button" 
-                onClick={() => console.log('Min participants saved:', field.value)}
-                className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-              >
-                Save
-              </Button>
-              <FormMessage className="col-start-2" />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
-        <FormField
-          control={form.control}
-          name="maxParticipants"
-          render={({ field }) => (
-            <FormItem className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
-              <FormLabel className="text-sm font-medium text-primary">Maximum Participants</FormLabel>
-              <div className="flex items-center gap-4">
+          <FormField
+            control={form.control}
+            name="maxParticipants"
+            render={({ field }) => (
+              <FormItem className="space-y-2">
+                <FormLabel className="text-sm font-medium text-primary">Maximum Participants</FormLabel>
                 <FormControl>
                   <Input 
                     type="number" 
-                    min="0"
+                    min="1"
                     className="bg-white border-neutral-200"
-                    disabled={field.value === 0}
-                    {...field} 
-                  />
-                </FormControl>
-                <div className="flex items-center gap-2">
-                  <Switch 
-                    checked={field.value === 0}
-                    onCheckedChange={(checked) => {
-                      form.setValue('maxParticipants', checked ? 0 : 1);
+                    {...field}
+                    onChange={(e) => {
+                      const value = parseInt(e.target.value);
+                      if (!isNaN(value)) {
+                        const minValue = form.getValues('minParticipants');
+                        if (value >= minValue) {
+                          field.onChange(value);
+                        } else {
+                          // If max is less than min, set them equal
+                          field.onChange(minValue);
+                        }
+                      }
                     }}
                   />
-                  <span className="text-sm text-neutral-600">No maximum</span>
-                </div>
-              </div>
-              <Button 
-                type="button" 
-                onClick={() => console.log('Max participants saved:', field.value)}
-                className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-              >
-                Save
-              </Button>
-              <FormMessage className="col-start-2" />
-            </FormItem>
-          )}
-        />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
       </CardContent>
     </Card>
   );

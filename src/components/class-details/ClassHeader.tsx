@@ -195,6 +195,12 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
     }
   };
 
+  const getParticipantRange = () => {
+    const min = classItem.minParticipants || 1;
+    const max = classItem.maxParticipants || 10;
+    return `${min}-${max} people`;
+  };
+
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4 text-left">
@@ -214,7 +220,7 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
           </div>
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
-            <span>Max {classItem.maxParticipants} people</span>
+            <span>{getParticipantRange()}</span>
           </div>
           <button 
             onClick={scrollToReviews}
