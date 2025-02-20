@@ -203,9 +203,7 @@ const UserBookings = () => {
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-2xl font-semibold mb-2 text-left">Classes & Bookings</h2>
-          <p className="text-muted-foreground">
-            Manage your classes and schedules
-          </p>
+          
         </div>
       </div>
 
