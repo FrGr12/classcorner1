@@ -47,84 +47,23 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
     }
   };
 
-  // If we're in a class card (on the main page), just show the first image
-  const isClassCard = location.pathname === '/';
-  if (isClassCard) {
-    const image = images && images.length > 0 ? images[0] : null;
-    return (
-      <div className="absolute inset-0">
-        {image ? (
-          <img
-            src={image}
-            alt={`${title}`}
-            className="w-full h-full object-cover"
-          />
-        ) : (
-          <div className="w-full h-full">
-            <PlaceholderImage />
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  const displayImages = images && images.length > 0 
-    ? images 
-    : Array(6).fill(null);
-
-  const carouselItemClass = variant === 'large' 
-    ? "pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
-    : "pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4";
-
+  const image = images && images.length > 0 ? images[0] : null;
   return (
-    <div className="relative group h-full" onClick={handleClick}>
-      <Carousel 
-        className="w-full h-full" 
-        setApi={setApi}
-        opts={{
-          align: "start",
-          loop: true,
-          skipSnaps: false,
-          dragFree: true
-        }}
-      >
-        <CarouselContent className="-ml-2 md:-ml-4">
-          {displayImages.map((image, index) => (
-            <CarouselItem key={index} className={carouselItemClass}>
-              <div className="relative aspect-square overflow-hidden rounded-lg">
-                {image ? (
-                  <img
-                    src={image}
-                    alt={`${title} - Image ${index + 1}`}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  <div className="w-full h-full">
-                    <PlaceholderImage />
-                  </div>
-                )}
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-
-        {displayImages.length > 1 && (
-          <>
-            <CarouselPrevious 
-              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
-                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
-                        transition-opacity duration-200 border-none z-20" 
-            />
-            <CarouselNext 
-              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
-                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
-                        transition-opacity duration-200 border-none z-20" 
-            />
-          </>
-        )}
-      </Carousel>
+    <div className="absolute inset-0">
+      {image ? (
+        <img
+          src={image}
+          alt={`${title}`}
+          className="w-full h-full object-cover"
+        />
+      ) : (
+        <div className="w-full h-full">
+          <PlaceholderImage />
+        </div>
+      )}
     </div>
   );
 };
 
 export default ImageCarousel;
+
