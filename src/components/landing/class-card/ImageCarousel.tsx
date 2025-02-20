@@ -1,13 +1,5 @@
 
-import { Image, ArrowLeft, ArrowRight } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
-import { useEffect, useState } from "react";
+import { Image } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ImageCarouselProps {
@@ -23,38 +15,23 @@ const PlaceholderImage = () => (
 );
 
 const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps) => {
-  const [api, setApi] = useState<any>();
-  const [current, setCurrent] = useState(0);
-
-  useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap());
-    });
-  }, [api]);
-
-  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const width = rect.width;
-    
-    if (x > width * 0.7) {
-      e.stopPropagation();
-      api?.scrollNext();
-    }
-  };
-
   const image = images && images.length > 0 ? images[0] : null;
+  
+  const containerClasses = cn(
+    "relative",
+    variant === 'large' ? "aspect-[21/9]" : "absolute inset-0"
+  );
+
   return (
-    <div className="absolute inset-0">
+    <div className={containerClasses}>
       {image ? (
         <img
           src={image}
           alt={`${title}`}
-          className="w-full h-full object-cover"
+          className={cn(
+            "w-full h-full object-cover",
+            variant === 'large' && "rounded-lg shadow-sm"
+          )}
         />
       ) : (
         <div className="w-full h-full">
@@ -66,4 +43,3 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
 };
 
 export default ImageCarousel;
-

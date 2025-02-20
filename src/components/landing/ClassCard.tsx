@@ -1,6 +1,6 @@
 
 import { Card } from "@/components/ui/card";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImageCarousel from "./class-card/ImageCarousel";
 import SaveButton from "./class-card/SaveButton";
 import DateButtons from "./class-card/DateButtons";
@@ -49,7 +49,6 @@ const ClassCard = ({
   maxParticipants,
 }: ClassCardProps) => {
   const navigate = useNavigate();
-  const location = useLocation();
   const dates = Array.isArray(date) ? date : [date];
 
   const determineCategory = (title: string, providedCategory?: string): string => {
@@ -67,15 +66,6 @@ const ClassCard = ({
     return 'Pottery';
   };
 
-  const makeUrlSafe = (str: string): string => {
-    return str
-      .toLowerCase()
-      .replace(/[&\s]+/g, '-')
-      .replace(/[^a-z0-9-]/g, '')
-      .replace(/-+/g, '-')
-      .replace(/^-|-$/g, '');
-  };
-
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
     
@@ -85,14 +75,8 @@ const ClassCard = ({
     }
 
     const displayCategory = determineCategory(title, category);
-    const safeCategoryPath = makeUrlSafe(displayCategory);
-    
-    if (!safeCategoryPath) {
-      console.error('Invalid category path');
-      return;
-    }
-
-    navigate(`/class/${safeCategoryPath}/${id}`);
+    const safePath = displayCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+    navigate(`/class/${safePath}/${id}`);
   };
 
   const displayCategory = determineCategory(title, category);

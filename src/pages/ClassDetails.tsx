@@ -1,5 +1,5 @@
 
-import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation, Navigate } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { mockClasses } from "@/data/mockClasses";
@@ -25,8 +25,7 @@ const ClassDetails = () => {
   const classItem = category && mockClasses[category]?.find(c => c.id === Number(id));
 
   if (!classItem) {
-    navigate("/");
-    return null;
+    return <Navigate to="/" replace />;
   }
 
   const handleBooking = () => {
@@ -49,7 +48,6 @@ const ClassDetails = () => {
   };
 
   const handleShowQuestion = () => {
-    // Find the dialog by its button and click it
     const questionButton = document.querySelector('[data-question-trigger]') as HTMLButtonElement;
     if (questionButton) {
       questionButton.click();
@@ -60,7 +58,9 @@ const ClassDetails = () => {
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
       <div className="w-full mt-[110px]">
-        <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
+        <div className="max-w-[1920px] mx-auto">
+          <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
+        </div>
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-24">
