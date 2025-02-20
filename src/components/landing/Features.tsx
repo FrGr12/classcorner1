@@ -17,7 +17,7 @@ const Features = () => {
   }];
 
   const handleTeachClick = () => {
-    navigate('/dashboard/create-class');
+    navigate('/auth', { state: { returnTo: '/dashboard/create-class' } });
   };
 
   return <section className="py-24">
@@ -52,7 +52,7 @@ const Features = () => {
                   {index === 0 ? "Find your next class" : "Start Teaching"}
                 </button>
                 <button 
-                  onClick={() => navigate('/community')}
+                  onClick={() => navigate('/community/resource/beginner-guides')}
                   className="px-6 py-3 text-neutral-600 hover:text-primary transition-colors"
                 >
                   Learn More
