@@ -63,7 +63,7 @@ const TestimonialSection = () => {
   const displayedTestimonials = showAll ? testimonials : testimonials.slice(0, 3);
 
   return (
-    <section className="glass-panel rounded-xl p-8">
+    <section id="reviews-section" className="glass-panel rounded-xl p-8">
       <h2 className="text-2xl font-bold mb-6 text-left">What Students Say</h2>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">

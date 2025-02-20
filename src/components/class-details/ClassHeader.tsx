@@ -1,4 +1,3 @@
-
 import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -189,6 +188,13 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
     navigate(`/community/post/new?courseId=${classItem.id}&type=question`);
   };
 
+  const scrollToReviews = () => {
+    const reviewsSection = document.getElementById('reviews-section');
+    if (reviewsSection) {
+      reviewsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4 text-left">
@@ -210,10 +216,13 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
             <Users className="h-4 w-4" />
             <span>Max {classItem.maxParticipants} people</span>
           </div>
-          <div className="flex items-center gap-1">
+          <button 
+            onClick={scrollToReviews}
+            className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer"
+          >
             <Star className="h-4 w-4 fill-accent-purple text-accent-purple" />
             <span>{classItem.rating}</span>
-          </div>
+          </button>
         </div>
       </div>
 
@@ -280,7 +289,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         </div>
       </div>
 
-      {/* Private Class Request Dialog */}
       <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -318,7 +326,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Contact Dialog */}
       <Dialog open={isContactDialogOpen} onOpenChange={setIsContactDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -354,7 +361,6 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
         </DialogContent>
       </Dialog>
 
-      {/* Question Dialog - Now shared between Header and InstructorInfo */}
       <Dialog open={isQuestionDialogOpen} onOpenChange={setIsQuestionDialogOpen}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
