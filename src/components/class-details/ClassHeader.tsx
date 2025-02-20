@@ -1,3 +1,4 @@
+
 import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -196,8 +197,8 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
   };
 
   const getParticipantRange = () => {
-    const min = classItem.minParticipants || 1;
-    const max = classItem.maxParticipants || 10;
+    const min = classItem.minParticipants ?? 1;
+    const max = classItem.maxParticipants ?? 10;
     return `${min}-${max} people`;
   };
 

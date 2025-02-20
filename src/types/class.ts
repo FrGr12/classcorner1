@@ -12,6 +12,7 @@ export interface ClassItem {
   date: Date | Date[];
   city: string;
   maxParticipants?: number;
+  minParticipants?: number;
   waitlist_enabled?: boolean;
   max_waitlist_size?: number;
   groupBookingsEnabled?: boolean;
