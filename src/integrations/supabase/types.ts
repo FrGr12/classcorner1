@@ -1839,6 +1839,80 @@ export type Database = {
           },
         ]
       }
+      guest_bookings: {
+        Row: {
+          course_id: number | null
+          created_at: string | null
+          email: string
+          expires_at: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+          session_id: number | null
+          special_requests: string | null
+          status: string | null
+          token: string | null
+          total_price: number | null
+        }
+        Insert: {
+          course_id?: number | null
+          created_at?: string | null
+          email: string
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          session_id?: number | null
+          special_requests?: string | null
+          status?: string | null
+          token?: string | null
+          total_price?: number | null
+        }
+        Update: {
+          course_id?: number | null
+          created_at?: string | null
+          email?: string
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+          session_id?: number | null
+          special_requests?: string | null
+          status?: string | null
+          token?: string | null
+          total_price?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "guest_bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "guest_bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_engagement_metrics"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "guest_bookings_course_id_fkey"
+            columns: ["course_id"]
+            isOneToOne: false
+            referencedRelation: "teacher_revenue_insights"
+            referencedColumns: ["course_id"]
+          },
+          {
+            foreignKeyName: "guest_bookings_session_id_fkey"
+            columns: ["session_id"]
+            isOneToOne: false
+            referencedRelation: "course_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       learning_resources: {
         Row: {
           author_id: string
@@ -2902,6 +2976,10 @@ export type Database = {
         Returns: number
       }
       cleanup_expired_categories: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      cleanup_expired_guest_bookings: {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
