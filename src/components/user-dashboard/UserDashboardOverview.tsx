@@ -15,186 +15,80 @@ import { BookingData } from "@/types/dashboard";
 const UserDashboardOverview = () => {
   const { toast } = useToast();
   const [metrics, setMetrics] = useState<DashboardMetrics>({
-    totalClasses: 0,
-    upcomingBookings: 0,
-    averageRating: 0,
-    waitlistCount: 0
+    totalClasses: 12,
+    upcomingBookings: 3,
+    averageRating: 4.8,
+    waitlistCount: 2
   });
 
-  const [recentReviews, setRecentReviews] = useState<any[]>([]);
-  const [upcomingClasses, setUpcomingClasses] = useState<ClassPreview[]>([]);
-  const [savedClasses, setSavedClasses] = useState<ClassPreview[]>([]);
+  const dummyClasses: ClassPreview[] = [
+    {
+      id: 1,
+      title: "Advanced Pottery Workshop",
+      instructor: "Sarah Wilson",
+      price: 89,
+      rating: 4.8,
+      images: ["https://images.unsplash.com/photo-1565193298357-c394a6bf6519"],
+      level: "Advanced",
+      date: new Date("2024-03-15"),
+      city: "San Francisco",
+      category: "Pottery"
+    },
+    {
+      id: 2,
+      title: "Watercolor Painting Basics",
+      instructor: "Michael Chen",
+      price: 65,
+      rating: 4.9,
+      images: ["https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b"],
+      level: "Beginner",
+      date: new Date("2024-03-20"),
+      city: "Los Angeles",
+      category: "Painting"
+    },
+    {
+      id: 3,
+      title: "Jewelry Making Workshop",
+      instructor: "Emma Davis",
+      price: 75,
+      rating: 4.7,
+      images: ["https://images.unsplash.com/photo-1626947346165-4c2288dadc2e"],
+      level: "Intermediate",
+      date: new Date("2024-03-25"),
+      city: "New York",
+      category: "Jewelry"
+    }
+  ];
+
+  const dummyReviews = [
+    {
+      id: 1,
+      courses: { title: "Advanced Pottery Workshop" },
+      created_at: "2024-02-15",
+      rating: 5,
+      review_text: "Amazing class! Sarah is an excellent instructor and I learned so much about advanced pottery techniques."
+    },
+    {
+      id: 2,
+      courses: { title: "Watercolor Painting Basics" },
+      created_at: "2024-02-10",
+      rating: 4,
+      review_text: "Great introduction to watercolor painting. Michael explains everything clearly and provides helpful feedback."
+    },
+    {
+      id: 3,
+      courses: { title: "Jewelry Making Workshop" },
+      created_at: "2024-02-05",
+      rating: 5,
+      review_text: "Emma is fantastic! The class was well-structured and I created a beautiful piece of jewelry."
+    }
+  ];
 
   useEffect(() => {
-    fetchStudentMetrics();
-    fetchRecentReviews();
-    fetchUpcomingClasses();
-    fetchSavedClasses();
+    setUpcomingClasses(dummyClasses);
+    setSavedClasses([...dummyClasses].reverse());
+    setRecentReviews(dummyReviews);
   }, []);
-
-  const fetchSavedClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('courses')
-        .select(`
-          id,
-          title,
-          price,
-          location,
-          instructor_id,
-          course_images (
-            image_path
-          ),
-          profiles!courses_instructor_id_fkey (
-            first_name,
-            last_name
-          )
-        `)
-        .in('id', [1, 2, 3])
-        .limit(3);
-
-      if (error) throw error;
-
-      const formattedClasses: ClassPreview[] = data?.map(item => ({
-        id: item.id,
-        title: item.title,
-        instructor: `${item.profiles[0].first_name} ${item.profiles[0].last_name}`,
-        price: item.price,
-        rating: 4.5,
-        images: item.course_images.map(img => img.image_path),
-        level: "All Levels",
-        date: new Date(),
-        city: item.location
-      })) || [];
-
-      setSavedClasses(formattedClasses);
-    } catch (error) {
-      console.error('Error fetching saved classes:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load saved classes"
-      });
-    }
-  };
-
-  const fetchStudentMetrics = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: metricsData, error } = await supabase
-        .from('student_metrics')
-        .select('*')
-        .eq('student_id', user.id)
-        .single();
-
-      if (error) throw error;
-
-      setMetrics({
-        totalClasses: metricsData?.total_classes_attended || 0,
-        upcomingBookings: metricsData?.upcoming_classes || 0,
-        averageRating: metricsData?.average_rating || 0,
-        waitlistCount: 0
-      });
-
-    } catch (error) {
-      console.error('Error fetching metrics:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load dashboard metrics"
-      });
-    }
-  };
-
-  const fetchRecentReviews = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: reviews, error } = await supabase
-        .from('course_reviews')
-        .select(`
-          *,
-          courses (title)
-        `)
-        .eq('reviewer_id', user.id)
-        .order('created_at', { ascending: false })
-        .limit(3);
-
-      if (error) throw error;
-
-      setRecentReviews(reviews || []);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load recent reviews"
-      });
-    }
-  };
-
-  const fetchUpcomingClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select(`
-          courses (
-            id,
-            title,
-            price,
-            location,
-            instructor_id,
-            course_images (
-              image_path
-            ),
-            profiles (
-              first_name,
-              last_name
-            )
-          ),
-          course_sessions (
-            start_time
-          )
-        `)
-        .eq('student_id', user.id)
-        .eq('status', 'confirmed')
-        .returns<BookingData[]>();
-
-      if (error) throw error;
-
-      const formattedClasses = data.map(booking => {
-        const sessionStartTime = booking.course_sessions?.[0]?.start_time;
-        if (!sessionStartTime) {
-          console.warn('Missing session start time for booking:', booking);
-        }
-
-        return {
-          id: booking.courses.id,
-          title: booking.courses.title,
-          instructor: `${booking.courses.profiles[0].first_name} ${booking.courses.profiles[0].last_name}`,
-          price: booking.courses.price,
-          rating: 4.5,
-          images: booking.courses.course_images.map(img => img.image_path),
-          level: "All Levels",
-          date: sessionStartTime ? new Date(sessionStartTime) : new Date(),
-          city: booking.courses.location
-        };
-      });
-
-      setUpcomingClasses(formattedClasses);
-    } catch (error) {
-      console.error('Error fetching upcoming classes:', error);
-    }
-  };
 
   return (
     <div className="space-y-8">
@@ -212,7 +106,7 @@ const UserDashboardOverview = () => {
         viewAllLink="/student-dashboard/bookings"
       >
         <ClassesGrid 
-          classes={upcomingClasses} 
+          classes={dummyClasses} 
           emptyMessage="No upcoming classes scheduled" 
         />
       </SectionWrapper>
@@ -224,7 +118,7 @@ const UserDashboardOverview = () => {
         viewAllLink="/student-dashboard/saved"
       >
         <ClassesGrid 
-          classes={savedClasses} 
+          classes={[...dummyClasses].reverse()} 
           emptyMessage="No saved classes yet" 
         />
       </SectionWrapper>
@@ -233,7 +127,7 @@ const UserDashboardOverview = () => {
         title="Your Reviews" 
         viewAllLink="/student-dashboard/reviews"
       >
-        <ReviewsSection reviews={recentReviews} />
+        <ReviewsSection reviews={dummyReviews} />
       </SectionWrapper>
     </div>
   );
