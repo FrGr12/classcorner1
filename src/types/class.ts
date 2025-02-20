@@ -1,4 +1,3 @@
-
 export interface ClassItem {
   id: number;
   title: string;
@@ -31,4 +30,17 @@ export interface ClassItem {
 
 export interface ClassData {
   [key: string]: ClassItem[];
+}
+
+export interface ClassPreview {
+  id: number;
+  title: string;
+  instructor: string;
+  price: number;
+  rating: number;
+  images: string[];
+  level: string;
+  date: Date;
+  city: string;
+  category?: string;
 }

@@ -1,32 +1,18 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, CalendarDays, Star, Clock } from "lucide-react";
-import TestimonialCard from "@/components/landing/class-card/TestimonialCard";
 import NotificationCenter from "@/components/notifications/NotificationCenter";
-import ClassCard from "@/components/landing/ClassCard";
 import RecommendationSection from "./recommendations/RecommendationSection";
-
-interface ClassPreview {
-  id: number;
-  title: string;
-  instructor: string;
-  price: number;
-  rating: number;
-  images: string[];
-  level: string;
-  date: Date;
-  city: string;
-  category?: string;
-}
+import MetricsCards from "./overview/MetricsCards";
+import SectionWrapper from "./overview/SectionWrapper";
+import ReviewsSection from "./overview/ReviewsSection";
+import ClassesGrid from "./overview/ClassesGrid";
+import { DashboardMetrics, BookingData } from "@/types/dashboard";
+import { ClassPreview } from "@/types/class";
 
 const UserDashboardOverview = () => {
-  const navigate = useNavigate();
   const { toast } = useToast();
-  const [metrics, setMetrics] = useState({
+  const [metrics, setMetrics] = useState<DashboardMetrics>({
     totalClasses: 0,
     upcomingBookings: 0,
     averageRating: 0,
@@ -207,158 +193,43 @@ const UserDashboardOverview = () => {
 
   return (
     <div className="space-y-8">
-      <div className="grid gap-4 grid-cols-1 lg:grid-cols-4">
-        <Card className="bg-accent-purple text-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Total Classes</CardTitle>
-            <CalendarDays className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.totalClasses}</div>
-            <p className="text-xs opacity-90">Classes taken</p>
-          </CardContent>
-        </Card>
+      <MetricsCards metrics={metrics} />
 
-        <Card className="bg-accent-purple text-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Upcoming Classes</CardTitle>
-            <Users className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.upcomingBookings}</div>
-            <p className="text-xs opacity-90">Next 7 days</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-accent-purple text-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Average Rating</CardTitle>
-            <Star className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.averageRating.toFixed(1)}</div>
-            <p className="text-xs opacity-90">From your reviews</p>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-accent-purple text-white">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-lg font-medium">Waitlist</CardTitle>
-            <Clock className="h-4 w-4" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{metrics.waitlistCount}</div>
-            <p className="text-xs opacity-90">Classes waitlisted</p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Notifications</CardTitle>
-          <Button 
-            variant="ghost" 
-            className="text-accent-purple"
-            onClick={() => navigate("/student-dashboard/notifications")}
-          >
-            View All
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <NotificationCenter limit={5} />
-        </CardContent>
-      </Card>
+      <SectionWrapper 
+        title="Notifications" 
+        viewAllLink="/student-dashboard/notifications"
+      >
+        <NotificationCenter limit={5} />
+      </SectionWrapper>
 
       <RecommendationSection />
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Upcoming Classes</CardTitle>
-          <Button 
-            variant="ghost" 
-            className="text-accent-purple"
-            onClick={() => navigate("/student-dashboard/bookings")}
-          >
-            View All Classes
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {upcomingClasses.length > 0 ? (
-              upcomingClasses.map((classItem) => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))
-            ) : (
-              <p className="text-muted-foreground col-span-3 text-center py-8">
-                No upcoming classes scheduled
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <SectionWrapper 
+        title="Upcoming Classes" 
+        viewAllLink="/student-dashboard/bookings"
+      >
+        <ClassesGrid 
+          classes={upcomingClasses} 
+          emptyMessage="No upcoming classes scheduled" 
+        />
+      </SectionWrapper>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Waitlisted Classes</CardTitle>
-          <Button 
-            variant="ghost" 
-            className="text-accent-purple"
-            onClick={() => navigate("/student-dashboard/waitlist")}
-          >
-            View All Waitlisted
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {waitlistedClasses.length > 0 ? (
-              waitlistedClasses.map((classItem) => (
-                <ClassCard key={classItem.id} {...classItem} />
-              ))
-            ) : (
-              <p className="text-muted-foreground col-span-3 text-center py-8">
-                You're not on any waitlists
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <SectionWrapper 
+        title="Waitlisted Classes" 
+        viewAllLink="/student-dashboard/waitlist"
+      >
+        <ClassesGrid 
+          classes={waitlistedClasses} 
+          emptyMessage="You're not on any waitlists" 
+        />
+      </SectionWrapper>
 
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Your Reviews</CardTitle>
-          <Button 
-            variant="ghost" 
-            className="text-accent-purple"
-            onClick={() => navigate("/student-dashboard/reviews")}
-          >
-            View All Reviews
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {recentReviews.length > 0 ? (
-              recentReviews.map((review) => (
-                <TestimonialCard
-                  key={review.id}
-                  name={review.courses.title}
-                  date={new Date(review.created_at).toLocaleDateString()}
-                  rating={review.rating}
-                  comment={review.review_text}
-                  avatarUrl={null}
-                />
-              ))
-            ) : (
-              <p className="text-muted-foreground col-span-3 text-center py-8">
-                No reviews yet. After taking classes, your reviews will appear here.
-              </p>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <SectionWrapper 
+        title="Your Reviews" 
+        viewAllLink="/student-dashboard/reviews"
+      >
+        <ReviewsSection reviews={recentReviews} />
+      </SectionWrapper>
     </div>
   );
 };
