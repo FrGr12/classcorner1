@@ -48,13 +48,13 @@ export function DesktopMenu({
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-sm">
           <DropdownMenuItem asChild>
-            <Link to="/teach" className="flex items-center hover:text-accent-purple">
+            <Link to="/auth" state={{ returnTo: '/dashboard/create-class' }} className="flex items-center hover:text-accent-purple">
               <School className="mr-2 h-4 w-4" />
               <span>Start Teaching</span>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link to="/resources" className="flex items-center hover:text-accent-purple">
+            <Link to="/community/resource/beginner-guides" className="flex items-center hover:text-accent-purple">
               <BookOpen className="mr-2 h-4 w-4" />
               <span>Resources</span>
             </Link>
