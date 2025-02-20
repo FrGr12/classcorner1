@@ -66,6 +66,15 @@ const ClassCard = ({
     return 'Pottery';
   };
 
+  const makeUrlSafe = (str: string): string => {
+    return str
+      .toLowerCase()
+      .replace(/&/g, 'and')
+      .replace(/[^a-z0-9-\s]/g, '')
+      .replace(/\s+/g, '-')
+      .trim();
+  };
+
   const handleCardClick = () => {
     if (!id) {
       console.warn('No ID provided for class card:', title);
@@ -73,8 +82,13 @@ const ClassCard = ({
     }
 
     const displayCategory = determineCategory(title, category);
-    // Ensure the category is URL-safe by encoding it
-    const safeCategoryPath = encodeURIComponent(displayCategory.replace('&', 'and'));
+    const safeCategoryPath = makeUrlSafe(displayCategory);
+    
+    if (!safeCategoryPath) {
+      console.error('Invalid category path generated for:', displayCategory);
+      return;
+    }
+
     navigate(`/class/${safeCategoryPath}/${id}`);
   };
 
