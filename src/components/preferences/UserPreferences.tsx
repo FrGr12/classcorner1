@@ -9,10 +9,8 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { X, Save, User, Mail, Phone, CreditCard, MapPin, Bell, Settings } from "lucide-react";
-
 const categories = ["Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making", "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance", "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"];
 const cities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Helsingborg", "Jönköping", "Norrköping"];
-
 interface UserPreferencesData {
   id: string;
   interests: string[];
@@ -26,7 +24,6 @@ interface UserPreferencesData {
   email: string;
   phone: string;
 }
-
 interface ProfileUpdateData {
   email_notifications: boolean;
   class_reminders: boolean;
@@ -36,46 +33,43 @@ interface ProfileUpdateData {
   email: string;
   phone: string;
 }
-
 const UserPreferences = () => {
   const [preferences, setPreferences] = useState<UserPreferencesData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   useEffect(() => {
     fetchPreferences();
   }, []);
-
   const fetchPreferences = async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) return;
-      
       console.log("Fetching preferences for user:", user.id);
-      
       let userPreferences;
-      const { data: prefData, error: prefError } = await supabase
-        .from("user_preferences")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-        
+      const {
+        data: prefData,
+        error: prefError
+      } = await supabase.from("user_preferences").select("*").eq("id", user.id).single();
       console.log("Preferences data:", prefData);
 
       // If no preferences exist yet, create a new record
       if (prefError && prefError.code === "PGRST116") {
-        const { data: newPrefData, error: createError } = await supabase
-          .from("user_preferences")
-          .insert({
-            id: user.id,
-            interests: [],
-            preferred_location: "",
-            notification_preference: "both"
-          })
-          .select()
-          .single();
-          
+        const {
+          data: newPrefData,
+          error: createError
+        } = await supabase.from("user_preferences").insert({
+          id: user.id,
+          interests: [],
+          preferred_location: "",
+          notification_preference: "both"
+        }).select().single();
         if (createError) throw createError;
         console.log("Created new preferences:", newPrefData);
         userPreferences = newPrefData;
@@ -84,17 +78,12 @@ const UserPreferences = () => {
       } else {
         userPreferences = prefData;
       }
-      
-      const { data: profileData, error: profileError } = await supabase
-        .from("profiles")
-        .select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone")
-        .eq("id", user.id)
-        .single();
-        
+      const {
+        data: profileData,
+        error: profileError
+      } = await supabase.from("profiles").select("email_notifications, class_reminders, marketing_emails, first_name, last_name, email, phone").eq("id", user.id).single();
       if (profileError) throw profileError;
-      
       console.log("Profile data:", profileData);
-
       const preferencesData: UserPreferencesData = {
         id: user.id,
         interests: userPreferences?.interests || [],
@@ -108,7 +97,6 @@ const UserPreferences = () => {
         email: profileData?.email || "",
         phone: profileData?.phone || ""
       };
-
       console.log("Setting preferences:", preferencesData);
       setPreferences(preferencesData);
     } catch (error: any) {
@@ -122,22 +110,19 @@ const UserPreferences = () => {
       setLoading(false);
     }
   };
-
   const handleSave = async () => {
     if (!preferences) return;
     setSaving(true);
     try {
-      const { error: prefError } = await supabase
-        .from("user_preferences")
-        .upsert({
-          id: preferences.id,
-          interests: preferences.interests,
-          preferred_location: preferences.preferred_location,
-          notification_preference: preferences.notification_preference
-        });
-      
+      const {
+        error: prefError
+      } = await supabase.from("user_preferences").upsert({
+        id: preferences.id,
+        interests: preferences.interests,
+        preferred_location: preferences.preferred_location,
+        notification_preference: preferences.notification_preference
+      });
       if (prefError) throw prefError;
-
       const profileData: ProfileUpdateData = {
         email_notifications: preferences.email_notifications,
         class_reminders: preferences.class_reminders,
@@ -147,14 +132,10 @@ const UserPreferences = () => {
         email: preferences.email,
         phone: preferences.phone
       };
-
-      const { error: profileError } = await supabase
-        .from("profiles")
-        .update(profileData)
-        .eq("id", preferences.id);
-
+      const {
+        error: profileError
+      } = await supabase.from("profiles").update(profileData).eq("id", preferences.id);
       if (profileError) throw profileError;
-
       toast({
         title: "Success",
         description: "Your preferences have been saved."
@@ -170,10 +151,8 @@ const UserPreferences = () => {
       setSaving(false);
     }
   };
-
   const InterestsSection = () => {
     const [selectedInterest, setSelectedInterest] = useState("");
-    
     const handleAddInterest = async () => {
       if (!preferences || !selectedInterest) {
         toast({
@@ -183,7 +162,6 @@ const UserPreferences = () => {
         });
         return;
       }
-      
       if (preferences.interests.includes(selectedInterest)) {
         toast({
           variant: "destructive",
@@ -192,26 +170,19 @@ const UserPreferences = () => {
         });
         return;
       }
-
       try {
         const newInterests = [selectedInterest, ...preferences.interests];
-        
-        const { error } = await supabase
-          .from("user_preferences")
-          .update({
-            interests: newInterests
-          })
-          .eq("id", preferences.id);
-
+        const {
+          error
+        } = await supabase.from("user_preferences").update({
+          interests: newInterests
+        }).eq("id", preferences.id);
         if (error) throw error;
-
         setPreferences({
           ...preferences,
           interests: newInterests
         });
-        
         setSelectedInterest("");
-        
         toast({
           title: "Success",
           description: "Interest added successfully"
@@ -225,27 +196,20 @@ const UserPreferences = () => {
         });
       }
     };
-
     const handleRemoveInterest = async (interestToRemove: string) => {
       if (!preferences) return;
-
       try {
         const newInterests = preferences.interests.filter(i => i !== interestToRemove);
-        
-        const { error } = await supabase
-          .from("user_preferences")
-          .update({
-            interests: newInterests
-          })
-          .eq("id", preferences.id);
-
+        const {
+          error
+        } = await supabase.from("user_preferences").update({
+          interests: newInterests
+        }).eq("id", preferences.id);
         if (error) throw error;
-
         setPreferences({
           ...preferences,
           interests: newInterests
         });
-
         toast({
           title: "Success",
           description: "Interest removed successfully"
@@ -259,91 +223,59 @@ const UserPreferences = () => {
         });
       }
     };
-
-    const availableCategories = categories.filter(
-      category => !preferences?.interests.includes(category)
-    );
-
-    return (
-      <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
+    const availableCategories = categories.filter(category => !preferences?.interests.includes(category));
+    return <div className="grid grid-cols-[180px_1fr_auto] items-start gap-4">
         <Label className="text-left flex items-center gap-2">
           <Bell className="w-4 h-4" />
           Interests
         </Label>
         <div className="space-y-4">
           <div className="min-h-[40px] flex flex-wrap gap-2">
-            {preferences?.interests && preferences.interests.length > 0 ? (
-              preferences.interests.map((interest) => (
-                <Badge key={interest} variant="secondary" className="gap-1 text-sm py-1 px-2">
+            {preferences?.interests && preferences.interests.length > 0 ? preferences.interests.map(interest => <Badge key={interest} variant="secondary" className="gap-1 text-sm py-1 px-2">
                   {interest}
-                  <button
-                    onClick={() => handleRemoveInterest(interest)}
-                    className="ml-1 hover:text-destructive"
-                    aria-label={`Remove ${interest}`}
-                  >
+                  <button onClick={() => handleRemoveInterest(interest)} className="ml-1 hover:text-destructive" aria-label={`Remove ${interest}`}>
                     <X className="h-3 w-3" />
                   </button>
-                </Badge>
-              ))
-            ) : (
-              <p className="text-sm text-muted-foreground">No interests selected yet</p>
-            )}
+                </Badge>) : <p className="text-sm text-muted-foreground">No interests selected yet</p>}
           </div>
           <div className="flex gap-2">
-            <Select
-              value={selectedInterest}
-              onValueChange={setSelectedInterest}
-            >
+            <Select value={selectedInterest} onValueChange={setSelectedInterest}>
               <SelectTrigger className="flex-1">
                 <SelectValue placeholder="Select an interest" />
               </SelectTrigger>
               <SelectContent>
-                {availableCategories.map((category) => (
-                  <SelectItem key={category} value={category}>
+                {availableCategories.map(category => <SelectItem key={category} value={category}>
                     {category}
-                  </SelectItem>
-                ))}
+                  </SelectItem>)}
               </SelectContent>
             </Select>
-            <Button 
-              onClick={handleAddInterest}
-              className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
-              disabled={!selectedInterest}
-            >
+            <Button onClick={handleAddInterest} className="bg-[#6E44FF] hover:bg-[#6E44FF]/90" disabled={!selectedInterest}>
               Add Interest
             </Button>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   };
-
   if (loading) {
     return <div className="flex items-center justify-center p-8">
       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-accent-purple"></div>
     </div>;
   }
-
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-left">Profile & Settings</h1>
-          <p className="text-sm text-muted-foreground text-left">
-            Manage your personal information, preferences, and account settings
-          </p>
+          
         </div>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle className="text-left flex items-center gap-2">
-            <User className="w-5 h-5" />
+            
             Basic Information
           </CardTitle>
-          <CardDescription className="text-left">
-            Manage your personal details and contact information
-          </CardDescription>
+          
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-[180px_1fr_auto] items-center gap-4">
@@ -414,12 +346,10 @@ const UserPreferences = () => {
       <Card>
         <CardHeader>
           <CardTitle className="text-left flex items-center gap-2">
-            <Settings className="w-5 h-5" />
+            
             Preferences & Settings
           </CardTitle>
-          <CardDescription className="text-left">
-            Customize your experience and communication preferences
-          </CardDescription>
+          
         </CardHeader>
         <CardContent className="space-y-4">
           <InterestsSection />
@@ -503,8 +433,6 @@ const UserPreferences = () => {
             </>}
         </Button>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default UserPreferences;
