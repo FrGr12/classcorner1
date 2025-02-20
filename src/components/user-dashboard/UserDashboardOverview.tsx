@@ -21,12 +21,65 @@ const UserDashboardOverview = () => {
 
   const [recentReviews, setRecentReviews] = useState<any[]>([]);
   const [upcomingClasses, setUpcomingClasses] = useState<ClassPreview[]>([]);
+  const [savedClasses, setSavedClasses] = useState<ClassPreview[]>([]);
 
   useEffect(() => {
     fetchStudentMetrics();
     fetchRecentReviews();
     fetchUpcomingClasses();
+    fetchSavedClasses();
   }, []);
+
+  const fetchSavedClasses = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('saved_classes')
+        .select(`
+          courses (
+            id,
+            title,
+            price,
+            location,
+            instructor_id,
+            course_images (
+              image_path
+            ),
+            profiles (
+              first_name,
+              last_name
+            )
+          )
+        `)
+        .eq('user_id', user.id)
+        .limit(3);
+
+      if (error) throw error;
+
+      const formattedClasses = data?.map(item => ({
+        id: item.courses.id,
+        title: item.courses.title,
+        instructor: `${item.courses.profiles[0].first_name} ${item.courses.profiles[0].last_name}`,
+        price: item.courses.price,
+        rating: 4.5,
+        images: item.courses.course_images.map(img => img.image_path),
+        level: "All Levels",
+        date: new Date(),
+        city: item.courses.location
+      }));
+
+      setSavedClasses(formattedClasses || []);
+    } catch (error) {
+      console.error('Error fetching saved classes:', error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to load saved classes"
+      });
+    }
+  };
 
   const fetchStudentMetrics = async () => {
     try {
@@ -163,6 +216,16 @@ const UserDashboardOverview = () => {
         <ClassesGrid 
           classes={upcomingClasses} 
           emptyMessage="No upcoming classes scheduled" 
+        />
+      </SectionWrapper>
+
+      <SectionWrapper 
+        title="Saved Classes" 
+        viewAllLink="/student-dashboard/saved"
+      >
+        <ClassesGrid 
+          classes={savedClasses} 
+          emptyMessage="No saved classes yet" 
         />
       </SectionWrapper>
 
