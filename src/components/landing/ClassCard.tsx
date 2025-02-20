@@ -67,12 +67,26 @@ const ClassCard = ({
   };
 
   const makeUrlSafe = (str: string): string => {
+    // First, handle special category names
+    const specialCategories: Record<string, string> = {
+      "Painting & Art": "painting-art",
+      "Jewellery & Metal": "jewellery-metal",
+      "Cocktail & Wine": "cocktail-wine",
+      "Music & Dance": "music-dance",
+      "Flower & Plants": "flower-plants"
+    };
+
+    if (specialCategories[str]) {
+      return specialCategories[str];
+    }
+
+    // For other categories, apply general URL-safe transformation
     return str
       .toLowerCase()
-      .replace(/&/g, 'and')
-      .replace(/[^a-z0-9-\s]/g, '')
-      .replace(/\s+/g, '-')
-      .trim();
+      .replace(/[&\s]+/g, '-') // Replace & and spaces with single hyphen
+      .replace(/[^a-z0-9-]/g, '') // Remove any other special characters
+      .replace(/-+/g, '-') // Replace multiple hyphens with single hyphen
+      .replace(/^-|-$/g, ''); // Remove leading/trailing hyphens
   };
 
   const handleCardClick = () => {
@@ -81,15 +95,22 @@ const ClassCard = ({
       return;
     }
 
-    const displayCategory = determineCategory(title, category);
-    const safeCategoryPath = makeUrlSafe(displayCategory);
-    
-    if (!safeCategoryPath) {
-      console.error('Invalid category path generated for:', displayCategory);
-      return;
-    }
+    try {
+      const displayCategory = determineCategory(title, category);
+      const safeCategoryPath = makeUrlSafe(displayCategory);
+      
+      if (!safeCategoryPath) {
+        throw new Error(`Invalid category path for: ${displayCategory}`);
+      }
 
-    navigate(`/class/${safeCategoryPath}/${id}`);
+      navigate(`/class/${safeCategoryPath}/${id}`);
+    } catch (error) {
+      console.error('Navigation error:', error);
+      // Fallback to browse page if there's an error
+      navigate('/browse', { 
+        state: { error: "Could not load class details. Please try again." }
+      });
+    }
   };
 
   const displayCategory = determineCategory(title, category);
