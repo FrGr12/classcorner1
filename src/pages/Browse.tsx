@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -133,7 +134,7 @@ const Browse = () => {
       <Navigation />
       <main className="pt-24 pb-16" role="main">
         <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="glass-panel p-6 rounded-2xl shadow-sm mb-8 max-w-[1920px] mx-auto">
+          <div className="glass-panel p-4 sm:p-6 rounded-2xl shadow-sm mb-8 max-w-[1920px] mx-auto">
             <h1 className="text-2xl font-semibold mb-6 text-center">Find Your Perfect Class</h1>
             <div className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
@@ -150,12 +151,12 @@ const Browse = () => {
                 </div>
                 
                 <div className="relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400 pointer-events-none" />
                   <Select value={selectedCity} onValueChange={setSelectedCity}>
                     <SelectTrigger className="pl-10 h-12 border-neutral-200" aria-label="Select city">
                       <SelectValue placeholder="Select location" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {cities.map((city) => (
                         <SelectItem key={city} value={city.toLowerCase()}>
                           {city}
@@ -185,7 +186,7 @@ const Browse = () => {
                     <SelectTrigger className="border-neutral-200">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       <SelectItem value="all">All Categories</SelectItem>
                       {categories.map((category) => (
                         <SelectItem key={category} value={category}>
@@ -206,14 +207,14 @@ const Browse = () => {
                       <Button 
                         variant="outline" 
                         className={cn(
-                          "w-full justify-start text-left font-normal",
+                          "w-full justify-start text-left font-normal border-neutral-200",
                           !date && "text-neutral-500"
                         )}
                       >
                         {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
                       </Button>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className="w-auto p-0 bg-white" align="start">
                       <CalendarComponent
                         mode="single"
                         selected={date}
@@ -233,7 +234,7 @@ const Browse = () => {
                     <SelectTrigger className="border-neutral-200">
                       <SelectValue placeholder="Sort by" />
                     </SelectTrigger>
-                    <SelectContent>
+                    <SelectContent className="bg-white">
                       {sortOptions.map((option) => {
                         const Icon = option.icon;
                         return (
