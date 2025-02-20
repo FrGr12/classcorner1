@@ -212,7 +212,7 @@ const Browse = () => {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-[1.5fr,1fr,1fr] gap-4 max-w-5xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-[1fr,1fr,1fr,auto] gap-4 max-w-5xl mx-auto">
                 <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
                   <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
                     <Filter className="w-4 h-4" />
@@ -279,7 +279,7 @@ const Browse = () => {
                   <div className="flex items-center justify-between mb-3">
                     <h3 className="text-sm font-medium flex items-center gap-2">
                       <SortIcon className="w-4 h-4" />
-                      Sort & Price
+                      Sort By
                     </h3>
                     <Button 
                       variant="ghost" 
@@ -291,41 +291,42 @@ const Browse = () => {
                       Reset
                     </Button>
                   </div>
-                  <div className="space-y-3">
-                    <Select value={sortBy} onValueChange={handleSortChange}>
-                      <SelectTrigger className="border-neutral-200">
-                        <SelectValue placeholder="Sort by" />
-                      </SelectTrigger>
-                      <SelectContent className="bg-white">
-                        {sortOptions.map((option) => {
-                          const Icon = option.icon;
-                          return (
-                            <SelectItem key={option.value} value={option.value}>
-                              <div className="flex items-center gap-2">
-                                <Icon className="w-4 h-4" />
-                                <span>{option.label}</span>
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
-                      </SelectContent>
-                    </Select>
-                    
-                    <div>
-                      <div className="flex justify-between text-sm text-neutral-600 mb-1">
-                        <span>Price Range</span>
-                        <span>${priceRange[0]} - ${priceRange[1]}</span>
-                      </div>
-                      <Slider
-                        defaultValue={[0, 200]}
-                        max={200}
-                        step={10}
-                        value={priceRange}
-                        onValueChange={handlePriceRangeChange}
-                        className="mt-2"
-                        aria-label="Price range"
-                      />
+                  <Select value={sortBy} onValueChange={handleSortChange}>
+                    <SelectTrigger className="border-neutral-200">
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {sortOptions.map((option) => {
+                        const Icon = option.icon;
+                        return (
+                          <SelectItem key={option.value} value={option.value}>
+                            <div className="flex items-center gap-2">
+                              <Icon className="w-4 h-4" />
+                              <span>{option.label}</span>
+                            </div>
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 w-[200px]">
+                  <h3 className="text-sm font-medium mb-3">Price Range</h3>
+                  <div>
+                    <div className="flex justify-between text-sm text-neutral-600 mb-1">
+                      <span>${priceRange[0]}</span>
+                      <span>${priceRange[1]}</span>
                     </div>
+                    <Slider
+                      defaultValue={[0, 200]}
+                      max={200}
+                      step={10}
+                      value={priceRange}
+                      onValueChange={handlePriceRangeChange}
+                      className="mt-2"
+                      aria-label="Price range"
+                    />
                   </div>
                 </div>
               </div>
