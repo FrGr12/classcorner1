@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -38,7 +37,6 @@ const UserDashboardOverview = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
-      // Using a type assertion to handle the saved_classes table
       const { data, error } = await supabase
         .from('courses')
         .select(`
@@ -55,7 +53,7 @@ const UserDashboardOverview = () => {
             last_name
           )
         `)
-        .in('id', [1, 2, 3]) // Replace with actual saved class IDs from a separate query
+        .in('id', [1, 2, 3])
         .limit(3);
 
       if (error) throw error;
@@ -202,26 +200,12 @@ const UserDashboardOverview = () => {
     <div className="space-y-8">
       <MetricsCards metrics={metrics} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <SectionWrapper 
-          title="Notifications" 
-          viewAllLink="/student-dashboard/notifications"
-        >
-          <NotificationCenter limit={5} />
-        </SectionWrapper>
-
-        <SectionWrapper 
-          title="Saved Classes" 
-          viewAllLink="/student-dashboard/saved"
-        >
-          <ClassesGrid 
-            classes={savedClasses} 
-            emptyMessage="No saved classes yet" 
-          />
-        </SectionWrapper>
-      </div>
-
-      <RecommendationSection />
+      <SectionWrapper 
+        title="Notifications" 
+        viewAllLink="/student-dashboard/notifications"
+      >
+        <NotificationCenter limit={5} />
+      </SectionWrapper>
 
       <SectionWrapper 
         title="Upcoming Classes" 
@@ -230,6 +214,18 @@ const UserDashboardOverview = () => {
         <ClassesGrid 
           classes={upcomingClasses} 
           emptyMessage="No upcoming classes scheduled" 
+        />
+      </SectionWrapper>
+
+      <RecommendationSection />
+
+      <SectionWrapper 
+        title="Saved Classes" 
+        viewAllLink="/student-dashboard/saved"
+      >
+        <ClassesGrid 
+          classes={savedClasses} 
+          emptyMessage="No saved classes yet" 
         />
       </SectionWrapper>
 
