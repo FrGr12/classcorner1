@@ -57,22 +57,25 @@ const ClassCard = ({
     }
     
     const titleLower = title.toLowerCase();
-    for (const category of validCategories) {
-      const categoryLower = category.toLowerCase();
+    for (const cat of validCategories) {
+      const categoryLower = cat.toLowerCase();
       if (titleLower.includes(categoryLower.split(' ')[0])) {
-        return category;
+        return cat;
       }
     }
     return 'Pottery';
   };
 
   const handleCardClick = () => {
-    if (id) {
-      const displayCategory = determineCategory(title, category);
-      navigate(`/class/${displayCategory}/${id}`);
-    } else {
+    if (!id) {
       console.warn('No ID provided for class card:', title);
+      return;
     }
+
+    const displayCategory = determineCategory(title, category);
+    // Ensure the category is URL-safe by encoding it
+    const safeCategoryPath = encodeURIComponent(displayCategory.replace('&', 'and'));
+    navigate(`/class/${safeCategoryPath}/${id}`);
   };
 
   const displayCategory = determineCategory(title, category);
