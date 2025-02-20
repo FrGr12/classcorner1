@@ -1,14 +1,10 @@
-
 import { useNavigate } from "react-router-dom";
 import { Plus, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-
 const ClassesHeader = () => {
   const navigate = useNavigate();
-  
-  return (
-    <Card className="mb-8">
+  return <Card className="mb-8">
       <CardContent className="p-6">
         <div className="flex items-center justify-between">
           <div className="text-left">
@@ -19,30 +15,15 @@ const ClassesHeader = () => {
           </div>
           
           <div className="flex gap-3">
-            <Button 
-              variant="outline"
-              size="sm"
-              className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10"
-              onClick={() => navigate("/dashboard/classes")}
-            >
-              <BookOpen className="mr-2 h-4 w-4" />
-              Manage Classes
-            </Button>
             
-            <Button 
-              variant="default"
-              size="sm"
-              className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-              onClick={() => navigate("/dashboard/create-class")}
-            >
+            
+            <Button variant="default" size="sm" className="bg-accent-purple hover:bg-accent-purple/90 text-white" onClick={() => navigate("/dashboard/create-class")}>
               <Plus className="mr-2 h-4 w-4" />
               Create New Class
             </Button>
           </div>
         </div>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default ClassesHeader;
