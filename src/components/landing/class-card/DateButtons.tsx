@@ -31,6 +31,7 @@ const DateButtons = ({
   const hasMoreDates = dates.length > 2;
 
   const handleDateClick = (date: Date, e: React.MouseEvent) => {
+    e.preventDefault();
     e.stopPropagation();
     if (onDateSelect) {
       onDateSelect(date);
@@ -85,6 +86,7 @@ const DateButtons = ({
               variant="ghost"
               className="w-full flex items-center justify-center gap-2 text-base"
               onClick={(e) => {
+                e.preventDefault();
                 e.stopPropagation();
                 classId && category && navigate(`/class/${category}/${classId}`);
               }}
@@ -118,6 +120,7 @@ const DateButtons = ({
             size="sm"
             className="text-xs w-full flex items-center justify-center gap-1"
             onClick={(e) => {
+              e.preventDefault();
               e.stopPropagation();
               classId && category && navigate(`/class/${category}/${classId}`);
             }}
@@ -132,4 +135,3 @@ const DateButtons = ({
 };
 
 export default DateButtons;
-
