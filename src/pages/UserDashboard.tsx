@@ -20,18 +20,18 @@ const UserDashboard = () => {
       <UserDashboardHeader />
       <main className="flex-1 p-4 md:p-6 overflow-auto">
         <Routes>
-          <Route index element={<Navigate to="/student-dashboard/overview" replace />} />
-          <Route path="/overview" element={<UserDashboardOverview />} />
-          <Route path="/bookings" element={<UserBookings />} />
-          <Route path="/messages" element={<UserMessages />} />
-          <Route path="/notifications" element={<UserNotifications />} />
-          <Route path="/matches" element={<UserMatches />} />
-          <Route path="/saved" element={<UserSavedClasses />} />
-          <Route path="/profile" element={<UserProfile />} />
-          <Route path="/preferences" element={<UserPreferences />} />
-          <Route path="/reviews" element={<UserReviews />} />
-          <Route path="/waitlist" element={<UserWaitlist />} />
-          <Route path="/payments" element={<UserPayments />} />
+          <Route index element={<UserDashboardOverview />} />
+          <Route path="overview" element={<UserDashboardOverview />} />
+          <Route path="bookings" element={<UserBookings />} />
+          <Route path="messages" element={<UserMessages />} />
+          <Route path="notifications" element={<UserNotifications />} />
+          <Route path="matches" element={<UserMatches />} />
+          <Route path="saved" element={<UserSavedClasses />} />
+          <Route path="profile" element={<UserProfile />} />
+          <Route path="preferences" element={<UserPreferences />} />
+          <Route path="reviews" element={<UserReviews />} />
+          <Route path="waitlist" element={<UserWaitlist />} />
+          <Route path="payments" element={<UserPayments />} />
         </Routes>
       </main>
     </div>

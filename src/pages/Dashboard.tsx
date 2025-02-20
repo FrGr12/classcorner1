@@ -1,5 +1,5 @@
 
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
 import TeacherOverview from "@/components/teach/dashboard/TeacherOverview";
 import TeacherInbox from "@/components/teach/crm/TeacherInbox";
@@ -17,16 +17,16 @@ const Dashboard = () => {
       <DashboardHeader />
       <main className="flex-1 p-4 md:p-6 overflow-auto">
         <Routes>
-          <Route index element={<Navigate to="/dashboard/overview" replace />} />
-          <Route path="/overview" element={<TeacherOverview />} />
-          <Route path="/create-class" element={<CreateClass />} />
-          <Route path="/inbox" element={<TeacherInbox />} />
-          <Route path="/contacts" element={<TeacherContacts />} />
-          <Route path="/profile" element={<TeacherProfile />} />
-          <Route path="/classes" element={<TeacherClasses />} />
-          <Route path="/stats" element={<TeacherStats />} />
-          <Route path="/reviews" element={<TeacherReviews />} />
-          <Route path="/waitlist" element={<TeacherWaitlist />} />
+          <Route index element={<TeacherOverview />} />
+          <Route path="overview" element={<TeacherOverview />} />
+          <Route path="create-class" element={<CreateClass />} />
+          <Route path="inbox" element={<TeacherInbox />} />
+          <Route path="contacts" element={<TeacherContacts />} />
+          <Route path="profile" element={<TeacherProfile />} />
+          <Route path="classes" element={<TeacherClasses />} />
+          <Route path="stats" element={<TeacherStats />} />
+          <Route path="reviews" element={<TeacherReviews />} />
+          <Route path="waitlist" element={<TeacherWaitlist />} />
         </Routes>
       </main>
     </div>
