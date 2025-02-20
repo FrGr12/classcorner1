@@ -27,12 +27,6 @@ export function DesktopMenu({
   return (
     <div className="hidden md:flex items-center gap-4 ml-auto">
       <Link 
-        to="/about" 
-        className="text-xs text-primary hover:text-accent-purple transition-colors"
-      >
-        About
-      </Link>
-      <Link 
         to="/community" 
         className="text-xs text-primary hover:text-accent-purple transition-colors"
       >

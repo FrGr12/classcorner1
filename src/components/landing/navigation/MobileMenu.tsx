@@ -36,13 +36,6 @@ export function MobileMenu({
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
           <Link 
-            to="/about" 
-            className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
-            onClick={() => setIsOpen(false)}
-          >
-            About
-          </Link>
-          <Link 
             to="/community" 
             className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
             onClick={() => setIsOpen(false)}
