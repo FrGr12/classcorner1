@@ -1,3 +1,4 @@
+
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -68,43 +69,11 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/dashboard/*",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <Dashboard />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/student-dashboard/*",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <UserDashboard />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/edit-course/:id",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <EditCourse />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
     path: "/booking-confirmation",
     element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <BookingConfirmation />
-        </ErrorBoundary>
-      </AuthGuard>
+      <ErrorBoundary>
+        <BookingConfirmation />
+      </ErrorBoundary>
     ),
   },
   {
@@ -133,6 +102,36 @@ const router = createBrowserRouter([
       <AuthGuard>
         <ErrorBoundary>
           <PaymentFailed />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/dashboard/*",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <Dashboard />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/student-dashboard/*",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <UserDashboard />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/edit-course/:id",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <EditCourse />
         </ErrorBoundary>
       </AuthGuard>
     ),

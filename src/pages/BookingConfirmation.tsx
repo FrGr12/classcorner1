@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -31,7 +30,6 @@ const BookingConfirmation = () => {
   const [lastName, setLastName] = useState("");
   const [isGuestBooking, setIsGuestBooking] = useState(false);
 
-  // Redirect if no class data
   if (!classItem) {
     navigate("/browse", { 
       replace: true,
@@ -44,10 +42,6 @@ const BookingConfirmation = () => {
     try {
       setIsSubmitting(true);
       
-      if (!classItem.sessionId) {
-        throw new Error("Session ID is required");
-      }
-
       const { data, error } = await supabase
         .from('guest_bookings')
         .insert({
@@ -55,7 +49,7 @@ const BookingConfirmation = () => {
           first_name: firstName,
           last_name: lastName,
           course_id: classItem.id,
-          session_id: classItem.sessionId,
+          selected_date: classItem.date,
           total_price: classItem.price,
           status: 'pending'
         })
@@ -64,10 +58,8 @@ const BookingConfirmation = () => {
 
       if (error) throw error;
 
-      // Show success message
       toast.success("Booking initiated! Please check your email to complete the process.");
       
-      // Redirect to success page
       navigate("/booking-success", { 
         state: { 
           isGuest: true,
@@ -85,15 +77,9 @@ const BookingConfirmation = () => {
     try {
       setIsSubmitting(true);
       
-      if (!classItem.sessionId) {
-        throw new Error("Session ID is required");
-      }
-
-      // Check if user is authenticated
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        // Switch to guest booking form
         setIsGuestBooking(true);
         return;
       }
@@ -102,8 +88,8 @@ const BookingConfirmation = () => {
         .from('bookings')
         .insert({
           course_id: classItem.id,
-          session_id: classItem.sessionId,
           student_id: user.id,
+          selected_date: classItem.date,
           total_price: classItem.price,
           status: 'pending'
         })
