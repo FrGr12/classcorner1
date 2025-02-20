@@ -75,8 +75,9 @@ const ClassCard = ({
     }
 
     const displayCategory = determineCategory(title, category);
-    const safePath = displayCategory.toLowerCase().replace(/[^a-z0-9]+/g, '-');
-    navigate(`/class/${safePath}/${id}`);
+    // Simplify category to match the mockClasses structure
+    const categoryKey = displayCategory.split(' ')[0];
+    navigate(`/class/${categoryKey.toLowerCase()}/${id}`);
   };
 
   const displayCategory = determineCategory(title, category);

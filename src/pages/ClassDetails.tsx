@@ -1,5 +1,5 @@
 
-import { useParams, useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { mockClasses } from "@/data/mockClasses";
@@ -22,10 +22,25 @@ const ClassDetails = () => {
   const location = useLocation();
   const selectedDate = location.state?.selectedDate;
 
-  const classItem = category && mockClasses[category]?.find(c => c.id === Number(id));
+  // Find the class in mockClasses by matching the first word of the category
+  const findClassItem = () => {
+    if (!category || !id) return null;
+
+    const categoryKey = Object.keys(mockClasses).find(key => 
+      key.toLowerCase().startsWith(category.toLowerCase())
+    );
+
+    if (!categoryKey) return null;
+
+    return mockClasses[categoryKey]?.find(c => c.id === Number(id));
+  };
+
+  const classItem = findClassItem();
 
   if (!classItem) {
-    return <Navigate to="/" replace />;
+    console.log('Class not found:', { category, id });
+    navigate("/");
+    return null;
   }
 
   const handleBooking = () => {
