@@ -1,7 +1,10 @@
+
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
+
 const PolicyInfo = () => {
-  return <section className="glass-panel rounded-xl p-8">
+  return (
+    <section className="glass-panel rounded-xl p-8">
       <h2 className="text-2xl font-bold mb-6 text-left">Class Policies</h2>
       <div className="space-y-6 text-neutral-600">
         <div>
@@ -85,6 +88,8 @@ const PolicyInfo = () => {
           <p className="text-left">One-on-one instruction available upon request. Contact for pricing and availability.</p>
         </div>
       </div>
-    </section>;
+    </section>
+  );
 };
+
 export default PolicyInfo;
