@@ -7,160 +7,98 @@ import SectionWrapper from "../overview/SectionWrapper";
 import ClassesGrid from "../overview/ClassesGrid";
 import type { ClassPreview } from "@/types/class";
 
-interface InstructorProfile {
-  first_name: string;
-  last_name: string;
-  email: string;
-  phone: string;
-}
-
-export const RecommendationSection = () => {
+const RecommendationSection = () => {
   const [recommendations, setRecommendations] = useState<ClassPreview[]>([]);
   const [alternativeClasses, setAlternativeClasses] = useState<ClassPreview[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  const dummyRecommendations: ClassPreview[] = [
+    {
+      id: 4,
+      title: "Digital Photography Masterclass",
+      instructor: "Alex Thompson",
+      price: 95,
+      rating: 4.9,
+      images: ["https://images.unsplash.com/photo-1452587925148-ce544e77e70d"],
+      level: "Intermediate",
+      date: new Date("2024-04-01"),
+      city: "Chicago",
+      category: "Photography"
+    },
+    {
+      id: 5,
+      title: "Floral Design Workshop",
+      instructor: "Jessica Lee",
+      price: 85,
+      rating: 4.8,
+      images: ["https://images.unsplash.com/photo-1526047932273-341f2a7631f9"],
+      level: "Beginner",
+      date: new Date("2024-04-05"),
+      city: "Portland",
+      category: "Floral Design"
+    }
+  ];
+
+  const dummyAlternatives: ClassPreview[] = [
+    {
+      id: 6,
+      title: "Oil Painting for Beginners",
+      instructor: "Robert Chen",
+      price: 78,
+      rating: 4.7,
+      images: ["https://images.unsplash.com/photo-1579783900882-c0d3dad7b119"],
+      level: "Beginner",
+      date: new Date("2024-04-10"),
+      city: "Seattle",
+      category: "Painting"
+    },
+    {
+      id: 7,
+      title: "Ceramic Bowl Making",
+      instructor: "Maria Garcia",
+      price: 82,
+      rating: 4.9,
+      images: ["https://images.unsplash.com/photo-1565193298357-c394a6bf6519"],
+      level: "Beginner",
+      date: new Date("2024-04-15"),
+      city: "Austin",
+      category: "Ceramics"
+    }
+  ];
+
   useEffect(() => {
-    fetchRecommendations();
-    fetchAlternativeClasses();
-  }, []);
-
-  const fetchRecommendations = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: matchData, error: matchError } = await supabase
-        .from('course_matches')
-        .select(`
-          course:courses (
-            id,
-            title,
-            description,
-            price,
-            location,
-            category,
-            instructor_id,
-            images:course_images(image_path),
-            instructor:profiles!courses_instructor_id_fkey (
-              first_name,
-              last_name,
-              email,
-              phone
-            )
-          )
-        `)
-        .eq('user_id', user.id)
-        .order('match_score', { ascending: false })
-        .limit(4);
-
-      if (matchError) throw matchError;
-
-      const formattedRecommendations = matchData?.map(item => {
-        const instructorData = Array.isArray(item.course.instructor) 
-          ? item.course.instructor[0] 
-          : item.course.instructor as InstructorProfile;
-
-        return {
-          id: item.course.id,
-          title: item.course.title,
-          instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
-          price: item.course.price,
-          rating: 4.5,
-          images: item.course.images.map((img: any) => img.image_path),
-          level: "All Levels",
-          category: item.course.category,
-          date: new Date(),
-          city: item.course.location
-        };
-      });
-
-      setRecommendations(formattedRecommendations || []);
-    } catch (error) {
-      console.error("Error fetching recommendations:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to load recommendations"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchAlternativeClasses = async () => {
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data: waitlistData, error: waitlistError } = await supabase
-        .from('waitlist_entries')
-        .select('courses(id, category)')
-        .eq('user_id', user.id)
-        .eq('status', 'waiting');
-
-      if (waitlistError) throw waitlistError;
-
-      if (waitlistData && waitlistData.length > 0) {
-        const categories = waitlistData.map(entry => entry.courses.category);
-        const waitlistedIds = waitlistData.map(entry => entry.courses.id);
-        
-        const { data: alternativeData, error: alternativeError } = await supabase
-          .from('courses')
-          .select(`
-            id,
-            title,
-            price,
-            location,
-            instructor_id,
-            category,
-            course_images (
-              image_path
-            ),
-            instructor:profiles!courses_instructor_id_fkey (
-              first_name,
-              last_name,
-              email,
-              phone
-            )
-          `)
-          .in('category', categories)
-          .eq('status', 'published')
-          .not('id', 'in', waitlistedIds)
-          .limit(4);
-
-        if (alternativeError) throw alternativeError;
-
-        const formattedAlternatives = alternativeData?.map(course => {
-          const instructorData = Array.isArray(course.instructor) 
-            ? course.instructor[0] 
-            : course.instructor as InstructorProfile;
-
-          return {
-            id: course.id,
-            title: course.title,
-            instructor: instructorData ? `${instructorData.first_name} ${instructorData.last_name}` : 'Unknown Instructor',
-            price: course.price,
-            rating: 4.5,
-            images: course.course_images.map((img: any) => img.image_path),
-            level: "All Levels",
-            category: course.category,
-            date: new Date(),
-            city: course.location
-          };
+    const loadRecommendations = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setRecommendations(dummyRecommendations);
+        setAlternativeClasses(dummyAlternatives);
+      } catch (error) {
+        toast({
+          title: "Error loading recommendations",
+          description: "Please try refreshing the page.",
+          variant: "destructive"
         });
-
-        setAlternativeClasses(formattedAlternatives || []);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error fetching alternative classes:", error);
-    }
-  };
+    };
+
+    loadRecommendations();
+  }, [toast]);
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
+      <div className="space-y-6">
+        <SectionWrapper
+          title="Recommended For You"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <div className="flex items-center justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </SectionWrapper>
       </div>
     );
   }
@@ -191,7 +129,7 @@ export const RecommendationSection = () => {
         </SectionWrapper>
       )}
 
-      {recommendations.length === 0 && alternativeClasses.length === 0 && (
+      {recommendations.length === 0 && alternativeClasses.length === 0 && !loading && (
         <SectionWrapper 
           title="Recommendations"
           viewAllLink="/student-dashboard/recommendations"
