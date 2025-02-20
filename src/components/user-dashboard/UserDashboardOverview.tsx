@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -20,6 +21,10 @@ const UserDashboardOverview = () => {
     averageRating: 4.8,
     waitlistCount: 2
   });
+
+  const [upcomingClasses, setUpcomingClasses] = useState<ClassPreview[]>([]);
+  const [savedClasses, setSavedClasses] = useState<ClassPreview[]>([]);
+  const [recentReviews, setRecentReviews] = useState<any[]>([]);
 
   const dummyClasses: ClassPreview[] = [
     {
@@ -106,7 +111,7 @@ const UserDashboardOverview = () => {
         viewAllLink="/student-dashboard/bookings"
       >
         <ClassesGrid 
-          classes={dummyClasses} 
+          classes={upcomingClasses} 
           emptyMessage="No upcoming classes scheduled" 
         />
       </SectionWrapper>
@@ -118,7 +123,7 @@ const UserDashboardOverview = () => {
         viewAllLink="/student-dashboard/saved"
       >
         <ClassesGrid 
-          classes={[...dummyClasses].reverse()} 
+          classes={savedClasses} 
           emptyMessage="No saved classes yet" 
         />
       </SectionWrapper>
@@ -127,7 +132,7 @@ const UserDashboardOverview = () => {
         title="Your Reviews" 
         viewAllLink="/student-dashboard/reviews"
       >
-        <ReviewsSection reviews={dummyReviews} />
+        <ReviewsSection reviews={recentReviews} />
       </SectionWrapper>
     </div>
   );
