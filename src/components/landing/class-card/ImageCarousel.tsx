@@ -29,12 +29,19 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
     variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9] relative" : "absolute inset-0"
   );
 
-  const handlePrevious = () => {
+  const handlePrevious = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
-  const handleNext = () => {
+  const handleNext = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent event bubbling
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
+  };
+
+  const handleDotClick = (e: React.MouseEvent, index: number) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setCurrentIndex(index);
   };
 
   return (
@@ -76,7 +83,7 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
                         "w-2 h-2 rounded-full transition-all",
                         index === currentIndex ? "bg-white" : "bg-white/50"
                       )}
-                      onClick={() => setCurrentIndex(index)}
+                      onClick={(e) => handleDotClick(e, index)}
                     />
                   ))}
                 </div>
