@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -8,6 +9,7 @@ import { Form } from "@/components/ui/form";
 import { Card } from "@/components/ui/card";
 import { Session } from "@/types/session";
 import { supabase } from "@/integrations/supabase/client";
+import { Loader2 } from "lucide-react";
 
 import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
 import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
@@ -89,6 +91,7 @@ const CreateClass = () => {
       targetAudience: [],
       schedule: [],
     },
+    mode: "onChange" // Enable real-time validation
   });
 
   useEffect(() => {
@@ -121,6 +124,9 @@ const CreateClass = () => {
         toast.error("You must be logged in to create a class");
         return;
       }
+
+      // Show loading toast
+      toast.loading("Creating your class...");
 
       const { data: course, error: courseError } = await supabase
         .from('courses')
@@ -200,6 +206,7 @@ const CreateClass = () => {
         }
       }
 
+      // Dismiss loading toast and show success
       toast.success("Class created successfully!");
       navigate("/dashboard/classes");
     } catch (error) {
@@ -222,6 +229,8 @@ const CreateClass = () => {
         toast.error("You must be logged in to save a draft");
         return;
       }
+
+      toast.loading("Saving draft...");
 
       const { error: courseError } = await supabase
         .from('courses')
@@ -259,7 +268,7 @@ const CreateClass = () => {
 
       if (courseError) throw courseError;
 
-      toast.success("Class saved as draft");
+      toast.success("Draft saved successfully");
       setDraftCount(prev => prev + 1);
       navigate("/dashboard/classes");
     } catch (error) {
@@ -271,17 +280,17 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-5xl mx-auto px-4 py-8">
       <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
 
       <Form {...form}>
         <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">Basic Information</h2>
             <BasicInfoSection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">What to Bring and Learning Outcomes</h2>
             <div className="space-y-6">
               <BringItemsSection form={form} />
@@ -289,29 +298,41 @@ const CreateClass = () => {
             </div>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
             <LocationCategorySection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
             <PricingCapacitySection form={form} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">Add Images</h2>
             <ImagesSection images={images} setImages={setImages} />
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
             <h2 className="text-xl font-semibold mb-6 text-left">Schedule & Sessions</h2>
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
-          <CreateClassActions isSubmitting={isSubmitting} onSaveDraft={saveDraft} />
+          <CreateClassActions 
+            isSubmitting={isSubmitting} 
+            onSaveDraft={saveDraft} 
+          />
         </form>
       </Form>
+
+      {isSubmitting && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-lg flex items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <p className="text-lg">Processing your request...</p>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
