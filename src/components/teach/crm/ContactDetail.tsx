@@ -48,7 +48,7 @@ export const ContactDetail = ({ selectedMessage, studentBookings }: ContactDetai
               className="text-accent-purple hover:text-accent-purple/90 hover:bg-accent-purple/10"
             >
               <ExternalLink className="h-4 w-4 mr-2" />
-              View More
+              View Profile
             </Button>
           </div>
           <div className="space-y-4 text-sm">
@@ -64,24 +64,28 @@ export const ContactDetail = ({ selectedMessage, studentBookings }: ContactDetai
                 <span>{selectedMessage.profile.location}</span>
               </div>
             )}
-            {selectedMessage.profile?.tags && selectedMessage.profile.tags.length > 0 && (
-              <div className="flex items-center gap-2">
-                <Tag className="h-4 w-4 text-muted-foreground" />
-                <div className="flex gap-2 flex-wrap">
-                  {selectedMessage.profile.tags.map((tag) => (
-                    <Badge 
-                      key={tag} 
-                      variant="outline" 
-                      className="bg-accent-purple/10 text-accent-purple border-accent-purple/20 text-xs"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
+        
+        {selectedMessage.profile?.tags && selectedMessage.profile.tags.length > 0 && (
+          <div className="border-t pt-6">
+            <h3 className="text-base font-semibold mb-4 text-left flex items-center gap-2">
+              <Tag className="h-4 w-4" />
+              Tags
+            </h3>
+            <div className="flex gap-2 flex-wrap">
+              {selectedMessage.profile.tags.map((tag) => (
+                <Badge 
+                  key={tag} 
+                  variant="outline" 
+                  className="bg-accent-purple/10 text-accent-purple border-accent-purple/20 text-xs"
+                >
+                  {tag}
+                </Badge>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="border-t pt-6">
           <h3 className="text-base font-semibold mb-4 text-left">Booking History</h3>
@@ -110,7 +114,7 @@ export const ContactDetail = ({ selectedMessage, studentBookings }: ContactDetai
                 <Badge 
                   key={lang} 
                   variant="outline"
-                  className="bg-white text-accent-purple border-accent-purple text-xs"
+                  className="bg-white text-gray-700 border-gray-200 text-xs"
                 >
                   {lang}
                 </Badge>
