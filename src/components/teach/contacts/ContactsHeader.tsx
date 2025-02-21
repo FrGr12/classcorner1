@@ -16,22 +16,33 @@ const ContactsHeader = () => {
             Manage your student contacts and interactions
           </p>
         </div>
-        <div className="flex gap-3">
-          <Button 
-            variant="outline"
-            className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 text-sm"
-            onClick={() => navigate("/dashboard/contacts/tags")}
-          >
-            <Tags className="mr-2 h-4 w-4" />
-            Manage Tags
-          </Button>
-          <Button 
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white text-sm"
-            onClick={() => navigate("/dashboard/contacts/add")}
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add Contact
-          </Button>
+        <div className="flex gap-6">
+          <div className="text-center">
+            <Button 
+              variant="default"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white text-sm mb-2 w-full"
+              onClick={() => navigate("/dashboard/contacts/tags")}
+            >
+              <Tags className="mr-2 h-4 w-4 text-white" />
+              Manage Tags
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Organize your contacts
+            </p>
+          </div>
+          <div className="text-center">
+            <Button 
+              variant="default"
+              className="bg-accent-purple hover:bg-accent-purple/90 text-white text-sm mb-2 w-full"
+              onClick={() => navigate("/dashboard/contacts/add")}
+            >
+              <Plus className="mr-2 h-4 w-4 text-white" />
+              Add Contact
+            </Button>
+            <p className="text-xs text-muted-foreground">
+              Create new contact
+            </p>
+          </div>
         </div>
       </div>
     </Card>
