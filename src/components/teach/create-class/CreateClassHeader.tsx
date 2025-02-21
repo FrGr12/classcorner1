@@ -1,7 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Plus } from "lucide-react";
+import { Plus, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 interface CreateClassHeaderProps {
@@ -15,11 +15,21 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
   return (
     <Card className="p-6">
       <div className="flex items-center justify-between">
-        <div className="text-left">
-          <h1 className="text-2xl font-semibold">Create New Class</h1>
-          <p className="text-muted-foreground mt-1">
-            Share your expertise with the world
-          </p>
+        <div className="flex items-center gap-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="h-8 w-8 hover:text-accent-purple"
+            onClick={() => navigate(-1)}
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="text-2xl font-semibold">Create New Class</h1>
+            <p className="text-muted-foreground mt-1">
+              Share your expertise with the world
+            </p>
+          </div>
         </div>
         
         <div className="flex gap-3">
@@ -48,4 +58,3 @@ const CreateClassHeader = ({ draftCount, isSubmitting }: CreateClassHeaderProps)
 };
 
 export default CreateClassHeader;
-

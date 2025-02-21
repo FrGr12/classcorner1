@@ -1,3 +1,4 @@
+
 import { Card } from "@/components/ui/card";
 import { TeacherCredits } from "@/components/teach/dashboard/profile/TeacherCredits";
 import MetricsChart from "./components/MetricsChart";
@@ -47,6 +48,14 @@ const sampleData = [
   },
 ];
 
+const sampleRecommendations = {
+  metrics: {
+    views: 150,
+    engagement: 7.5,
+    bookings: 5
+  }
+};
+
 const PromotionalStats = () => {
   const handleBoost = () => {
     alert("Boost action triggered");
@@ -82,7 +91,7 @@ const PromotionalStats = () => {
       </div>
 
       <MetricsChart metrics={sampleData} />
-      <Recommendations />
+      <Recommendations metrics={sampleRecommendations.metrics} />
     </div>
   );
 };
