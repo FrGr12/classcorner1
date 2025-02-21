@@ -1,15 +1,10 @@
 
-import { Search } from "lucide-react";
+import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { MapPin } from "lucide-react";
+import { useState, useEffect } from "react";
+import SearchSuggestions from "./SearchSuggestions";
 
 interface SearchBarProps {
   searchInput: string;
@@ -25,6 +20,17 @@ const cities = [
   "Austin", "Seattle"
 ];
 
+const popularSearches = [
+  "Pottery for beginners",
+  "Cooking classes near me",
+  "Weekend art workshops",
+  "Photography basics",
+  "Candle making"
+];
+
+const RECENT_SEARCHES_KEY = "recentSearches";
+const MAX_RECENT_SEARCHES = 5;
+
 const SearchBar = ({
   searchInput,
   selectedCity,
@@ -33,6 +39,36 @@ const SearchBar = ({
   onCityChange,
   onSearch
 }: SearchBarProps) => {
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
+    if (stored) {
+      setRecentSearches(JSON.parse(stored));
+    }
+  }, []);
+
+  const handleSearch = () => {
+    if (!searchInput.trim()) return;
+    
+    const newRecentSearches = [
+      searchInput,
+      ...recentSearches.filter(s => s !== searchInput)
+    ].slice(0, MAX_RECENT_SEARCHES);
+    
+    setRecentSearches(newRecentSearches);
+    localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(newRecentSearches));
+    
+    onSearch();
+    setShowSuggestions(false);
+  };
+
+  const handleSelectSearch = (search: string) => {
+    onSearchChange(search);
+    setShowSuggestions(false);
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
       <div className="relative">
@@ -42,9 +78,17 @@ const SearchBar = ({
           placeholder="What do you want to learn?"
           value={searchInput}
           onChange={(e) => onSearchChange(e.target.value)}
+          onFocus={() => setShowSuggestions(true)}
           className="pl-10 h-12 border-neutral-200"
           aria-label="Search classes"
         />
+        {showSuggestions && (searchInput.length === 0) && (
+          <SearchSuggestions
+            recentSearches={recentSearches}
+            popularSearches={popularSearches}
+            onSelectSearch={handleSelectSearch}
+          />
+        )}
       </div>
       
       <div className="relative">
@@ -64,7 +108,7 @@ const SearchBar = ({
       </div>
       
       <Button 
-        onClick={onSearch}
+        onClick={handleSearch}
         className="h-12 px-8 bg-accent-purple hover:bg-accent-purple/90"
         disabled={isLoading}
         aria-label="Search"
