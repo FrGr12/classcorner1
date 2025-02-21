@@ -65,7 +65,7 @@ const TeacherInbox = () => {
           id: 2,
           message_type: "feedback",
           message_content: "The woodworking class was amazing! I learned so much about different types of wood and techniques.",
-          sent_at: new Date(Date.now() - 86400000).toISOString(), // 1 day ago
+          sent_at: new Date(Date.now() - 86400000).toISOString(),
           read_at: new Date(Date.now() - 43200000).toISOString(),
           status: "read",
           student_id: "2",
@@ -95,7 +95,7 @@ const TeacherInbox = () => {
           id: 3,
           message_type: "question",
           message_content: "Do we need to bring our own canvas for the painting workshop?",
-          sent_at: new Date(Date.now() - 172800000).toISOString(), // 2 days ago
+          sent_at: new Date(Date.now() - 172800000).toISOString(),
           read_at: null,
           status: "unread",
           student_id: "3",
@@ -125,7 +125,7 @@ const TeacherInbox = () => {
           id: 4,
           message_type: "booking",
           message_content: "I'd like to book a private session for my daughter's birthday. Do you offer group discounts?",
-          sent_at: new Date(Date.now() - 259200000).toISOString(), // 3 days ago
+          sent_at: new Date(Date.now() - 259200000).toISOString(),
           read_at: null,
           status: "unread",
           student_id: "4",
@@ -155,7 +155,7 @@ const TeacherInbox = () => {
           id: 5,
           message_type: "support",
           message_content: "I might be running 10 minutes late to tomorrow's class. Is that okay?",
-          sent_at: new Date(Date.now() - 345600000).toISOString(), // 4 days ago
+          sent_at: new Date(Date.now() - 345600000).toISOString(),
           read_at: new Date(Date.now() - 342000000).toISOString(),
           status: "read",
           student_id: "5",
@@ -199,7 +199,7 @@ const TeacherInbox = () => {
             price: 75,
             duration: 120
           },
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(), // 1 week ago
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7).toISOString(),
           status: "confirmed"
         },
         {
@@ -209,7 +209,7 @@ const TeacherInbox = () => {
             price: 90,
             duration: 180
           },
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14).toISOString(), // 2 weeks ago
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14).toISOString(),
           status: "completed"
         },
         {
@@ -219,7 +219,7 @@ const TeacherInbox = () => {
             price: 85,
             duration: 240
           },
-          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(), // 3 weeks ago
+          created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(),
           status: "completed"
         }
       ];

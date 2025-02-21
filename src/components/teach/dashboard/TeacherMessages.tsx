@@ -7,7 +7,7 @@ import { Loader2, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { format } from "date-fns";
-import type { Message } from "../crm/TeacherInbox";
+import type { Message } from "../crm/types";
 
 const TeacherMessages = () => {
   const [loading, setLoading] = useState(true);
