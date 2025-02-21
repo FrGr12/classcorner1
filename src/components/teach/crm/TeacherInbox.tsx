@@ -53,7 +53,8 @@ const TeacherInbox = () => {
             avatar_url: null,
             location: "Stockholm",
             bio: "Art enthusiast looking to explore new creative outlets",
-            languages: ["English", "Swedish"]
+            languages: ["English", "Swedish"],
+            tags: ["Beginner", "Pottery Interest", "Workshop"]
           },
           course: {
             title: "Introduction to Pottery",
@@ -83,7 +84,8 @@ const TeacherInbox = () => {
             avatar_url: null,
             location: "Gothenburg",
             bio: "DIY enthusiast and weekend warrior",
-            languages: ["English"]
+            languages: ["English"],
+            tags: ["Advanced", "Returning Student", "DIY"]
           },
           course: {
             title: "Advanced Woodworking",
@@ -113,76 +115,16 @@ const TeacherInbox = () => {
             avatar_url: null,
             location: "Uppsala",
             bio: "Aspiring artist with a passion for colors",
-            languages: ["Swedish", "English", "Spanish"]
+            languages: ["Swedish", "English", "Spanish"],
+            tags: ["New Student", "Art Interest", "Painting"]
           },
           course: {
             title: "Oil Painting Basics",
             price: 900,
             duration: "2.5 hours"
           }
-        },
-        {
-          id: 4,
-          message_type: "booking",
-          message_content: "I'd like to book a private session for my daughter's birthday. Do you offer group discounts?",
-          sent_at: new Date(Date.now() - 259200000).toISOString(),
-          read_at: null,
-          status: "unread",
-          student_id: "4",
-          course_id: 4,
-          instructor_id: "dummy-instructor",
-          thread_id: "thread4",
-          is_unread: true,
-          assigned_to: null,
-          communication_context: "Private Session Inquiry",
-          last_activity_at: new Date(Date.now() - 259200000).toISOString(),
-          profile: {
-            id: "4",
-            first_name: "Maria",
-            last_name: "Garcia",
-            avatar_url: null,
-            location: "Stockholm",
-            bio: "Mother of two creative kids",
-            languages: ["Spanish", "English"]
-          },
-          course: {
-            title: "Ceramic Art for Kids",
-            price: 800,
-            duration: "1.5 hours"
-          }
-        },
-        {
-          id: 5,
-          message_type: "support",
-          message_content: "I might be running 10 minutes late to tomorrow's class. Is that okay?",
-          sent_at: new Date(Date.now() - 345600000).toISOString(),
-          read_at: new Date(Date.now() - 342000000).toISOString(),
-          status: "read",
-          student_id: "5",
-          course_id: 5,
-          instructor_id: "dummy-instructor",
-          thread_id: "thread5",
-          is_unread: false,
-          assigned_to: null,
-          communication_context: "Class Attendance",
-          last_activity_at: new Date(Date.now() - 342000000).toISOString(),
-          profile: {
-            id: "5",
-            first_name: "Lars",
-            last_name: "Johansson",
-            avatar_url: null,
-            location: "Malmö",
-            bio: "Photography enthusiast",
-            languages: ["Swedish", "English", "Danish"]
-          },
-          course: {
-            title: "Digital Photography",
-            price: 1100,
-            duration: "2 hours"
-          }
         }
       ];
-
       return dummyMessages;
     }
   });
