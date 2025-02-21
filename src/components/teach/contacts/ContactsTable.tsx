@@ -9,6 +9,7 @@ import { MessageSquare, Calendar, FileText, ChevronUp, ChevronDown } from "lucid
 import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { useDebounce } from "@/hooks/use-debounce";
+import { useNavigate } from "react-router-dom";
 
 interface ContactsTableProps {
   contacts: Contact[];
@@ -28,6 +29,7 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
   const [tagFilter, setTagFilter] = useState<string>("");
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const navigate = useNavigate();
 
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
@@ -71,6 +73,15 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
     });
 
   const allTags = Array.from(new Set(contacts.flatMap(contact => contact.tags)));
+
+  const handleMessageClick = (contact: Contact) => {
+    navigate("/dashboard/inbox", { 
+      state: { 
+        selectedContact: contact,
+        fromContacts: true
+      }
+    });
+  };
 
   const handleSendMessage = () => {
     // TODO: Implement message sending logic
@@ -181,10 +192,7 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                           variant="secondary"
                           size="icon"
                           title="Message Contact"
-                          onClick={() => {
-                            setSelectedContact(contact);
-                            setIsMessageOpen(true);
-                          }}
+                          onClick={() => handleMessageClick(contact)}
                           className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
                         >
                           <MessageSquare className="h-4 w-4 text-white" />

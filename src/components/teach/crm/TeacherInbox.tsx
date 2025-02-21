@@ -27,6 +27,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import { useLocation, useNavigate } from "react-router-dom";
+import React from "react";
 
 export type Profile = {
   id: string;
@@ -70,6 +72,8 @@ const TeacherInbox = () => {
   const [recipient, setRecipient] = useState("");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { toast } = useToast();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const { data: messages, isLoading } = useQuery({
     queryKey: ["messages"],
@@ -308,6 +312,29 @@ const TeacherInbox = () => {
     }
   };
 
+  React.useEffect(() => {
+    if (location.state?.selectedContact) {
+      const contact = location.state.selectedContact;
+      const contactMessages = messages?.filter(
+        msg => msg.profile?.id === contact.id
+      );
+      if (contactMessages?.[0]) {
+        setSelectedMessage(contactMessages[0]);
+      }
+    }
+  }, [location.state, messages]);
+
+  const handleContactClick = (message: Message) => {
+    if (message.profile) {
+      navigate("/dashboard/contacts", {
+        state: {
+          selectedProfile: message.profile,
+          fromInbox: true
+        }
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card className="p-6">
@@ -377,7 +404,10 @@ const TeacherInbox = () => {
                       : "hover:bg-neutral-50"
                   }`}
                 >
-                  <div className="flex items-center gap-3 mb-2">
+                  <div 
+                    className="flex items-center gap-3 mb-2"
+                    onClick={() => handleContactClick(message)}
+                  >
                     <Avatar className="h-8 w-8">
                       <AvatarImage src={message.profile?.avatar_url || ""} />
                       <AvatarFallback>

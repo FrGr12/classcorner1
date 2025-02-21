@@ -25,6 +25,7 @@ import ErrorBoundary from "@/components/error/ErrorBoundary";
 import GroupPage from "@/pages/GroupPage";
 import About from "@/pages/About";
 import TeacherContacts from "@/pages/TeacherContacts";
+import TeacherInbox from "@/pages/TeacherInbox";
 import ContactManagement from "@/pages/ContactManagement";
 
 const router = createBrowserRouter([
@@ -120,6 +121,10 @@ const router = createBrowserRouter([
       {
         path: "contacts",
         element: <TeacherContacts />
+      },
+      {
+        path: "inbox",
+        element: <TeacherInbox />
       },
       {
         path: "contacts/tags",
