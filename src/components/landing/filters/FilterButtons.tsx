@@ -118,11 +118,7 @@ const FilterButtons = ({
         setSelectedTimeRange("Custom");
       }
     } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Invalid date selection"
-      });
+      toast.error("Invalid date selection");
     }
   };
 
