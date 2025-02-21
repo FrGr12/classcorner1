@@ -2,9 +2,11 @@
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { User, MapPin, Calendar } from "lucide-react";
+import { User, MapPin, Calendar, ExternalLink } from "lucide-react";
 import { format } from "date-fns";
 import { Message } from "./types";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface ContactDetailProps {
   selectedMessage: Message | null;
@@ -12,6 +14,8 @@ interface ContactDetailProps {
 }
 
 export const ContactDetail = ({ selectedMessage, studentBookings }: ContactDetailProps) => {
+  const navigate = useNavigate();
+
   if (!selectedMessage) {
     return (
       <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
@@ -20,11 +24,33 @@ export const ContactDetail = ({ selectedMessage, studentBookings }: ContactDetai
     );
   }
 
+  const handleViewMore = () => {
+    if (selectedMessage.profile) {
+      navigate("/dashboard/contacts", {
+        state: {
+          selectedProfile: selectedMessage.profile,
+          fromInbox: true
+        }
+      });
+    }
+  };
+
   return (
     <ScrollArea className="h-[600px]">
       <div className="p-6 space-y-6">
         <div>
-          <h3 className="text-base font-semibold mb-4 text-left">Contact Information</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-base font-semibold text-left">Contact Information</h3>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={handleViewMore}
+              className="text-accent-purple hover:text-accent-purple/90 hover:bg-accent-purple/10"
+            >
+              <ExternalLink className="h-4 w-4 mr-2" />
+              View More
+            </Button>
+          </div>
           <div className="space-y-4 text-sm">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
