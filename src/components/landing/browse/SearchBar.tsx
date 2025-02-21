@@ -3,7 +3,7 @@ import { Search, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import SearchSuggestions from "./SearchSuggestions";
 
 interface SearchBarProps {
@@ -41,12 +41,29 @@ const SearchBar = ({
 }: SearchBarProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
     if (stored) {
       setRecentSearches(JSON.parse(stored));
     }
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleSearch = () => {
@@ -69,9 +86,17 @@ const SearchBar = ({
     setShowSuggestions(false);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSearch();
+    } else if (e.key === 'Escape') {
+      setShowSuggestions(false);
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
-      <div className="relative">
+      <div className="relative" ref={searchContainerRef}>
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-neutral-400" />
         <Input
           type="text"
@@ -79,8 +104,12 @@ const SearchBar = ({
           value={searchInput}
           onChange={(e) => onSearchChange(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
+          onKeyDown={handleKeyDown}
           className="pl-10 h-12 border-neutral-200"
           aria-label="Search classes"
+          aria-expanded={showSuggestions}
+          aria-controls="search-suggestions"
+          aria-haspopup="listbox"
         />
         {showSuggestions && (searchInput.length === 0) && (
           <SearchSuggestions
