@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
@@ -45,6 +44,10 @@ const Browse = () => {
     setShowCustomDate(false);
     setDate(undefined);
     handleSearch();
+  };
+
+  const handlePriceRangeChange = (value: [number, number]) => {
+    setPriceRange(value);
   };
 
   const handleSearch = () => {
@@ -128,7 +131,7 @@ const Browse = () => {
                 onTimeRangeChange={handleTimeRangeChange}
                 onDateChange={setDate}
                 onSortChange={setSortBy}
-                onPriceRangeChange={setPriceRange}
+                onPriceRangeChange={handlePriceRangeChange}
                 onReset={handleReset}
               />
             </div>

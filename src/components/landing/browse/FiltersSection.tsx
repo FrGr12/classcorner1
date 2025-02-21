@@ -19,7 +19,7 @@ interface FiltersSectionProps {
   onTimeRangeChange: (value: string) => void;
   onDateChange: (date: Date | undefined) => void;
   onSortChange: (value: string) => void;
-  onPriceRangeChange: (value: number[]) => void;
+  onPriceRangeChange: (value: [number, number]) => void;  // Updated type
   onReset: () => void;
 }
 
@@ -59,6 +59,10 @@ const FiltersSection = ({
   onReset
 }: FiltersSectionProps) => {
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
+
+  const handlePriceRangeChange = (value: number[]) => {
+    onPriceRangeChange([value[0], value[1]] as [number, number]);
+  };
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-[1fr,1fr,1fr,auto] gap-4 max-w-5xl mx-auto">
@@ -172,7 +176,7 @@ const FiltersSection = ({
             max={200}
             step={10}
             value={priceRange}
-            onValueChange={onPriceRangeChange}
+            onValueChange={handlePriceRangeChange}
             className="mt-2"
             aria-label="Price range"
           />
