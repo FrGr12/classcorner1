@@ -7,6 +7,7 @@ import SaveButton from "./class-card/SaveButton";
 import DateButtons from "./class-card/DateButtons";
 import CategoryBadges from "./class-card/CategoryBadges";
 import ClassDetails from "./class-card/ClassDetails";
+import { useState } from "react";
 
 interface ClassCardProps {
   id?: number;
@@ -38,7 +39,7 @@ const ClassCard = ({
   instructor,
   price,
   rating,
-  images,
+  images: initialImages,
   level,
   date,
   city,
@@ -51,6 +52,7 @@ const ClassCard = ({
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
+  const [images, setImages] = useState(initialImages?.length > 0 ? initialImages : ['/placeholder.svg']);
 
   const determineCategory = (title: string, providedCategory?: string): string => {
     if (providedCategory && validCategories.includes(providedCategory)) {
@@ -86,12 +88,12 @@ const ClassCard = ({
     }
   };
 
-  const displayCategory = determineCategory(title, category);
+  const handleImageError = () => {
+    console.warn('Image load error for class:', title);
+    setImages(['/placeholder.svg']);
+  };
 
-  if (!images || images.length === 0) {
-    console.warn('No images provided for class:', title);
-    images = ['/placeholder.svg'];
-  }
+  const displayCategory = determineCategory(title, category);
 
   return (
     <Card 
@@ -102,9 +104,7 @@ const ClassCard = ({
         <ImageCarousel 
           images={images} 
           title={title} 
-          onError={() => {
-            console.warn('Image load error for class:', title);
-          }}
+          onError={handleImageError}
         />
         <SaveButton />
         <CategoryBadges displayCategory={displayCategory} />

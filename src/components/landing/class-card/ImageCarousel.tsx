@@ -8,6 +8,7 @@ interface ImageCarouselProps {
   images: string[];
   title: string;
   variant?: 'large' | 'small';
+  onError?: () => void;
 }
 
 const PlaceholderImage = () => (
@@ -16,7 +17,7 @@ const PlaceholderImage = () => (
   </div>
 );
 
-const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps) => {
+const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarouselProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const hasMultipleImages = images && images.length > 1;
   const currentImage = images && images.length > 0 ? images[currentIndex] : null;
@@ -51,6 +52,10 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
     setCurrentIndex(index);
   };
 
+  const handleImageError = () => {
+    onError?.();
+  };
+
   return (
     <div className={wrapperClasses}>
       <div className={containerClasses}>
@@ -60,6 +65,7 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
               src={currentImage}
               alt={`${title} - Image ${currentIndex + 1}`}
               className={imageClasses}
+              onError={handleImageError}
             />
             {variant === 'large' && hasMultipleImages && (
               <>
