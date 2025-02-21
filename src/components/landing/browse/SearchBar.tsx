@@ -1,5 +1,5 @@
 
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import SearchSuggestions from "./SearchSuggestions";
 import { mockClasses } from "@/data/mockClasses";
 import type { ClassItem } from "@/types/class";
+import { useDebounce } from "@/hooks/use-debounce";
 
 interface SearchBarProps {
   searchInput: string;
@@ -45,7 +46,10 @@ const SearchBar = ({
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [matchingCategories, setMatchingCategories] = useState<string[]>([]);
   const [matchingTitles, setMatchingTitles] = useState<string[]>([]);
+  const [selectedSuggestionIndex, setSelectedSuggestionIndex] = useState(-1);
+  const [isLoadingSuggestions, setIsLoadingSuggestions] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+  const debouncedSearchInput = useDebounce(searchInput, 300);
 
   useEffect(() => {
     const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
@@ -54,32 +58,37 @@ const SearchBar = ({
     }
   }, []);
 
-  // Search suggestions logic
+  // Search suggestions logic with debounce
   useEffect(() => {
-    if (searchInput.trim()) {
-      // Get all class titles from mockClasses
-      const allTitles = new Set<string>();
-      const allCategories = new Set<string>();
-      
-      Object.entries(mockClasses).forEach(([category, classes]: [string, ClassItem[]]) => {
-        if (category.toLowerCase().includes(searchInput.toLowerCase())) {
-          allCategories.add(category);
-        }
+    if (debouncedSearchInput.trim()) {
+      setIsLoadingSuggestions(true);
+      // Simulate network delay for demo purposes
+      setTimeout(() => {
+        const allTitles = new Set<string>();
+        const allCategories = new Set<string>();
         
-        classes.forEach(classItem => {
-          if (classItem.title.toLowerCase().includes(searchInput.toLowerCase())) {
-            allTitles.add(classItem.title);
+        Object.entries(mockClasses).forEach(([category, classes]: [string, ClassItem[]]) => {
+          if (category.toLowerCase().includes(debouncedSearchInput.toLowerCase())) {
+            allCategories.add(category);
           }
+          
+          classes.forEach(classItem => {
+            if (classItem.title.toLowerCase().includes(debouncedSearchInput.toLowerCase())) {
+              allTitles.add(classItem.title);
+            }
+          });
         });
-      });
 
-      setMatchingCategories(Array.from(allCategories));
-      setMatchingTitles(Array.from(allTitles).slice(0, 5)); // Limit to 5 suggestions
+        setMatchingCategories(Array.from(allCategories));
+        setMatchingTitles(Array.from(allTitles).slice(0, 5));
+        setIsLoadingSuggestions(false);
+      }, 300);
     } else {
       setMatchingCategories([]);
       setMatchingTitles([]);
+      setIsLoadingSuggestions(false);
     }
-  }, [searchInput]);
+  }, [debouncedSearchInput]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -118,11 +127,52 @@ const SearchBar = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    } else if (e.key === 'Escape') {
-      setShowSuggestions(false);
+    const suggestions = [...matchingCategories, ...matchingTitles];
+    
+    switch (e.key) {
+      case 'Enter':
+        if (selectedSuggestionIndex >= 0 && selectedSuggestionIndex < suggestions.length) {
+          handleSelectSearch(suggestions[selectedSuggestionIndex]);
+        } else {
+          handleSearch();
+        }
+        break;
+      case 'Escape':
+        setShowSuggestions(false);
+        break;
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev < suggestions.length - 1 ? prev + 1 : -1
+        );
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedSuggestionIndex(prev => 
+          prev > -1 ? prev - 1 : suggestions.length - 1
+        );
+        break;
     }
+  };
+
+  const handleClearSearch = () => {
+    onSearchChange('');
+    setShowSuggestions(false);
+  };
+
+  const highlightMatch = (text: string) => {
+    if (!searchInput) return text;
+    const regex = new RegExp(`(${searchInput})`, 'gi');
+    const parts = text.split(regex);
+    return (
+      <span>
+        {parts.map((part, i) => 
+          regex.test(part) ? 
+            <span key={i} className="bg-accent-purple/10 text-accent-purple">{part}</span> : 
+            part
+        )}
+      </span>
+    );
   };
 
   return (
@@ -136,12 +186,23 @@ const SearchBar = ({
           onChange={(e) => onSearchChange(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
           onKeyDown={handleKeyDown}
-          className="pl-10 h-12 border-neutral-200"
+          className="pl-10 pr-10 h-12 border-neutral-200"
           aria-label="Search classes"
           aria-expanded={showSuggestions}
           aria-controls="search-suggestions"
           aria-haspopup="listbox"
+          aria-activedescendant={selectedSuggestionIndex >= 0 ? `suggestion-${selectedSuggestionIndex}` : undefined}
+          role="combobox"
         />
+        {searchInput && (
+          <button
+            onClick={handleClearSearch}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-neutral-400 hover:text-neutral-600"
+            aria-label="Clear search"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
         {showSuggestions && (
           searchInput.length === 0 ? (
             <SearchSuggestions
@@ -149,20 +210,33 @@ const SearchBar = ({
               popularSearches={popularSearches}
               onSelectSearch={handleSelectSearch}
             />
-          ) : (matchingCategories.length > 0 || matchingTitles.length > 0) && (
-            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-2 z-50">
+          ) : isLoadingSuggestions ? (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-4 z-50 text-center text-neutral-500">
+              Searching...
+            </div>
+          ) : (matchingCategories.length > 0 || matchingTitles.length > 0) ? (
+            <div 
+              className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-2 z-50"
+              role="listbox"
+              id="search-suggestions"
+            >
               {matchingCategories.length > 0 && (
                 <div className="mb-4">
                   <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Categories</h3>
-                  {matchingCategories.map((category) => (
+                  {matchingCategories.map((category, index) => (
                     <Button
                       key={category}
+                      id={`suggestion-${index}`}
+                      role="option"
+                      aria-selected={selectedSuggestionIndex === index}
                       variant="ghost"
-                      className="w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50"
+                      className={`w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50 ${
+                        selectedSuggestionIndex === index ? 'bg-neutral-50 text-accent-purple' : ''
+                      }`}
                       onClick={() => handleSelectSearch(category)}
                     >
                       <Search className="w-4 h-4 mr-2 text-neutral-400" />
-                      {category}
+                      {highlightMatch(category)}
                     </Button>
                   ))}
                 </div>
@@ -170,21 +244,30 @@ const SearchBar = ({
               {matchingTitles.length > 0 && (
                 <div>
                   <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Classes</h3>
-                  {matchingTitles.map((title) => (
+                  {matchingTitles.map((title, index) => (
                     <Button
                       key={title}
+                      id={`suggestion-${index + matchingCategories.length}`}
+                      role="option"
+                      aria-selected={selectedSuggestionIndex === index + matchingCategories.length}
                       variant="ghost"
-                      className="w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50"
+                      className={`w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50 ${
+                        selectedSuggestionIndex === index + matchingCategories.length ? 'bg-neutral-50 text-accent-purple' : ''
+                      }`}
                       onClick={() => handleSelectSearch(title)}
                     >
                       <Search className="w-4 h-4 mr-2 text-neutral-400" />
-                      {title}
+                      {highlightMatch(title)}
                     </Button>
                   ))}
                 </div>
               )}
             </div>
-          )
+          ) : searchInput.trim() ? (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-4 z-50 text-center text-neutral-500">
+              No results found
+            </div>
+          ) : null
         )}
       </div>
       
