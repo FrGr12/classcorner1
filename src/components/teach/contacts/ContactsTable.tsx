@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -174,7 +175,7 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                       {contact.tags.map((tag) => (
                         <Badge
                           key={tag}
-                          className={`${getTagColor(tag)} border-0`}
+                          className={`${getTagColor(tag)} border-0 text-sm px-3 py-1`}
                         >
                           {tag}
                         </Badge>
