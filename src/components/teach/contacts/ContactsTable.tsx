@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -95,40 +94,52 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                   {contact.average_rating ? contact.average_rating.toFixed(1) : '-'}
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      title="Message Contact"
-                      onClick={() => {
-                        setSelectedContact(contact);
-                        setIsMessageOpen(true);
-                      }}
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      title="View Booking History"
-                      onClick={() => {
-                        setSelectedContact(contact);
-                        setIsBookingOpen(true);
-                      }}
-                    >
-                      <Calendar className="h-4 w-4" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      title="Add Note"
-                      onClick={() => {
-                        setSelectedContact(contact);
-                        setIsNoteOpen(true);
-                      }}
-                    >
-                      <FileText className="h-4 w-4" />
-                    </Button>
+                  <div className="flex gap-4">
+                    <div className="flex flex-col items-center">
+                      <Button 
+                        variant="secondary"
+                        size="icon"
+                        title="Message Contact"
+                        onClick={() => {
+                          setSelectedContact(contact);
+                          setIsMessageOpen(true);
+                        }}
+                        className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                      >
+                        <MessageSquare className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-gray-600">Message</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <Button 
+                        variant="secondary"
+                        size="icon"
+                        title="View Booking History"
+                        onClick={() => {
+                          setSelectedContact(contact);
+                          setIsBookingOpen(true);
+                        }}
+                        className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                      >
+                        <Calendar className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-gray-600">Bookings</span>
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <Button 
+                        variant="secondary"
+                        size="icon"
+                        title="Add Note"
+                        onClick={() => {
+                          setSelectedContact(contact);
+                          setIsNoteOpen(true);
+                        }}
+                        className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                      >
+                        <FileText className="h-4 w-4 text-white" />
+                      </Button>
+                      <span className="text-xs text-gray-600">Notes</span>
+                    </div>
                   </div>
                 </TableCell>
               </TableRow>
