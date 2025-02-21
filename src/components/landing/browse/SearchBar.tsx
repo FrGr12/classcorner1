@@ -5,34 +5,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import SearchSuggestions from "./SearchSuggestions";
-import { mockClasses } from "@/data/mockClasses";
-import type { ClassItem } from "@/types/class";
+import SearchSuggestionsList from "./SearchSuggestionsList";
 import { useDebounce } from "@/hooks/use-debounce";
-
-interface SearchBarProps {
-  searchInput: string;
-  selectedCity: string;
-  isLoading: boolean;
-  onSearchChange: (value: string) => void;
-  onCityChange: (value: string) => void;
-  onSearch: () => void;
-}
-
-const cities = [
-  "New York", "Los Angeles", "Chicago", "San Francisco", 
-  "Austin", "Seattle"
-];
-
-const popularSearches = [
-  "Pottery for beginners",
-  "Cooking classes near me",
-  "Weekend art workshops",
-  "Photography basics",
-  "Candle making"
-];
-
-const RECENT_SEARCHES_KEY = "recentSearches";
-const MAX_RECENT_SEARCHES = 5;
+import { cities, popularSearches, RECENT_SEARCHES_KEY, MAX_RECENT_SEARCHES } from "./constants";
+import { searchClasses, highlightMatch } from "./utils";
+import type { SearchBarProps } from "./types";
 
 const SearchBar = ({
   searchInput,
@@ -58,29 +35,13 @@ const SearchBar = ({
     }
   }, []);
 
-  // Search suggestions logic with debounce
   useEffect(() => {
     if (debouncedSearchInput.trim()) {
       setIsLoadingSuggestions(true);
-      // Simulate network delay for demo purposes
       setTimeout(() => {
-        const allTitles = new Set<string>();
-        const allCategories = new Set<string>();
-        
-        Object.entries(mockClasses).forEach(([category, classes]: [string, ClassItem[]]) => {
-          if (category.toLowerCase().includes(debouncedSearchInput.toLowerCase())) {
-            allCategories.add(category);
-          }
-          
-          classes.forEach(classItem => {
-            if (classItem.title.toLowerCase().includes(debouncedSearchInput.toLowerCase())) {
-              allTitles.add(classItem.title);
-            }
-          });
-        });
-
-        setMatchingCategories(Array.from(allCategories));
-        setMatchingTitles(Array.from(allTitles).slice(0, 5));
+        const { categories, titles } = searchClasses(debouncedSearchInput);
+        setMatchingCategories(categories);
+        setMatchingTitles(titles);
         setIsLoadingSuggestions(false);
       }, 300);
     } else {
@@ -160,21 +121,6 @@ const SearchBar = ({
     setShowSuggestions(false);
   };
 
-  const highlightMatch = (text: string) => {
-    if (!searchInput) return text;
-    const regex = new RegExp(`(${searchInput})`, 'gi');
-    const parts = text.split(regex);
-    return (
-      <span>
-        {parts.map((part, i) => 
-          regex.test(part) ? 
-            <span key={i} className="bg-accent-purple/10 text-accent-purple">{part}</span> : 
-            part
-        )}
-      </span>
-    );
-  };
-
   return (
     <div className="grid grid-cols-1 md:grid-cols-[2fr,1fr,auto] gap-3 max-w-5xl mx-auto">
       <div className="relative" ref={searchContainerRef}>
@@ -215,54 +161,14 @@ const SearchBar = ({
               Searching...
             </div>
           ) : (matchingCategories.length > 0 || matchingTitles.length > 0) ? (
-            <div 
-              className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-2 z-50"
-              role="listbox"
-              id="search-suggestions"
-            >
-              {matchingCategories.length > 0 && (
-                <div className="mb-4">
-                  <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Categories</h3>
-                  {matchingCategories.map((category, index) => (
-                    <Button
-                      key={category}
-                      id={`suggestion-${index}`}
-                      role="option"
-                      aria-selected={selectedSuggestionIndex === index}
-                      variant="ghost"
-                      className={`w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50 ${
-                        selectedSuggestionIndex === index ? 'bg-neutral-50 text-accent-purple' : ''
-                      }`}
-                      onClick={() => handleSelectSearch(category)}
-                    >
-                      <Search className="w-4 h-4 mr-2 text-neutral-400" />
-                      {highlightMatch(category)}
-                    </Button>
-                  ))}
-                </div>
-              )}
-              {matchingTitles.length > 0 && (
-                <div>
-                  <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Classes</h3>
-                  {matchingTitles.map((title, index) => (
-                    <Button
-                      key={title}
-                      id={`suggestion-${index + matchingCategories.length}`}
-                      role="option"
-                      aria-selected={selectedSuggestionIndex === index + matchingCategories.length}
-                      variant="ghost"
-                      className={`w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50 ${
-                        selectedSuggestionIndex === index + matchingCategories.length ? 'bg-neutral-50 text-accent-purple' : ''
-                      }`}
-                      onClick={() => handleSelectSearch(title)}
-                    >
-                      <Search className="w-4 h-4 mr-2 text-neutral-400" />
-                      {highlightMatch(title)}
-                    </Button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <SearchSuggestionsList
+              searchInput={searchInput}
+              matchingCategories={matchingCategories}
+              matchingTitles={matchingTitles}
+              selectedSuggestionIndex={selectedSuggestionIndex}
+              onSelectSearch={handleSelectSearch}
+              highlightMatch={(text) => highlightMatch(text, searchInput)}
+            />
           ) : searchInput.trim() ? (
             <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-4 z-50 text-center text-neutral-500">
               No results found
