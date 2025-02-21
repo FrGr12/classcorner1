@@ -16,6 +16,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Search, Filter, Archive, CheckSquare, Plus, Library, Send, User, MessageSquare, MapPin, Calendar, Star } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -269,6 +281,35 @@ const TeacherInbox = () => {
           },
           created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 21).toISOString(), // 3 weeks ago
           status: "completed"
+        }
+      ];
+    }
+  });
+
+  const { data: contacts } = useQuery({
+    queryKey: ["contacts"],
+    queryFn: async () => {
+      return [
+        {
+          id: "1",
+          first_name: "Emma",
+          last_name: "Watson",
+          email: "emma@example.com",
+          avatar_url: null
+        },
+        {
+          id: "2",
+          first_name: "James",
+          last_name: "Smith",
+          email: "james@example.com",
+          avatar_url: null
+        },
+        {
+          id: "3",
+          first_name: "Sofia",
+          last_name: "Andersson",
+          email: "sofia@example.com",
+          avatar_url: null
         }
       ];
     }
@@ -570,13 +611,47 @@ const TeacherInbox = () => {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="recipient" className="text-sm">Recipient</Label>
-              <Input
-                id="recipient"
-                placeholder="Enter recipient ID"
-                value={recipient}
-                onChange={(e) => setRecipient(e.target.value)}
-                className="text-sm"
-              />
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Input
+                    id="recipient"
+                    placeholder="Search contacts..."
+                    value={recipient}
+                    className="text-sm"
+                  />
+                </PopoverTrigger>
+                <PopoverContent className="w-[400px] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search contacts..." />
+                    <CommandEmpty>No contacts found.</CommandEmpty>
+                    <CommandGroup>
+                      {contacts?.map((contact) => (
+                        <CommandItem
+                          key={contact.id}
+                          value={`${contact.first_name} ${contact.last_name}`}
+                          onSelect={(value) => {
+                            setRecipient(value);
+                          }}
+                          className="flex items-center gap-2 p-2"
+                        >
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={contact.avatar_url || ""} />
+                            <AvatarFallback>
+                              {contact.first_name[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span>{contact.first_name} {contact.last_name}</span>
+                            <span className="text-xs text-muted-foreground">
+                              {contact.email}
+                            </span>
+                          </div>
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </Command>
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="grid gap-2">
               <Label htmlFor="subject" className="text-sm">Subject</Label>
