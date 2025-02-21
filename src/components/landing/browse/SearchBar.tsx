@@ -41,6 +41,8 @@ const SearchBar = ({
 }: SearchBarProps) => {
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
+  const [matchingCategories, setMatchingCategories] = useState<string[]>([]);
+  const [matchingTitles, setMatchingTitles] = useState<string[]>([]);
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -49,6 +51,33 @@ const SearchBar = ({
       setRecentSearches(JSON.parse(stored));
     }
   }, []);
+
+  // Search suggestions logic
+  useEffect(() => {
+    if (searchInput.trim()) {
+      // Get all class titles from mockClasses
+      const allTitles = new Set<string>();
+      const allCategories = new Set<string>();
+      
+      Object.entries(mockClasses).forEach(([category, classes]) => {
+        if (category.toLowerCase().includes(searchInput.toLowerCase())) {
+          allCategories.add(category);
+        }
+        
+        classes.forEach(classItem => {
+          if (classItem.title.toLowerCase().includes(searchInput.toLowerCase())) {
+            allTitles.add(classItem.title);
+          }
+        });
+      });
+
+      setMatchingCategories(Array.from(allCategories));
+      setMatchingTitles(Array.from(allTitles).slice(0, 5)); // Limit to 5 suggestions
+    } else {
+      setMatchingCategories([]);
+      setMatchingTitles([]);
+    }
+  }, [searchInput]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -111,12 +140,49 @@ const SearchBar = ({
           aria-controls="search-suggestions"
           aria-haspopup="listbox"
         />
-        {showSuggestions && (searchInput.length === 0) && (
-          <SearchSuggestions
-            recentSearches={recentSearches}
-            popularSearches={popularSearches}
-            onSelectSearch={handleSelectSearch}
-          />
+        {showSuggestions && (
+          searchInput.length === 0 ? (
+            <SearchSuggestions
+              recentSearches={recentSearches}
+              popularSearches={popularSearches}
+              onSelectSearch={handleSelectSearch}
+            />
+          ) : (matchingCategories.length > 0 || matchingTitles.length > 0) && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-lg shadow-lg border border-neutral-200 p-2 z-50">
+              {matchingCategories.length > 0 && (
+                <div className="mb-4">
+                  <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Categories</h3>
+                  {matchingCategories.map((category) => (
+                    <Button
+                      key={category}
+                      variant="ghost"
+                      className="w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50"
+                      onClick={() => handleSelectSearch(category)}
+                    >
+                      <Search className="w-4 h-4 mr-2 text-neutral-400" />
+                      {category}
+                    </Button>
+                  ))}
+                </div>
+              )}
+              {matchingTitles.length > 0 && (
+                <div>
+                  <h3 className="text-sm font-medium text-neutral-500 px-3 mb-2">Classes</h3>
+                  {matchingTitles.map((title) => (
+                    <Button
+                      key={title}
+                      variant="ghost"
+                      className="w-full justify-start text-left text-neutral-700 hover:text-accent-purple hover:bg-neutral-50"
+                      onClick={() => handleSelectSearch(title)}
+                    >
+                      <Search className="w-4 h-4 mr-2 text-neutral-400" />
+                      {title}
+                    </Button>
+                  ))}
+                </div>
+              )}
+            </div>
+          )
         )}
       </div>
       
