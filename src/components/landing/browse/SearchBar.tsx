@@ -5,6 +5,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { useState, useEffect, useRef } from "react";
 import SearchSuggestions from "./SearchSuggestions";
+import { mockClasses } from "@/data/mockClasses";
+import type { ClassItem } from "@/types/class";
 
 interface SearchBarProps {
   searchInput: string;
@@ -59,7 +61,7 @@ const SearchBar = ({
       const allTitles = new Set<string>();
       const allCategories = new Set<string>();
       
-      Object.entries(mockClasses).forEach(([category, classes]) => {
+      Object.entries(mockClasses).forEach(([category, classes]: [string, ClassItem[]]) => {
         if (category.toLowerCase().includes(searchInput.toLowerCase())) {
           allCategories.add(category);
         }
