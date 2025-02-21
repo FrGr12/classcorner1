@@ -2,78 +2,18 @@ import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Search, Filter, Archive, CheckSquare, Plus, Library, Send, User, MessageSquare, MapPin, Calendar, Star } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { format } from "date-fns";
 import { useLocation, useNavigate } from "react-router-dom";
-import React from "react";
-
-export type Profile = {
-  id: string;
-  first_name: string | null;
-  last_name: string | null;
-  avatar_url: string | null;
-  location: string | null;
-  bio: string | null;
-  languages: string[] | null;
-};
-
-export type Message = {
-  id: number;
-  message_type: string;
-  message_content: string;
-  sent_at: string;
-  read_at: string | null;
-  status: string;
-  student_id: string;
-  course_id: number | null;
-  instructor_id: string;
-  thread_id: string | null;
-  is_unread: boolean;
-  assigned_to: string | null;
-  communication_context: string | null;
-  last_activity_at: string | null;
-  profile: Profile | null;
-  course: {
-    title: string | null;
-    price: number | null;
-    duration: string | null;
-  } | null;
-};
+import { Search, Filter, Library, Plus } from "lucide-react";
+import { MessageList } from "./MessageList";
+import { MessageDetail } from "./MessageDetail";
+import { ContactDetail } from "./ContactDetail";
+import { ComposeDialog } from "./ComposeDialog";
+import { Message } from "./types";
+import { supabase } from "@/integrations/supabase/client";
 
 const TeacherInbox = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -87,7 +27,7 @@ const TeacherInbox = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const { data: messages, isLoading } = useQuery({
+  const { data: messages } = useQuery({
     queryKey: ["messages"],
     queryFn: async () => {
       const dummyMessages: Message[] = [
@@ -353,18 +293,6 @@ const TeacherInbox = () => {
     }
   };
 
-  React.useEffect(() => {
-    if (location.state?.selectedContact) {
-      const contact = location.state.selectedContact;
-      const contactMessages = messages?.filter(
-        msg => msg.profile?.id === contact.id
-      );
-      if (contactMessages?.[0]) {
-        setSelectedMessage(contactMessages[0]);
-      }
-    }
-  }, [location.state, messages]);
-
   const handleContactClick = (message: Message) => {
     if (message.profile) {
       navigate("/dashboard/contacts", {
@@ -433,262 +361,42 @@ const TeacherInbox = () => {
 
       <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
         <ResizablePanel defaultSize={25} minSize={20}>
-          <ScrollArea className="h-[600px]">
-            <div className="p-4 space-y-0.5">
-              {messages?.map((message) => (
-                <div
-                  key={message.id}
-                  onClick={() => setSelectedMessage(message)}
-                  className={`p-4 border-b border-neutral-100 cursor-pointer transition-colors ${
-                    selectedMessage?.id === message.id 
-                      ? "bg-accent-purple/5" 
-                      : "hover:bg-neutral-50"
-                  }`}
-                >
-                  <div 
-                    className="flex items-center gap-3 mb-2"
-                    onClick={() => handleContactClick(message)}
-                  >
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage src={message.profile?.avatar_url || ""} />
-                      <AvatarFallback>
-                        {message.profile?.first_name?.[0] || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between">
-                        <p className="font-medium text-sm truncate text-left">
-                          {message.profile?.first_name} {message.profile?.last_name}
-                        </p>
-                        <span className="text-xs text-muted-foreground shrink-0 ml-2">
-                          {format(new Date(message.sent_at), "MMM d")}
-                        </span>
-                      </div>
-                      <p className="text-xs text-muted-foreground truncate text-left">
-                        {message.communication_context || "No subject"}
-                      </p>
-                    </div>
-                  </div>
-                  <p className="text-xs truncate text-neutral-600 text-left pl-11">
-                    {message.message_content}
-                  </p>
-                </div>
-              ))}
-            </div>
-          </ScrollArea>
+          <MessageList
+            messages={messages || []}
+            selectedMessage={selectedMessage}
+            onMessageSelect={setSelectedMessage}
+            onContactClick={handleContactClick}
+          />
         </ResizablePanel>
 
         <ResizableHandle />
 
         <ResizablePanel defaultSize={45}>
-          <ScrollArea className="h-[600px]">
-            {selectedMessage ? (
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-6">
-                  <Avatar className="h-10 w-10">
-                    <AvatarImage src={selectedMessage.profile?.avatar_url || ""} />
-                    <AvatarFallback>
-                      {selectedMessage.profile?.first_name?.[0] || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="text-left">
-                    <h2 className="text-base font-semibold">
-                      {selectedMessage.profile?.first_name} {selectedMessage.profile?.last_name}
-                    </h2>
-                    <p className="text-xs text-muted-foreground">
-                      {selectedMessage.communication_context}
-                    </p>
-                  </div>
-                </div>
-                <div className="prose max-w-none space-y-4">
-                  <div className="bg-accent-purple/5 p-4 rounded-lg text-sm text-left border border-accent-purple/10">
-                    {selectedMessage.message_content}
-                  </div>
-                  <div className="text-xs text-muted-foreground text-left">
-                    Sent {format(new Date(selectedMessage.sent_at), "PPp")}
-                  </div>
-                </div>
-                <div className="mt-6">
-                  <Textarea
-                    placeholder="Type your reply..."
-                    className="min-h-[100px] text-sm"
-                  />
-                  <div className="flex justify-end mt-2">
-                    <Button className="text-sm">
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Reply
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                Select a message to view details
-              </div>
-            )}
-          </ScrollArea>
+          <MessageDetail selectedMessage={selectedMessage} />
         </ResizablePanel>
 
         <ResizableHandle />
 
         <ResizablePanel defaultSize={30}>
-          <ScrollArea className="h-[600px]">
-            {selectedMessage ? (
-              <div className="p-6 space-y-6">
-                <div>
-                  <h3 className="text-base font-semibold mb-4 text-left">Contact Information</h3>
-                  <div className="space-y-4 text-sm">
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span>
-                        {selectedMessage.profile?.first_name} {selectedMessage.profile?.last_name}
-                      </span>
-                    </div>
-                    {selectedMessage.profile?.location && (
-                      <div className="flex items-center gap-2">
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
-                        <span>{selectedMessage.profile.location}</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="border-t pt-6">
-                  <h3 className="text-base font-semibold mb-4 text-left">Booking History</h3>
-                  <div className="space-y-3">
-                    {studentBookings?.map((booking: any) => (
-                      <Card key={booking.id} className="p-3 bg-neutral-50 border-neutral-200">
-                        <div className="flex items-center gap-3">
-                          <Calendar className="h-4 w-4 text-muted-foreground" />
-                          <div className="text-left">
-                            <p className="text-sm font-medium">{booking.course?.title}</p>
-                            <p className="text-xs text-muted-foreground">
-                              {format(new Date(booking.created_at), "MMMM d, yyyy")}
-                            </p>
-                          </div>
-                        </div>
-                      </Card>
-                    ))}
-                  </div>
-                </div>
-
-                {selectedMessage.profile?.languages && (
-                  <div className="border-t pt-6">
-                    <h3 className="text-base font-semibold mb-4 text-left">Languages</h3>
-                    <div className="flex gap-2">
-                      {selectedMessage.profile.languages.map((lang) => (
-                        <Badge key={lang} variant="secondary" className="text-xs">
-                          {lang}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {selectedMessage.profile?.bio && (
-                  <div className="border-t pt-6">
-                    <h3 className="text-base font-semibold mb-4 text-left">About</h3>
-                    <p className="text-sm text-muted-foreground text-left">
-                      {selectedMessage.profile.bio}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center justify-center h-full text-sm text-muted-foreground">
-                Select a message to view contact details
-              </div>
-            )}
-          </ScrollArea>
+          <ContactDetail
+            selectedMessage={selectedMessage}
+            studentBookings={studentBookings || []}
+          />
         </ResizablePanel>
       </ResizablePanelGroup>
 
-      <Dialog open={isComposeOpen} onOpenChange={setIsComposeOpen}>
-        <DialogContent className="sm:max-w-[525px]">
-          <DialogHeader>
-            <DialogTitle className="text-left">Write New Message</DialogTitle>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="recipient" className="text-sm">Recipient</Label>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Input
-                    id="recipient"
-                    placeholder="Search contacts..."
-                    value={recipient}
-                    className="text-sm"
-                  />
-                </PopoverTrigger>
-                <PopoverContent className="w-[400px] p-0" align="start">
-                  <Command>
-                    <CommandInput placeholder="Search contacts..." />
-                    <CommandEmpty>No contacts found.</CommandEmpty>
-                    <CommandGroup>
-                      {contacts?.map((contact) => (
-                        <CommandItem
-                          key={contact.id}
-                          value={`${contact.first_name} ${contact.last_name}`}
-                          onSelect={(value) => {
-                            setRecipient(value);
-                          }}
-                          className="flex items-center gap-2 p-2"
-                        >
-                          <Avatar className="h-6 w-6">
-                            <AvatarImage src={contact.avatar_url || ""} />
-                            <AvatarFallback>
-                              {contact.first_name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="flex flex-col">
-                            <span>{contact.first_name} {contact.last_name}</span>
-                            <span className="text-xs text-muted-foreground">
-                              {contact.email}
-                            </span>
-                          </div>
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="subject" className="text-sm">Subject</Label>
-              <Input
-                id="subject"
-                placeholder="Enter message subject"
-                value={messageSubject}
-                onChange={(e) => setMessageSubject(e.target.value)}
-                className="text-sm"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="message" className="text-sm">Message</Label>
-              <Textarea
-                id="message"
-                placeholder="Type your message here..."
-                value={messageContent}
-                onChange={(e) => setMessageContent(e.target.value)}
-                className="min-h-[200px] text-sm"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button
-              onClick={() => setIsComposeOpen(false)}
-              variant="outline"
-              className="text-sm"
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleSendMessage} className="gap-2 text-sm">
-              <Send className="h-4 w-4" />
-              Send Message
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ComposeDialog
+        isOpen={isComposeOpen}
+        onClose={() => setIsComposeOpen(false)}
+        recipient={recipient}
+        setRecipient={setRecipient}
+        messageSubject={messageSubject}
+        setMessageSubject={setMessageSubject}
+        messageContent={messageContent}
+        setMessageContent={setMessageContent}
+        onSend={handleSendMessage}
+        contacts={contacts || []}
+      />
     </div>
   );
 };
