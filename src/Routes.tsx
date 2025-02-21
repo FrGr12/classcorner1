@@ -116,26 +116,40 @@ const router = createBrowserRouter([
         </ErrorBoundary>
       </AuthGuard>
     ),
-  },
-  {
-    path: "/dashboard/create-class",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <CreateClass />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/dashboard/*",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <Dashboard />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
+    children: [
+      {
+        path: "contacts",
+        element: <TeacherContacts />
+      },
+      {
+        path: "contacts/tags",
+        element: <ContactManagement />
+      },
+      {
+        path: "contacts/add",
+        element: <ContactManagement />
+      },
+      {
+        path: "/dashboard/create-class",
+        element: (
+          <AuthGuard>
+            <ErrorBoundary>
+              <CreateClass />
+            </ErrorBoundary>
+          </AuthGuard>
+        ),
+      },
+      {
+        path: "/dashboard/*",
+        element: (
+          <AuthGuard>
+            <ErrorBoundary>
+              <Dashboard />
+            </ErrorBoundary>
+          </AuthGuard>
+        ),
+      },
+    ]
   },
   {
     path: "/student-dashboard",
@@ -163,36 +177,6 @@ const router = createBrowserRouter([
       <AuthGuard>
         <ErrorBoundary>
           <EditCourse />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/dashboard/contacts",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <TeacherContacts />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/dashboard/contacts/tags",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <ContactManagement />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-  {
-    path: "/dashboard/contacts/add",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <ContactManagement />
         </ErrorBoundary>
       </AuthGuard>
     ),

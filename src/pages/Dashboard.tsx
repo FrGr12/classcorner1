@@ -6,6 +6,7 @@ import TeacherInbox from "@/components/teach/crm/TeacherInbox";
 import CreateClass from "@/pages/CreateClass";
 import TeacherProfile from "@/pages/TeacherProfile";
 import TeacherContacts from "@/pages/TeacherContacts";
+import ContactManagement from "@/pages/ContactManagement";
 import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherStats from "@/components/teach/dashboard/TeacherStats";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
@@ -22,6 +23,8 @@ const Dashboard = () => {
           <Route path="create-class" element={<CreateClass />} />
           <Route path="inbox" element={<TeacherInbox />} />
           <Route path="contacts" element={<TeacherContacts />} />
+          <Route path="contacts/tags" element={<ContactManagement />} />
+          <Route path="contacts/add" element={<ContactManagement />} />
           <Route path="profile" element={<TeacherProfile />} />
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="stats" element={<TeacherStats />} />
