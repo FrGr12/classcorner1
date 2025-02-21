@@ -22,25 +22,32 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
   const currentImage = images && images.length > 0 ? images[currentIndex] : null;
   
   const wrapperClasses = cn(
-    variant === 'large' ? "relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : "relative"
+    "relative w-full h-full",
+    variant === 'large' ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : ""
   );
 
   const containerClasses = cn(
-    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9] relative" : "absolute inset-0"
+    "relative w-full h-full",
+    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9]" : "aspect-[4/3]"
+  );
+
+  const imageClasses = cn(
+    "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
+    variant === 'large' && "rounded-lg"
   );
 
   const handlePrevious = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
   };
 
   const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
   };
 
   const handleDotClick = (e: React.MouseEvent, index: number) => {
-    e.stopPropagation(); // Prevent event bubbling
+    e.stopPropagation();
     setCurrentIndex(index);
   };
 
@@ -48,14 +55,11 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
     <div className={wrapperClasses}>
       <div className={containerClasses}>
         {currentImage ? (
-          <>
+          <div className="relative w-full h-full overflow-hidden">
             <img
               src={currentImage}
               alt={`${title} - Image ${currentIndex + 1}`}
-              className={cn(
-                "w-full h-full object-cover",
-                variant === 'large' && "rounded-lg shadow-sm"
-              )}
+              className={imageClasses}
             />
             {variant === 'large' && hasMultipleImages && (
               <>
@@ -89,11 +93,9 @@ const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps)
                 </div>
               </>
             )}
-          </>
-        ) : (
-          <div className="w-full h-full">
-            <PlaceholderImage />
           </div>
+        ) : (
+          <PlaceholderImage />
         )}
       </div>
     </div>
