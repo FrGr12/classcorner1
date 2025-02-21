@@ -2,6 +2,7 @@
 import { Card } from "@/components/ui/card";
 import { useLocation } from "react-router-dom";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
+import TagManagement from "@/components/teach/contacts/TagManagement";
 
 const ContactManagement = () => {
   const location = useLocation();
@@ -22,12 +23,7 @@ const ContactManagement = () => {
           </p>
           
           {isTagsPage ? (
-            <div className="space-y-6">
-              {/* Tag Management UI will be implemented here */}
-              <div className="bg-yellow-50 border border-yellow-200 rounded-md p-4">
-                Tag management interface coming soon
-              </div>
-            </div>
+            <TagManagement />
           ) : (
             <div className="space-y-6">
               {/* Contact Form UI will be implemented here */}
