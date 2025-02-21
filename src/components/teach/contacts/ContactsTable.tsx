@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -33,18 +32,7 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
   const debouncedSearchTerm = useDebounce(searchTerm, 300);
 
   const getTagColor = (tag: string) => {
-    switch (tag.toLowerCase()) {
-      case 'active':
-        return 'bg-green-100 text-green-800';
-      case 'vip':
-        return 'bg-purple-100 text-purple-800';
-      case 'waitlist':
-        return 'bg-orange-100 text-orange-800';
-      case 'past attendee':
-        return 'bg-gray-100 text-gray-800';
-      default:
-        return 'bg-blue-100 text-blue-800';
-    }
+    return 'bg-white text-accent-purple border border-accent-purple/20';
   };
 
   const handleSort = (field: SortField) => {
@@ -175,7 +163,7 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                       {contact.tags.map((tag) => (
                         <Badge
                           key={tag}
-                          className={`${getTagColor(tag)} border-0 text-sm px-3 py-1`}
+                          className={`${getTagColor(tag)} text-sm px-3 py-1`}
                         >
                           {tag}
                         </Badge>
