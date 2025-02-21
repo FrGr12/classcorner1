@@ -1,4 +1,3 @@
-
 import { createBrowserRouter } from "react-router-dom";
 import Index from "@/pages/Index";
 import Browse from "@/pages/Browse";
@@ -25,6 +24,8 @@ import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 import GroupPage from "@/pages/GroupPage";
 import About from "@/pages/About";
+import TeacherContacts from "@/pages/TeacherContacts";
+import ContactManagement from "@/pages/ContactManagement";
 
 const router = createBrowserRouter([
   {
@@ -162,6 +163,36 @@ const router = createBrowserRouter([
       <AuthGuard>
         <ErrorBoundary>
           <EditCourse />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/dashboard/contacts",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <TeacherContacts />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/dashboard/contacts/tags",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <ContactManagement />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/dashboard/contacts/add",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <ContactManagement />
         </ErrorBoundary>
       </AuthGuard>
     ),

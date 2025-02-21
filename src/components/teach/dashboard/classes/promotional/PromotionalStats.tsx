@@ -49,11 +49,12 @@ const sampleData = [
 ];
 
 const sampleRecommendations = {
-  metrics: {
+  metrics: [{
     views: 150,
-    engagement: 7.5,
+    ctr: 7.5,
+    saves: 10,
     bookings: 5
-  }
+  }]
 };
 
 const PromotionalStats = () => {
