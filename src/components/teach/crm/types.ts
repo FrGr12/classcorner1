@@ -7,6 +7,7 @@ export type Profile = {
   location: string | null;
   bio: string | null;
   languages: string[] | null;
+  tags?: string[];
 };
 
 export type Message = {
