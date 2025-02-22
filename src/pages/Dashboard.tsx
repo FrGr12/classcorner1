@@ -16,21 +16,23 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col w-full bg-gray-50">
       <DashboardHeader />
-      <main className="flex-1 p-4 md:p-6 overflow-auto">
-        <Routes>
-          <Route index element={<TeacherOverview />} />
-          <Route path="overview" element={<TeacherOverview />} />
-          <Route path="create-class" element={<CreateClass />} />
-          <Route path="inbox" element={<TeacherInbox />} />
-          <Route path="contacts" element={<TeacherContacts />} />
-          <Route path="contacts/tags" element={<ContactManagement />} />
-          <Route path="contacts/add" element={<ContactManagement />} />
-          <Route path="profile" element={<TeacherProfile />} />
-          <Route path="classes" element={<TeacherClasses />} />
-          <Route path="stats" element={<TeacherStats />} />
-          <Route path="reviews" element={<TeacherReviews />} />
-          <Route path="waitlist" element={<TeacherWaitlist />} />
-        </Routes>
+      <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto">
+        <div className="max-w-full overflow-x-hidden">
+          <Routes>
+            <Route index element={<TeacherOverview />} />
+            <Route path="overview" element={<TeacherOverview />} />
+            <Route path="create-class" element={<CreateClass />} />
+            <Route path="inbox" element={<TeacherInbox />} />
+            <Route path="contacts" element={<TeacherContacts />} />
+            <Route path="contacts/tags" element={<ContactManagement />} />
+            <Route path="contacts/add" element={<ContactManagement />} />
+            <Route path="profile" element={<TeacherProfile />} />
+            <Route path="classes" element={<TeacherClasses />} />
+            <Route path="stats" element={<TeacherStats />} />
+            <Route path="reviews" element={<TeacherReviews />} />
+            <Route path="waitlist" element={<TeacherWaitlist />} />
+          </Routes>
+        </div>
       </main>
     </div>
   );

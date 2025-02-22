@@ -9,8 +9,10 @@ import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommunitySidebar } from "@/components/community/sidebar/CommunitySidebar";
 import { SearchBar } from "@/components/community/search/SearchBar";
+
 const POSTS_PER_PAGE = 10;
 const INITIAL_TOPICS_TO_SHOW = 10;
+
 const Community = () => {
   const navigate = useNavigate();
   const {
@@ -24,6 +26,7 @@ const Community = () => {
     ref,
     inView
   } = useInView();
+
   const {
     data: groupsData
   } = useQuery({
@@ -39,6 +42,7 @@ const Community = () => {
       return data;
     }
   });
+
   const {
     data: topicsData
   } = useQuery({
@@ -61,6 +65,7 @@ const Community = () => {
       })).sort((a, b) => b.count - a.count);
     }
   });
+
   const {
     data,
     fetchNextPage,
@@ -103,16 +108,21 @@ const Community = () => {
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5
   });
+
   const handleTopicClick = (topicName: string) => {
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
   };
+
   const handleResourceClick = (resourceName: string) => {
     navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
   };
+
   const handleGroupClick = (groupId: number) => {
     navigate('/community/groups');
   };
+
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
+
   if (error) {
     return <div className="min-h-screen bg-background pt-24">
         <Navigation />
@@ -121,38 +131,58 @@ const Community = () => {
         </div>
       </div>;
   }
+
   return <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
         <div className="border-b bg-card">
-          <div className="container mx-auto py-6 px-4">
-            <h1 className="text-4xl font-bold mb-2 text-left">Community</h1>
-            <p className="text-muted-foreground text-left">
+          <div className="container mx-auto py-4 sm:py-6 px-4">
+            <h1 className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 text-left">Community</h1>
+            <p className="text-sm sm:text-base text-muted-foreground text-left">
               Connect with fellow crafters, share experiences, and learn together
             </p>
           </div>
         </div>
 
-        <div className="container mx-auto py-8 px-4">
-          <div className="grid gap-6 md:grid-cols-[300px_1fr]">
-            <CommunitySidebar topic={topic} category={category} resource={resource} displayedTopics={displayedTopics || []} topicsData={topicsData} groupsData={groupsData} showAllTopics={showAllTopics} onTopicClick={handleTopicClick} onGroupClick={handleGroupClick} onResourceClick={handleResourceClick} onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)} onAllPostsClick={() => navigate('/community/category/all')} onViewAllGroupsClick={() => navigate('/community/groups')} />
+        <div className="container mx-auto py-4 sm:py-8 px-4">
+          <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+            <div className="lg:block">
+              <CommunitySidebar 
+                topic={topic} 
+                category={category} 
+                resource={resource} 
+                displayedTopics={displayedTopics || []} 
+                topicsData={topicsData} 
+                groupsData={groupsData} 
+                showAllTopics={showAllTopics} 
+                onTopicClick={handleTopicClick} 
+                onGroupClick={handleGroupClick} 
+                onResourceClick={handleResourceClick} 
+                onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)} 
+                onAllPostsClick={() => navigate('/community/category/all')} 
+                onViewAllGroupsClick={() => navigate('/community/groups')} 
+              />
+            </div>
 
             <main>
-              <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
+              <div className="max-w-full overflow-x-hidden">
+                <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-              {isLoading ? <div className="space-y-4">
-                  {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
-                </div> : <>
-                  <CommunityHome topic={topic} category={category} resource={resource} posts={data?.pages.flatMap(page => page.posts) || []} />
-                  {isFetchingNextPage && <div className="mt-4 space-y-4">
-                      {[...Array(2)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
-                    </div>}
-                  <div ref={ref} className="h-10" />
-                </>}
+                {isLoading ? <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
+                  </div> : <>
+                    <CommunityHome topic={topic} category={category} resource={resource} posts={data?.pages.flatMap(page => page.posts) || []} />
+                    {isFetchingNextPage && <div className="mt-4 space-y-4">
+                        {[...Array(2)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
+                      </div>}
+                    <div ref={ref} className="h-10" />
+                  </>}
+              </div>
             </main>
           </div>
         </div>
       </div>
     </>;
 };
+
 export default Community;
