@@ -1,4 +1,5 @@
 
+import React from 'react';
 import type { ClassItem } from "@/types/class";
 import { mockClasses } from "@/data/mockClasses";
 
@@ -24,16 +25,16 @@ export const searchClasses = (searchInput: string) => {
   };
 };
 
-export const highlightMatch = (text: string, searchInput: string) => {
+export const highlightMatch = (text: string, searchInput: string): React.ReactNode => {
   if (!searchInput) return text;
   const regex = new RegExp(`(${searchInput})`, 'gi');
   const parts = text.split(regex);
   return (
     <span>
       {parts.map((part, i) => 
-        regex.test(part) ? 
-          <span key={i} className="bg-accent-purple/10 text-accent-purple">{part}</span> : 
-          part
+        regex.test(part) ? (
+          <span key={i} className="bg-accent-purple/10 text-accent-purple">{part}</span>
+        ) : part
       )}
     </span>
   );
