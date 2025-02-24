@@ -30,12 +30,12 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[120px] sm:w-[300px]">Class</TableHead>
+            <TableHead className="w-[180px] sm:w-[300px]">Class</TableHead>
             <TableHead className="hidden sm:table-cell">Instructor</TableHead>
-            <TableHead className="w-[90px] sm:w-auto">Date</TableHead>
+            <TableHead className="w-[70px] sm:w-auto">Date</TableHead>
             <TableHead className="w-[80px] sm:w-auto">Status</TableHead>
             <TableHead className="hidden sm:table-cell">Price</TableHead>
-            <TableHead className="w-[100px] sm:w-[140px] text-right">Actions</TableHead>
+            <TableHead className="w-[90px] sm:w-[140px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -48,14 +48,11 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
                 <span className="block sm:hidden text-[10px] text-muted-foreground mt-0.5">
                   {classItem.instructor}
                 </span>
-                <span className="block sm:hidden text-[10px] text-muted-foreground">
-                  ${classItem.price}
-                </span>
               </TableCell>
               <TableCell className="hidden sm:table-cell text-sm">
                 {classItem.instructor}
               </TableCell>
-              <TableCell className="text-xs sm:text-sm whitespace-nowrap">
+              <TableCell className="text-[10px] sm:text-sm whitespace-nowrap">
                 {classItem.date.toLocaleDateString()}
               </TableCell>
               <TableCell>
@@ -66,41 +63,32 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
               <TableCell className="hidden sm:table-cell text-sm">
                 ${classItem.price}
               </TableCell>
-              <TableCell className="p-2 sm:p-4">
+              <TableCell className="p-1 sm:p-4">
                 <div className="flex justify-end gap-1 sm:gap-4">
-                  <div className="flex flex-col items-center gap-1">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-red-100 hover:bg-red-200 border-red-200" 
-                      onClick={() => onAction("cancel", classItem.id)}
-                    >
-                      <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-700" />
-                    </Button>
-                    <span className="text-[8px] sm:text-xs text-neutral-600">Cancel</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
-                      onClick={() => onAction("message", classItem.id)}
-                    >
-                      <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
-                    </Button>
-                    <span className="text-[8px] sm:text-xs text-neutral-600">Message</span>
-                  </div>
-                  <div className="flex flex-col items-center gap-1">
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
-                      onClick={() => onAction("share", classItem.id)}
-                    >
-                      <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
-                    </Button>
-                    <span className="text-[8px] sm:text-xs text-neutral-600">Share</span>
-                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-red-100 hover:bg-red-200 border-red-200" 
+                    onClick={() => onAction("cancel", classItem.id)}
+                  >
+                    <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-700" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
+                    onClick={() => onAction("message", classItem.id)}
+                  >
+                    <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
+                    onClick={() => onAction("share", classItem.id)}
+                  >
+                    <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
+                  </Button>
                 </div>
               </TableCell>
             </TableRow>
