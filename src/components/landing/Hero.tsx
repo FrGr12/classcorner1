@@ -61,7 +61,7 @@ const Hero = () => {
         </motion.div>
         
         <motion.div 
-          className="mt-12 flex items-center justify-center gap-6 text-sm text-neutral-600"
+          className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-sm text-neutral-600"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
@@ -70,12 +70,12 @@ const Hero = () => {
             <span className="font-medium text-neutral-900">10,000+</span>
             <span>Active Students</span>
           </div>
-          <div className="w-1 h-1 rounded-full bg-neutral-300" />
+          <div className="hidden sm:block w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-2">
             <span className="font-medium text-neutral-900">1,000+</span>
             <span>Expert Instructors</span>
           </div>
-          <div className="w-1 h-1 rounded-full bg-neutral-300" />
+          <div className="hidden sm:block w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-2">
             <span className="font-medium text-neutral-900">50+</span>
             <span>Categories</span>
