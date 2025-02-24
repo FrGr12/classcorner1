@@ -30,9 +30,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[220px] sm:w-[300px]">Class</TableHead>
+            <TableHead className="w-[250px] sm:w-[300px]">Class</TableHead>
             <TableHead className="hidden sm:table-cell">Instructor</TableHead>
-            <TableHead className="w-[60px] sm:w-auto">Date</TableHead>
+            <TableHead className="w-[45px] sm:w-auto">Date</TableHead>
             <TableHead className="w-[70px] sm:w-auto">Status</TableHead>
             <TableHead className="hidden sm:table-cell">Price</TableHead>
             <TableHead className="w-[100px] sm:w-[140px] text-right">Actions</TableHead>
@@ -52,7 +52,7 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
               <TableCell className="hidden sm:table-cell text-sm">
                 {classItem.instructor}
               </TableCell>
-              <TableCell className="text-[10px] sm:text-sm whitespace-nowrap">
+              <TableCell className="text-[9px] sm:text-sm whitespace-nowrap px-1 sm:px-4">
                 {classItem.date.toLocaleDateString()}
               </TableCell>
               <TableCell>
