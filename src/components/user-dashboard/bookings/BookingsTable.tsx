@@ -42,12 +42,9 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
           {filteredClasses.map(classItem => (
             <TableRow key={classItem.id}>
               <TableCell className="font-medium">
-                <Link to={`/class/${classItem.id}`} className="hover:text-primary transition-colors line-clamp-1 sm:line-clamp-2 text-xs sm:text-sm">
+                <Link to={`/class/${classItem.id}`} className="hover:text-primary transition-colors line-clamp-2 text-xs sm:text-sm">
                   {classItem.title}
                 </Link>
-                <span className="block sm:hidden text-[10px] text-muted-foreground mt-0.5">
-                  {classItem.instructor}
-                </span>
               </TableCell>
               <TableCell className="hidden sm:table-cell text-sm">
                 {classItem.instructor}
