@@ -26,70 +26,80 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
   getStatusBadgeClass,
 }) => {
   return (
-    <div className="overflow-x-auto -mx-6 px-6 sm:mx-0 sm:px-0">
+    <div className="overflow-x-auto -mx-4 sm:mx-0 px-4 sm:px-0">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[180px] sm:w-[300px] text-sm sm:text-base">Title</TableHead>
-            <TableHead className="text-sm sm:text-base min-w-[100px]">Instructor</TableHead>
-            <TableHead className="text-sm sm:text-base min-w-[100px]">Date</TableHead>
-            <TableHead className="text-sm sm:text-base min-w-[90px]">Status</TableHead>
-            <TableHead className="text-sm sm:text-base min-w-[80px]">Price</TableHead>
-            <TableHead className="text-right text-sm sm:text-base min-w-[140px]">Actions</TableHead>
+            <TableHead className="w-[120px] sm:w-[300px]">Class</TableHead>
+            <TableHead className="hidden sm:table-cell">Instructor</TableHead>
+            <TableHead className="w-[90px] sm:w-auto">Date</TableHead>
+            <TableHead className="w-[80px] sm:w-auto">Status</TableHead>
+            <TableHead className="hidden sm:table-cell">Price</TableHead>
+            <TableHead className="w-[100px] sm:w-[140px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {filteredClasses.map(classItem => (
             <TableRow key={classItem.id}>
-              <TableCell className="font-medium text-xs sm:text-sm">
-                <Link to={`/class/${classItem.id}`} className="hover:text-primary transition-colors line-clamp-2">
+              <TableCell className="font-medium">
+                <Link to={`/class/${classItem.id}`} className="hover:text-primary transition-colors line-clamp-1 sm:line-clamp-2 text-xs sm:text-sm">
                   {classItem.title}
                 </Link>
+                <span className="block sm:hidden text-[10px] text-muted-foreground mt-0.5">
+                  {classItem.instructor}
+                </span>
+                <span className="block sm:hidden text-[10px] text-muted-foreground">
+                  ${classItem.price}
+                </span>
               </TableCell>
-              <TableCell className="text-xs sm:text-sm">{classItem.instructor}</TableCell>
+              <TableCell className="hidden sm:table-cell text-sm">
+                {classItem.instructor}
+              </TableCell>
               <TableCell className="text-xs sm:text-sm whitespace-nowrap">
                 {classItem.date.toLocaleDateString()}
               </TableCell>
-              <TableCell className="text-xs sm:text-sm">
+              <TableCell>
                 <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[10px] sm:text-xs font-medium ${getStatusBadgeClass(classItem.status)}`}>
                   {classItem.status}
                 </span>
               </TableCell>
-              <TableCell className="text-xs sm:text-sm">${classItem.price}</TableCell>
-              <TableCell className="text-right p-2 sm:p-4">
-                <div className="flex justify-end gap-2 sm:gap-4">
+              <TableCell className="hidden sm:table-cell text-sm">
+                ${classItem.price}
+              </TableCell>
+              <TableCell className="p-2 sm:p-4">
+                <div className="flex justify-end gap-1 sm:gap-4">
                   <div className="flex flex-col items-center gap-1">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 bg-red-100 hover:bg-red-200 border-red-200" 
+                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-red-100 hover:bg-red-200 border-red-200" 
                       onClick={() => onAction("cancel", classItem.id)}
                     >
                       <XCircle className="h-3 w-3 sm:h-4 sm:w-4 text-red-700" />
                     </Button>
-                    <span className="text-[10px] sm:text-xs text-neutral-600">Cancel</span>
+                    <span className="text-[8px] sm:text-xs text-neutral-600">Cancel</span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
+                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
                       onClick={() => onAction("message", classItem.id)}
                     >
                       <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
                     </Button>
-                    <span className="text-[10px] sm:text-xs text-neutral-600">Message</span>
+                    <span className="text-[8px] sm:text-xs text-neutral-600">Message</span>
                   </div>
                   <div className="flex flex-col items-center gap-1">
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="h-7 w-7 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
+                      className="h-6 w-6 sm:h-8 sm:w-8 p-0 bg-[#6E44FF]/10 hover:bg-[#6E44FF]/20 border-[#6E44FF]/20" 
                       onClick={() => onAction("share", classItem.id)}
                     >
                       <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-[#6E44FF]" />
                     </Button>
-                    <span className="text-[10px] sm:text-xs text-neutral-600">Share</span>
+                    <span className="text-[8px] sm:text-xs text-neutral-600">Share</span>
                   </div>
                 </div>
               </TableCell>
