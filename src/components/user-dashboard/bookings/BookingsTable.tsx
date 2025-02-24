@@ -30,12 +30,12 @@ const BookingsTable: React.FC<BookingsTableProps> = ({
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[180px] sm:w-[300px]">Class</TableHead>
+            <TableHead className="w-[220px] sm:w-[300px]">Class</TableHead>
             <TableHead className="hidden sm:table-cell">Instructor</TableHead>
-            <TableHead className="w-[70px] sm:w-auto">Date</TableHead>
-            <TableHead className="w-[80px] sm:w-auto">Status</TableHead>
+            <TableHead className="w-[60px] sm:w-auto">Date</TableHead>
+            <TableHead className="w-[70px] sm:w-auto">Status</TableHead>
             <TableHead className="hidden sm:table-cell">Price</TableHead>
-            <TableHead className="w-[90px] sm:w-[140px] text-right">Actions</TableHead>
+            <TableHead className="w-[100px] sm:w-[140px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
