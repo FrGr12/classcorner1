@@ -77,7 +77,7 @@ const router = createBrowserRouter([
 
   // Protected student routes
   {
-    path: "/student-dashboard",
+    path: "/student-dashboard/*",
     element: (
       <AuthGuard>
         <ErrorBoundary>
@@ -85,25 +85,11 @@ const router = createBrowserRouter([
         </ErrorBoundary>
       </AuthGuard>
     ),
-    children: [
-      {
-        path: "bookings",
-        element: <UserDashboard />,
-      },
-      {
-        path: "messages",
-        element: <UserDashboard />,
-      },
-      {
-        path: "preferences",
-        element: <UserDashboard />,
-      },
-    ],
   },
 
   // Protected teacher dashboard routes
   {
-    path: "/dashboard",
+    path: "/dashboard/*",
     element: (
       <AuthGuard>
         <ErrorBoundary>
@@ -111,32 +97,6 @@ const router = createBrowserRouter([
         </ErrorBoundary>
       </AuthGuard>
     ),
-    children: [
-      {
-        path: "contacts",
-        element: <TeacherContacts />,
-      },
-      {
-        path: "contacts/tags",
-        element: <ContactManagement />,
-      },
-      {
-        path: "contacts/add",
-        element: <ContactManagement />,
-      },
-      {
-        path: "inbox",
-        element: <TeacherInbox />,
-      },
-      {
-        path: "create-class",
-        element: <CreateClass />,
-      },
-      {
-        path: "edit-class/:id",
-        element: <EditCourse />,
-      },
-    ],
   },
 
   // Payment routes
