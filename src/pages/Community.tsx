@@ -132,7 +132,8 @@ const Community = () => {
 
         <div className="container mx-auto py-4 px-4">
           <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-            <div className="hidden lg:block">
+            {/* Desktop Sidebar */}
+            <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
               <CommunitySidebar
                 topic={topic}
                 category={category}
@@ -151,8 +152,8 @@ const Community = () => {
             </div>
 
             <main className="min-w-0">
-              <div className="w-full">
-                <div className="flex items-center justify-between mb-4">
+              <div className="w-full space-y-4">
+                <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">Latest Posts</h2>
                   <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
                     <SheetTrigger asChild>
