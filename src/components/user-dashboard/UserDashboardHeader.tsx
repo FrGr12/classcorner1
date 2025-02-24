@@ -5,8 +5,6 @@ import {
   LayoutDashboard,
   MessageSquare,
   CalendarDays,
-  Bell,
-  Bookmark,
   Settings,
   Menu,
 } from "lucide-react";
@@ -25,24 +23,14 @@ const UserDashboardHeader = () => {
       icon: LayoutDashboard,
     },
     {
-      title: "Bookings",
-      href: "/student-dashboard/bookings",
-      icon: CalendarDays,
-    },
-    {
       title: "Messages",
       href: "/student-dashboard/messages",
       icon: MessageSquare,
     },
     {
-      title: "Notifications",
-      href: "/student-dashboard/notifications",
-      icon: Bell,
-    },
-    {
-      title: "Saved Classes",
-      href: "/student-dashboard/saved",
-      icon: Bookmark,
+      title: "Classes and Bookings",
+      href: "/student-dashboard/bookings",
+      icon: CalendarDays,
     },
     {
       title: "Settings",
