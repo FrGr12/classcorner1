@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -23,6 +24,12 @@ const Community = () => {
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('topics');
+  
+  // Initialize the intersection observer ref
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.5,
+    delay: 100
+  });
 
   const { data: groupsData } = useQuery({
     queryKey: ['groups'],
@@ -84,6 +91,13 @@ const Community = () => {
     staleTime: 1000 * 60 * 5
   });
 
+  // Effect to fetch next page when bottom is visible
+  React.useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const handleTopicClick = (topicName: string) => {
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
     setSidebarOpen(false);
@@ -121,6 +135,7 @@ const Community = () => {
     <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
+        {/* Mobile Navigation */}
         <div className="lg:hidden fixed top-[4.5rem] left-0 right-0 z-40 bg-background border-b">
           <div className="flex items-center justify-around p-3">
             <Button 
@@ -174,6 +189,7 @@ const Community = () => {
 
         <div className="container mx-auto py-4 px-4">
           <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+            {/* Desktop Sidebar */}
             <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
               <CommunitySidebar
                 topic={topic}
@@ -221,13 +237,14 @@ const Community = () => {
                         ))}
                       </div>
                     )}
-                    <div ref={ref} className="h-10" />
+                    <div ref={loadMoreRef} className="h-10" />
                   </>
                 )}
               </div>
             </main>
           </div>
 
+          {/* Mobile Sheet */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
             <SheetContent 
               side="left" 
