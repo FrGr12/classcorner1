@@ -118,22 +118,25 @@ const Community = () => {
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
         <div className="border-b bg-card">
-          <div className="container mx-auto py-4 sm:py-6 px-4">
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 text-left">Community</h1>
-                <p className="text-sm sm:text-base text-muted-foreground text-left">
+          <div className="container mx-auto py-4 px-4">
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-1 text-left truncate">Community</h1>
+                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground text-left">
                   Connect with fellow crafters, share experiences, and learn together
                 </p>
               </div>
               <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="lg:hidden">
+                  <Button variant="outline" size="icon" className="lg:hidden shrink-0">
                     <Menu className="h-5 w-5" />
                   </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="w-[280px] sm:w-[300px] p-0">
-                  <div className="h-full overflow-auto py-6 px-4">
+                <SheetContent 
+                  side="left" 
+                  className="w-[240px] sm:w-[280px] p-0 overflow-y-auto"
+                >
+                  <div className="h-full py-4 px-3">
                     <CommunitySidebar
                       topic={topic}
                       category={category}
@@ -162,8 +165,8 @@ const Community = () => {
           </div>
         </div>
 
-        <div className="container mx-auto py-4 sm:py-8 px-4">
-          <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
+        <div className="container mx-auto py-4 px-4">
+          <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
             <div className="hidden lg:block">
               <CommunitySidebar
                 topic={topic}
@@ -182,8 +185,8 @@ const Community = () => {
               />
             </div>
 
-            <main>
-              <div className="max-w-full overflow-x-hidden">
+            <main className="min-w-0">
+              <div className="w-full">
                 <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
                 {isLoading ? (
