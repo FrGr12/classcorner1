@@ -126,41 +126,6 @@ const Community = () => {
                   Connect with fellow crafters, share experiences, and learn together
                 </p>
               </div>
-              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                <SheetTrigger asChild>
-                  <Button variant="outline" size="icon" className="lg:hidden shrink-0">
-                    <Menu className="h-5 w-5" />
-                  </Button>
-                </SheetTrigger>
-                <SheetContent 
-                  side="left" 
-                  className="w-[240px] sm:w-[280px] p-0 overflow-y-auto"
-                >
-                  <div className="h-full py-4 px-3">
-                    <CommunitySidebar
-                      topic={topic}
-                      category={category}
-                      resource={resource}
-                      displayedTopics={displayedTopics || []}
-                      topicsData={topicsData}
-                      groupsData={groupsData}
-                      showAllTopics={showAllTopics}
-                      onTopicClick={handleTopicClick}
-                      onGroupClick={handleGroupClick}
-                      onResourceClick={handleResourceClick}
-                      onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
-                      onAllPostsClick={() => {
-                        navigate('/community/category/all');
-                        setSidebarOpen(false);
-                      }}
-                      onViewAllGroupsClick={() => {
-                        navigate('/community/groups');
-                        setSidebarOpen(false);
-                      }}
-                    />
-                  </div>
-                </SheetContent>
-              </Sheet>
             </div>
           </div>
         </div>
@@ -187,6 +152,46 @@ const Community = () => {
 
             <main className="min-w-0">
               <div className="w-full">
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-xl font-semibold">Latest Posts</h2>
+                  <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                    <SheetTrigger asChild>
+                      <Button variant="outline" size="icon" className="lg:hidden">
+                        <Menu className="h-5 w-5" />
+                        <span className="sr-only">Open menu</span>
+                      </Button>
+                    </SheetTrigger>
+                    <SheetContent 
+                      side="left" 
+                      className="w-[240px] sm:w-[280px] p-0 overflow-y-auto"
+                    >
+                      <div className="h-full py-4 px-3">
+                        <CommunitySidebar
+                          topic={topic}
+                          category={category}
+                          resource={resource}
+                          displayedTopics={displayedTopics || []}
+                          topicsData={topicsData}
+                          groupsData={groupsData}
+                          showAllTopics={showAllTopics}
+                          onTopicClick={handleTopicClick}
+                          onGroupClick={handleGroupClick}
+                          onResourceClick={handleResourceClick}
+                          onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
+                          onAllPostsClick={() => {
+                            navigate('/community/category/all');
+                            setSidebarOpen(false);
+                          }}
+                          onViewAllGroupsClick={() => {
+                            navigate('/community/groups');
+                            setSidebarOpen(false);
+                          }}
+                        />
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                </div>
+                
                 <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
                 {isLoading ? (
