@@ -14,12 +14,12 @@ const MetricsCards = ({ metrics }: MetricsCardsProps) => {
       <Link to="/student-dashboard/bookings" className="w-full">
         <Card className="bg-accent-purple text-white hover:bg-accent-purple/90 transition-colors cursor-pointer h-[120px]">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-base font-medium">Total Classes</CardTitle>
+            <CardTitle className="text-sm font-medium">Classes</CardTitle>
             <CalendarDays className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold">{metrics.totalClasses}</div>
-            <p className="text-xs opacity-90">Classes taken</p>
+            <p className="text-xs opacity-90">Total</p>
           </CardContent>
         </Card>
       </Link>
@@ -27,7 +27,7 @@ const MetricsCards = ({ metrics }: MetricsCardsProps) => {
       <Link to="/student-dashboard/bookings" className="w-full">
         <Card className="bg-accent-purple text-white hover:bg-accent-purple/90 transition-colors cursor-pointer h-[120px]">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-base font-medium">Upcoming Classes</CardTitle>
+            <CardTitle className="text-sm font-medium">Upcoming</CardTitle>
             <Users className="h-4 w-4" />
           </CardHeader>
           <CardContent>
@@ -39,24 +39,24 @@ const MetricsCards = ({ metrics }: MetricsCardsProps) => {
 
       <Card className="bg-accent-purple text-white h-[120px]">
         <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-          <CardTitle className="text-base font-medium">Average Rating</CardTitle>
+          <CardTitle className="text-sm font-medium">Rating</CardTitle>
           <Star className="h-4 w-4" />
         </CardHeader>
         <CardContent>
           <div className="text-xl font-bold">{metrics.averageRating.toFixed(1)}</div>
-          <p className="text-xs opacity-90">From your reviews</p>
+          <p className="text-xs opacity-90">Average</p>
         </CardContent>
       </Card>
 
       <Link to="/student-dashboard/waitlist" className="w-full">
         <Card className="bg-accent-purple text-white hover:bg-accent-purple/90 transition-colors cursor-pointer h-[120px]">
           <CardHeader className="flex flex-row items-center justify-between pb-2 space-y-0">
-            <CardTitle className="text-base font-medium">Waitlist</CardTitle>
+            <CardTitle className="text-sm font-medium">Waitlist</CardTitle>
             <Clock className="h-4 w-4" />
           </CardHeader>
           <CardContent>
             <div className="text-xl font-bold">{metrics.waitlistCount}</div>
-            <p className="text-xs opacity-90">Classes waitlisted</p>
+            <p className="text-xs opacity-90">Classes</p>
           </CardContent>
         </Card>
       </Link>
