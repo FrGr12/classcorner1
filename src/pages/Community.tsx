@@ -122,6 +122,7 @@ const Community = () => {
     <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
+        {/* Mobile Navigation */}
         <div className="lg:hidden fixed top-[4.5rem] left-0 right-0 z-40 bg-background border-b">
           <div className="flex items-center justify-around p-2">
             <Button 
@@ -166,6 +167,7 @@ const Community = () => {
 
         <div className="container mx-auto py-4 px-4">
           <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+            {/* Desktop Sidebar */}
             <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
               <CommunitySidebar
                 topic={topic}
@@ -188,6 +190,7 @@ const Community = () => {
               <div className="w-full space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">Latest Posts</h2>
+                  {/* Mobile Menu Button */}
                   <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
                     <SheetTrigger asChild>
                       <Button variant="outline" size="icon" className="lg:hidden">
