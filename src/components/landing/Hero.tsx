@@ -44,7 +44,7 @@ const Hero = () => {
         >
           <Button 
             size="lg"
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8"
+            className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8 w-[200px]"
             onClick={() => navigate('/browse')}
           >
             Browse Classes
@@ -53,7 +53,7 @@ const Hero = () => {
           <Button 
             variant="outline" 
             size="lg"
-            className="border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+            className="border-accent-purple text-accent-purple hover:bg-accent-purple/10 w-[200px]"
             onClick={() => navigate('/auth', { state: { returnTo: '/dashboard/create-class' } })}
           >
             Become an Instructor
