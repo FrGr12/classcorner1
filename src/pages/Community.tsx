@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -9,6 +10,9 @@ import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommunitySidebar } from "@/components/community/sidebar/CommunitySidebar";
 import { SearchBar } from "@/components/community/search/SearchBar";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 const POSTS_PER_PAGE = 10;
 const INITIAL_TOPICS_TO_SHOW = 10;
@@ -122,13 +126,48 @@ const Community = () => {
                   Connect with fellow crafters, share experiences, and learn together
                 </p>
               </div>
+              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="lg:hidden shrink-0">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent 
+                  side="left" 
+                  className="w-[240px] sm:w-[280px] p-0 overflow-y-auto"
+                >
+                  <div className="h-full py-4 px-3">
+                    <CommunitySidebar
+                      topic={topic}
+                      category={category}
+                      resource={resource}
+                      displayedTopics={displayedTopics || []}
+                      topicsData={topicsData}
+                      groupsData={groupsData}
+                      showAllTopics={showAllTopics}
+                      onTopicClick={handleTopicClick}
+                      onGroupClick={handleGroupClick}
+                      onResourceClick={handleResourceClick}
+                      onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
+                      onAllPostsClick={() => {
+                        navigate('/community/category/all');
+                        setSidebarOpen(false);
+                      }}
+                      onViewAllGroupsClick={() => {
+                        navigate('/community/groups');
+                        setSidebarOpen(false);
+                      }}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
 
         <div className="container mx-auto py-4 px-4">
-          <div className="grid gap-4 sm:grid-cols-[180px_1fr] lg:grid-cols-[240px_1fr]">
-            <aside className="bg-card rounded-lg p-2 h-[calc(100vh-180px)] overflow-y-auto sticky top-24 shrink-0">
+          <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+            <div className="hidden lg:block">
               <CommunitySidebar
                 topic={topic}
                 category={category}
@@ -144,7 +183,7 @@ const Community = () => {
                 onAllPostsClick={() => navigate('/community/category/all')}
                 onViewAllGroupsClick={() => navigate('/community/groups')}
               />
-            </aside>
+            </div>
 
             <main className="min-w-0">
               <div className="w-full">
@@ -153,7 +192,7 @@ const Community = () => {
                 {isLoading ? (
                   <div className="space-y-4">
                     {[...Array(3)].map((_, i) => (
-                      <Skeleton key={i} className="h-24 sm:h-32 w-full" />
+                      <Skeleton key={i} className="h-32 w-full" />
                     ))}
                   </div>
                 ) : (
@@ -167,7 +206,7 @@ const Community = () => {
                     {isFetchingNextPage && (
                       <div className="mt-4 space-y-4">
                         {[...Array(2)].map((_, i) => (
-                          <Skeleton key={i} className="h-24 sm:h-32 w-full" />
+                          <Skeleton key={i} className="h-32 w-full" />
                         ))}
                       </div>
                     )}
