@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -9,49 +10,40 @@ import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommunitySidebar } from "@/components/community/sidebar/CommunitySidebar";
 import { SearchBar } from "@/components/community/search/SearchBar";
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
 
 const POSTS_PER_PAGE = 10;
 const INITIAL_TOPICS_TO_SHOW = 10;
 
 const Community = () => {
   const navigate = useNavigate();
-  const {
-    topic,
-    category,
-    resource
-  } = useParams();
+  const { topic, category, resource } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTopics, setShowAllTopics] = useState(false);
-  const {
-    ref,
-    inView
-  } = useInView();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { ref, inView } = useInView();
 
-  const {
-    data: groupsData
-  } = useQuery({
+  const { data: groupsData } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('community_groups').select('*').order('member_count', {
-        ascending: false
-      });
+      const { data, error } = await supabase
+        .from('community_groups')
+        .select('*')
+        .order('member_count', { ascending: false });
       if (error) throw error;
       return data;
     }
   });
 
-  const {
-    data: topicsData
-  } = useQuery({
+  const { data: topicsData } = useQuery({
     queryKey: ['topics'],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('posts').select('tags').not('tags', 'is', null);
+      const { data, error } = await supabase
+        .from('posts')
+        .select('tags')
+        .not('tags', 'is', null);
       if (error) throw error;
       const tagCounts = data.reduce((acc: Record<string, number>, post) => {
         post.tags?.forEach(tag => {
@@ -59,28 +51,16 @@ const Community = () => {
         });
         return acc;
       }, {});
-      return Object.entries(tagCounts).map(([name, count]) => ({
-        name,
-        count
-      })).sort((a, b) => b.count - a.count);
+      return Object.entries(tagCounts)
+        .map(([name, count]) => ({ name, count }))
+        .sort((a, b) => b.count - a.count);
     }
   });
 
-  const {
-    data,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage,
-    isLoading,
-    error
-  } = useInfiniteQuery({
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, error } = useInfiniteQuery({
     queryKey: ['posts', topic, category, searchQuery],
-    queryFn: async ({
-      pageParam = 0
-    }) => {
-      let query = supabase.from('posts').select('*', {
-        count: 'exact'
-      });
+    queryFn: async ({ pageParam = 0 }) => {
+      let query = supabase.from('posts').select('*', { count: 'exact' });
       if (topic) {
         query = query.contains('tags', [topic]);
       }
@@ -90,13 +70,9 @@ const Community = () => {
       if (searchQuery) {
         query = query.textSearch('search_vector', searchQuery);
       }
-      const {
-        data: posts,
-        error,
-        count
-      } = await query.order('created_at', {
-        ascending: false
-      }).range(pageParam * POSTS_PER_PAGE, (pageParam + 1) * POSTS_PER_PAGE - 1);
+      const { data: posts, error, count } = await query
+        .order('created_at', { ascending: false })
+        .range(pageParam * POSTS_PER_PAGE, (pageParam + 1) * POSTS_PER_PAGE - 1);
       if (error) throw error;
       return {
         posts: posts as Post[],
@@ -111,56 +87,98 @@ const Community = () => {
 
   const handleTopicClick = (topicName: string) => {
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
+    setSidebarOpen(false);
   };
 
   const handleResourceClick = (resourceName: string) => {
     navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
+    setSidebarOpen(false);
   };
 
   const handleGroupClick = (groupId: number) => {
     navigate('/community/groups');
+    setSidebarOpen(false);
   };
 
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
 
   if (error) {
-    return <div className="min-h-screen bg-background pt-24">
+    return (
+      <div className="min-h-screen bg-background pt-24">
         <Navigation />
         <div className="container mx-auto py-8 px-4">
           <p className="text-red-500">Error loading posts: {(error as Error).message}</p>
         </div>
-      </div>;
+      </div>
+    );
   }
 
-  return <>
+  return (
+    <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
         <div className="border-b bg-card">
           <div className="container mx-auto py-4 sm:py-6 px-4">
-            <h1 className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 text-left">Community</h1>
-            <p className="text-sm sm:text-base text-muted-foreground text-left">
-              Connect with fellow crafters, share experiences, and learn together
-            </p>
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-2xl sm:text-4xl font-bold mb-1 sm:mb-2 text-left">Community</h1>
+                <p className="text-sm sm:text-base text-muted-foreground text-left">
+                  Connect with fellow crafters, share experiences, and learn together
+                </p>
+              </div>
+              <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="outline" size="icon" className="lg:hidden">
+                    <Menu className="h-5 w-5" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="left" className="w-[280px] sm:w-[300px] p-0">
+                  <div className="h-full overflow-auto py-6 px-4">
+                    <CommunitySidebar
+                      topic={topic}
+                      category={category}
+                      resource={resource}
+                      displayedTopics={displayedTopics || []}
+                      topicsData={topicsData}
+                      groupsData={groupsData}
+                      showAllTopics={showAllTopics}
+                      onTopicClick={handleTopicClick}
+                      onGroupClick={handleGroupClick}
+                      onResourceClick={handleResourceClick}
+                      onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
+                      onAllPostsClick={() => {
+                        navigate('/community/category/all');
+                        setSidebarOpen(false);
+                      }}
+                      onViewAllGroupsClick={() => {
+                        navigate('/community/groups');
+                        setSidebarOpen(false);
+                      }}
+                    />
+                  </div>
+                </SheetContent>
+              </Sheet>
+            </div>
           </div>
         </div>
 
         <div className="container mx-auto py-4 sm:py-8 px-4">
           <div className="grid gap-6 lg:grid-cols-[300px_1fr]">
-            <div className="lg:block">
-              <CommunitySidebar 
-                topic={topic} 
-                category={category} 
-                resource={resource} 
-                displayedTopics={displayedTopics || []} 
-                topicsData={topicsData} 
-                groupsData={groupsData} 
-                showAllTopics={showAllTopics} 
-                onTopicClick={handleTopicClick} 
-                onGroupClick={handleGroupClick} 
-                onResourceClick={handleResourceClick} 
-                onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)} 
-                onAllPostsClick={() => navigate('/community/category/all')} 
-                onViewAllGroupsClick={() => navigate('/community/groups')} 
+            <div className="hidden lg:block">
+              <CommunitySidebar
+                topic={topic}
+                category={category}
+                resource={resource}
+                displayedTopics={displayedTopics || []}
+                topicsData={topicsData}
+                groupsData={groupsData}
+                showAllTopics={showAllTopics}
+                onTopicClick={handleTopicClick}
+                onGroupClick={handleGroupClick}
+                onResourceClick={handleResourceClick}
+                onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
+                onAllPostsClick={() => navigate('/community/category/all')}
+                onViewAllGroupsClick={() => navigate('/community/groups')}
               />
             </div>
 
@@ -168,21 +186,37 @@ const Community = () => {
               <div className="max-w-full overflow-x-hidden">
                 <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
 
-                {isLoading ? <div className="space-y-4">
-                    {[...Array(3)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
-                  </div> : <>
-                    <CommunityHome topic={topic} category={category} resource={resource} posts={data?.pages.flatMap(page => page.posts) || []} />
-                    {isFetchingNextPage && <div className="mt-4 space-y-4">
-                        {[...Array(2)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
-                      </div>}
+                {isLoading ? (
+                  <div className="space-y-4">
+                    {[...Array(3)].map((_, i) => (
+                      <Skeleton key={i} className="h-32 w-full" />
+                    ))}
+                  </div>
+                ) : (
+                  <>
+                    <CommunityHome
+                      topic={topic}
+                      category={category}
+                      resource={resource}
+                      posts={data?.pages.flatMap(page => page.posts) || []}
+                    />
+                    {isFetchingNextPage && (
+                      <div className="mt-4 space-y-4">
+                        {[...Array(2)].map((_, i) => (
+                          <Skeleton key={i} className="h-32 w-full" />
+                        ))}
+                      </div>
+                    )}
                     <div ref={ref} className="h-10" />
-                  </>}
+                  </>
+                )}
               </div>
             </main>
           </div>
         </div>
       </div>
-    </>;
+    </>
+  );
 };
 
 export default Community;
