@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -152,15 +153,15 @@ const UserBookings = () => {
   }[dialogType] : null;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-semibold mb-2 text-left">Classes & Bookings</h2>
+          <h2 className="text-xl sm:text-2xl font-semibold mb-1 sm:mb-2 text-left">Classes & Bookings</h2>
         </div>
       </div>
 
       <Card>
-        <CardContent className="p-6">
+        <CardContent className="p-4 sm:p-6">
           <FiltersSection
             searchTerm={searchTerm}
             setSearchTerm={setSearchTerm}
@@ -173,7 +174,7 @@ const UserBookings = () => {
             dateFilter={dateFilter}
             setDateFilter={setDateFilter}
             resetFilters={resetFilters}
-            isFiltersActive={isFiltersActive}
+            isFiltersActive={Boolean(titleFilter || instructorFilter || dateFilter || statusFilter !== "all")}
           />
 
           <BookingsTable
@@ -185,7 +186,7 @@ const UserBookings = () => {
       </Card>
 
       <Dialog open={dialogType !== null} onOpenChange={() => handleDialogClose()}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           {dialogContent && (
             <BookingDialogContent
               type={dialogType}

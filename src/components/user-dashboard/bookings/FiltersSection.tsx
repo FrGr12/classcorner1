@@ -36,19 +36,19 @@ const FiltersSection: React.FC<FiltersSectionProps> = ({
   isFiltersActive,
 }) => {
   return (
-    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
-      <div className="flex flex-1 gap-4">
+    <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6">
+      <div className="flex flex-col sm:flex-row flex-1 gap-3 sm:gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder="Search classes..." 
-            className="pl-8" 
+            className="pl-8 text-sm" 
             value={searchTerm} 
             onChange={e => setSearchTerm(e.target.value)} 
           />
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-full sm:w-[180px] text-sm">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -59,41 +59,44 @@ const FiltersSection: React.FC<FiltersSectionProps> = ({
           </SelectContent>
         </Select>
       </div>
-      <div className="flex gap-2">
-        <Button variant="outline" size="icon">
+      <div className="flex gap-2 mt-2 sm:mt-0">
+        <Button variant="outline" size="icon" className="h-9 w-9">
           <Download className="h-4 w-4" />
         </Button>
         <Popover>
           <PopoverTrigger asChild>
             <Button 
               variant="outline" 
-              size="icon" 
-              className={isFiltersActive ? "bg-[#6E44FF] text-white hover:bg-[#6E44FF]/90" : ""}
+              size="icon"
+              className={`h-9 w-9 ${isFiltersActive ? "bg-[#6E44FF] text-white hover:bg-[#6E44FF]/90" : ""}`}
             >
               <Filter className="h-4 w-4" />
             </Button>
           </PopoverTrigger>
-          <PopoverContent className="w-80" align="end">
+          <PopoverContent className="w-[280px] sm:w-80" align="end">
             <div className="space-y-4">
-              <h4 className="font-medium leading-none">Filter Classes</h4>
+              <h4 className="font-medium leading-none text-sm">Filter Classes</h4>
               <div className="space-y-2">
                 <Input 
                   placeholder="Filter by title..." 
                   value={titleFilter} 
-                  onChange={e => setTitleFilter(e.target.value)} 
+                  onChange={e => setTitleFilter(e.target.value)}
+                  className="text-sm"
                 />
                 <Input 
                   placeholder="Filter by instructor..." 
                   value={instructorFilter} 
-                  onChange={e => setInstructorFilter(e.target.value)} 
+                  onChange={e => setInstructorFilter(e.target.value)}
+                  className="text-sm"
                 />
                 <Input 
                   placeholder="Filter by date..." 
                   value={dateFilter} 
-                  onChange={e => setDateFilter(e.target.value)} 
+                  onChange={e => setDateFilter(e.target.value)}
+                  className="text-sm"
                 />
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger>
+                  <SelectTrigger className="text-sm">
                     <SelectValue placeholder="Filter by status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -103,8 +106,8 @@ const FiltersSection: React.FC<FiltersSectionProps> = ({
                     <SelectItem value="saved">Saved</SelectItem>
                   </SelectContent>
                 </Select>
-                {isFiltersActive && (
-                  <Button variant="outline" className="w-full mt-2" onClick={resetFilters}>
+                {Boolean(isFiltersActive) && (
+                  <Button variant="outline" className="w-full mt-2 text-sm" onClick={resetFilters}>
                     Reset Filters
                   </Button>
                 )}
