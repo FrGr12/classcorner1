@@ -7,6 +7,7 @@ import {
   CalendarDays,
   Settings,
   Menu,
+  ArrowLeft,
 } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
@@ -64,7 +65,14 @@ const UserDashboardHeader = () => {
     <header className="bg-white border-b sticky top-0 z-50">
       <div className="px-4 sm:px-6">
         <div className="flex h-16 items-center justify-between">
-          <h1 className="text-lg sm:text-xl font-semibold">Student Dashboard</h1>
+          <div className="flex items-center gap-2">
+            <Link to="/">
+              <Button variant="ghost" size="icon" className="mr-2">
+                <ArrowLeft className="h-5 w-5" />
+              </Button>
+            </Link>
+            <h1 className="text-lg sm:text-xl font-semibold">Student Dashboard</h1>
+          </div>
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden">
