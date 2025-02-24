@@ -37,31 +37,40 @@ export const CommunitySidebar = ({
 }: CommunitySidebarProps) => {
   return (
     <div className="space-y-6">
-      <TopicsList
-        displayedTopics={displayedTopics}
-        topic={topic}
-        category={category}
-        showAllTopics={showAllTopics}
-        topicsData={topicsData}
-        onTopicClick={onTopicClick}
-        onShowAllTopicsToggle={onShowAllTopicsToggle}
-        onAllPostsClick={onAllPostsClick}
-      />
+      <div>
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Popular Topics</h2>
+        <TopicsList
+          displayedTopics={displayedTopics}
+          topic={topic}
+          category={category}
+          showAllTopics={showAllTopics}
+          topicsData={topicsData}
+          onTopicClick={onTopicClick}
+          onShowAllTopicsToggle={onShowAllTopicsToggle}
+          onAllPostsClick={onAllPostsClick}
+        />
+      </div>
 
-      <Separator />
+      <Separator className="my-4" />
       
-      <GroupsList
-        groups={groupsData}
-        onGroupClick={onGroupClick}
-        onViewAllClick={onViewAllGroupsClick}
-      />
+      <div>
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Community Groups</h2>
+        <GroupsList
+          groups={groupsData}
+          onGroupClick={onGroupClick}
+          onViewAllClick={onViewAllGroupsClick}
+        />
+      </div>
 
-      <Separator />
+      <Separator className="my-4" />
 
-      <ResourcesList
-        resource={resource}
-        onResourceClick={onResourceClick}
-      />
+      <div>
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Learning Resources</h2>
+        <ResourcesList
+          resource={resource}
+          onResourceClick={onResourceClick}
+        />
+      </div>
     </div>
   );
 };
