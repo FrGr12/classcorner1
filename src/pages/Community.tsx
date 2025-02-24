@@ -9,9 +9,9 @@ import { useInView } from "react-intersection-observer";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CommunitySidebar } from "@/components/community/sidebar/CommunitySidebar";
 import { SearchBar } from "@/components/community/search/SearchBar";
-import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, Users, BookOpen, Hash } from "lucide-react";
+import { Users, BookOpen, Hash } from "lucide-react";
 
 const POSTS_PER_PAGE = 10;
 const INITIAL_TOPICS_TO_SHOW = 10;
@@ -23,7 +23,6 @@ const Community = () => {
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('topics');
-  const { ref, inView } = useInView();
 
   const { data: groupsData } = useQuery({
     queryKey: ['groups'],
@@ -122,32 +121,40 @@ const Community = () => {
     <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
-        {/* Mobile Navigation */}
         <div className="lg:hidden fixed top-[4.5rem] left-0 right-0 z-40 bg-background border-b">
-          <div className="flex items-center justify-around p-2">
+          <div className="flex items-center justify-around p-3">
             <Button 
               variant="ghost" 
-              className={`flex flex-col items-center gap-1 h-auto py-2 ${activeTab === 'topics' ? 'text-accent-purple' : ''}`}
+              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
+                ${activeTab === 'topics' 
+                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                  : 'hover:bg-accent-purple/5'}`}
               onClick={() => handleTabClick('topics')}
             >
               <Hash className="h-5 w-5" />
-              <span className="text-xs">Topics</span>
+              <span className="text-sm font-medium">Topics</span>
             </Button>
             <Button 
               variant="ghost"
-              className={`flex flex-col items-center gap-1 h-auto py-2 ${activeTab === 'groups' ? 'text-accent-purple' : ''}`}
+              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
+                ${activeTab === 'groups' 
+                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                  : 'hover:bg-accent-purple/5'}`}
               onClick={() => handleTabClick('groups')}
             >
               <Users className="h-5 w-5" />
-              <span className="text-xs">Groups</span>
+              <span className="text-sm font-medium">Groups</span>
             </Button>
             <Button 
               variant="ghost"
-              className={`flex flex-col items-center gap-1 h-auto py-2 ${activeTab === 'resources' ? 'text-accent-purple' : ''}`}
+              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
+                ${activeTab === 'resources' 
+                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                  : 'hover:bg-accent-purple/5'}`}
               onClick={() => handleTabClick('resources')}
             >
               <BookOpen className="h-5 w-5" />
-              <span className="text-xs">Resources</span>
+              <span className="text-sm font-medium">Resources</span>
             </Button>
           </div>
         </div>
@@ -167,7 +174,6 @@ const Community = () => {
 
         <div className="container mx-auto py-4 px-4">
           <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-            {/* Desktop Sidebar */}
             <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
               <CommunitySidebar
                 topic={topic}
@@ -186,56 +192,10 @@ const Community = () => {
               />
             </div>
 
-            <main className="min-w-0 mt-16 lg:mt-0">
+            <main className="min-w-0 mt-20 lg:mt-0">
               <div className="w-full space-y-4">
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-semibold">Latest Posts</h2>
-                  {/* Mobile Menu Button */}
-                  <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-                    <SheetTrigger asChild>
-                      <Button variant="outline" size="icon" className="lg:hidden">
-                        <Menu className="h-5 w-5" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </SheetTrigger>
-                    <SheetContent 
-                      side="left" 
-                      className="w-[240px] sm:w-[280px] p-0 overflow-y-auto"
-                    >
-                      <div className="h-full py-4 px-3">
-                        <CommunitySidebar
-                          topic={topic}
-                          category={category}
-                          resource={resource}
-                          displayedTopics={displayedTopics || []}
-                          topicsData={topicsData}
-                          groupsData={groupsData}
-                          showAllTopics={showAllTopics}
-                          onTopicClick={(name) => {
-                            handleTopicClick(name);
-                            setSidebarOpen(false);
-                          }}
-                          onGroupClick={(id) => {
-                            handleGroupClick(id);
-                            setSidebarOpen(false);
-                          }}
-                          onResourceClick={(name) => {
-                            handleResourceClick(name);
-                            setSidebarOpen(false);
-                          }}
-                          onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
-                          onAllPostsClick={() => {
-                            navigate('/community/category/all');
-                            setSidebarOpen(false);
-                          }}
-                          onViewAllGroupsClick={() => {
-                            navigate('/community/groups');
-                            setSidebarOpen(false);
-                          }}
-                        />
-                      </div>
-                    </SheetContent>
-                  </Sheet>
                 </div>
                 
                 <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
@@ -267,6 +227,46 @@ const Community = () => {
               </div>
             </main>
           </div>
+
+          <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
+            <SheetContent 
+              side="left" 
+              className="w-[280px] sm:w-[320px] p-0"
+            >
+              <div className="h-full py-4 px-3">
+                <CommunitySidebar
+                  topic={topic}
+                  category={category}
+                  resource={resource}
+                  displayedTopics={displayedTopics || []}
+                  topicsData={topicsData}
+                  groupsData={groupsData}
+                  showAllTopics={showAllTopics}
+                  onTopicClick={(name) => {
+                    handleTopicClick(name);
+                    setSidebarOpen(false);
+                  }}
+                  onGroupClick={(id) => {
+                    handleGroupClick(id);
+                    setSidebarOpen(false);
+                  }}
+                  onResourceClick={(name) => {
+                    handleResourceClick(name);
+                    setSidebarOpen(false);
+                  }}
+                  onShowAllTopicsToggle={() => setShowAllTopics(!showAllTopics)}
+                  onAllPostsClick={() => {
+                    navigate('/community/category/all');
+                    setSidebarOpen(false);
+                  }}
+                  onViewAllGroupsClick={() => {
+                    navigate('/community/groups');
+                    setSidebarOpen(false);
+                  }}
+                />
+              </div>
+            </SheetContent>
+          </Sheet>
         </div>
       </div>
     </>

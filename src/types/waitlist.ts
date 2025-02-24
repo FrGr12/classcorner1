@@ -19,26 +19,3 @@ export interface WaitlistEntry {
     last_name: string;
   } | null;
 }
-
-export interface AttendanceRecord {
-  id: number;
-  booking_id: number;
-  session_id: number;
-  attendance_status: 'present' | 'absent' | 'pending';
-  notes: string | null;
-  marked_at: string | null;
-  marked_by: string | null;
-  created_at: string;
-  updated_at: string;
-  booking: {
-    student: {
-      first_name: string;
-      last_name: string;
-    };
-  };
-}
-
-export interface Session {
-  id: number;
-  start_time: string;
-}
