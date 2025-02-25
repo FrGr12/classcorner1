@@ -1,16 +1,24 @@
-
 import { Separator } from "@/components/ui/separator";
 import { TopicsList } from "./TopicsList";
 import { GroupsList } from "./GroupsList";
 import { ResourcesList } from "./ResourcesList";
-
 interface CommunitySidebarProps {
   topic?: string;
   category?: string;
   resource?: string;
-  displayedTopics: Array<{ name: string; count: number }>;
-  topicsData?: Array<{ name: string; count: number }>;
-  groupsData?: Array<{ id: number; name: string; type: string }>;
+  displayedTopics: Array<{
+    name: string;
+    count: number;
+  }>;
+  topicsData?: Array<{
+    name: string;
+    count: number;
+  }>;
+  groupsData?: Array<{
+    id: number;
+    name: string;
+    type: string;
+  }>;
   showAllTopics: boolean;
   onTopicClick: (topicName: string) => void;
   onGroupClick: (groupId: number) => void;
@@ -19,7 +27,6 @@ interface CommunitySidebarProps {
   onAllPostsClick: () => void;
   onViewAllGroupsClick: () => void;
 }
-
 export const CommunitySidebar = ({
   topic,
   category,
@@ -33,44 +40,26 @@ export const CommunitySidebar = ({
   onResourceClick,
   onShowAllTopicsToggle,
   onAllPostsClick,
-  onViewAllGroupsClick,
+  onViewAllGroupsClick
 }: CommunitySidebarProps) => {
-  return (
-    <div className="space-y-6">
+  return <div className="space-y-6">
       <div>
-        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Popular Topics</h2>
-        <TopicsList
-          displayedTopics={displayedTopics}
-          topic={topic}
-          category={category}
-          showAllTopics={showAllTopics}
-          topicsData={topicsData}
-          onTopicClick={onTopicClick}
-          onShowAllTopicsToggle={onShowAllTopicsToggle}
-          onAllPostsClick={onAllPostsClick}
-        />
+        
+        <TopicsList displayedTopics={displayedTopics} topic={topic} category={category} showAllTopics={showAllTopics} topicsData={topicsData} onTopicClick={onTopicClick} onShowAllTopicsToggle={onShowAllTopicsToggle} onAllPostsClick={onAllPostsClick} />
       </div>
 
       <Separator className="my-4" />
       
       <div>
-        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Community Groups</h2>
-        <GroupsList
-          groups={groupsData}
-          onGroupClick={onGroupClick}
-          onViewAllClick={onViewAllGroupsClick}
-        />
+        
+        <GroupsList groups={groupsData} onGroupClick={onGroupClick} onViewAllClick={onViewAllGroupsClick} />
       </div>
 
       <Separator className="my-4" />
 
       <div>
-        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Learning Resources</h2>
-        <ResourcesList
-          resource={resource}
-          onResourceClick={onResourceClick}
-        />
+        
+        <ResourcesList resource={resource} onResourceClick={onResourceClick} />
       </div>
-    </div>
-  );
+    </div>;
 };
