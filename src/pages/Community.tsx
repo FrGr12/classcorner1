@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -11,7 +12,7 @@ import { CommunitySidebar } from "@/components/community/sidebar/CommunitySideba
 import { SearchBar } from "@/components/community/search/SearchBar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Users, BookOpen, Hash, Filter } from "lucide-react";
+import { Users, BookOpen, Hash, Filter, PlusCircle } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -254,6 +255,13 @@ const Community = () => {
                   Connect with fellow crafters, share experiences, and learn together
                 </p>
               </div>
+              <Button 
+                className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+                onClick={() => {/* Add your new post handler here */}}
+              >
+                <PlusCircle className="h-4 w-4 mr-2" />
+                New Post
+              </Button>
             </div>
           </div>
         </div>
