@@ -1,5 +1,6 @@
+
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ChevronUp, Menu } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,22 +49,36 @@ export const TopicsList = ({
       <div className="block lg:hidden px-3 mb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="w-full justify-between">
+            <Button 
+              variant="outline" 
+              className="w-full justify-between bg-background border-input"
+            >
               <span className="truncate">{currentTopic}</span>
               <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-[calc(100vw-32px)] max-w-[400px]" align="start">
+          <DropdownMenuContent 
+            className="w-[calc(100vw-32px)] max-w-[400px] bg-popover" 
+            align="start"
+            sideOffset={4}
+          >
             <DropdownMenuLabel>Select Topic</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onAllPostsClick}>
+            <DropdownMenuItem 
+              className="focus:bg-accent cursor-pointer"
+              onClick={() => {
+                onAllPostsClick();
+              }}
+            >
               All Posts
             </DropdownMenuItem>
             {displayedTopics?.map(topicItem => (
               <DropdownMenuItem
                 key={topicItem.name}
-                onClick={() => onTopicClick(topicItem.name)}
-                className="flex justify-between"
+                className="flex justify-between focus:bg-accent cursor-pointer"
+                onClick={() => {
+                  onTopicClick(topicItem.name);
+                }}
               >
                 <span>{topicItem.name}</span>
                 <span className="text-muted-foreground text-xs">
