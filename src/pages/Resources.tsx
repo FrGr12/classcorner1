@@ -32,7 +32,7 @@ export default function Resources() {
             <div className="flex items-center justify-between">
               <div>
                 <h1 className="sm:text-3xl lg:text-4xl font-bold mb-2 text-left text-xl">Learning Resources</h1>
-                <p className="text-muted-foreground">
+                <p className="text-muted-foreground text-sm text-left">
                   Discover guides, tutorials, and expert tips to enhance your crafting journey
                 </p>
               </div>
