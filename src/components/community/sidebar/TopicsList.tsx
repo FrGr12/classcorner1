@@ -43,7 +43,7 @@ export const TopicsList = ({
 
   return (
     <div className="space-y-1">
-      <h3 className="px-3 py-2 text-left font-semibold">Topics</h3>
+      <h3 className="px-3 py-2 text-left font-semibold text-accent-purple">Topics</h3>
       
       {/* Mobile dropdown */}
       <div className="block lg:hidden px-3 mb-4">

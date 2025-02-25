@@ -1,7 +1,9 @@
+
 import { Separator } from "@/components/ui/separator";
 import { TopicsList } from "./TopicsList";
 import { GroupsList } from "./GroupsList";
 import { ResourcesList } from "./ResourcesList";
+
 interface CommunitySidebarProps {
   topic?: string;
   category?: string;
@@ -27,6 +29,7 @@ interface CommunitySidebarProps {
   onAllPostsClick: () => void;
   onViewAllGroupsClick: () => void;
 }
+
 export const CommunitySidebar = ({
   topic,
   category,
@@ -42,24 +45,42 @@ export const CommunitySidebar = ({
   onAllPostsClick,
   onViewAllGroupsClick
 }: CommunitySidebarProps) => {
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <div>
-        
-        <TopicsList displayedTopics={displayedTopics} topic={topic} category={category} showAllTopics={showAllTopics} topicsData={topicsData} onTopicClick={onTopicClick} onShowAllTopicsToggle={onShowAllTopicsToggle} onAllPostsClick={onAllPostsClick} />
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Popular Topics</h2>
+        <TopicsList 
+          displayedTopics={displayedTopics} 
+          topic={topic} 
+          category={category} 
+          showAllTopics={showAllTopics} 
+          topicsData={topicsData} 
+          onTopicClick={onTopicClick} 
+          onShowAllTopicsToggle={onShowAllTopicsToggle} 
+          onAllPostsClick={onAllPostsClick} 
+        />
       </div>
 
       <Separator className="my-4" />
       
       <div>
-        
-        <GroupsList groups={groupsData} onGroupClick={onGroupClick} onViewAllClick={onViewAllGroupsClick} />
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Community Groups</h2>
+        <GroupsList 
+          groups={groupsData} 
+          onGroupClick={onGroupClick} 
+          onViewAllClick={onViewAllGroupsClick} 
+        />
       </div>
 
       <Separator className="my-4" />
 
       <div>
-        
-        <ResourcesList resource={resource} onResourceClick={onResourceClick} />
+        <h2 className="text-lg font-semibold mb-2 px-3 text-accent-purple">Learning Resources</h2>
+        <ResourcesList 
+          resource={resource} 
+          onResourceClick={onResourceClick} 
+        />
       </div>
-    </div>;
+    </div>
+  );
 };
