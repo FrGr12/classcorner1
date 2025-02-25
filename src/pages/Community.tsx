@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
@@ -23,7 +22,11 @@ const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState('topics');
+  const [activeTab, setActiveTab] = useState(() => {
+    if (topic) return 'topics';
+    if (resource) return 'resources';
+    return 'topics';
+  });
   
   // Initialize the intersection observer ref
   const { ref: loadMoreRef, inView } = useInView({
@@ -91,7 +94,6 @@ const Community = () => {
     staleTime: 1000 * 60 * 5
   });
 
-  // Effect to fetch next page when bottom is visible
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -99,16 +101,19 @@ const Community = () => {
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   const handleTopicClick = (topicName: string) => {
+    setActiveTab('topics');
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
     setSidebarOpen(false);
   };
 
   const handleResourceClick = (resourceName: string) => {
+    setActiveTab('resources');
     navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
     setSidebarOpen(false);
   };
 
   const handleGroupClick = (groupId: number) => {
+    setActiveTab('groups');
     navigate('/community/groups');
     setSidebarOpen(false);
   };
@@ -116,6 +121,19 @@ const Community = () => {
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     setSidebarOpen(true);
+    
+    // Synchronize navigation with tab selection
+    switch (tab) {
+      case 'topics':
+        navigate('/community/category/all');
+        break;
+      case 'groups':
+        navigate('/community/groups');
+        break;
+      case 'resources':
+        navigate('/community/resources');
+        break;
+    }
   };
 
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
@@ -135,45 +153,6 @@ const Community = () => {
     <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
-        {/* Mobile Navigation */}
-        <div className="lg:hidden fixed top-[4.5rem] left-0 right-0 z-40 bg-background border-b">
-          <div className="flex items-center justify-around p-3">
-            <Button 
-              variant="ghost" 
-              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
-                ${activeTab === 'topics' 
-                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                  : 'hover:bg-accent-purple/5'}`}
-              onClick={() => handleTabClick('topics')}
-            >
-              <Hash className="h-5 w-5" />
-              <span className="text-sm font-medium">Topics</span>
-            </Button>
-            <Button 
-              variant="ghost"
-              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
-                ${activeTab === 'groups' 
-                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                  : 'hover:bg-accent-purple/5'}`}
-              onClick={() => handleTabClick('groups')}
-            >
-              <Users className="h-5 w-5" />
-              <span className="text-sm font-medium">Groups</span>
-            </Button>
-            <Button 
-              variant="ghost"
-              className={`flex flex-col items-center w-24 gap-2 h-auto py-3 rounded-lg transition-colors
-                ${activeTab === 'resources' 
-                  ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                  : 'hover:bg-accent-purple/5'}`}
-              onClick={() => handleTabClick('resources')}
-            >
-              <BookOpen className="h-5 w-5" />
-              <span className="text-sm font-medium">Resources</span>
-            </Button>
-          </div>
-        </div>
-
         <div className="border-b bg-card">
           <div className="container mx-auto py-4 px-4">
             <div className="flex items-center justify-between gap-4">
@@ -208,10 +187,53 @@ const Community = () => {
               />
             </div>
 
-            <main className="min-w-0 mt-20 lg:mt-0">
+            <main className="min-w-0">
               <div className="w-full space-y-4">
+                {/* Mobile Navigation - Moved closer to content */}
+                <div className="lg:hidden bg-background border rounded-lg">
+                  <div className="flex items-center justify-around p-2">
+                    <Button 
+                      variant="ghost" 
+                      className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                        ${activeTab === 'topics' 
+                          ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                          : 'hover:bg-accent-purple/5'}`}
+                      onClick={() => handleTabClick('topics')}
+                    >
+                      <Hash className="h-5 w-5" />
+                      <span className="text-sm font-medium">Topics</span>
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                        ${activeTab === 'groups' 
+                          ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                          : 'hover:bg-accent-purple/5'}`}
+                      onClick={() => handleTabClick('groups')}
+                    >
+                      <Users className="h-5 w-5" />
+                      <span className="text-sm font-medium">Groups</span>
+                    </Button>
+                    <Button 
+                      variant="ghost"
+                      className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                        ${activeTab === 'resources' 
+                          ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
+                          : 'hover:bg-accent-purple/5'}`}
+                      onClick={() => handleTabClick('resources')}
+                    >
+                      <BookOpen className="h-5 w-5" />
+                      <span className="text-sm font-medium">Resources</span>
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="flex items-center justify-between">
-                  <h2 className="text-xl font-semibold">Latest Posts</h2>
+                  <h2 className="text-xl font-semibold">
+                    {activeTab === 'topics' && 'Latest Posts'}
+                    {activeTab === 'groups' && 'Community Groups'}
+                    {activeTab === 'resources' && 'Learning Resources'}
+                  </h2>
                 </div>
                 
                 <SearchBar searchQuery={searchQuery} onSearchChange={setSearchQuery} />
