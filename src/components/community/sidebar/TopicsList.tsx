@@ -1,13 +1,7 @@
 
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import * as React from "react";
 
 interface TopicsListProps {
   displayedTopics: Array<{
@@ -36,6 +30,8 @@ export const TopicsList = ({
   onShowAllTopicsToggle,
   onAllPostsClick
 }: TopicsListProps) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  
   const currentTopic = topic 
     ? displayedTopics?.find(t => t.name.toLowerCase().replace(/ /g, '-') === topic)?.name 
     : 'All Topics';
@@ -46,37 +42,46 @@ export const TopicsList = ({
       
       {/* Mobile dropdown */}
       <div className="block lg:hidden px-3 mb-4">
-        <Select 
-          value={currentTopic} 
-          onValueChange={(value) => {
-            if (value === "all") {
-              onAllPostsClick();
-            } else {
-              onTopicClick(value);
-            }
-          }}
-        >
-          <SelectTrigger className="w-full bg-background">
-            <SelectValue placeholder="Select a topic" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Posts</SelectItem>
-            {displayedTopics?.map(topicItem => (
-              <SelectItem 
-                key={topicItem.name} 
-                value={topicItem.name}
-                className="flex justify-between"
+        <div className="relative">
+          <Button 
+            variant="outline" 
+            className="w-full justify-between bg-background"
+            onClick={() => setIsOpen(!isOpen)}
+          >
+            <span className="truncate">{currentTopic}</span>
+            <ChevronDown className={`ml-2 h-4 w-4 shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
+          </Button>
+          
+          {isOpen && (
+            <div className="absolute top-full left-0 w-full mt-2 py-1 bg-white border rounded-md shadow-lg z-50">
+              <button
+                className="w-full px-3 py-2 text-left text-sm hover:bg-accent/50"
+                onClick={() => {
+                  onAllPostsClick();
+                  setIsOpen(false);
+                }}
               >
-                <div className="flex justify-between w-full">
+                All Posts
+              </button>
+              
+              {displayedTopics?.map(topicItem => (
+                <button
+                  key={topicItem.name}
+                  className="w-full px-3 py-2 text-left text-sm hover:bg-accent/50 flex justify-between"
+                  onClick={() => {
+                    onTopicClick(topicItem.name);
+                    setIsOpen(false);
+                  }}
+                >
                   <span>{topicItem.name}</span>
                   <span className="text-muted-foreground text-xs">
                     {topicItem.count}
                   </span>
-                </div>
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       
       {/* Desktop navigation */}
