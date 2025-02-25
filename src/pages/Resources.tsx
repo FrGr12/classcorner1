@@ -4,16 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Users, BookOpen, Hash } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-
 export default function Resources() {
   const navigate = useNavigate();
   const location = useLocation();
   const [activeTab, setActiveTab] = useState("resources");
-
   useEffect(() => {
     setActiveTab('resources');
   }, [location.pathname]);
-
   const handleTabClick = (tab: string) => {
     switch (tab) {
       case 'topics':
@@ -27,16 +24,14 @@ export default function Resources() {
         break;
     }
   };
-
-  return (
-    <>
+  return <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
         <div className="border-b bg-card">
-          <div className="container mx-auto py-6 px-4">
+          <div className="container mx-auto px-4 py-[42px]">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Learning Resources</h1>
+                <h1 className="sm:text-3xl lg:text-4xl font-bold mb-2 text-left text-xl">Learning Resources</h1>
                 <p className="text-muted-foreground">
                   Discover guides, tutorials, and expert tips to enhance your crafting journey
                 </p>
@@ -49,36 +44,18 @@ export default function Resources() {
           {/* Mobile Navigation */}
           <div className="lg:hidden bg-background border rounded-lg mb-6">
             <div className="flex items-center justify-around p-2">
-              <Button 
-                variant="ghost" 
-                className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
-                  ${activeTab === 'topics' 
-                    ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                    : 'hover:bg-accent-purple/5'}`}
-                onClick={() => handleTabClick('topics')}
-              >
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'topics' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('topics')}>
                 <Hash className="h-5 w-5" />
                 <span className="text-sm font-medium">Topics</span>
               </Button>
-              <Button 
-                variant="ghost"
-                className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
-                  ${activeTab === 'groups' 
-                    ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                    : 'hover:bg-accent-purple/5'}`}
-                onClick={() => handleTabClick('groups')}
-              >
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'groups' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('groups')}>
                 <Users className="h-5 w-5" />
                 <span className="text-sm font-medium">Groups</span>
               </Button>
-              <Button 
-                variant="ghost"
-                className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
-                  ${activeTab === 'resources' 
-                    ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' 
-                    : 'hover:bg-accent-purple/5'}`}
-                onClick={() => handleTabClick('resources')}
-              >
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'resources' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('resources')}>
                 <BookOpen className="h-5 w-5" />
                 <span className="text-sm font-medium">Resources</span>
               </Button>
@@ -116,6 +93,5 @@ export default function Resources() {
           </div>
         </div>
       </div>
-    </>
-  );
+    </>;
 }
