@@ -2,13 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface TopicsListProps {
   displayedTopics: Array<{
@@ -47,43 +46,37 @@ export const TopicsList = ({
       
       {/* Mobile dropdown */}
       <div className="block lg:hidden px-3 mb-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button 
-              variant="outline" 
-              className="w-full justify-between bg-background border-input"
-            >
-              <span className="truncate">{currentTopic}</span>
-              <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            className="w-[calc(100vw-32px)] max-w-[400px] bg-white" 
-            align="start"
-            sideOffset={4}
-          >
-            <DropdownMenuLabel className="font-semibold">Select Topic</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem 
-              className="focus:bg-accent/50 cursor-pointer"
-              onClick={onAllPostsClick}
-            >
-              All Posts
-            </DropdownMenuItem>
+        <Select 
+          value={currentTopic} 
+          onValueChange={(value) => {
+            if (value === "all") {
+              onAllPostsClick();
+            } else {
+              onTopicClick(value);
+            }
+          }}
+        >
+          <SelectTrigger className="w-full bg-background">
+            <SelectValue placeholder="Select a topic" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Posts</SelectItem>
             {displayedTopics?.map(topicItem => (
-              <DropdownMenuItem
-                key={topicItem.name}
-                className="flex justify-between focus:bg-accent/50 cursor-pointer"
-                onClick={() => onTopicClick(topicItem.name)}
+              <SelectItem 
+                key={topicItem.name} 
+                value={topicItem.name}
+                className="flex justify-between"
               >
-                <span>{topicItem.name}</span>
-                <span className="text-muted-foreground text-xs">
-                  {topicItem.count}
-                </span>
-              </DropdownMenuItem>
+                <div className="flex justify-between w-full">
+                  <span>{topicItem.name}</span>
+                  <span className="text-muted-foreground text-xs">
+                    {topicItem.count}
+                  </span>
+                </div>
+              </SelectItem>
             ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SelectContent>
+        </Select>
       </div>
       
       {/* Desktop navigation */}
