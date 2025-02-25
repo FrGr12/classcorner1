@@ -1,13 +1,25 @@
 
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Users, BookOpen, Hash } from "lucide-react";
 import Navigation from "@/components/landing/Navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function Resources() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("resources");
+
+  useEffect(() => {
+    if (location.pathname.includes('/community/resources')) {
+      setActiveTab('resources');
+    } else if (location.pathname.includes('/community/groups')) {
+      setActiveTab('groups');
+    } else {
+      setActiveTab('topics');
+    }
+  }, [location.pathname]);
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
@@ -33,7 +45,7 @@ export default function Resources() {
           <div className="container mx-auto py-6 px-4">
             <div className="flex items-center justify-between">
               <div>
-                <h1 className="text-4xl font-bold mb-2">Learning Resources</h1>
+                <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2">Learning Resources</h1>
                 <p className="text-muted-foreground">
                   Discover guides, tutorials, and expert tips to enhance your crafting journey
                 </p>
@@ -84,18 +96,32 @@ export default function Resources() {
 
           {/* Resources Content */}
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            <div className="p-6 border rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">Beginner Guides</h3>
-              <p className="text-muted-foreground">Essential guides for getting started with various crafts</p>
-            </div>
-            <div className="p-6 border rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">Video Tutorials</h3>
-              <p className="text-muted-foreground">Step-by-step video guides for different techniques</p>
-            </div>
-            <div className="p-6 border rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">Expert Tips</h3>
-              <p className="text-muted-foreground">Advanced techniques and professional insights</p>
-            </div>
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Beginner Guides</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Essential guides for getting started with various crafts</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Video Tutorials</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Step-by-step video guides for different techniques</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Expert Tips</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Advanced techniques and professional insights</p>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </div>
