@@ -11,9 +11,17 @@ import { CommunitySidebar } from "@/components/community/sidebar/CommunitySideba
 import { SearchBar } from "@/components/community/search/SearchBar";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Users, BookOpen, Hash } from "lucide-react";
+import { Users, BookOpen, Hash, Filter } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const POSTS_PER_PAGE = 10;
 const INITIAL_TOPICS_TO_SHOW = 10;
+
 const Community = () => {
   const navigate = useNavigate();
   const {
@@ -36,6 +44,7 @@ const Community = () => {
     if (window.location.pathname.includes('/resources')) return 'resources';
     return 'topics';
   });
+
   const {
     data: groupsData
   } = useQuery({
@@ -51,6 +60,7 @@ const Community = () => {
       return data;
     }
   });
+
   const {
     data: topicsData
   } = useQuery({
@@ -73,6 +83,7 @@ const Community = () => {
       })).sort((a, b) => b.count - a.count);
     }
   });
+
   const {
     data,
     fetchNextPage,
@@ -115,6 +126,7 @@ const Community = () => {
     initialPageParam: 0,
     staleTime: 1000 * 60 * 5
   });
+
   useEffect(() => {
     if (window.location.pathname.includes('/groups')) {
       setActiveTab('groups');
@@ -124,26 +136,31 @@ const Community = () => {
       setActiveTab('topics');
     }
   }, [window.location.pathname]);
+
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
   const handleTopicClick = (topicName: string) => {
     setActiveTab('topics');
     navigate(`/community/topic/${topicName.toLowerCase().replace(/ /g, '-')}`);
     setSidebarOpen(false);
   };
+
   const handleResourceClick = (resourceName: string) => {
     setActiveTab('resources');
     navigate(`/community/resource/${resourceName.toLowerCase().replace(/ /g, '-')}`);
     setSidebarOpen(false);
   };
+
   const handleGroupClick = (groupId: number) => {
     setActiveTab('groups');
     navigate('/community/groups');
     setSidebarOpen(false);
   };
+
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
     switch (tab) {
@@ -158,7 +175,9 @@ const Community = () => {
         break;
     }
   };
+
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
+
   const renderContent = () => {
     switch (activeTab) {
       case 'groups':
@@ -175,6 +194,33 @@ const Community = () => {
           </div>;
       default:
         return <>
+            <div className="lg:hidden mb-4">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full justify-between">
+                    <div className="flex items-center gap-2">
+                      <Filter className="h-4 w-4" />
+                      <span>Filter Posts</span>
+                    </div>
+                    <Hash className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[calc(100vw-32px)] max-w-[400px]">
+                  {displayedTopics?.map(topicItem => (
+                    <DropdownMenuItem
+                      key={topicItem.name}
+                      className="flex justify-between"
+                      onClick={() => onTopicClick(topicItem.name)}
+                    >
+                      <span>{topicItem.name}</span>
+                      <span className="text-muted-foreground text-xs">
+                        {topicItem.count}
+                      </span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
             <CommunityHome topic={topic} category={category} resource={resource} posts={data?.pages.flatMap(page => page.posts) || []} />
             {isFetchingNextPage && <div className="mt-4 space-y-4">
                 {[...Array(2)].map((_, i) => <Skeleton key={i} className="h-32 w-full" />)}
@@ -183,6 +229,7 @@ const Community = () => {
           </>;
     }
   };
+
   if (error) {
     return <div className="min-h-screen bg-background pt-24">
         <Navigation />
@@ -191,6 +238,7 @@ const Community = () => {
         </div>
       </div>;
   }
+
   return <>
       <Navigation />
       <div className="min-h-screen bg-background pt-24">
@@ -278,4 +326,5 @@ const Community = () => {
       </div>
     </>;
 };
+
 export default Community;
