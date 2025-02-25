@@ -23,12 +23,17 @@ const Community = () => {
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
+  const { ref: loadMoreRef, inView } = useInView({
+    threshold: 0.5,
+    delay: 100
+  });
+
   const [activeTab, setActiveTab] = useState(() => {
     if (window.location.pathname.includes('/groups')) return 'groups';
     if (window.location.pathname.includes('/resource')) return 'resources';
     return 'topics';
   });
-  
+
   const { data: groupsData } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
