@@ -83,10 +83,7 @@ export function CreatePostDialog() {
   };
   return <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" size="sm" className="text-primary-foreground bg-accent-purple">
-          <PlusCircle className="w-4 h-4 mr-2" />
-          New Post
-        </Button>
+        
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
