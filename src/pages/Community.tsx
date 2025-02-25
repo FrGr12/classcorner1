@@ -199,7 +199,7 @@ const Community = () => {
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0">
                 <h1 className="text-xl sm:text-2xl lg:text-4xl font-bold mb-1 text-left truncate">Community</h1>
-                <p className="text-xs sm:text-sm lg:text-base text-muted-foreground text-left">
+                <p className="sm:text-sm lg:text-base text-muted-foreground text-left text-sm">
                   Connect with fellow crafters, share experiences, and learn together
                 </p>
               </div>
