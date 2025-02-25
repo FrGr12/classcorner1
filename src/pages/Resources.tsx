@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -12,18 +11,10 @@ export default function Resources() {
   const [activeTab, setActiveTab] = useState("resources");
 
   useEffect(() => {
-    if (location.pathname.includes('/community/resources')) {
-      setActiveTab('resources');
-    } else if (location.pathname.includes('/community/groups')) {
-      setActiveTab('groups');
-    } else {
-      setActiveTab('topics');
-    }
+    setActiveTab('resources');
   }, [location.pathname]);
 
   const handleTabClick = (tab: string) => {
-    setActiveTab(tab);
-    
     switch (tab) {
       case 'topics':
         navigate('/community/category/all');

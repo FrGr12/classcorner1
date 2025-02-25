@@ -21,6 +21,7 @@ import BookingConfirmation from "@/pages/BookingConfirmation";
 import Community from "@/pages/Community";
 import PostDetail from "@/components/community/PostDetail";
 import Groups from "@/pages/Groups";
+import Resources from "@/pages/Resources";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
 import GroupPage from "@/pages/GroupPage";
@@ -169,6 +170,14 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <GroupPage />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/community/resources",
+    element: (
+      <ErrorBoundary>
+        <Resources />
       </ErrorBoundary>
     ),
   },

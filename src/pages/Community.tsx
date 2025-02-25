@@ -30,7 +30,7 @@ const Community = () => {
 
   const [activeTab, setActiveTab] = useState(() => {
     if (window.location.pathname.includes('/groups')) return 'groups';
-    if (window.location.pathname.includes('/resource')) return 'resources';
+    if (window.location.pathname.includes('/resources')) return 'resources';
     return 'topics';
   });
 
@@ -97,7 +97,7 @@ const Community = () => {
   useEffect(() => {
     if (window.location.pathname.includes('/groups')) {
       setActiveTab('groups');
-    } else if (window.location.pathname.includes('/resource')) {
+    } else if (window.location.pathname.includes('/resources')) {
       setActiveTab('resources');
     } else {
       setActiveTab('topics');
