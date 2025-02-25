@@ -58,27 +58,23 @@ export const TopicsList = ({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent 
-            className="w-[calc(100vw-32px)] max-w-[400px] bg-popover" 
+            className="w-[calc(100vw-32px)] max-w-[400px] bg-white" 
             align="start"
             sideOffset={4}
           >
-            <DropdownMenuLabel>Select Topic</DropdownMenuLabel>
+            <DropdownMenuLabel className="font-semibold">Select Topic</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem 
-              className="focus:bg-accent cursor-pointer"
-              onClick={() => {
-                onAllPostsClick();
-              }}
+              className="focus:bg-accent/50 cursor-pointer"
+              onClick={onAllPostsClick}
             >
               All Posts
             </DropdownMenuItem>
             {displayedTopics?.map(topicItem => (
               <DropdownMenuItem
                 key={topicItem.name}
-                className="flex justify-between focus:bg-accent cursor-pointer"
-                onClick={() => {
-                  onTopicClick(topicItem.name);
-                }}
+                className="flex justify-between focus:bg-accent/50 cursor-pointer"
+                onClick={() => onTopicClick(topicItem.name)}
               >
                 <span>{topicItem.name}</span>
                 <span className="text-muted-foreground text-xs">
