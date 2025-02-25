@@ -197,7 +197,7 @@ const Community = () => {
             <div className="lg:hidden mb-4">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-between">
+                  <Button variant="outline" className="w-full justify-between bg-white">
                     <div className="flex items-center gap-2">
                       <Filter className="h-4 w-4" />
                       <span>Filter Posts</span>
@@ -205,12 +205,15 @@ const Community = () => {
                     <Hash className="h-4 w-4" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[calc(100vw-32px)] max-w-[400px]">
+                <DropdownMenuContent 
+                  className="w-[calc(100vw-32px)] max-w-[400px] bg-white border" 
+                  style={{ backgroundColor: 'white' }}
+                >
                   {displayedTopics?.map(topicItem => (
                     <DropdownMenuItem
                       key={topicItem.name}
-                      className="flex justify-between"
-                      onClick={() => onTopicClick(topicItem.name)}
+                      className="flex justify-between hover:bg-gray-50"
+                      onClick={() => handleTopicClick(topicItem.name)}
                     >
                       <span>{topicItem.name}</span>
                       <span className="text-muted-foreground text-xs">
