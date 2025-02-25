@@ -22,18 +22,13 @@ const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showAllTopics, setShowAllTopics] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  
   const [activeTab, setActiveTab] = useState(() => {
-    if (topic) return 'topics';
-    if (resource) return 'resources';
+    if (window.location.pathname.includes('/groups')) return 'groups';
+    if (window.location.pathname.includes('/resource')) return 'resources';
     return 'topics';
   });
   
-  // Initialize the intersection observer ref
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0.5,
-    delay: 100
-  });
-
   const { data: groupsData } = useQuery({
     queryKey: ['groups'],
     queryFn: async () => {
@@ -95,6 +90,16 @@ const Community = () => {
   });
 
   useEffect(() => {
+    if (window.location.pathname.includes('/groups')) {
+      setActiveTab('groups');
+    } else if (window.location.pathname.includes('/resource')) {
+      setActiveTab('resources');
+    } else {
+      setActiveTab('topics');
+    }
+  }, [window.location.pathname]);
+
+  useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
     }
@@ -120,9 +125,7 @@ const Community = () => {
 
   const handleTabClick = (tab: string) => {
     setActiveTab(tab);
-    setSidebarOpen(true);
     
-    // Synchronize navigation with tab selection
     switch (tab) {
       case 'topics':
         navigate('/community/category/all');
@@ -137,6 +140,48 @@ const Community = () => {
   };
 
   const displayedTopics = showAllTopics ? topicsData : topicsData?.slice(0, INITIAL_TOPICS_TO_SHOW);
+
+  const renderContent = () => {
+    switch (activeTab) {
+      case 'groups':
+        return (
+          <div className="space-y-4">
+            {groupsData?.map((group) => (
+              <div key={group.id} className="p-4 border rounded-lg">
+                <h3 className="font-semibold">{group.name}</h3>
+              </div>
+            ))}
+          </div>
+        );
+      case 'resources':
+        return (
+          <div className="space-y-4">
+            <div className="p-4 border rounded-lg">
+              <h3 className="font-semibold">Learning Resources</h3>
+            </div>
+          </div>
+        );
+      default:
+        return (
+          <>
+            <CommunityHome
+              topic={topic}
+              category={category}
+              resource={resource}
+              posts={data?.pages.flatMap(page => page.posts) || []}
+            />
+            {isFetchingNextPage && (
+              <div className="mt-4 space-y-4">
+                {[...Array(2)].map((_, i) => (
+                  <Skeleton key={i} className="h-32 w-full" />
+                ))}
+              </div>
+            )}
+            <div ref={loadMoreRef} className="h-10" />
+          </>
+        );
+    }
+  };
 
   if (error) {
     return (
@@ -168,7 +213,6 @@ const Community = () => {
 
         <div className="container mx-auto py-4 px-4">
           <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
-            {/* Desktop Sidebar */}
             <div className="hidden lg:block sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto">
               <CommunitySidebar
                 topic={topic}
@@ -189,7 +233,6 @@ const Community = () => {
 
             <main className="min-w-0">
               <div className="w-full space-y-4">
-                {/* Mobile Navigation - Moved closer to content */}
                 <div className="lg:hidden bg-background border rounded-lg">
                   <div className="flex items-center justify-around p-2">
                     <Button 
@@ -245,28 +288,12 @@ const Community = () => {
                     ))}
                   </div>
                 ) : (
-                  <>
-                    <CommunityHome
-                      topic={topic}
-                      category={category}
-                      resource={resource}
-                      posts={data?.pages.flatMap(page => page.posts) || []}
-                    />
-                    {isFetchingNextPage && (
-                      <div className="mt-4 space-y-4">
-                        {[...Array(2)].map((_, i) => (
-                          <Skeleton key={i} className="h-32 w-full" />
-                        ))}
-                      </div>
-                    )}
-                    <div ref={loadMoreRef} className="h-10" />
-                  </>
+                  renderContent()
                 )}
               </div>
             </main>
           </div>
 
-          {/* Mobile Sheet */}
           <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
             <SheetContent 
               side="left" 
