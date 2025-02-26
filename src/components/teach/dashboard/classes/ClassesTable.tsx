@@ -5,7 +5,6 @@ import { format } from "date-fns";
 import { useState } from "react";
 import ColumnFilter from "./table/ColumnFilter";
 import ClassActions from "./table/ClassActions";
-import StatsDisplay from "./table/StatsDisplay";
 import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
 import MessageDialog from "./dialogs/MessageDialog";
@@ -27,8 +26,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [filters, setFilters] = useState({
     title: "",
     date: "",
-    capacity: "",
     attendees: "",
+    capacity: "",
   });
 
   const handleFilter = (column: string, value: string) => {
@@ -55,36 +54,35 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-2 sm:px-4 min-w-[120px]">
+              <TableHead className="px-2 sm:px-4 min-w-[100px]">
                 <ColumnFilter
                   column="Title"
                   value={filters.title}
                   onChange={(value) => handleFilter('title', value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[60px]">
+              <TableHead className="px-2 sm:px-4 w-[50px]">
                 <ColumnFilter
                   column="Date"
                   value={filters.date}
                   onChange={(value) => handleFilter('date', value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[70px]">
+              <TableHead className="px-2 sm:px-4 w-[45px]">
                 <ColumnFilter
-                  column="Cap."
-                  value={filters.capacity}
-                  onChange={(value) => handleFilter('capacity', value)}
-                />
-              </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[70px]">
-                <ColumnFilter
-                  column="Att."
+                  column="Att"
                   value={filters.attendees}
                   onChange={(value) => handleFilter('attendees', value)}
                 />
               </TableHead>
-              <TableHead className="text-center px-1 sm:px-4 w-[50px]">Views</TableHead>
-              <TableHead className="px-1 sm:px-4 w-[80px]">Actions</TableHead>
+              <TableHead className="px-2 sm:px-4 w-[45px]">
+                <ColumnFilter
+                  column="Cap"
+                  value={filters.capacity}
+                  onChange={(value) => handleFilter('capacity', value)}
+                />
+              </TableHead>
+              <TableHead className="px-2 sm:px-4 w-[100px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -108,17 +106,12 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                   </span>
                 </TableCell>
                 <TableCell className="px-2 sm:px-4">
+                  <span className="text-[10px] sm:text-sm">0</span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
                   <span className="text-[10px] sm:text-sm">
                     {classItem.maxParticipants || '-'}
                   </span>
-                </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm">0</span>
-                </TableCell>
-                <TableCell className="text-center px-1 sm:px-4">
-                  <div className="flex items-center justify-center gap-1">
-                    <span className="text-[10px] sm:text-sm">{classItem.views || 0}</span>
-                  </div>
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()} className="px-1 sm:px-4">
                   <ClassActions
