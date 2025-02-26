@@ -29,8 +29,6 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
     date: "",
     capacity: "",
     attendees: "",
-    waitlist: "",
-    paid: "",
   });
 
   const handleFilter = (column: string, value: string) => {
@@ -42,9 +40,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
-      return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
+      return date.length > 0 ? format(date[0], 'MM/dd') : '-';
     }
-    return format(date, 'PPP');
+    return format(date, 'MM/dd');
   };
 
   const handleEditSuccess = () => {
@@ -57,19 +55,36 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <Table>
           <TableHeader>
             <TableRow>
-              {Object.keys(filters).map((column) => (
-                <TableHead key={column} className="px-2 sm:px-4">
-                  <ColumnFilter
-                    column={column.charAt(0).toUpperCase() + column.slice(1)}
-                    value={filters[column as keyof typeof filters]}
-                    onChange={(value) => handleFilter(column, value)}
-                  />
-                </TableHead>
-              ))}
-              <TableHead className="text-center px-1 sm:px-4">Views</TableHead>
-              <TableHead className="text-center px-1 sm:px-4">Saves</TableHead>
-              <TableHead className="text-center px-1 sm:px-4">Clicks</TableHead>
-              <TableHead className="px-1 sm:px-4">Actions</TableHead>
+              <TableHead className="px-2 sm:px-4 min-w-[120px]">
+                <ColumnFilter
+                  column="Title"
+                  value={filters.title}
+                  onChange={(value) => handleFilter('title', value)}
+                />
+              </TableHead>
+              <TableHead className="px-2 sm:px-4 w-[60px]">
+                <ColumnFilter
+                  column="Date"
+                  value={filters.date}
+                  onChange={(value) => handleFilter('date', value)}
+                />
+              </TableHead>
+              <TableHead className="px-2 sm:px-4 w-[70px]">
+                <ColumnFilter
+                  column="Cap."
+                  value={filters.capacity}
+                  onChange={(value) => handleFilter('capacity', value)}
+                />
+              </TableHead>
+              <TableHead className="px-2 sm:px-4 w-[70px]">
+                <ColumnFilter
+                  column="Att."
+                  value={filters.attendees}
+                  onChange={(value) => handleFilter('attendees', value)}
+                />
+              </TableHead>
+              <TableHead className="text-center px-1 sm:px-4 w-[50px]">Views</TableHead>
+              <TableHead className="px-1 sm:px-4 w-[80px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -83,34 +98,28 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 }}
               >
                 <TableCell className="px-2 sm:px-4">
-                  <span className="text-[11px] sm:text-sm font-medium line-clamp-2">
+                  <span className="text-[10px] sm:text-sm font-medium line-clamp-1">
                     {classItem.title}
                   </span>
                 </TableCell>
-                <TableCell className="px-2 sm:px-4 whitespace-nowrap">
-                  <span className="text-[11px] sm:text-sm">
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[10px] sm:text-sm whitespace-nowrap">
                     {formatClassDate(classItem.date)}
                   </span>
                 </TableCell>
                 <TableCell className="px-2 sm:px-4">
-                  <span className="text-[11px] sm:text-sm">
+                  <span className="text-[10px] sm:text-sm">
                     {classItem.maxParticipants || '-'}
                   </span>
                 </TableCell>
                 <TableCell className="px-2 sm:px-4">
-                  <span className="text-[11px] sm:text-sm">0</span>
+                  <span className="text-[10px] sm:text-sm">0</span>
                 </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[11px] sm:text-sm">0</span>
+                <TableCell className="text-center px-1 sm:px-4">
+                  <div className="flex items-center justify-center gap-1">
+                    <span className="text-[10px] sm:text-sm">{classItem.views || 0}</span>
+                  </div>
                 </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[11px] sm:text-sm">0</span>
-                </TableCell>
-                <StatsDisplay
-                  views={classItem.views || 0}
-                  saves={classItem.saves || 0}
-                  adClicks={classItem.adClicks || 0}
-                />
                 <TableCell onClick={(e) => e.stopPropagation()} className="px-1 sm:px-4">
                   <ClassActions
                     classId={classItem.id}
