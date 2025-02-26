@@ -12,41 +12,41 @@ interface ClassActionsProps {
 
 const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsProps) => {
   return (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5 sm:gap-1">
       <Button
         variant="ghost"
         size="icon"
         onClick={onEdit}
-        className="h-5 w-5 sm:h-8 sm:w-8 p-0"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 hover:bg-accent-purple/10"
       >
-        <Edit className="h-3 w-3 sm:h-4 sm:w-4 text-accent-purple" />
+        <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
 
       <Button
         variant="ghost"
         size="icon"
         onClick={onMessage}
-        className="h-5 w-5 sm:h-8 sm:w-8 p-0"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 hover:bg-accent-purple/10"
       >
-        <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-accent-purple" />
+        <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
 
       <Button
         variant="ghost"
         size="icon"
         onClick={onPromote}
-        className="h-5 w-5 sm:h-8 sm:w-8 p-0"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 hover:bg-accent-purple/10"
       >
-        <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4 text-accent-purple" />
+        <ArrowUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
 
       <Button
         variant="ghost"
         size="icon"
         onClick={onShare}
-        className="h-5 w-5 sm:h-8 sm:w-8 p-0"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 hover:bg-accent-purple/10"
       >
-        <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-accent-purple" />
+        <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
     </div>
   );
