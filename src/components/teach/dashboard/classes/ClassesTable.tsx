@@ -57,7 +57,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <TableHeader>
           <TableRow>
             {Object.keys(filters).map((column) => (
-              <TableHead key={column}>
+              <TableHead key={column} className={column === 'date' ? 'hidden sm:table-cell' : ''}>
                 <ColumnFilter
                   column={column.charAt(0).toUpperCase() + column.slice(1)}
                   value={filters[column as keyof typeof filters]}
@@ -65,10 +65,10 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 />
               </TableHead>
             ))}
-            <TableHead className="text-center">Views</TableHead>
-            <TableHead className="text-center">Saves</TableHead>
-            <TableHead className="text-center">Clicks</TableHead>
-            <TableHead>Actions</TableHead>
+            <TableHead className="text-center hidden sm:table-cell">Views</TableHead>
+            <TableHead className="text-center hidden sm:table-cell">Saves</TableHead>
+            <TableHead className="text-center hidden sm:table-cell">Clicks</TableHead>
+            <TableHead className="hidden sm:table-cell">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -82,17 +82,48 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               }}
             >
               <TableCell className="font-medium">{classItem.title}</TableCell>
-              <TableCell>{formatClassDate(classItem.date)}</TableCell>
-              <TableCell>{classItem.maxParticipants || '-'}</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>0</TableCell>
-              <StatsDisplay
-                views={classItem.views || 0}
-                saves={classItem.saves || 0}
-                adClicks={classItem.adClicks || 0}
-              />
-              <TableCell onClick={(e) => e.stopPropagation()}>
+              <TableCell>
+                <div className="flex items-center justify-between gap-2">
+                  <span>{formatClassDate(classItem.date)}</span>
+                  <div className="sm:hidden">
+                    <ClassActions
+                      classId={classItem.id}
+                      onEdit={(e) => {
+                        e.stopPropagation();
+                        setSelectedClassId(classItem.id);
+                        setIsEditOpen(true);
+                      }}
+                      onMessage={(e) => {
+                        e.stopPropagation();
+                        setSelectedClassId(classItem.id);
+                        setIsMessageOpen(true);
+                      }}
+                      onPromote={(e) => {
+                        e.stopPropagation();
+                        setSelectedClassId(classItem.id);
+                        setIsPromoteOpen(true);
+                      }}
+                      onShare={(e) => {
+                        e.stopPropagation();
+                        setSelectedClassId(classItem.id);
+                        setIsShareOpen(true);
+                      }}
+                    />
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell className="hidden sm:table-cell">{classItem.maxParticipants || '-'}</TableCell>
+              <TableCell className="hidden sm:table-cell">0</TableCell>
+              <TableCell className="hidden sm:table-cell">0</TableCell>
+              <TableCell className="hidden sm:table-cell">0</TableCell>
+              <TableCell className="hidden sm:table-cell">
+                <StatsDisplay
+                  views={classItem.views || 0}
+                  saves={classItem.saves || 0}
+                  adClicks={classItem.adClicks || 0}
+                />
+              </TableCell>
+              <TableCell onClick={(e) => e.stopPropagation()} className="hidden sm:table-cell">
                 <ClassActions
                   classId={classItem.id}
                   onEdit={(e) => {
