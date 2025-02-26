@@ -17,7 +17,7 @@ const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsPro
         variant="ghost"
         size="icon"
         onClick={onEdit}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:bg-transparent hover:bg-accent-purple/10"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
       >
         <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
@@ -26,7 +26,7 @@ const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsPro
         variant="ghost"
         size="icon"
         onClick={onMessage}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:bg-transparent hover:bg-accent-purple/10"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
       >
         <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
@@ -35,7 +35,7 @@ const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsPro
         variant="ghost"
         size="icon"
         onClick={onPromote}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:bg-transparent hover:bg-accent-purple/10"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
       >
         <ArrowUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>
@@ -44,7 +44,7 @@ const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsPro
         variant="ghost"
         size="icon"
         onClick={onShare}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:bg-transparent hover:bg-accent-purple/10"
+        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
       >
         <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
       </Button>

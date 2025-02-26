@@ -54,35 +54,35 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="px-2 sm:px-4 min-w-[100px]">
+              <TableHead className="px-2 sm:px-4 min-w-[150px]">
                 <ColumnFilter
                   column="Title"
                   value={filters.title}
                   onChange={(value) => handleFilter('title', value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[50px]">
+              <TableHead className="px-2 sm:px-4 w-[80px]">
                 <ColumnFilter
                   column="Date"
                   value={filters.date}
                   onChange={(value) => handleFilter('date', value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[45px]">
-                <ColumnFilter
-                  column="Att"
-                  value={filters.attendees}
-                  onChange={(value) => handleFilter('attendees', value)}
-                />
-              </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[45px]">
+              <TableHead className="px-2 sm:px-4 w-[80px]">
                 <ColumnFilter
                   column="Cap"
                   value={filters.capacity}
                   onChange={(value) => handleFilter('capacity', value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[100px]">Actions</TableHead>
+              <TableHead className="px-2 sm:px-4 w-[80px]">
+                <ColumnFilter
+                  column="Att"
+                  value={filters.attendees}
+                  onChange={(value) => handleFilter('attendees', value)}
+                />
+              </TableHead>
+              <TableHead className="px-2 sm:px-4 w-[120px]">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -106,12 +106,12 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                   </span>
                 </TableCell>
                 <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm">0</span>
-                </TableCell>
-                <TableCell className="px-2 sm:px-4">
                   <span className="text-[10px] sm:text-sm">
                     {classItem.maxParticipants || '-'}
                   </span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[10px] sm:text-sm">0</span>
                 </TableCell>
                 <TableCell onClick={(e) => e.stopPropagation()} className="px-1 sm:px-4">
                   <ClassActions
@@ -179,3 +179,4 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 };
 
 export default ClassesTable;
+
