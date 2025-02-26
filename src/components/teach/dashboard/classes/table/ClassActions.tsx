@@ -10,43 +10,43 @@ interface ClassActionsProps {
   onShare: (e: React.MouseEvent) => void;
 }
 
-const ClassActions = ({ onEdit, onMessage, onPromote, onShare }: ClassActionsProps) => {
+const ClassActions = ({ classId, onEdit, onMessage, onPromote, onShare }: ClassActionsProps) => {
   return (
-    <div className="flex gap-0.5 sm:gap-1">
+    <div className="flex gap-1 sm:gap-2">
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={onEdit}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
+        <Edit className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={onMessage}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <MessageSquare className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
+        <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={onPromote}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <ArrowUp className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
+        <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
-        variant="ghost"
+        variant="outline"
         size="icon"
         onClick={onShare}
-        className="h-7 w-7 sm:h-8 sm:w-8 bg-accent-purple/5 sm:hover:bg-accent/50"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <Share2 className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-accent-purple" />
+        <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
     </div>
   );

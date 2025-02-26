@@ -5,6 +5,7 @@ import { format } from "date-fns";
 import { useState } from "react";
 import ColumnFilter from "./table/ColumnFilter";
 import ClassActions from "./table/ClassActions";
+import StatsDisplay from "./table/StatsDisplay";
 import PromoteDialog from "./promote/PromoteDialog";
 import ClassDetailsDialog from "./ClassDetailsDialog";
 import MessageDialog from "./dialogs/MessageDialog";
@@ -26,8 +27,10 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const [filters, setFilters] = useState({
     title: "",
     date: "",
-    attendees: "",
     capacity: "",
+    attendees: "",
+    waitlist: "",
+    paid: "",
   });
 
   const handleFilter = (column: string, value: string) => {
@@ -39,9 +42,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
-      return date.length > 0 ? format(date[0], 'MM/dd') : '-';
+      return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
     }
-    return format(date, 'MM/dd');
+    return format(date, 'PPP');
   };
 
   const handleEditSuccess = () => {
@@ -50,99 +53,74 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <div className="overflow-x-auto -mx-2 sm:mx-0">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="px-2 sm:px-4 min-w-[150px]">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            {Object.keys(filters).map((column) => (
+              <TableHead key={column}>
                 <ColumnFilter
-                  column="Title"
-                  value={filters.title}
-                  onChange={(value) => handleFilter('title', value)}
+                  column={column.charAt(0).toUpperCase() + column.slice(1)}
+                  value={filters[column as keyof typeof filters]}
+                  onChange={(value) => handleFilter(column, value)}
                 />
               </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[80px]">
-                <ColumnFilter
-                  column="Date"
-                  value={filters.date}
-                  onChange={(value) => handleFilter('date', value)}
-                />
-              </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[80px]">
-                <ColumnFilter
-                  column="Cap"
-                  value={filters.capacity}
-                  onChange={(value) => handleFilter('capacity', value)}
-                />
-              </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[80px]">
-                <ColumnFilter
-                  column="Att"
-                  value={filters.attendees}
-                  onChange={(value) => handleFilter('attendees', value)}
-                />
-              </TableHead>
-              <TableHead className="px-2 sm:px-4 w-[120px]">Actions</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {classes.map((classItem) => (
-              <TableRow 
-                key={classItem.id}
-                className="cursor-pointer hover:bg-accent/50"
-                onClick={() => {
-                  setSelectedClassId(classItem.id);
-                  setIsDetailsOpen(true);
-                }}
-              >
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm font-medium line-clamp-1">
-                    {classItem.title}
-                  </span>
-                </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm whitespace-nowrap">
-                    {formatClassDate(classItem.date)}
-                  </span>
-                </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm">
-                    {classItem.maxParticipants || '-'}
-                  </span>
-                </TableCell>
-                <TableCell className="px-2 sm:px-4">
-                  <span className="text-[10px] sm:text-sm">0</span>
-                </TableCell>
-                <TableCell onClick={(e) => e.stopPropagation()} className="px-1 sm:px-4">
-                  <ClassActions
-                    classId={classItem.id}
-                    onEdit={(e) => {
-                      e.stopPropagation();
-                      setSelectedClassId(classItem.id);
-                      setIsEditOpen(true);
-                    }}
-                    onMessage={(e) => {
-                      e.stopPropagation();
-                      setSelectedClassId(classItem.id);
-                      setIsMessageOpen(true);
-                    }}
-                    onPromote={(e) => {
-                      e.stopPropagation();
-                      setSelectedClassId(classItem.id);
-                      setIsPromoteOpen(true);
-                    }}
-                    onShare={(e) => {
-                      e.stopPropagation();
-                      setSelectedClassId(classItem.id);
-                      setIsShareOpen(true);
-                    }}
-                  />
-                </TableCell>
-              </TableRow>
             ))}
-          </TableBody>
-        </Table>
-      </div>
+            <TableHead className="text-center">Views</TableHead>
+            <TableHead className="text-center">Saves</TableHead>
+            <TableHead className="text-center">Clicks</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {classes.map((classItem) => (
+            <TableRow 
+              key={classItem.id}
+              className="cursor-pointer hover:bg-accent/50"
+              onClick={() => {
+                setSelectedClassId(classItem.id);
+                setIsDetailsOpen(true);
+              }}
+            >
+              <TableCell className="font-medium">{classItem.title}</TableCell>
+              <TableCell>{formatClassDate(classItem.date)}</TableCell>
+              <TableCell>{classItem.maxParticipants || '-'}</TableCell>
+              <TableCell>0</TableCell>
+              <TableCell>0</TableCell>
+              <TableCell>0</TableCell>
+              <StatsDisplay
+                views={classItem.views || 0}
+                saves={classItem.saves || 0}
+                adClicks={classItem.adClicks || 0}
+              />
+              <TableCell onClick={(e) => e.stopPropagation()}>
+                <ClassActions
+                  classId={classItem.id}
+                  onEdit={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsEditOpen(true);
+                  }}
+                  onMessage={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsMessageOpen(true);
+                  }}
+                  onPromote={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsPromoteOpen(true);
+                  }}
+                  onShare={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsShareOpen(true);
+                  }}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
 
       <MessageDialog 
         open={isMessageOpen}
@@ -179,4 +157,3 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 };
 
 export default ClassesTable;
-
