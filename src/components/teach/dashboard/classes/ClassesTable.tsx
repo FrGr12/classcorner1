@@ -53,74 +53,94 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {Object.keys(filters).map((column) => (
-              <TableHead key={column}>
-                <ColumnFilter
-                  column={column.charAt(0).toUpperCase() + column.slice(1)}
-                  value={filters[column as keyof typeof filters]}
-                  onChange={(value) => handleFilter(column, value)}
-                />
-              </TableHead>
-            ))}
-            <TableHead className="text-center">Views</TableHead>
-            <TableHead className="text-center">Saves</TableHead>
-            <TableHead className="text-center">Clicks</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {classes.map((classItem) => (
-            <TableRow 
-              key={classItem.id}
-              className="cursor-pointer hover:bg-accent/50"
-              onClick={() => {
-                setSelectedClassId(classItem.id);
-                setIsDetailsOpen(true);
-              }}
-            >
-              <TableCell className="font-medium">{classItem.title}</TableCell>
-              <TableCell>{formatClassDate(classItem.date)}</TableCell>
-              <TableCell>{classItem.maxParticipants || '-'}</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>0</TableCell>
-              <TableCell>0</TableCell>
-              <StatsDisplay
-                views={classItem.views || 0}
-                saves={classItem.saves || 0}
-                adClicks={classItem.adClicks || 0}
-              />
-              <TableCell onClick={(e) => e.stopPropagation()}>
-                <ClassActions
-                  classId={classItem.id}
-                  onEdit={(e) => {
-                    e.stopPropagation();
-                    setSelectedClassId(classItem.id);
-                    setIsEditOpen(true);
-                  }}
-                  onMessage={(e) => {
-                    e.stopPropagation();
-                    setSelectedClassId(classItem.id);
-                    setIsMessageOpen(true);
-                  }}
-                  onPromote={(e) => {
-                    e.stopPropagation();
-                    setSelectedClassId(classItem.id);
-                    setIsPromoteOpen(true);
-                  }}
-                  onShare={(e) => {
-                    e.stopPropagation();
-                    setSelectedClassId(classItem.id);
-                    setIsShareOpen(true);
-                  }}
-                />
-              </TableCell>
+      <div className="overflow-x-auto -mx-2 sm:mx-0">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {Object.keys(filters).map((column) => (
+                <TableHead key={column} className="px-2 sm:px-4">
+                  <ColumnFilter
+                    column={column.charAt(0).toUpperCase() + column.slice(1)}
+                    value={filters[column as keyof typeof filters]}
+                    onChange={(value) => handleFilter(column, value)}
+                  />
+                </TableHead>
+              ))}
+              <TableHead className="text-center px-1 sm:px-4">Views</TableHead>
+              <TableHead className="text-center px-1 sm:px-4">Saves</TableHead>
+              <TableHead className="text-center px-1 sm:px-4">Clicks</TableHead>
+              <TableHead className="px-1 sm:px-4">Actions</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {classes.map((classItem) => (
+              <TableRow 
+                key={classItem.id}
+                className="cursor-pointer hover:bg-accent/50"
+                onClick={() => {
+                  setSelectedClassId(classItem.id);
+                  setIsDetailsOpen(true);
+                }}
+              >
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[11px] sm:text-sm font-medium line-clamp-2">
+                    {classItem.title}
+                  </span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4 whitespace-nowrap">
+                  <span className="text-[11px] sm:text-sm">
+                    {formatClassDate(classItem.date)}
+                  </span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[11px] sm:text-sm">
+                    {classItem.maxParticipants || '-'}
+                  </span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[11px] sm:text-sm">0</span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[11px] sm:text-sm">0</span>
+                </TableCell>
+                <TableCell className="px-2 sm:px-4">
+                  <span className="text-[11px] sm:text-sm">0</span>
+                </TableCell>
+                <StatsDisplay
+                  views={classItem.views || 0}
+                  saves={classItem.saves || 0}
+                  adClicks={classItem.adClicks || 0}
+                />
+                <TableCell onClick={(e) => e.stopPropagation()} className="px-1 sm:px-4">
+                  <ClassActions
+                    classId={classItem.id}
+                    onEdit={(e) => {
+                      e.stopPropagation();
+                      setSelectedClassId(classItem.id);
+                      setIsEditOpen(true);
+                    }}
+                    onMessage={(e) => {
+                      e.stopPropagation();
+                      setSelectedClassId(classItem.id);
+                      setIsMessageOpen(true);
+                    }}
+                    onPromote={(e) => {
+                      e.stopPropagation();
+                      setSelectedClassId(classItem.id);
+                      setIsPromoteOpen(true);
+                    }}
+                    onShare={(e) => {
+                      e.stopPropagation();
+                      setSelectedClassId(classItem.id);
+                      setIsShareOpen(true);
+                    }}
+                  />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       <MessageDialog 
         open={isMessageOpen}
