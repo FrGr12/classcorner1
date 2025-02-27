@@ -13,6 +13,8 @@ export interface WaitlistEntry {
   last_notification_sent_at?: string;
   user_email?: string;
   user_name?: string;
+  waitlist_position?: number;
+  notification_status?: string;
   course: {
     title: string;
     auto_promote_from_waitlist: boolean;
@@ -23,4 +25,16 @@ export interface WaitlistEntry {
     last_name: string;
     avatar_url?: string;
   };
+}
+
+export interface AttendanceRecord {
+  id: number;
+  session_id: number;
+  user_id: string;
+  status: 'present' | 'absent' | 'late' | 'excused';
+  check_in_time?: string;
+  check_out_time?: string;
+  notes?: string;
+  created_at: string;
+  updated_at?: string;
 }
