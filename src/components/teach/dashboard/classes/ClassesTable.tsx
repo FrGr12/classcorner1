@@ -42,9 +42,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
-      return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
+      return date.length > 0 ? format(date[0], 'MM/dd/yy') : '-';
     }
-    return format(date, 'PPP');
+    return format(date, 'MM/dd/yy');
   };
 
   const handleEditSuccess = () => {
@@ -117,7 +117,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               <TableCell className="font-medium">{classItem.title}</TableCell>
               <TableCell>
                 <div className="flex items-center justify-between gap-2">
-                  <span>{formatClassDate(classItem.date)}</span>
+                  <span className="whitespace-nowrap">{formatClassDate(classItem.date)}</span>
                   <div className="sm:hidden">
                     <ClassActions
                       classId={classItem.id}
