@@ -1,8 +1,9 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, School, BookOpen, Users } from "lucide-react";
+import { Menu, School, BookOpen, Users, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UserType } from "@/types/user";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface MobileMenuProps {
   handleLogout: () => void;
   handleAuthClick: () => void;
   loading: boolean;
+  userType?: UserType;
 }
 
 export function MobileMenu({
@@ -22,7 +24,10 @@ export function MobileMenu({
   handleLogout,
   handleAuthClick,
   loading,
+  userType = 'teacher',
 }: MobileMenuProps) {
+  const dashboardPath = userType === 'student' ? '/user-dashboard' : '/dashboard';
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -61,6 +66,18 @@ export function MobileMenu({
               <Users className="h-4 w-4" />
               <span>Community</span>
             </Link>
+            {session && (
+              <Link 
+                to={dashboardPath}
+                className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+                onClick={() => {
+                  setIsOpen(false);
+                }}
+              >
+                <LayoutDashboard className="h-4 w-4" />
+                <span>{userType === 'student' ? 'Student Dashboard' : 'Teacher Dashboard'}</span>
+              </Link>
+            )}
           </div>
           {session ? (
             <>
