@@ -5,14 +5,53 @@ import ParticipantsTable from "./ParticipantsTable";
 import WaitlistTable from "./WaitlistTable";
 import { AttendanceTracking } from "@/components/teach/dashboard/AttendanceTracking";
 
-// Add mock data for each table to fix the type errors
-const mockParticipants = [
+interface Participant {
+  id: number;
+  name: string;
+  email: string;
+  status: string;
+  paymentStatus: string;
+  attendanceStatus?: string;
+  booking_date?: string; // Added to match mock data
+}
+
+interface BookingRequest {
+  id: number;
+  name: string;
+  type: string;
+  size?: number;
+  status: string;
+  email?: string;
+  date?: string;
+  message?: string;
+}
+
+interface WaitlistEntry {
+  id: number;
+  user_id: string;
+  created_at: string;
+  status: string;
+  profile?: {
+    first_name: string;
+    last_name: string;
+    email?: string;
+  };
+  waitlist_position?: number;
+  name?: string; // For backward compatibility
+  email?: string; // For backward compatibility
+  date_added?: string; // For backward compatibility
+  position?: number; // For backward compatibility
+  message?: string; // For backward compatibility
+}
+
+// Add mock data for each table
+const mockParticipants: Participant[] = [
   {
     id: 1,
     name: "Jane Smith",
     email: "jane@example.com",
     status: "confirmed",
-    payment_status: "paid",
+    paymentStatus: "paid",
     booking_date: "2023-06-15"
   },
   {
@@ -20,19 +59,20 @@ const mockParticipants = [
     name: "John Doe",
     email: "john@example.com",
     status: "confirmed",
-    payment_status: "paid",
+    paymentStatus: "paid",
     booking_date: "2023-06-16"
   }
 ];
 
-const mockRequests = [
+const mockRequests: BookingRequest[] = [
   {
     id: 1,
     name: "Alice Johnson",
     email: "alice@example.com",
     date: "2023-06-20",
     status: "pending",
-    message: "Looking forward to joining the class!"
+    message: "Looking forward to joining the class!",
+    type: "private"
   },
   {
     id: 2,
@@ -40,13 +80,18 @@ const mockRequests = [
     email: "bob@example.com",
     date: "2023-06-21",
     status: "pending",
-    message: "I have previous experience with pottery."
+    message: "I have previous experience with pottery.",
+    type: "group",
+    size: 4
   }
 ];
 
-const mockWaitlistEntries = [
+const mockWaitlistEntries: WaitlistEntry[] = [
   {
     id: 1,
+    user_id: "user1",
+    created_at: "2023-06-10T10:00:00Z",
+    status: "waiting",
     name: "Carol White",
     email: "carol@example.com",
     date_added: "2023-06-10",
@@ -55,6 +100,9 @@ const mockWaitlistEntries = [
   },
   {
     id: 2,
+    user_id: "user2",
+    created_at: "2023-06-11T10:00:00Z",
+    status: "waiting",
     name: "David Green",
     email: "david@example.com",
     date_added: "2023-06-11",
@@ -63,8 +111,8 @@ const mockWaitlistEntries = [
   }
 ];
 
-const onStatusUpdate = (id: number, status: string) => {
-  console.log(`Status updated for ${id} to ${status}`);
+const onStatusUpdate = (participantId: number, status: string) => {
+  console.log(`Status updated for ${participantId} to ${status}`);
 };
 
 const onApprove = (id: number) => {
@@ -75,8 +123,8 @@ const onDeny = (id: number) => {
   console.log(`Request ${id} denied`);
 };
 
-const onPromote = (id: number) => {
-  console.log(`Waitlist entry ${id} promoted`);
+const onPromote = (userId: string) => {
+  console.log(`Waitlist entry ${userId} promoted`);
 };
 
 const ClassesTabs = () => {

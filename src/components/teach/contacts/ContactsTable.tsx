@@ -87,17 +87,17 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
   };
 
   if (isLoading) {
-    return <div className="p-2 text-center text-xs sm:text-sm sm:p-4">Loading contacts...</div>;
+    return <div className="p-1 text-center text-xs">Loading contacts...</div>;
   }
 
   return (
     <>
-      <div className="space-y-2 sm:space-y-4">
-        <div className="mb-2 sm:mb-4">
+      <div className="space-y-1 sm:space-y-4">
+        <div className="mb-1 sm:mb-4">
           <select
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
-            className="w-full border rounded-md px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm h-7 sm:h-10"
+            className="w-full border rounded-md px-2 py-0.5 sm:px-3 sm:py-2 text-xs sm:text-sm h-6 sm:h-10"
           >
             <option value="">All Tags</option>
             {allTags.map(tag => (
@@ -106,88 +106,88 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
           </select>
         </div>
 
-        <div className="relative overflow-x-auto -mx-2 sm:mx-0">
-          <Table className="w-[530px] sm:w-full table-fixed">
+        <div className="relative overflow-x-auto -mx-4 sm:mx-0">
+          <Table className="w-[520px] sm:w-full table-fixed border-collapse">
             <TableHeader>
               <TableRow className="border-b-0 sm:border-b">
                 <TableHead 
-                  className="cursor-pointer text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[25%]"
+                  className="cursor-pointer text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[22%]"
                   onClick={() => handleSort('name')}
                 >
                   Name {sortField === 'name' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-2 w-2 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-2 w-2 sm:h-3 sm:w-3" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" />
                   )}
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[25%] hidden sm:table-cell"
+                  className="cursor-pointer text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[25%] hidden sm:table-cell"
                   onClick={() => handleSort('email')}
                 >
                   Email {sortField === 'email' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-2 w-2 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-2 w-2 sm:h-3 sm:w-3" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" />
                   )}
                 </TableHead>
-                <TableHead className="text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[15%] hidden sm:table-cell">Phone</TableHead>
-                <TableHead className="text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[20%]">Tags</TableHead>
+                <TableHead className="text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[15%] hidden sm:table-cell">Phone</TableHead>
+                <TableHead className="text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[18%]">Tags</TableHead>
                 <TableHead 
-                  className="cursor-pointer text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[20%]"
+                  className="cursor-pointer text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[18%]"
                   onClick={() => handleSort('last_interaction')}
                 >
                   Last {sortField === 'last_interaction' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-2 w-2 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-2 w-2 sm:h-3 sm:w-3" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" />
                   )}
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[10%]"
+                  className="cursor-pointer text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[8%]"
                   onClick={() => handleSort('total_bookings')}
                 >
                   # {sortField === 'total_bookings' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-2 w-2 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-2 w-2 sm:h-3 sm:w-3" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" /> : <ChevronDown className="inline h-1.5 w-1.5 sm:h-3 sm:w-3" />
                   )}
                 </TableHead>
-                <TableHead className="text-[9px] sm:text-sm py-0.5 sm:py-3 px-0.5 sm:px-4 w-[25%]"></TableHead>
+                <TableHead className="text-[8px] sm:text-sm py-0 sm:py-3 px-0 sm:px-4 w-[24%]"></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAndSortedContacts.map((contact) => (
-                <TableRow key={contact.id} className="border-b-0 sm:border-b">
-                  <TableCell className="font-medium text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4 truncate">
+                <TableRow key={contact.id} className="border-b-0 sm:border-b h-6 sm:h-auto">
+                  <TableCell className="font-medium text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4 truncate">
                     {contact.first_name} {contact.last_name}
                   </TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4 truncate hidden sm:table-cell">
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4 truncate hidden sm:table-cell">
                     {contact.email}
                   </TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4 hidden sm:table-cell">{contact.phone || '-'}</TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4">
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4 hidden sm:table-cell">{contact.phone || '-'}</TableCell>
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4">
                     <div className="flex gap-0.5 sm:gap-2 flex-wrap">
                       {contact.tags.slice(0, 1).map((tag) => (
                         <Badge
                           key={tag}
-                          className={`${getTagColor(tag)} text-[7px] sm:text-xs px-1 sm:px-3 py-0 sm:py-1 truncate max-w-[50px] sm:max-w-none`}
+                          className={`${getTagColor(tag)} text-[6px] sm:text-xs px-0.5 sm:px-3 py-0 sm:py-1 truncate max-w-[45px] sm:max-w-none`}
                         >
                           {tag}
                         </Badge>
                       ))}
                       {contact.tags.length > 1 && (
-                        <Badge className="bg-gray-100 text-[7px] sm:text-xs px-0.5 sm:px-2 py-0 sm:py-0.5">
+                        <Badge className="bg-gray-100 text-[6px] sm:text-xs px-0.5 sm:px-2 py-0 sm:py-0.5">
                           +{contact.tags.length - 1}
                         </Badge>
                       )}
                     </div>
                   </TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4 whitespace-nowrap">
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4 whitespace-nowrap">
                     {format(new Date(contact.last_interaction), 'MM/dd/yy')}
                   </TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4">{contact.total_bookings}</TableCell>
-                  <TableCell className="text-[9px] sm:text-sm py-0.5 sm:py-4 px-0.5 sm:px-4">
-                    <div className="flex gap-1 sm:gap-4 justify-end">
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4">{contact.total_bookings}</TableCell>
+                  <TableCell className="text-[8px] sm:text-sm py-0 sm:py-4 px-0 sm:px-4">
+                    <div className="flex gap-0.5 sm:gap-4 justify-end">
                       <Button 
                         variant="secondary"
                         size="icon"
                         title="Message Contact"
                         onClick={() => handleMessageClick(contact)}
-                        className="bg-accent-purple hover:bg-accent-purple/90 h-4 w-4 sm:h-8 sm:w-8 p-0"
+                        className="bg-accent-purple hover:bg-accent-purple/90 h-3.5 w-3.5 sm:h-8 sm:w-8 p-0"
                       >
-                        <MessageSquare className="h-2 w-2 sm:h-4 sm:w-4 text-white" />
+                        <MessageSquare className="h-1.5 w-1.5 sm:h-4 sm:w-4 text-white" />
                       </Button>
                       <Button 
                         variant="secondary"
@@ -197,9 +197,9 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                           setSelectedContact(contact);
                           setIsBookingOpen(true);
                         }}
-                        className="bg-accent-purple hover:bg-accent-purple/90 h-4 w-4 sm:h-8 sm:w-8 p-0"
+                        className="bg-accent-purple hover:bg-accent-purple/90 h-3.5 w-3.5 sm:h-8 sm:w-8 p-0"
                       >
-                        <Calendar className="h-2 w-2 sm:h-4 sm:w-4 text-white" />
+                        <Calendar className="h-1.5 w-1.5 sm:h-4 sm:w-4 text-white" />
                       </Button>
                       <Button 
                         variant="secondary"
@@ -209,9 +209,9 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                           setSelectedContact(contact);
                           setIsNoteOpen(true);
                         }}
-                        className="bg-accent-purple hover:bg-accent-purple/90 h-4 w-4 sm:h-8 sm:w-8 p-0"
+                        className="bg-accent-purple hover:bg-accent-purple/90 h-3.5 w-3.5 sm:h-8 sm:w-8 p-0"
                       >
-                        <FileText className="h-2 w-2 sm:h-4 sm:w-4 text-white" />
+                        <FileText className="h-1.5 w-1.5 sm:h-4 sm:w-4 text-white" />
                       </Button>
                     </div>
                   </TableCell>
