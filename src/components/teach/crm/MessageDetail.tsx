@@ -5,8 +5,23 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ReplyAll, MoreHorizontal, ArrowLeft } from "lucide-react";
+import { ReplyAll, MoreHorizontal, ArrowLeft, User, Copy, Archive, Trash2, Flag } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface MessageDetailProps {
   selectedMessage: Message | null;
@@ -15,6 +30,50 @@ interface MessageDetailProps {
 
 export const MessageDetail = ({ selectedMessage, onBack }: MessageDetailProps) => {
   const [replyContent, setReplyContent] = useState("");
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleViewProfile = () => {
+    if (selectedMessage?.profile) {
+      navigate("/dashboard/contacts", {
+        state: {
+          selectedProfile: selectedMessage.profile,
+          fromInbox: true
+        }
+      });
+    }
+  };
+
+  const handleCopyMessage = () => {
+    if (selectedMessage) {
+      navigator.clipboard.writeText(selectedMessage.message_content);
+      toast({
+        title: "Copied",
+        description: "Message content copied to clipboard",
+      });
+    }
+  };
+
+  const handleArchive = () => {
+    toast({
+      title: "Archived",
+      description: "Message has been archived",
+    });
+  };
+
+  const handleDelete = () => {
+    toast({
+      title: "Deleted",
+      description: "Message has been deleted",
+    });
+  };
+
+  const handleFlag = () => {
+    toast({
+      title: "Flagged",
+      description: "Message has been flagged for follow-up",
+    });
+  };
 
   if (!selectedMessage) {
     return (
@@ -39,14 +98,29 @@ export const MessageDetail = ({ selectedMessage, onBack }: MessageDetailProps) =
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             )}
-            <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
-              <AvatarImage src={selectedMessage.profile?.avatar_url || ""} />
-              <AvatarFallback className="text-xs sm:text-sm">
-                {selectedMessage.profile?.first_name?.[0] || "U"}
-              </AvatarFallback>
-            </Avatar>
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Avatar
+                    className="h-8 w-8 sm:h-10 sm:w-10 cursor-pointer"
+                    onClick={handleViewProfile}
+                  >
+                    <AvatarImage src={selectedMessage.profile?.avatar_url || ""} />
+                    <AvatarFallback className="text-xs sm:text-sm">
+                      {selectedMessage.profile?.first_name?.[0] || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View profile</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <div>
-              <h2 className="font-medium text-sm sm:text-base">
+              <h2 
+                className="font-medium text-sm sm:text-base cursor-pointer hover:underline"
+                onClick={handleViewProfile}
+              >
                 {selectedMessage.profile?.first_name} {selectedMessage.profile?.last_name}
               </h2>
               <p className="text-xs text-muted-foreground">
@@ -54,9 +128,36 @@ export const MessageDetail = ({ selectedMessage, onBack }: MessageDetailProps) =
               </p>
             </div>
           </div>
-          <Button variant="ghost" size="icon" className="h-8 w-8">
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon" className="h-8 w-8">
+                <MoreHorizontal className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              <DropdownMenuItem onClick={handleViewProfile} className="cursor-pointer">
+                <User className="mr-2 h-4 w-4" />
+                <span>View Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleCopyMessage} className="cursor-pointer">
+                <Copy className="mr-2 h-4 w-4" />
+                <span>Copy Message</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleFlag} className="cursor-pointer">
+                <Flag className="mr-2 h-4 w-4" />
+                <span>Flag for Follow-up</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={handleArchive} className="cursor-pointer">
+                <Archive className="mr-2 h-4 w-4" />
+                <span>Archive</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleDelete} className="cursor-pointer text-red-500 hover:text-red-600">
+                <Trash2 className="mr-2 h-4 w-4" />
+                <span>Delete</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <div className="text-xs sm:text-sm text-muted-foreground">

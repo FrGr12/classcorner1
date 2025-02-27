@@ -3,7 +3,7 @@ export interface WaitlistEntry {
   id: number;
   user_id: string;
   course_id: number;
-  status: 'waiting' | 'notified' | 'expired' | 'promoted';
+  status: 'waiting' | 'notified' | 'expired' | 'promoted' | string;
   position?: number; // Make optional to match actual data
   created_at: string;
   updated_at?: string;
