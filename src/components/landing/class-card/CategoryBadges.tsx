@@ -11,7 +11,7 @@ const CategoryBadges = ({ displayCategory, className }: CategoryBadgesProps) => 
   return (
     <div className={cn("absolute top-3 left-3 z-10", className)}>
       <Badge 
-        className="font-sans text-xs font-medium bg-white/90 text-black hover:bg-white/80"
+        className="font-sans text-xs font-semibold bg-white/90 text-black hover:bg-white/80"
       >
         {displayCategory}
       </Badge>
