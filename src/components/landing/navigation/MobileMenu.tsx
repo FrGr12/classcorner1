@@ -40,24 +40,6 @@ export function MobileMenu({
           <SheetTitle className="text-left text-accent-purple">Menu</SheetTitle>
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
-          {session && (
-            <Link 
-              to="/dashboard"
-              className="flex items-center justify-between text-sm text-primary hover:text-accent-purple transition-colors text-left"
-              onClick={() => setIsOpen(false)}
-            >
-              <div className="flex items-center">
-                <LayoutDashboard className="h-4 w-4 mr-2" />
-                <span>Dashboard</span>
-              </div>
-              {unreadCount > 0 && (
-                <Badge variant="default" className="bg-accent-purple text-[10px] h-5 px-1">
-                  {unreadCount}
-                </Badge>
-              )}
-            </Link>
-          )}
-
           <Link 
             to="/community" 
             className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
@@ -78,11 +60,6 @@ export function MobileMenu({
                   <LayoutDashboard className="h-4 w-4 mr-2" />
                   <span>Teacher Dashboard</span>
                 </div>
-                {unreadCount > 0 && (
-                  <Badge variant="default" className="bg-accent-purple text-[10px] h-5 px-1">
-                    {unreadCount}
-                  </Badge>
-                )}
               </Link>
               <Link 
                 to="/dashboard/classes"
@@ -129,6 +106,14 @@ export function MobileMenu({
             >
               <BookOpen className="h-4 w-4" />
               <span>Resources</span>
+            </Link>
+            <Link 
+              to="/community" 
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <Users className="h-4 w-4" />
+              <span>Community</span>
             </Link>
           </div>
           {session ? (
