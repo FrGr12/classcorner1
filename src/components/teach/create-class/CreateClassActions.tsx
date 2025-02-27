@@ -8,11 +8,11 @@ interface CreateClassActionsProps {
 
 const CreateClassActions = ({ isSubmitting, onSaveDraft }: CreateClassActionsProps) => {
   return (
-    <div className="flex justify-center gap-4 pt-4 pb-12">
+    <div className="flex flex-col sm:flex-row sm:justify-center items-center gap-3 sm:gap-4 pt-4 pb-12">
       <Button 
         type="button"
         variant="outline"
-        className="bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 px-8"
+        className="w-full sm:w-auto bg-white text-accent-purple border-accent-purple hover:bg-accent-purple/10 px-4 sm:px-8 text-sm"
         onClick={onSaveDraft}
         disabled={isSubmitting}
       >
@@ -21,7 +21,7 @@ const CreateClassActions = ({ isSubmitting, onSaveDraft }: CreateClassActionsPro
       
       <Button 
         type="submit"
-        className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8"
+        className="w-full sm:w-auto bg-accent-purple hover:bg-accent-purple/90 text-white px-4 sm:px-8 text-sm"
         disabled={isSubmitting}
       >
         Save and publish
