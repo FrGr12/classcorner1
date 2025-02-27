@@ -15,17 +15,21 @@ interface SchedulingSectionProps {
 
 const SchedulingSection = ({ form }: SchedulingSectionProps) => {
   return (
-    <div className="grid grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <FormField
         control={form.control}
         name="startDate"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Start Date</FormLabel>
+            <FormLabel className="text-xs sm:text-sm">Start Date</FormLabel>
             <FormControl>
-              <Input type="date" {...field} />
+              <Input 
+                type="date" 
+                {...field} 
+                className="h-9 sm:h-10 text-xs sm:text-sm"
+              />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-xs sm:text-sm" />
           </FormItem>
         )}
       />
@@ -35,11 +39,15 @@ const SchedulingSection = ({ form }: SchedulingSectionProps) => {
         name="startTime"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Start Time</FormLabel>
+            <FormLabel className="text-xs sm:text-sm">Start Time</FormLabel>
             <FormControl>
-              <Input type="time" {...field} />
+              <Input 
+                type="time" 
+                {...field} 
+                className="h-9 sm:h-10 text-xs sm:text-sm"
+              />
             </FormControl>
-            <FormMessage />
+            <FormMessage className="text-xs sm:text-sm" />
           </FormItem>
         )}
       />

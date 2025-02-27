@@ -3,14 +3,16 @@ export interface WaitlistEntry {
   id: number;
   user_id: string;
   course_id: number;
-  status: string;
+  status: 'waiting' | 'notified' | 'expired' | 'promoted';
+  position: number;
   created_at: string;
-  notification_sent_at: string | null;
-  notification_sent_count: number;
-  notification_expires_at: string | null;
-  last_notification_sent_at: string | null;
-  waitlist_position: number;
-  notification_status: 'sent' | 'waiting';
+  updated_at?: string;
+  notification_sent_at?: string;
+  notification_expires_at?: string;
+  notification_sent_count?: number;
+  last_notification_sent_at?: string;
+  user_email?: string;
+  user_name?: string;
   course: {
     title: string;
     auto_promote_from_waitlist: boolean;
@@ -19,5 +21,6 @@ export interface WaitlistEntry {
   profile?: {
     first_name: string;
     last_name: string;
+    avatar_url?: string;
   };
 }
