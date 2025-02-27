@@ -67,7 +67,7 @@ export function MobileMenu({
               <span>Community</span>
             </Link>
             <Link 
-              to={session ? dashboardPath : "/auth"}
+              to={session ? "/dashboard" : "/auth"}
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
               onClick={() => {
                 setIsOpen(false);
@@ -77,7 +77,20 @@ export function MobileMenu({
               }}
             >
               <LayoutDashboard className="h-4 w-4" />
-              <span>{userType === 'student' ? 'Student Dashboard' : 'Teacher Dashboard'}</span>
+              <span>Teacher Dashboard</span>
+            </Link>
+            <Link 
+              to={session ? "/user-dashboard" : "/auth"}
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => {
+                setIsOpen(false);
+                if (!session) {
+                  handleAuthClick();
+                }
+              }}
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Student Dashboard</span>
             </Link>
           </div>
           {session ? (
