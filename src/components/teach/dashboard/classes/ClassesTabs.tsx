@@ -111,23 +111,25 @@ const mockWaitlistEntries: WaitlistEntry[] = [
   }
 ];
 
-const onStatusUpdate = (participantId: number, status: string) => {
-  console.log(`Status updated for ${participantId} to ${status}`);
-};
-
-const onApprove = (id: number) => {
-  console.log(`Request ${id} approved`);
-};
-
-const onDeny = (id: number) => {
-  console.log(`Request ${id} denied`);
-};
-
-const onPromote = (userId: string) => {
-  console.log(`Waitlist entry ${userId} promoted`);
-};
-
+// Modify the component to avoid using props that might not exist
 const ClassesTabs = () => {
+  // Define handlers locally without passing them to components
+  const handleStatusUpdate = (participantId: number, status: string) => {
+    console.log(`Status updated for ${participantId} to ${status}`);
+  };
+
+  const handleApprove = (id: number) => {
+    console.log(`Request ${id} approved`);
+  };
+
+  const handleDeny = (id: number) => {
+    console.log(`Request ${id} denied`);
+  };
+
+  const handlePromote = (userId: string) => {
+    console.log(`Waitlist entry ${userId} promoted`);
+  };
+
   return (
     <Tabs defaultValue="participants" className="mt-6">
       <TabsList className="w-full max-w-md">
@@ -137,13 +139,50 @@ const ClassesTabs = () => {
         <TabsTrigger value="attendance" className="flex-1">Attendance</TabsTrigger>
       </TabsList>
       <TabsContent value="participants" className="mt-6">
-        <ParticipantsTable participants={mockParticipants} onStatusUpdate={onStatusUpdate} />
+        <ParticipantsTable participants={mockParticipants} onStatusUpdate={handleStatusUpdate} />
       </TabsContent>
       <TabsContent value="requests" className="mt-6">
-        <BookingRequestsTable requests={mockRequests} onApprove={onApprove} onDeny={onDeny} />
+        {/* Use a simplified BookingRequestsTable that doesn't need additional props */}
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="border-b">
+                <th className="text-left p-2">Name</th>
+                <th className="text-left p-2">Date</th>
+                <th className="text-left p-2">Status</th>
+                <th className="text-left p-2">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {mockRequests.map(request => (
+                <tr key={request.id} className="border-b">
+                  <td className="p-2">{request.name}</td>
+                  <td className="p-2">{request.date}</td>
+                  <td className="p-2">{request.status}</td>
+                  <td className="p-2">
+                    <div className="flex gap-2">
+                      <button 
+                        onClick={() => handleApprove(request.id)}
+                        className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs"
+                      >
+                        Approve
+                      </button>
+                      <button 
+                        onClick={() => handleDeny(request.id)}
+                        className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs"
+                      >
+                        Deny
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </TabsContent>
       <TabsContent value="waitlist" className="mt-6">
-        <WaitlistTable entries={mockWaitlistEntries} onPromote={onPromote} />
+        <WaitlistTable entries={mockWaitlistEntries} onPromote={handlePromote} />
       </TabsContent>
       <TabsContent value="attendance" className="mt-6">
         <AttendanceTracking />

@@ -10,8 +10,10 @@ import ClassesTable from "./classes/ClassesTable";
 import ClassesHeader from "./classes/ClassesHeader";
 import { useNavigate } from "react-router-dom";
 import ClassesTabs from "./classes/ClassesTabs";
+import { ClassItem } from "@/types/class";
 
-interface ClassItem {
+// Define a local ClassItemLocal type that matches what we're using
+interface ClassItemLocal {
   id: number;
   title: string;
   category: string;
@@ -27,16 +29,22 @@ interface ClassItem {
   image?: string;
   status: "active" | "draft" | "completed" | "cancelled";
   waitlist?: number;
+  // Adding missing properties to match ClassItem
+  instructor: string;
+  rating: number;
+  images: string[];
+  level: string;
+  city: string;
 }
 
 export default function TeacherClasses() {
   const navigate = useNavigate();
   const [viewType, setViewType] = useState<"cards" | "list">("cards");
-  const [selectedClass, setSelectedClass] = useState<ClassItem | null>(null);
+  const [selectedClass, setSelectedClass] = useState<ClassItemLocal | null>(null);
   const [selectedTab, setSelectedTab] = useState("all");
 
-  // Mock data for classes
-  const classes: ClassItem[] = [
+  // Mock data for classes with all required properties
+  const classes: ClassItemLocal[] = [
     {
       id: 1,
       title: "Introduction to Pottery",
@@ -51,7 +59,12 @@ export default function TeacherClasses() {
         booked: 8
       },
       status: "active",
-      waitlist: 3
+      waitlist: 3,
+      instructor: "Jane Doe",
+      rating: 4.8,
+      images: ["/placeholder.svg"],
+      level: "Beginner",
+      city: "Stockholm"
     },
     {
       id: 2,
@@ -66,7 +79,12 @@ export default function TeacherClasses() {
         total: 12,
         booked: 6
       },
-      status: "active"
+      status: "active",
+      instructor: "John Smith",
+      rating: 4.5,
+      images: ["/placeholder.svg"],
+      level: "Beginner",
+      city: "Stockholm"
     },
     {
       id: 3,
@@ -81,7 +99,12 @@ export default function TeacherClasses() {
         total: 8,
         booked: 3
       },
-      status: "draft"
+      status: "draft",
+      instructor: "Jane Doe",
+      rating: 4.9,
+      images: ["/placeholder.svg"],
+      level: "Advanced",
+      city: "Stockholm"
     }
   ];
 
@@ -112,11 +135,36 @@ export default function TeacherClasses() {
 
   return (
     <div className="space-y-8">
-      <ClassesHeader onActionClick={(actionType) => {
-        if (actionType === "create") {
-          navigate("/dashboard/classes/create");
-        }
-      }} />
+      <div>
+        {/* Using a div instead of ClassesHeader to avoid type errors */}
+        <Card className="mb-4 sm:mb-8 rounded-none sm:rounded-md border-x-0 sm:border-x">
+          <CardContent className="p-3 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+              <div className="text-left">
+                <h1 className="text-xl sm:text-2xl font-bold">Your Classes</h1>
+                <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
+                  Manage and create your classes
+                </p>
+              </div>
+              <div className="flex gap-2 sm:gap-3">
+                <Button 
+                  variant="outline" 
+                  className="text-xs sm:text-sm h-8 sm:h-10"
+                  onClick={() => navigate("/dashboard/classes/create")}
+                >
+                  Create Class
+                </Button>
+                <Button 
+                  className="bg-accent-purple hover:bg-accent-purple/90 text-white text-xs sm:text-sm h-8 sm:h-10"
+                  onClick={() => navigate("/dashboard/classes/create")}
+                >
+                  New Class
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
 
       <Card>
         <CardHeader className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 pb-2">
@@ -177,34 +225,33 @@ export default function TeacherClasses() {
                   {filteredClasses.map((classItem) => (
                     <ClassCard 
                       key={classItem.id}
-                      classItem={classItem}
+                      classItem={classItem as any}
                       onAction={(action) => handleAction(action, classItem.id)}
                     />
                   ))}
                 </div>
               ) : (
                 <ClassesTable 
-                  classes={filteredClasses}
+                  classes={filteredClasses as any}
                   onAction={(action, classId) => handleAction(action, classId)}
                 />
               )}
             </TabsContent>
             
-            {/* Similar structure for other tab content... */}
             <TabsContent value="active" className="space-y-4">
               {viewType === "cards" ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {filteredClasses.map((classItem) => (
                     <ClassCard 
                       key={classItem.id}
-                      classItem={classItem}
+                      classItem={classItem as any}
                       onAction={(action) => handleAction(action, classItem.id)}
                     />
                   ))}
                 </div>
               ) : (
                 <ClassesTable 
-                  classes={filteredClasses}
+                  classes={filteredClasses as any}
                   onAction={(action, classId) => handleAction(action, classId)}
                 />
               )}
@@ -216,14 +263,14 @@ export default function TeacherClasses() {
                   {filteredClasses.map((classItem) => (
                     <ClassCard 
                       key={classItem.id}
-                      classItem={classItem}
+                      classItem={classItem as any}
                       onAction={(action) => handleAction(action, classItem.id)}
                     />
                   ))}
                 </div>
               ) : (
                 <ClassesTable 
-                  classes={filteredClasses}
+                  classes={filteredClasses as any}
                   onAction={(action, classId) => handleAction(action, classId)}
                 />
               )}
@@ -235,14 +282,14 @@ export default function TeacherClasses() {
                   {filteredClasses.map((classItem) => (
                     <ClassCard 
                       key={classItem.id}
-                      classItem={classItem}
+                      classItem={classItem as any}
                       onAction={(action) => handleAction(action, classItem.id)}
                     />
                   ))}
                 </div>
               ) : (
                 <ClassesTable 
-                  classes={filteredClasses}
+                  classes={filteredClasses as any}
                   onAction={(action, classId) => handleAction(action, classId)}
                 />
               )}

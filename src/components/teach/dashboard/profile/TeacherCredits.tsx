@@ -87,41 +87,41 @@ export function TeacherCredits() {
 
   return (
     <Card className="rounded-none sm:rounded-md border-x-0 sm:border-x">
-      <CardHeader className="p-4 sm:p-6">
-        <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
-          <Wallet className="h-4 w-4 sm:h-5 sm:w-5" />
+      <CardHeader className="p-3 sm:p-6">
+        <CardTitle className="flex items-center gap-1.5 sm:gap-2 text-base sm:text-xl">
+          <Wallet className="h-3.5 w-3.5 sm:h-5 sm:w-5" />
           Promotion Credits
         </CardTitle>
-        <CardDescription className="text-xs sm:text-sm">
+        <CardDescription className="text-[10px] sm:text-sm">
           Purchase and manage your promotion credits
         </CardDescription>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0 sm:pt-0 space-y-4 sm:space-y-6">
-        <div className="rounded-lg bg-muted p-3 sm:p-4">
-          <div className="text-xs sm:text-sm font-medium">Current Balance</div>
-          <div className="mt-1 text-xl sm:text-2xl font-bold">{credits || 0} Credits</div>
-          <div className="mt-1 text-xs text-muted-foreground">
+      <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0 space-y-3 sm:space-y-6">
+        <div className="rounded-lg bg-muted p-2.5 sm:p-4">
+          <div className="text-[10px] sm:text-sm font-medium">Current Balance</div>
+          <div className="mt-0.5 sm:mt-1 text-lg sm:text-2xl font-bold">{credits || 0} Credits</div>
+          <div className="mt-0.5 sm:mt-1 text-[9px] sm:text-xs text-muted-foreground">
             Use credits to boost your classes and reach more students
           </div>
         </div>
 
         <div>
-          <div className="mb-3 sm:mb-4 text-xs sm:text-sm font-medium">Purchase Credits</div>
-          <div className="grid grid-cols-2 gap-2 sm:gap-4">
+          <div className="mb-2 sm:mb-4 text-[10px] sm:text-sm font-medium">Purchase Credits</div>
+          <div className="grid grid-cols-2 gap-1.5 sm:gap-4">
             {Object.entries(CREDIT_PRICES).map(([amount, price]) => (
               <Button
                 key={amount}
                 variant="outline"
                 onClick={() => handleBuyCredits(parseInt(amount))}
                 disabled={isLoading}
-                className="h-auto py-2 sm:py-4 text-xs sm:text-sm"
+                className="h-auto py-1.5 sm:py-4 text-[9px] sm:text-sm"
               >
                 <div className="text-left">
-                  <div className="flex items-center gap-1 sm:gap-2">
-                    <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <div className="flex items-center gap-0.5 sm:gap-2">
+                    <Plus className="h-2.5 w-2.5 sm:h-4 sm:w-4" />
                     <span>{amount} Credits</span>
                   </div>
-                  <div className="mt-0.5 sm:mt-1 text-[10px] sm:text-sm text-muted-foreground">
+                  <div className="mt-0 sm:mt-1 text-[8px] sm:text-sm text-muted-foreground">
                     {price} SEK
                   </div>
                 </div>
