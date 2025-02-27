@@ -1,40 +1,30 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ClassItem } from "@/types/class";
-import ClassesTabContent from "./ClassesTabContent";
-import AttendanceTracking from "../AttendanceTracking";
-import TeacherWaitlist from "@/pages/TeacherWaitlist";
-import PromotionalStats from "./promotional/PromotionalStats";
+import BookingRequestsTable from "./BookingRequestsTable";
+import ParticipantsTable from "./ParticipantsTable";
+import WaitlistTable from "./WaitlistTable";
+import { AttendanceTracking } from "@/components/teach/dashboard/AttendanceTracking";
 
-interface ClassesTabsProps {
-  classes: ClassItem[];
-  onAction: (action: string, classId: number) => void;
-}
-
-const ClassesTabs = ({ classes, onAction }: ClassesTabsProps) => {
+const ClassesTabs = () => {
   return (
-    <Tabs defaultValue="classes" className="space-y-4">
-      <TabsList>
-        <TabsTrigger value="classes">Classes</TabsTrigger>
-        <TabsTrigger value="attendance">Attendance</TabsTrigger>
-        <TabsTrigger value="waitlist">Waitlist</TabsTrigger>
-        <TabsTrigger value="promotional">Promotion</TabsTrigger>
+    <Tabs defaultValue="participants" className="mt-6">
+      <TabsList className="w-full max-w-md">
+        <TabsTrigger value="participants" className="flex-1">Participants</TabsTrigger>
+        <TabsTrigger value="requests" className="flex-1">Requests</TabsTrigger>
+        <TabsTrigger value="waitlist" className="flex-1">Waitlist</TabsTrigger>
+        <TabsTrigger value="attendance" className="flex-1">Attendance</TabsTrigger>
       </TabsList>
-
-      <TabsContent value="classes">
-        <ClassesTabContent classes={classes} onAction={onAction} />
+      <TabsContent value="participants" className="mt-6">
+        <ParticipantsTable />
       </TabsContent>
-
-      <TabsContent value="attendance">
+      <TabsContent value="requests" className="mt-6">
+        <BookingRequestsTable />
+      </TabsContent>
+      <TabsContent value="waitlist" className="mt-6">
+        <WaitlistTable />
+      </TabsContent>
+      <TabsContent value="attendance" className="mt-6">
         <AttendanceTracking />
-      </TabsContent>
-
-      <TabsContent value="waitlist">
-        <TeacherWaitlist />
-      </TabsContent>
-
-      <TabsContent value="promotional">
-        <PromotionalStats />
       </TabsContent>
     </Tabs>
   );
