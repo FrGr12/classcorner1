@@ -53,18 +53,51 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <Table>
+      <Table className="text-xs sm:text-sm">
         <TableHeader>
           <TableRow>
-            {Object.keys(filters).map((column) => (
-              <TableHead key={column} className={column === 'date' ? 'hidden sm:table-cell' : ''}>
-                <ColumnFilter
-                  column={column.charAt(0).toUpperCase() + column.slice(1)}
-                  value={filters[column as keyof typeof filters]}
-                  onChange={(value) => handleFilter(column, value)}
-                />
-              </TableHead>
-            ))}
+            <TableHead>
+              <ColumnFilter
+                column="Title"
+                value={filters.title}
+                onChange={(value) => handleFilter('title', value)}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter
+                column="Date"
+                value={filters.date}
+                onChange={(value) => handleFilter('date', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Capacity"
+                value={filters.capacity}
+                onChange={(value) => handleFilter('capacity', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Attendees"
+                value={filters.attendees}
+                onChange={(value) => handleFilter('attendees', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Waitlist"
+                value={filters.waitlist}
+                onChange={(value) => handleFilter('waitlist', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Paid"
+                value={filters.paid}
+                onChange={(value) => handleFilter('paid', value)}
+              />
+            </TableHead>
             <TableHead className="text-center hidden sm:table-cell">Views</TableHead>
             <TableHead className="text-center hidden sm:table-cell">Saves</TableHead>
             <TableHead className="text-center hidden sm:table-cell">Clicks</TableHead>
