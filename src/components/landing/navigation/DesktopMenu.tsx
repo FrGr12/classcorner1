@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, School, BookOpen, Users } from "lucide-react";
+import { ChevronDown, School, BookOpen, Users, LayoutDashboard } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,6 +57,29 @@ export function DesktopMenu({
             <Link to="/community" className="flex items-center hover:text-accent-purple">
               <Users className="mr-2 h-4 w-4" />
               <span>Community</span>
+            </Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" size="sm" className="text-xs hover:text-accent-purple">
+            Dashboard
+            <ChevronDown className="ml-1 h-3 w-3" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-sm">
+          <DropdownMenuItem asChild>
+            <Link to={session ? "/dashboard" : "/auth"} className="flex items-center hover:text-accent-purple">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>Teacher Dashboard</span>
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link to={session ? "/user-dashboard" : "/auth"} className="flex items-center hover:text-accent-purple">
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              <span>Student Dashboard</span>
             </Link>
           </DropdownMenuItem>
         </DropdownMenuContent>
