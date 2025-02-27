@@ -1,8 +1,10 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, School, BookOpen, Users } from "lucide-react";
+import { Menu, School, BookOpen, Users, LayoutDashboard, BellRing } from "lucide-react";
 import { Link } from "react-router-dom";
+import { useNotifications } from "@/hooks/useNotifications";
+import { Badge } from "@/components/ui/badge";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -23,6 +25,9 @@ export function MobileMenu({
   handleAuthClick,
   loading,
 }: MobileMenuProps) {
+  const { notifications } = useNotifications(5);
+  const unreadCount = notifications.filter(n => !n.read_at).length;
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -42,6 +47,48 @@ export function MobileMenu({
           >
             Community
           </Link>
+
+          {session && (
+            <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
+              <h3 className="text-sm font-semibold text-muted-foreground">Dashboard</h3>
+              <Link 
+                to="/dashboard"
+                className="flex items-center justify-between text-sm hover:text-accent-purple transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="flex items-center">
+                  <LayoutDashboard className="h-4 w-4 mr-2" />
+                  <span>Teacher Dashboard</span>
+                </div>
+              </Link>
+              <Link 
+                to="/dashboard/classes"
+                className="flex items-center justify-between text-sm hover:text-accent-purple transition-colors pl-6"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="flex items-center">
+                  <BookOpen className="h-4 w-4 mr-2" />
+                  <span>My Classes</span>
+                </div>
+              </Link>
+              <Link 
+                to="/dashboard/inbox"
+                className="flex items-center justify-between text-sm hover:text-accent-purple transition-colors pl-6"
+                onClick={() => setIsOpen(false)}
+              >
+                <div className="flex items-center">
+                  <BellRing className="h-4 w-4 mr-2" />
+                  <span>Notifications</span>
+                </div>
+                {unreadCount > 0 && (
+                  <Badge variant="default" className="bg-accent-purple text-[10px] h-5 px-1">
+                    {unreadCount}
+                  </Badge>
+                )}
+              </Link>
+            </div>
+          )}
+
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
             <Link 
               to="/auth"

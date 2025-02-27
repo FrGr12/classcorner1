@@ -1,12 +1,15 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, School, BookOpen, Users } from "lucide-react";
+import { ChevronDown, School, BookOpen, Users, LayoutDashboard, BellRing } from "lucide-react";
+import { useNotifications } from "@/hooks/useNotifications";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
 
 interface DesktopMenuProps {
@@ -24,6 +27,9 @@ export function DesktopMenu({
   handleAuthClick,
   loading,
 }: DesktopMenuProps) {
+  const { notifications } = useNotifications(5);
+  const unreadCount = notifications.filter(n => !n.read_at).length;
+
   return (
     <div className="hidden md:flex items-center gap-4 ml-auto">
       <Link 
@@ -32,6 +38,46 @@ export function DesktopMenu({
       >
         Community
       </Link>
+      
+      {session && (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="sm" className="text-xs hover:text-accent-purple relative">
+              Dashboard
+              {unreadCount > 0 && (
+                <Badge variant="default" className="absolute -top-1 -right-1 h-4 w-4 p-0 flex items-center justify-center text-[10px] bg-accent-purple">
+                  {unreadCount}
+                </Badge>
+              )}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-sm">
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard" className="flex items-center hover:text-accent-purple">
+                <LayoutDashboard className="mr-2 h-4 w-4" />
+                <span>Teacher Dashboard</span>
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/dashboard/classes" className="flex items-center hover:text-accent-purple">
+                <BookOpen className="mr-2 h-4 w-4" />
+                <span>My Classes</span>
+              </Link>
+            </DropdownMenuItem>
+            {unreadCount > 0 && (
+              <DropdownMenuItem asChild>
+                <Link to="/dashboard/inbox" className="flex items-center hover:text-accent-purple">
+                  <BellRing className="mr-2 h-4 w-4" />
+                  <span>Notifications</span>
+                  <Badge variant="default" className="ml-auto h-5 px-1 text-[10px] bg-accent-purple">
+                    {unreadCount}
+                  </Badge>
+                </Link>
+              </DropdownMenuItem>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      )}
       
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
