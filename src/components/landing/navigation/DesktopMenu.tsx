@@ -69,15 +69,15 @@ export function DesktopMenu({
             <ChevronDown className="ml-1 h-3 w-3" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="w-48 bg-white/95 backdrop-blur-sm">
-          <DropdownMenuItem asChild>
-            <Link to={session ? "/dashboard" : "/auth"} className="flex items-center hover:text-accent-purple">
+        <DropdownMenuContent align="end" className="w-56 bg-white/95 backdrop-blur-sm">
+          <DropdownMenuItem asChild className="p-2">
+            <Link to={session ? "/dashboard" : "/auth"} className="flex items-center hover:text-accent-purple w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Teacher Dashboard</span>
             </Link>
           </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link to={session ? "/user-dashboard" : "/auth"} className="flex items-center hover:text-accent-purple">
+          <DropdownMenuItem asChild className="p-2">
+            <Link to={session ? "/user-dashboard" : "/auth"} className="flex items-center hover:text-accent-purple w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Student Dashboard</span>
             </Link>
