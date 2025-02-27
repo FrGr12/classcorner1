@@ -60,6 +60,11 @@ export function MobileMenu({
                   <LayoutDashboard className="h-4 w-4 mr-2" />
                   <span>Teacher Dashboard</span>
                 </div>
+                {unreadCount > 0 && (
+                  <Badge variant="default" className="bg-accent-purple text-[10px] h-5 px-1">
+                    {unreadCount}
+                  </Badge>
+                )}
               </Link>
               <Link 
                 to="/dashboard/classes"
