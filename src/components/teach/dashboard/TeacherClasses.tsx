@@ -5,9 +5,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PlusCircle, Calendar, Users, Clock, ArrowUpRight } from "lucide-react";
-import { ClassCard } from "./classes/ClassCard";
-import { ClassesTable } from "./classes/ClassesTable";
-import { ClassesHeader } from "./classes/ClassesHeader";
+import ClassCard from "./classes/ClassCard";
+import ClassesTable from "./classes/ClassesTable";
+import ClassesHeader from "./classes/ClassesHeader";
 import { useNavigate } from "react-router-dom";
 import ClassesTabs from "./classes/ClassesTabs";
 
