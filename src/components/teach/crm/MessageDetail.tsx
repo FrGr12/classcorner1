@@ -134,7 +134,7 @@ export const MessageDetail = ({ selectedMessage, onBack }: MessageDetailProps) =
                 <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48">
+            <DropdownMenuContent align="end" className="w-48 bg-white">
               <DropdownMenuItem onClick={handleViewProfile} className="cursor-pointer">
                 <User className="mr-2 h-4 w-4" />
                 <span>View Profile</span>

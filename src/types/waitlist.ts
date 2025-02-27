@@ -17,8 +17,8 @@ export interface WaitlistEntry {
   notification_status?: string;
   course: {
     title: string;
-    auto_promote_from_waitlist: boolean;
-    auto_send_waitlist_notification: boolean;
+    auto_promote_from_waitlist?: boolean;
+    auto_send_waitlist_notification?: boolean;
   };
   profile?: {
     first_name: string;
