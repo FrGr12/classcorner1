@@ -98,9 +98,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                 onChange={(value) => handleFilter('paid', value)}
               />
             </TableHead>
-            <TableHead className="text-center hidden sm:table-cell">Views</TableHead>
-            <TableHead className="text-center hidden sm:table-cell">Saves</TableHead>
-            <TableHead className="text-center hidden sm:table-cell">Clicks</TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Views</TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Saves</TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Clicks</TableHead>
             <TableHead className="hidden sm:table-cell">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -179,16 +179,28 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
                   </div>
                 </div>
               </TableCell>
-              <TableCell className="hidden sm:table-cell">{classItem.maxParticipants || '-'}</TableCell>
-              <TableCell className="hidden sm:table-cell">0</TableCell>
-              <TableCell className="hidden sm:table-cell">0</TableCell>
-              <TableCell className="hidden sm:table-cell">0</TableCell>
-              <TableCell className="hidden sm:table-cell">
-                <StatsDisplay
-                  views={classItem.views || 0}
-                  saves={classItem.saves || 0}
-                  adClicks={classItem.adClicks || 0}
-                />
+              <TableCell className="hidden sm:table-cell text-center">{classItem.maxParticipants || '-'}</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell p-0" colSpan={3}>
+                <div className="grid grid-cols-3">
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.views || 0}</span>
+                    </div>
+                  </div>
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.saves || 0}</span>
+                    </div>
+                  </div>
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.adClicks || 0}</span>
+                    </div>
+                  </div>
+                </div>
               </TableCell>
               <TableCell onClick={(e) => e.stopPropagation()} className="hidden sm:table-cell">
                 <ClassActions
