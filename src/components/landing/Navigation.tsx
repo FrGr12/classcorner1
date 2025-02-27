@@ -1,171 +1,113 @@
 
-import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
-import MobileMenu from "./navigation/MobileMenu";
-import DesktopMenu from "./navigation/DesktopMenu";
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
-import { useQuery } from "@tanstack/react-query";
-import { User } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ArrowLeft } from "lucide-react";
+import { MobileMenu } from "./navigation/MobileMenu";
+import { DesktopMenu } from "./navigation/DesktopMenu";
 
 const Navigation = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const isHomePage = location.pathname === "/";
+  const isBrowsePage = location.pathname === "/browse";
 
-  const { data: session } = useQuery({
-    queryKey: ['session'],
-    queryFn: async () => {
-      const { data } = await supabase.auth.getSession();
-      return data.session;
-    },
-  });
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-  const { data: profile } = useQuery({
-    queryKey: ['profile', session?.user?.id],
-    queryFn: async () => {
-      if (!session?.user?.id) return null;
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('first_name, last_name, is_teacher')
-        .eq('id', session.user.id)
-        .single();
-        
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!session?.user?.id,
-  });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
-  const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    window.location.href = '/';
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleAuthClick = () => {
+    navigate("/auth");
   };
 
-  const isTeacher = profile?.is_teacher;
-  const userName = profile?.first_name || 'User';
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleDashboardClick = () => {
+    navigate("/dashboard");
+  };
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast({
+        title: "Logged out successfully",
+      });
+      navigate("/");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error logging out",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white/95 backdrop-blur">
-      <div className="container flex h-16 items-center justify-between">
-        <div className="flex items-center">
-          <Link to="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold text-xl hidden sm:inline-block">ClassConnect</span>
-            <span className="font-bold text-xl sm:hidden">CC</span>
-          </Link>
-          <nav className="hidden md:flex space-x-4 lg:space-x-6">
-            <Link
-              to="/"
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === "/" ? "text-primary" : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Home
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
+      <div className="bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-lg px-4 py-2.5 flex flex-col md:flex-row items-center gap-4">
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <div className="flex items-center gap-4 min-w-fit">
+            {!isHomePage && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-8 w-8 hover:text-accent-purple"
+                onClick={handleBack}
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
+            <Link to="/" className="flex items-center">
+              <span className="text-base sm:text-xl font-display text-accent-purple">
+                classcorner
+              </span>
             </Link>
-            <Link
-              to="/browse"
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === "/browse" ? "text-primary" : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Browse Classes
-            </Link>
-            <Link
-              to="/community"
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === "/community" ? "text-primary" : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Community
-            </Link>
-            <Link
-              to="/teach"
-              className={`text-sm font-medium transition-colors ${
-                location.pathname === "/teach" ? "text-primary" : "text-muted-foreground hover:text-primary"
-              }`}
-            >
-              Teach
-            </Link>
-          </nav>
+          </div>
+          <MobileMenu
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            session={session}
+            handleDashboardClick={handleDashboardClick}
+            handleLogout={handleLogout}
+            handleAuthClick={handleAuthClick}
+            loading={loading}
+          />
         </div>
-        <div className="flex items-center gap-2">
-          {session ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="rounded-full h-8 w-8 p-0">
-                  <User className="h-4 w-4" />
-                  <span className="sr-only">User menu</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Hi, {userName}</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link to="/student-dashboard">Student Dashboard</Link>
-                </DropdownMenuItem>
-                {isTeacher && (
-                  <DropdownMenuItem asChild>
-                    <Link to="/dashboard">Teacher Dashboard</Link>
-                  </DropdownMenuItem>
-                )}
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut}>
-                  Sign out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <>
-              <Link to="/auth?mode=signin" className="hidden sm:inline-block">
-                <Button variant="ghost" size="sm">
-                  Sign In
-                </Button>
-              </Link>
-              <Link to="/auth?mode=signup">
-                <Button size="sm">Sign Up</Button>
-              </Link>
-            </>
-          )}
-          <button
-            className="ml-2 md:hidden"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            <span className="sr-only">Toggle menu</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-          </button>
-        </div>
+        
+        {!isBrowsePage && <IntegratedSearch />}
+
+        <DesktopMenu
+          session={session}
+          handleDashboardClick={handleDashboardClick}
+          handleLogout={handleLogout}
+          handleAuthClick={handleAuthClick}
+          loading={loading}
+        />
       </div>
-      
-      {/* Mobile menu */}
-      <MobileMenu 
-        isOpen={isMenuOpen} 
-        onClose={() => setIsMenuOpen(false)}
-        isAuthenticated={!!session}
-        isTeacher={!!isTeacher}
-        onSignOut={handleSignOut}
-      />
-    </header>
+    </nav>
   );
 };
 

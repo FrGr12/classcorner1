@@ -16,7 +16,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex flex-col w-full bg-gray-50">
       <DashboardHeader />
-      <main className="flex-1 p-2 sm:p-4 md:p-6 overflow-auto">
+      <main className="flex-1 p-3 sm:p-4 md:p-6 overflow-auto">
         <div className="max-w-full overflow-x-hidden">
           <Routes>
             <Route index element={<TeacherOverview />} />
