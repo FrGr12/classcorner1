@@ -16,18 +16,15 @@ export const ResourcesList = ({ resource, onResourceClick }: ResourcesListProps)
 
   return (
     <div className="space-y-1">
-      <h3 className="px-3 py-2 text-left text-base font-semibold">
-        Learning Resources
-      </h3>
       <nav className="space-y-1">
         {resources.map(resourceName => (
           <button
             key={resourceName}
             onClick={() => onResourceClick(resourceName)}
-            className={`w-full text-left px-3 py-2 text-sm hover:bg-accent rounded-lg ${
+            className={`w-full text-left px-3 py-2 text-sm font-medium hover:bg-accent rounded-lg transition-colors ${
               resource === resourceName.toLowerCase().replace(/ /g, '-')
-                ? 'bg-accent'
-                : ''
+                ? 'bg-accent text-accent-purple'
+                : 'text-neutral-700'
             }`}
           >
             {resourceName}
