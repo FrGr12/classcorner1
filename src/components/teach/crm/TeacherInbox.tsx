@@ -77,7 +77,7 @@ const TeacherInbox = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <InboxHeader onComposeClick={() => setIsComposeOpen(true)} />
       
       <InboxFilters
@@ -87,8 +87,19 @@ const TeacherInbox = () => {
         onStatusFilterChange={setStatusFilter}
       />
 
-      <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
-        <ResizablePanel defaultSize={25} minSize={20}>
+      <ResizablePanelGroup 
+        direction="horizontal" 
+        className="min-h-[600px] rounded-lg border"
+      >
+        <ResizablePanel 
+          defaultSize={25} 
+          minSize={20}
+          className="md:block"
+          // On mobile, if there's a selected message, hide this panel
+          style={{ 
+            display: selectedMessage && window.innerWidth < 768 ? 'none' : 'block' 
+          }}
+        >
           <MessageList
             messages={messages || []}
             selectedMessage={selectedMessage}
@@ -97,15 +108,25 @@ const TeacherInbox = () => {
           />
         </ResizablePanel>
 
-        <ResizableHandle />
+        <ResizableHandle className="hidden md:flex" />
 
-        <ResizablePanel defaultSize={45}>
+        <ResizablePanel 
+          defaultSize={45}
+          className="md:block"
+          // On mobile, only show this panel if there's a selected message
+          style={{ 
+            display: !selectedMessage && window.innerWidth < 768 ? 'none' : 'block' 
+          }}
+        >
           <MessageDetail selectedMessage={selectedMessage} />
         </ResizablePanel>
 
-        <ResizableHandle />
+        <ResizableHandle className="hidden md:flex" />
 
-        <ResizablePanel defaultSize={30}>
+        <ResizablePanel 
+          defaultSize={30}
+          className="hidden md:block" // Hide on mobile always
+        >
           <ContactDetail
             selectedMessage={selectedMessage}
             studentBookings={studentBookings || []}

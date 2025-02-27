@@ -37,4 +37,17 @@ export interface AttendanceRecord {
   notes?: string;
   created_at: string;
   updated_at?: string;
+  // Fix build errors by adding properties used in AttendanceTracking
+  booking_id?: number;
+  attendance_status?: string;
+  booking?: {
+    student: {
+      first_name: string;
+      last_name: string;
+    };
+  };
+  marked_at?: string;
+  marked_by?: string;
 }
+
+export { Session } from './session';
