@@ -66,7 +66,7 @@ const TeacherContacts = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 sm:space-y-6">
       <ContactsHeader />
       <ContactSearch 
         searchTerm={searchTerm}
@@ -74,7 +74,7 @@ const TeacherContacts = () => {
         statusFilter={statusFilter}
         onStatusFilterChange={setStatusFilter}
       />
-      <Card>
+      <Card className="p-2 sm:p-4 overflow-hidden">
         <ContactsTable contacts={contacts || []} isLoading={isLoading} />
       </Card>
     </div>

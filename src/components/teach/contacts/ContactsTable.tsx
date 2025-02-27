@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
@@ -101,17 +102,17 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
   return (
     <>
       <div className="space-y-4">
-        <div className="flex gap-4 mb-4">
+        <div className="flex flex-col sm:flex-row sm:gap-4 mb-4">
           <Input
             placeholder="Search by name or email..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="max-w-sm"
+            className="text-xs sm:text-sm mb-2 sm:mb-0 sm:max-w-sm h-8 sm:h-10"
           />
           <select
             value={tagFilter}
             onChange={(e) => setTagFilter(e.target.value)}
-            className="border rounded-md px-3 py-2"
+            className="border rounded-md px-2 py-1 sm:px-3 sm:py-2 text-xs sm:text-sm h-8 sm:h-10"
           >
             <option value="">All Tags</option>
             {allTags.map(tag => (
@@ -120,84 +121,86 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
           </select>
         </div>
 
-        <div className="relative overflow-x-auto">
-          <Table>
+        <div className="relative overflow-x-auto -mx-4 sm:mx-0">
+          <Table className="w-[640px] sm:w-full">
             <TableHeader>
               <TableRow>
                 <TableHead 
-                  className="cursor-pointer"
+                  className="cursor-pointer text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4"
                   onClick={() => handleSort('name')}
                 >
                   Name {sortField === 'name' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-4 w-4" /> : <ChevronDown className="inline h-4 w-4" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronDown className="inline h-3 w-3 sm:h-4 sm:w-4" />
                   )}
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer"
+                  className="cursor-pointer text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4"
                   onClick={() => handleSort('email')}
                 >
                   Email {sortField === 'email' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-4 w-4" /> : <ChevronDown className="inline h-4 w-4" />
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronDown className="inline h-3 w-3 sm:h-4 sm:w-4" />
                   )}
                 </TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Tags</TableHead>
+                <TableHead className="text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4">Phone</TableHead>
+                <TableHead className="text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4">Tags</TableHead>
                 <TableHead 
-                  className="cursor-pointer"
+                  className="cursor-pointer text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4"
                   onClick={() => handleSort('last_interaction')}
                 >
-                  Last Interaction {sortField === 'last_interaction' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-4 w-4" /> : <ChevronDown className="inline h-4 w-4" />
+                  Last Int. {sortField === 'last_interaction' && (
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronDown className="inline h-3 w-3 sm:h-4 sm:w-4" />
                   )}
                 </TableHead>
                 <TableHead 
-                  className="cursor-pointer"
+                  className="cursor-pointer text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4"
                   onClick={() => handleSort('total_bookings')}
                 >
-                  Total Bookings {sortField === 'total_bookings' && (
-                    sortDirection === 'asc' ? <ChevronUp className="inline h-4 w-4" /> : <ChevronDown className="inline h-4 w-4" />
+                  Bookings {sortField === 'total_bookings' && (
+                    sortDirection === 'asc' ? <ChevronUp className="inline h-3 w-3 sm:h-4 sm:w-4" /> : <ChevronDown className="inline h-3 w-3 sm:h-4 sm:w-4" />
                   )}
                 </TableHead>
-                <TableHead>Actions</TableHead>
+                <TableHead className="text-xs sm:text-sm py-2 sm:py-3 px-2 sm:px-4">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {filteredAndSortedContacts.map((contact) => (
                 <TableRow key={contact.id}>
-                  <TableCell className="font-medium">
+                  <TableCell className="font-medium text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4">
                     {contact.first_name} {contact.last_name}
                   </TableCell>
-                  <TableCell>{contact.email}</TableCell>
-                  <TableCell>{contact.phone || '-'}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 flex-wrap">
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4 max-w-[100px] sm:max-w-none truncate">
+                    {contact.email}
+                  </TableCell>
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4">{contact.phone || '-'}</TableCell>
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4">
+                    <div className="flex gap-1 sm:gap-2 flex-wrap">
                       {contact.tags.map((tag) => (
                         <Badge
                           key={tag}
-                          className={`${getTagColor(tag)} text-sm px-3 py-1`}
+                          className={`${getTagColor(tag)} text-[10px] sm:text-xs px-1.5 sm:px-3 py-0.5 sm:py-1`}
                         >
                           {tag}
                         </Badge>
                       ))}
                     </div>
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4 whitespace-nowrap">
                     {format(new Date(contact.last_interaction), 'MMM d, yyyy')}
                   </TableCell>
-                  <TableCell>{contact.total_bookings}</TableCell>
-                  <TableCell>
-                    <div className="flex gap-4">
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4">{contact.total_bookings}</TableCell>
+                  <TableCell className="text-xs sm:text-sm py-2 sm:py-4 px-2 sm:px-4">
+                    <div className="flex gap-1 sm:gap-4">
                       <div className="flex flex-col items-center">
                         <Button 
                           variant="secondary"
                           size="icon"
                           title="Message Contact"
                           onClick={() => handleMessageClick(contact)}
-                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1 h-6 w-6 sm:h-8 sm:w-8"
                         >
-                          <MessageSquare className="h-4 w-4 text-white" />
+                          <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                         </Button>
-                        <span className="text-xs text-gray-600">Message</span>
+                        <span className="text-[8px] sm:text-xs text-gray-600">Msg</span>
                       </div>
                       <div className="flex flex-col items-center">
                         <Button 
@@ -208,11 +211,11 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                             setSelectedContact(contact);
                             setIsBookingOpen(true);
                           }}
-                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1 h-6 w-6 sm:h-8 sm:w-8"
                         >
-                          <Calendar className="h-4 w-4 text-white" />
+                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                         </Button>
-                        <span className="text-xs text-gray-600">Bookings</span>
+                        <span className="text-[8px] sm:text-xs text-gray-600">Book</span>
                       </div>
                       <div className="flex flex-col items-center">
                         <Button 
@@ -223,11 +226,11 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
                             setSelectedContact(contact);
                             setIsNoteOpen(true);
                           }}
-                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1"
+                          className="bg-accent-purple hover:bg-accent-purple/90 mb-1 h-6 w-6 sm:h-8 sm:w-8"
                         >
-                          <FileText className="h-4 w-4 text-white" />
+                          <FileText className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
                         </Button>
-                        <span className="text-xs text-gray-600">Notes</span>
+                        <span className="text-[8px] sm:text-xs text-gray-600">Note</span>
                       </div>
                     </div>
                   </TableCell>
@@ -240,23 +243,23 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
 
       {/* Message Dialog */}
       <Dialog open={isMessageOpen} onOpenChange={setIsMessageOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[90vw] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Send Message</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-sm sm:text-base">Send Message</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               Send a message to {selectedContact?.first_name} {selectedContact?.last_name}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <Textarea
               placeholder="Type your message here..."
-              className="min-h-[100px]"
+              className="min-h-[100px] text-xs sm:text-sm"
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsMessageOpen(false)}>
+              <Button variant="outline" onClick={() => setIsMessageOpen(false)} className="text-xs sm:text-sm h-8 sm:h-10">
                 Cancel
               </Button>
-              <Button onClick={handleSendMessage}>Send Message</Button>
+              <Button onClick={handleSendMessage} className="text-xs sm:text-sm h-8 sm:h-10">Send Message</Button>
             </div>
           </div>
         </DialogContent>
@@ -264,18 +267,18 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
 
       {/* Booking History Dialog */}
       <Dialog open={isBookingOpen} onOpenChange={setIsBookingOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[90vw] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Booking History</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-sm sm:text-base">Booking History</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               View booking history for {selectedContact?.first_name} {selectedContact?.last_name}
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
             {selectedContact?.total_bookings === 0 ? (
-              <p className="text-muted-foreground">No booking history available</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">No booking history available</p>
             ) : (
-              <p className="text-muted-foreground">Total bookings: {selectedContact?.total_bookings}</p>
+              <p className="text-muted-foreground text-xs sm:text-sm">Total bookings: {selectedContact?.total_bookings}</p>
             )}
           </div>
         </DialogContent>
@@ -283,10 +286,10 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
 
       {/* Add Note Dialog */}
       <Dialog open={isNoteOpen} onOpenChange={setIsNoteOpen}>
-        <DialogContent>
+        <DialogContent className="max-w-[90vw] sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Note</DialogTitle>
-            <DialogDescription>
+            <DialogTitle className="text-sm sm:text-base">Add Note</DialogTitle>
+            <DialogDescription className="text-xs sm:text-sm">
               Add a note about {selectedContact?.first_name} {selectedContact?.last_name}
             </DialogDescription>
           </DialogHeader>
@@ -295,13 +298,13 @@ const ContactsTable = ({ contacts, isLoading }: ContactsTableProps) => {
               placeholder="Type your note here..."
               value={noteContent}
               onChange={(e) => setNoteContent(e.target.value)}
-              className="min-h-[100px]"
+              className="min-h-[100px] text-xs sm:text-sm"
             />
             <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setIsNoteOpen(false)}>
+              <Button variant="outline" onClick={() => setIsNoteOpen(false)} className="text-xs sm:text-sm h-8 sm:h-10">
                 Cancel
               </Button>
-              <Button onClick={handleAddNote}>Save Note</Button>
+              <Button onClick={handleAddNote} className="text-xs sm:text-sm h-8 sm:h-10">Save Note</Button>
             </div>
           </div>
         </DialogContent>

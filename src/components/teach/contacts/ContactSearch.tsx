@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { Search, Filter } from "lucide-react";
+import { Search } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -23,30 +23,28 @@ const ContactSearch = ({
   onStatusFilterChange,
 }: ContactSearchProps) => {
   return (
-    <div className="flex justify-between items-center mb-6">
-      <div className="flex gap-4 flex-1">
-        <div className="flex-1 relative">
-          <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search contacts..."
-            value={searchTerm}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="pl-9 text-sm"
-          />
-        </div>
-        <Select value={statusFilter} onValueChange={onStatusFilterChange}>
-          <SelectTrigger className="w-[180px] text-sm">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Contacts</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="past">Past Attendee</SelectItem>
-            <SelectItem value="waitlist">Waitlist</SelectItem>
-            <SelectItem value="vip">VIP</SelectItem>
-          </SelectContent>
-        </Select>
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="relative flex-1">
+        <Search className="absolute left-3 top-2.5 h-3.5 w-3.5 sm:top-3 sm:h-4 sm:w-4 text-muted-foreground" />
+        <Input
+          placeholder="Search contacts..."
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="pl-9 text-xs sm:text-sm h-8 sm:h-10"
+        />
       </div>
+      <Select value={statusFilter} onValueChange={onStatusFilterChange}>
+        <SelectTrigger className="w-full sm:w-[180px] text-xs sm:text-sm h-8 sm:h-10">
+          <SelectValue placeholder="Filter by status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="all">All Contacts</SelectItem>
+          <SelectItem value="active">Active</SelectItem>
+          <SelectItem value="past">Past Attendee</SelectItem>
+          <SelectItem value="waitlist">Waitlist</SelectItem>
+          <SelectItem value="vip">VIP</SelectItem>
+        </SelectContent>
+      </Select>
     </div>
   );
 };
