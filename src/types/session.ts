@@ -9,7 +9,7 @@ export interface Session {
   recurrence_pattern?: string;
   recurrence_end_date?: string;
   duration?: string;
-  // Add properties to fix build errors
+  // Properties used in AttendanceTracking and other places
   start?: string;
   isRecurring?: boolean;
   recurrencePattern?: string;

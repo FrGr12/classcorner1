@@ -5,14 +5,15 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ReplyAll, MoreHorizontal } from "lucide-react";
+import { ReplyAll, MoreHorizontal, ArrowLeft } from "lucide-react";
 import { useState } from "react";
 
 interface MessageDetailProps {
   selectedMessage: Message | null;
+  onBack?: () => void;
 }
 
-export const MessageDetail = ({ selectedMessage }: MessageDetailProps) => {
+export const MessageDetail = ({ selectedMessage, onBack }: MessageDetailProps) => {
   const [replyContent, setReplyContent] = useState("");
 
   if (!selectedMessage) {
@@ -28,6 +29,16 @@ export const MessageDetail = ({ selectedMessage }: MessageDetailProps) => {
       <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 sm:gap-3">
+            {onBack && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={onBack}
+                className="md:hidden mr-1 h-8 w-8 p-0"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
             <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
               <AvatarImage src={selectedMessage.profile?.avatar_url || ""} />
               <AvatarFallback className="text-xs sm:text-sm">

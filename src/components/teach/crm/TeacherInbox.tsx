@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,9 +21,20 @@ const TeacherInbox = () => {
   const [messageContent, setMessageContent] = useState("");
   const [recipient, setRecipient] = useState("");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Detect window size changes
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const { messages, studentBookings } = useInboxData(selectedMessage?.student_id || null);
 
@@ -95,9 +106,8 @@ const TeacherInbox = () => {
           defaultSize={25} 
           minSize={20}
           className="md:block"
-          // On mobile, if there's a selected message, hide this panel
           style={{ 
-            display: selectedMessage && window.innerWidth < 768 ? 'none' : 'block' 
+            display: selectedMessage && isMobile ? 'none' : 'block' 
           }}
         >
           <MessageList
@@ -113,12 +123,18 @@ const TeacherInbox = () => {
         <ResizablePanel 
           defaultSize={45}
           className="md:block"
-          // On mobile, only show this panel if there's a selected message
           style={{ 
-            display: !selectedMessage && window.innerWidth < 768 ? 'none' : 'block' 
+            display: !selectedMessage && isMobile ? 'none' : 'block' 
           }}
         >
-          <MessageDetail selectedMessage={selectedMessage} />
+          <MessageDetail 
+            selectedMessage={selectedMessage} 
+            onBack={() => {
+              if (isMobile) {
+                setSelectedMessage(null);
+              }
+            }} 
+          />
         </ResizablePanel>
 
         <ResizableHandle className="hidden md:flex" />

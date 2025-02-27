@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 interface MessageListProps {
   messages: Message[];
   selectedMessage: Message | null;
-  onMessageSelect: (message: Message) => void;
+  onMessageSelect: (message: Message | null) => void;
   onContactClick: (message: Message) => void;
 }
 
@@ -26,7 +26,7 @@ export const MessageList = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => onMessageSelect(null as any)}
+            onClick={() => onMessageSelect(null)}
             className="text-xs flex items-center text-muted-foreground"
           >
             <ArrowLeft className="h-3 w-3 mr-1" />
@@ -46,14 +46,14 @@ export const MessageList = ({
                 : "hover:bg-neutral-50"
             }`}
           >
-            <div 
-              className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2"
-              onClick={(e) => {
-                e.stopPropagation();
-                onContactClick(message);
-              }}
-            >
-              <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
+            <div className="flex items-center gap-2 sm:gap-3 mb-1 sm:mb-2">
+              <Avatar 
+                className="h-6 w-6 sm:h-8 sm:w-8 cursor-pointer"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onContactClick(message);
+                }}
+              >
                 <AvatarImage src={message.profile?.avatar_url || ""} />
                 <AvatarFallback className="text-xs sm:text-sm">
                   {message.profile?.first_name?.[0] || "U"}
@@ -61,7 +61,13 @@ export const MessageList = ({
               </Avatar>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center justify-between">
-                  <p className="font-medium text-xs sm:text-sm truncate text-left">
+                  <p 
+                    className="font-medium text-xs sm:text-sm truncate text-left cursor-pointer"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onContactClick(message);
+                    }}
+                  >
                     {message.profile?.first_name} {message.profile?.last_name}
                   </p>
                   <span className="text-[10px] sm:text-xs text-muted-foreground shrink-0 ml-1 sm:ml-2">

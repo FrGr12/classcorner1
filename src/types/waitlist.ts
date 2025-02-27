@@ -4,7 +4,7 @@ export interface WaitlistEntry {
   user_id: string;
   course_id: number;
   status: 'waiting' | 'notified' | 'expired' | 'promoted';
-  position: number;
+  position?: number; // Make optional to match actual data
   created_at: string;
   updated_at?: string;
   notification_sent_at?: string;
@@ -30,14 +30,14 @@ export interface WaitlistEntry {
 export interface AttendanceRecord {
   id: number;
   session_id: number;
-  user_id: string;
-  status: 'present' | 'absent' | 'late' | 'excused';
+  user_id?: string; // Make optional to match actual data
+  status?: 'present' | 'absent' | 'late' | 'excused'; // Make optional to match actual data
   check_in_time?: string;
   check_out_time?: string;
   notes?: string;
   created_at: string;
   updated_at?: string;
-  // Fix build errors by adding properties used in AttendanceTracking
+  // Properties used in AttendanceTracking
   booking_id?: number;
   attendance_status?: string;
   booking?: {
@@ -50,4 +50,5 @@ export interface AttendanceRecord {
   marked_by?: string;
 }
 
-export { Session } from './session';
+// Use export type for re-exporting to fix TS1205 error
+export type { Session } from './session';
