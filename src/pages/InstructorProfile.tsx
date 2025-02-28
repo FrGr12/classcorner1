@@ -153,7 +153,6 @@ const InstructorProfilePage = () => {
           date: new Date(),
           city: course.location,
           maxParticipants: course.max_participants,
-          minParticipants: course.minParticipants,
           duration: course.duration || "2 hours",
           status: course.status || "draft"
         }));
