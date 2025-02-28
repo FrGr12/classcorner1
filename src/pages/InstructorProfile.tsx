@@ -13,6 +13,7 @@ import InstructorBio from "@/components/instructor-profile/InstructorBio";
 import InstructorClasses from "@/components/instructor-profile/InstructorClasses";
 import InstructorReviews from "@/components/instructor-profile/InstructorReviews";
 import ContactInstructor from "@/components/instructor-profile/ContactInstructor";
+import { UserType } from "@/types/user";
 
 interface ProfileData {
   first_name?: string;
@@ -152,6 +153,7 @@ const InstructorProfilePage = () => {
           date: new Date(),
           city: course.location,
           maxParticipants: course.max_participants,
+          minParticipants: course.minParticipants,
           duration: course.duration || "2 hours",
           status: course.status || "draft"
         }));
@@ -191,6 +193,11 @@ const InstructorProfilePage = () => {
           }
         }
 
+        // Map database user_type to our UserType enum
+        const userTypeValue: UserType = 
+          instructorProfile.user_type === "teacher" ? "teacher" : 
+          instructorProfile.user_type === "student" ? "student" : "admin";
+
         // Set instructor profile with additional data
         setInstructor({
           id: instructorProfile.user_type === "teacher" ? id || "" : "",
@@ -212,7 +219,7 @@ const InstructorProfilePage = () => {
           totalClasses: formattedClasses.length,
           socialMedia: socialMediaObj,
           classes: formattedClasses,
-          userType: instructorProfile.user_type
+          userType: userTypeValue
         });
         
         setClasses(formattedClasses);
