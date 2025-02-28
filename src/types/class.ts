@@ -1,3 +1,4 @@
+
 export interface ClassItem {
   id: number;
   title: string;
@@ -26,6 +27,7 @@ export interface ClassItem {
   adClicks?: number;
   instructorEmail?: string;
   instructorPhone?: string;
+  status?: string;
 }
 
 export interface ClassData {

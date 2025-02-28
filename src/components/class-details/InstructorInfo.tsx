@@ -215,15 +215,15 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
               <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Ask a Question
             </Button>
-            <Button
-              variant="outline" 
-              size="sm"
-              className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
-              as={Link}
-              to={`/instructor/${classItem.instructor_id}`}
-            >
-              View Profile
-            </Button>
+            <Link to={`/instructor/${classItem.instructor_id}`}>
+              <Button
+                variant="outline" 
+                size="sm"
+                className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
+              >
+                View Profile
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

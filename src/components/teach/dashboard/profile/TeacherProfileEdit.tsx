@@ -70,6 +70,26 @@ const TeacherProfileEdit = () => {
         if (error) throw error;
         
         if (data) {
+          // Parse social media JSON if it exists
+          let instagramValue = "";
+          let linkedinValue = "";
+          
+          if (data.social_media) {
+            // Handle different possible types of social_media data
+            if (typeof data.social_media === 'object') {
+              instagramValue = (data.social_media as any)?.instagram || "";
+              linkedinValue = (data.social_media as any)?.linkedin || "";
+            } else if (typeof data.social_media === 'string') {
+              try {
+                const parsed = JSON.parse(data.social_media);
+                instagramValue = parsed?.instagram || "";
+                linkedinValue = parsed?.linkedin || "";
+              } catch (e) {
+                console.error("Error parsing social media JSON:", e);
+              }
+            }
+          }
+          
           form.reset({
             firstName: data.first_name || "",
             lastName: data.last_name || "",
@@ -79,8 +99,8 @@ const TeacherProfileEdit = () => {
             location: data.location || "",
             teachingExperience: data.teaching_experience || "",
             portfolioUrl: data.portfolio_url || "",
-            instagram: data.social_media?.instagram || "",
-            linkedin: data.social_media?.linkedin || "",
+            instagram: instagramValue,
+            linkedin: linkedinValue,
             preferredTeachingMethod: data.preferred_teaching_method || "in-person"
           });
           

@@ -14,6 +14,40 @@ import InstructorClasses from "@/components/instructor-profile/InstructorClasses
 import InstructorReviews from "@/components/instructor-profile/InstructorReviews";
 import ContactInstructor from "@/components/instructor-profile/ContactInstructor";
 
+interface ProfileData {
+  first_name?: string;
+  last_name?: string;
+  email?: string;
+  phone?: string;
+  bio?: string;
+  avatar_url?: string;
+  location?: string;
+  teaching_experience?: string;
+  expertise?: string[];
+  preferred_teaching_method?: string;
+  portfolio_url?: string;
+  social_media?: any;
+  user_type: string;
+}
+
+interface ReviewData {
+  id: number;
+  course_id: number;
+  reviewer_id: string;
+  rating: number;
+  review_text: string;
+  instructor_response?: string;
+  created_at: string;
+  courses?: {
+    title?: string;
+  };
+  profiles?: {
+    first_name?: string;
+    last_name?: string;
+    avatar_url?: string;
+  };
+}
+
 const InstructorProfilePage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -46,6 +80,8 @@ const InstructorProfilePage = () => {
           navigate("/");
           return;
         }
+
+        const instructorProfile = instructorData as ProfileData;
 
         // Fetch instructor's classes
         const { data: classesData, error: classesError } = await supabase
@@ -105,11 +141,11 @@ const InstructorProfilePage = () => {
           title: course.title,
           description: course.description,
           price: course.price,
-          instructor: `${instructorData.first_name} ${instructorData.last_name}`,
+          instructor: `${instructorProfile.first_name || ""} ${instructorProfile.last_name || ""}`,
           instructor_id: id,
-          images: course.course_images?.map((img) => img.image_path) || ["/placeholder.svg"],
+          images: course.course_images?.map((img: any) => img.image_path) || ["/placeholder.svg"],
           rating: course.course_reviews?.length > 0 
-            ? course.course_reviews.reduce((sum, review) => sum + review.rating, 0) / course.course_reviews.length 
+            ? course.course_reviews.reduce((sum: number, review: any) => sum + review.rating, 0) / course.course_reviews.length 
             : 0,
           level: course.skill_level || "beginner",
           category: course.category,
@@ -117,13 +153,14 @@ const InstructorProfilePage = () => {
           city: course.location,
           maxParticipants: course.max_participants,
           duration: course.duration || "2 hours",
-          status: course.status
+          status: course.status || "draft"
         }));
 
         // Transform the data for reviews
-        const formattedReviews = reviewsData.map((review) => ({
+        const reviewsArray = reviewsData as ReviewData[];
+        const formattedReviews = reviewsArray.map((review) => ({
           id: review.id,
-          instructorId: id,
+          instructorId: id || "",
           reviewerId: review.reviewer_id,
           reviewerName: `${review.profiles?.first_name || ''} ${review.profiles?.last_name || ''}`,
           reviewerAvatar: review.profiles?.avatar_url,
@@ -139,28 +176,43 @@ const InstructorProfilePage = () => {
         const totalRating = formattedReviews.reduce((sum, review) => sum + review.rating, 0);
         const averageRating = formattedReviews.length > 0 ? totalRating / formattedReviews.length : 0;
 
+        // Convert social media from JSON if needed
+        let socialMediaObj: { instagram?: string; linkedin?: string; website?: string } = {};
+        
+        if (instructorProfile.social_media) {
+          if (typeof instructorProfile.social_media === 'object') {
+            socialMediaObj = instructorProfile.social_media;
+          } else if (typeof instructorProfile.social_media === 'string') {
+            try {
+              socialMediaObj = JSON.parse(instructorProfile.social_media);
+            } catch (e) {
+              console.error("Error parsing social media:", e);
+            }
+          }
+        }
+
         // Set instructor profile with additional data
         setInstructor({
-          id: instructorData.id,
-          firstName: instructorData.first_name || "",
-          lastName: instructorData.last_name || "",
-          displayName: `${instructorData.first_name || ""} ${instructorData.last_name || ""}`,
-          email: instructorData.email,
-          phone: instructorData.phone,
-          bio: instructorData.bio || "Experienced instructor passionate about teaching creative skills.",
-          avatar: instructorData.avatar_url,
-          location: instructorData.location,
-          teachingExperience: instructorData.teaching_experience || "10+ years of teaching experience",
-          expertise: instructorData.expertise || [],
-          preferredTeachingMethod: instructorData.preferred_teaching_method || "in-person",
-          portfolioUrl: instructorData.portfolio_url,
+          id: instructorProfile.user_type === "teacher" ? id || "" : "",
+          firstName: instructorProfile.first_name || "",
+          lastName: instructorProfile.last_name || "",
+          displayName: `${instructorProfile.first_name || ""} ${instructorProfile.last_name || ""}`,
+          email: instructorProfile.email,
+          phone: instructorProfile.phone,
+          bio: instructorProfile.bio || "Experienced instructor passionate about teaching creative skills.",
+          avatar: instructorProfile.avatar_url,
+          location: instructorProfile.location,
+          teachingExperience: instructorProfile.teaching_experience || "10+ years of teaching experience",
+          expertise: instructorProfile.expertise || [],
+          preferredTeachingMethod: instructorProfile.preferred_teaching_method || "in-person",
+          portfolioUrl: instructorProfile.portfolio_url,
           averageRating: averageRating,
           totalReviews: formattedReviews.length,
           totalStudents: 0, // This would come from a different query
           totalClasses: formattedClasses.length,
-          socialMedia: instructorData.social_media,
+          socialMedia: socialMediaObj,
           classes: formattedClasses,
-          userType: instructorData.user_type
+          userType: instructorProfile.user_type
         });
         
         setClasses(formattedClasses);
