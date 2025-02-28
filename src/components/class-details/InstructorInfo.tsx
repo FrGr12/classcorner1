@@ -1,4 +1,6 @@
+
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Mail, Phone, UserPlus, UserMinus, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -167,7 +169,9 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
         <div className="w-20 h-20 sm:w-24 sm:h-24 bg-neutral-100 rounded-full flex-shrink-0" />
         <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
           <div>
-            <h3 className="text-lg sm:text-xl font-medium">{classItem.instructor}</h3>
+            <Link to={`/instructor/${classItem.instructor_id}`} className="hover:underline">
+              <h3 className="text-lg sm:text-xl font-medium">{classItem.instructor}</h3>
+            </Link>
             <p className="text-sm sm:text-base text-neutral-600">Expert Craftsperson</p>
           </div>
           <p className="text-sm sm:text-base text-neutral-600 max-w-prose">
@@ -211,6 +215,15 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
               <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Ask a Question
             </Button>
+            <Link to={`/instructor/${classItem.instructor_id}`}>
+              <Button
+                variant="outline" 
+                size="sm"
+                className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
+              >
+                View Profile
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

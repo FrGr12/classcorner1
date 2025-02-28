@@ -29,6 +29,7 @@ import About from "@/pages/About";
 import TeacherContacts from "@/pages/TeacherContacts";
 import TeacherInbox from "@/pages/TeacherInbox";
 import ContactManagement from "@/pages/ContactManagement";
+import InstructorProfile from "@/pages/InstructorProfile";
 
 const router = createBrowserRouter([
   // Public routes
@@ -54,6 +55,14 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <ClassDetails />
+      </ErrorBoundary>
+    ),
+  },
+  {
+    path: "/instructor/:id",
+    element: (
+      <ErrorBoundary>
+        <InstructorProfile />
       </ErrorBoundary>
     ),
   },
