@@ -397,7 +397,7 @@ const InstructorProfilePage = () => {
     return (
       <div className="min-h-screen bg-neutral-50">
         <Navigation />
-        <div className="min-h-[calc(100vh-72px)] flex items-center justify-center">
+        <div className="min-h-[calc(100vh-72px)] flex items-center justify-center pt-20">
           <Loader2 className="h-8 w-8 animate-spin text-accent-purple" />
         </div>
         <Footer />
@@ -409,7 +409,7 @@ const InstructorProfilePage = () => {
     return (
       <div className="min-h-screen bg-neutral-50">
         <Navigation />
-        <div className="min-h-[calc(100vh-72px)] flex items-center justify-center">
+        <div className="min-h-[calc(100vh-72px)] flex items-center justify-center pt-20">
           <div className="text-center">
             <h1 className="text-2xl font-bold mb-2">Instructor Not Found</h1>
             <p className="text-neutral-600">The instructor you're looking for doesn't exist or has been removed.</p>
@@ -437,7 +437,7 @@ const InstructorProfilePage = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 pt-24 mt-10">
         <div className="max-w-7xl mx-auto">
           <InstructorHeader instructor={instructor} />
           
