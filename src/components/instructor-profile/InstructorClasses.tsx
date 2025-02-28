@@ -61,7 +61,16 @@ const InstructorClasses = ({ classes, activeFilter, onFilterChange }: Instructor
           {classes.map((classItem) => (
             <ClassCard 
               key={classItem.id} 
-              classItem={classItem} 
+              id={classItem.id}
+              title={classItem.title}
+              instructor={classItem.instructor}
+              price={classItem.price}
+              rating={classItem.rating}
+              images={classItem.images}
+              level={classItem.level}
+              date={classItem.date}
+              city={classItem.city}
+              category={classItem.category}
             />
           ))}
         </div>
