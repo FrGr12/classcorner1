@@ -1,4 +1,3 @@
-
 import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
@@ -6,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { handleError } from "@/utils/errorHandler";
 import {
   Dialog,
   DialogContent,
@@ -34,36 +34,54 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    checkInstructor();
-    checkFollowStatus();
+    const fetchData = async () => {
+      try {
+        await Promise.all([checkInstructor(), checkFollowStatus()]);
+      } catch (error) {
+        handleError(error, {
+          title: "Failed to load instructor data",
+          description: "Please try refreshing the page"
+        });
+      }
+    };
+    
+    fetchData();
   }, [classItem.id]);
 
   const checkInstructor = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const { data: course } = await supabase
-      .from("courses")
-      .select("instructor_id")
-      .eq("id", classItem.id)
-      .single();
+      const { data: course } = await supabase
+        .from("courses")
+        .select("instructor_id")
+        .eq("id", classItem.id)
+        .single();
 
-    setIsInstructor(course?.instructor_id === user.id);
+      setIsInstructor(course?.instructor_id === user.id);
+    } catch (error) {
+      throw new Error("Failed to verify instructor status");
+    }
   };
 
   const checkFollowStatus = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) return;
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-    const { data: followData } = await supabase
-      .from("teacher_follows")
-      .select("id")
-      .eq("student_id", user.id)
-      .eq("teacher_id", classItem.instructor_id)
-      .eq("status", "active")
-      .single();
+      const { data: followData } = await supabase
+        .from("teacher_follows")
+        .select("id")
+        .eq("student_id", user.id)
+        .eq("teacher_id", classItem.instructor_id)
+        .eq("status", "active")
+        .single();
 
-    setIsFollowing(!!followData);
+      setIsFollowing(!!followData);
+    } catch (error) {
+      console.error("Error checking follow status:", error);
+    }
   };
 
   const handlePrivateRequest = async () => {
@@ -71,7 +89,9 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Please sign in to request a private class");
+        toast.error("Authentication required", {
+          description: "Please sign in to request a private class"
+        });
         navigate("/auth", { state: { returnTo: window.location.pathname } });
         return;
       }
@@ -89,12 +109,16 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
 
       if (messageError) throw messageError;
 
-      toast.success("Private class request sent successfully!");
+      toast.success("Request sent successfully", {
+        description: "Your private class request has been sent to the instructor"
+      });
       setIsMessageOpen(false);
       setPrivateMessage("");
     } catch (error) {
-      console.error("Error sending private request:", error);
-      toast.error("Failed to send request. Please try again.");
+      handleError(error, {
+        title: "Failed to send request",
+        description: "Please try again later"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -105,7 +129,9 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Please sign in to follow instructors");
+        toast.error("Authentication required", {
+          description: "Please sign in to follow instructors"
+        });
         navigate("/auth", { state: { returnTo: window.location.pathname } });
         return;
       }
@@ -132,8 +158,10 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
 
       setIsFollowing(!isFollowing);
     } catch (error) {
-      console.error("Error toggling follow:", error);
-      toast.error("Failed to update follow status");
+      handleError(error, {
+        title: "Follow action failed",
+        description: "Unable to update follow status"
+      });
     } finally {
       setIsLoading(false);
     }
@@ -144,7 +172,9 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(true);
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        toast.error("Please sign in to ask a question");
+        toast.error("Authentication required", {
+          description: "Please sign in to ask a question"
+        });
         navigate("/auth", { state: { returnTo: window.location.pathname } });
         return;
       }
@@ -174,12 +204,16 @@ const ClassHeader = ({ classItem, onBooking }: ClassHeaderProps) => {
 
       if (notificationError) throw notificationError;
 
-      toast.success("Your question has been sent to the instructor");
+      toast.success("Question sent", {
+        description: "Your question has been sent to the instructor"
+      });
       setIsQuestionDialogOpen(false);
       setQuestion("");
     } catch (error) {
-      console.error('Error sending question:', error);
-      toast.error("Failed to send question");
+      handleError(error, {
+        title: "Failed to send question",
+        description: "Please try again later"
+      });
     } finally {
       setIsLoading(false);
     }

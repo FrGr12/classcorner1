@@ -58,6 +58,7 @@ export default {
       animation: {
         "fade-up": "fadeUp 0.5s ease-out forwards",
         "fade-in": "fadeIn 0.5s ease-out forwards",
+        "skeleton-wave": "skeletonWave 1.5s ease-in-out infinite",
       },
       keyframes: {
         fadeUp: {
@@ -68,12 +69,18 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
+        skeletonWave: {
+          "0%": { backgroundPosition: "-200% 0" },
+          "100%": { backgroundPosition: "200% 0" },
+        },
       },
       backdropBlur: {
         xs: "2px",
+      },
+      backgroundImage: {
+        "skeleton-gradient": "linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0) 100%)",
       },
     },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
-

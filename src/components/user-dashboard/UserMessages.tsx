@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
+import Skeleton, { SkeletonList } from "@/components/ui/skeleton-loader";
+import { handleError } from "@/utils/errorHandler";
 
 interface Message {
   id: number;
@@ -61,7 +62,7 @@ interface Message {
 }
 
 const UserMessages = () => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [isComposeOpen, setIsComposeOpen] = useState(false);
   const [messageContent, setMessageContent] = useState("");
@@ -71,41 +72,44 @@ const UserMessages = () => {
   const { data: messages, isLoading } = useQuery({
     queryKey: ["student-messages"],
     queryFn: async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return [];
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return [];
 
-      const { data, error } = await supabase
-        .from('communications')
-        .select(`
-          *,
-          profile:profiles!instructor_id(
-            id,
-            first_name,
-            last_name,
-            avatar_url,
-            location,
-            bio,
-            languages
-          ),
-          course:courses(
-            title,
-            price,
-            duration
-          )
-        `)
-        .eq('student_id', user.id)
-        .order('sent_at', { ascending: false });
+        const { data, error } = await supabase
+          .from('communications')
+          .select(`
+            *,
+            profile:profiles!instructor_id(
+              id,
+              first_name,
+              last_name,
+              avatar_url,
+              location,
+              bio,
+              languages
+            ),
+            course:courses(
+              title,
+              price,
+              duration
+            )
+          `)
+          .eq('student_id', user.id)
+          .order('sent_at', { ascending: false });
 
-      if (error) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Failed to load messages"
+        if (error) {
+          throw error;
+        }
+
+        return data as Message[];
+      } catch (error) {
+        handleError(error, {
+          title: "Failed to load messages",
+          description: "Please try refreshing the page"
         });
-        throw error;
+        return [];
       }
-
-      return data as Message[];
     }
   });
 
@@ -117,27 +121,66 @@ const UserMessages = () => {
       if (!user) {
         toast({
           variant: "destructive",
-          title: "Error",
+          title: "Authentication required",
           description: "Please sign in to send messages"
         });
         return;
       }
 
-      // Add message sending logic here
       toast({
         title: "Success",
         description: "Message sent successfully"
       });
       setIsComposeOpen(false);
       setMessageContent("");
-    } catch (error: any) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message || "Failed to send message"
+    } catch (error) {
+      handleError(error, {
+        title: "Failed to send message"
       });
     }
   };
+
+  const renderMessagesSkeleton = () => (
+    <div className="p-4 space-y-2">
+      {Array(5).fill(0).map((_, i) => (
+        <div key={i} className="p-4 border rounded-lg">
+          <div className="flex items-center gap-3">
+            <Skeleton variant="circular" width={32} height={32} />
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center justify-between">
+                <Skeleton variant="text" width="30%" height={16} />
+                <Skeleton variant="text" width="20%" height={12} />
+              </div>
+              <Skeleton variant="text" width="80%" height={16} />
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+
+  const renderMessageDetailSkeleton = () => (
+    <div className="p-6">
+      <div className="flex items-center gap-4 mb-6">
+        <Skeleton variant="circular" width={40} height={40} />
+        <div>
+          <Skeleton variant="text" width={120} height={20} />
+          <Skeleton variant="text" width={180} height={16} />
+        </div>
+      </div>
+      <div className="prose max-w-none">
+        <div className="bg-muted p-4 rounded-lg">
+          <SkeletonList count={3} height={16} />
+        </div>
+      </div>
+      <div className="mt-6">
+        <Skeleton variant="rectangular" className="min-h-[100px] w-full" />
+        <div className="flex justify-end mt-2">
+          <Skeleton variant="button" width={100} height={36} />
+        </div>
+      </div>
+    </div>
+  );
 
   return (
     <div className="space-y-6">
@@ -157,8 +200,8 @@ const UserMessages = () => {
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search messages..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9"
           />
         </div>
@@ -177,13 +220,13 @@ const UserMessages = () => {
       <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
         <ResizablePanel defaultSize={40}>
           <ScrollArea className="h-[600px]">
-            <div className="p-4 space-y-2">
-              {isLoading ? (
-                <p className="text-center py-4">Loading messages...</p>
-              ) : messages?.length === 0 ? (
-                <p className="text-center py-4 text-muted-foreground">No messages found</p>
-              ) : (
-                messages?.map((message) => (
+            {isLoading ? (
+              renderMessagesSkeleton()
+            ) : messages?.length === 0 ? (
+              <p className="text-center py-4 text-muted-foreground">No messages found</p>
+            ) : (
+              <div className="p-4 space-y-2">
+                {messages?.map((message) => (
                   <div
                     key={message.id}
                     onClick={() => setSelectedMessage(message)}
@@ -215,9 +258,9 @@ const UserMessages = () => {
                       </div>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
+                ))}
+              </div>
+            )}
           </ScrollArea>
         </ResizablePanel>
 
@@ -259,6 +302,8 @@ const UserMessages = () => {
                 </div>
               </div>
             </div>
+          ) : isLoading ? (
+            renderMessageDetailSkeleton()
           ) : (
             <div className="flex items-center justify-center h-full text-muted-foreground">
               Select a message to view details
@@ -293,6 +338,7 @@ const UserMessages = () => {
             <Button
               onClick={handleSendMessage}
               className="bg-[#6E44FF] hover:bg-[#6E44FF]/90 text-white"
+              disabled={!messageContent.trim()}
             >
               Send Message
             </Button>
