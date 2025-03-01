@@ -2,6 +2,10 @@
 import { ClassItem } from "./class";
 import { UserType } from "./user";
 
+/**
+ * InstructorProfile represents a teacher's complete profile information
+ * including personal details, teaching statistics, and associated classes
+ */
 export interface InstructorProfile {
   id: string;
   firstName: string;
@@ -29,6 +33,10 @@ export interface InstructorProfile {
   userType: UserType;
 }
 
+/**
+ * InstructorReview represents a review left by a student for an instructor
+ * after taking one of their classes
+ */
 export interface InstructorReview {
   id: number;
   instructorId: string;
