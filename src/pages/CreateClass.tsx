@@ -32,7 +32,12 @@ const CreateClass = () => {
       } catch (error) {
         handleError(error, {
           title: "Failed to load drafts",
-          description: "Your draft count may be inaccurate"
+          description: "Your draft count may be inaccurate. Please try refreshing the page.",
+          position: "top-right",
+          action: {
+            label: "Retry",
+            onClick: () => fetchDraftCount()
+          }
         });
       } finally {
         setIsLoading(false);

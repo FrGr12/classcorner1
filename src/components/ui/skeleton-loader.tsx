@@ -3,7 +3,7 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "text" | "circular" | "rectangular" | "button" | "card";
+  variant?: "text" | "circular" | "rectangular" | "button" | "card" | "avatar" | "badge";
   width?: number | string;
   height?: number | string;
   animation?: "pulse" | "wave" | "none";
@@ -23,7 +23,7 @@ const Skeleton = ({
       ? "animate-skeleton-wave" 
       : "";
   
-  const baseClasses = "bg-neutral-200";
+  const baseClasses = "bg-neutral-200 dark:bg-neutral-700";
   
   const variantClasses = {
     text: "h-4 rounded w-full",
@@ -31,6 +31,8 @@ const Skeleton = ({
     rectangular: "rounded",
     button: "rounded-md",
     card: "rounded-xl",
+    avatar: "rounded-full h-10 w-10",
+    badge: "h-6 w-16 rounded-full",
   };
 
   return (
@@ -45,6 +47,9 @@ const Skeleton = ({
         width: width,
         height: height,
       }}
+      role="status"
+      aria-busy="true"
+      aria-label="Loading"
       {...props}
     />
   );
@@ -68,6 +73,9 @@ export const SkeletonList = ({
     <div 
       className={cn("space-y-2", className)} 
       style={{ gap: `${spacing}rem` }}
+      role="status"
+      aria-busy="true"
+      aria-label="Loading list items"
       {...props}
     >
       {Array(count)
@@ -87,6 +95,9 @@ export const SkeletonList = ({
 export const CardSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div 
     className={cn("space-y-4 p-4 border rounded-xl", className)} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading card"
     {...props}
   >
     <Skeleton variant="rectangular" height={200} />
@@ -108,6 +119,9 @@ export const TableRowSkeleton = ({
 }: { columns?: number } & React.HTMLAttributes<HTMLDivElement>) => (
   <div 
     className={cn("grid border-b py-3", `grid-cols-${columns}`, className)} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading table row"
     {...props}
   >
     {Array(columns)

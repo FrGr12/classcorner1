@@ -9,6 +9,8 @@ type ErrorOptions = {
     onClick: () => void;
   };
   description?: string;
+  position?: "top-center" | "top-right" | "bottom-center" | "bottom-right";
+  variant?: "default" | "destructive";
 };
 
 /**
@@ -33,7 +35,10 @@ export const handleError = (error: unknown, options?: ErrorOptions) => {
     description: options?.description || errorMessage,
     duration: options?.duration || 5000,
     action: options?.action,
+    position: options?.position || "top-center",
   });
+
+  return errorMessage;
 };
 
 /**
@@ -52,3 +57,13 @@ export const withErrorHandling = <T extends (...args: any[]) => Promise<any>>(
     }
   };
 };
+
+/**
+ * Create a custom error with additional context
+ */
+export class AppError extends Error {
+  constructor(message: string, public context?: Record<string, any>) {
+    super(message);
+    this.name = "AppError";
+  }
+}
