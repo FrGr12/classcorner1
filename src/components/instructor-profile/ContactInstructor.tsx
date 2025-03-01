@@ -4,7 +4,7 @@ import { InstructorProfile } from "@/types/instructor";
 import MessageDialog from "./contact/MessageDialog";
 import ContactButtons from "./contact/ContactButtons";
 import SocialLinks from "./contact/SocialLinks";
-import { ErrorBoundary } from "@/components/error/ErrorBoundary";
+import ErrorBoundary from "@/components/error/ErrorBoundary";
 
 interface ContactInstructorProps {
   instructor: InstructorProfile;
