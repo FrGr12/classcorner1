@@ -17,6 +17,13 @@ const SocialLinks = ({ instructor }: SocialLinksProps) => {
     return null;
   }
 
+  const getWebsiteUrl = (url: string) => {
+    if (url.startsWith('http://') || url.startsWith('https://')) {
+      return url;
+    }
+    return `https://${url}`;
+  };
+
   return (
     <div className="mt-6">
       <h3 className="font-medium mb-3">Connect with {instructor.firstName}</h3>
@@ -27,9 +34,10 @@ const SocialLinks = ({ instructor }: SocialLinksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors"
-            aria-label="Instagram"
+            aria-label={`${instructor.firstName}'s Instagram profile`}
           >
-            <Instagram className="h-5 w-5" />
+            <Instagram className="h-5 w-5" aria-hidden="true" />
+            <span className="sr-only">Instagram</span>
           </a>
         )}
         
@@ -39,21 +47,23 @@ const SocialLinks = ({ instructor }: SocialLinksProps) => {
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors"
-            aria-label="LinkedIn"
+            aria-label={`${instructor.firstName}'s LinkedIn profile`}
           >
-            <Linkedin className="h-5 w-5" />
+            <Linkedin className="h-5 w-5" aria-hidden="true" />
+            <span className="sr-only">LinkedIn</span>
           </a>
         )}
         
         {(instructor.socialMedia?.website || instructor.portfolioUrl) && (
           <a 
-            href={instructor.socialMedia?.website || instructor.portfolioUrl}
+            href={getWebsiteUrl(instructor.socialMedia?.website || instructor.portfolioUrl || '')}
             target="_blank"
             rel="noopener noreferrer"
             className="p-2 bg-neutral-100 rounded-full hover:bg-neutral-200 transition-colors"
-            aria-label="Website"
+            aria-label={`${instructor.firstName}'s website`}
           >
-            <Globe className="h-5 w-5" />
+            <Globe className="h-5 w-5" aria-hidden="true" />
+            <span className="sr-only">Website</span>
           </a>
         )}
       </div>

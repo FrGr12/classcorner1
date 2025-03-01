@@ -4,6 +4,7 @@ import { InstructorProfile } from "@/types/instructor";
 import MessageDialog from "./contact/MessageDialog";
 import ContactButtons from "./contact/ContactButtons";
 import SocialLinks from "./contact/SocialLinks";
+import { ErrorBoundary } from "@/components/error/ErrorBoundary";
 
 interface ContactInstructorProps {
   instructor: InstructorProfile;
@@ -13,7 +14,7 @@ const ContactInstructor = ({ instructor }: ContactInstructorProps) => {
   const [isMessageOpen, setIsMessageOpen] = useState(false);
 
   return (
-    <>
+    <ErrorBoundary>
       <div className="glass-panel rounded-xl p-6">
         <h2 className="text-xl font-bold mb-4">Contact</h2>
         
@@ -30,7 +31,7 @@ const ContactInstructor = ({ instructor }: ContactInstructorProps) => {
         onOpenChange={setIsMessageOpen}
         instructor={instructor}
       />
-    </>
+    </ErrorBoundary>
   );
 };
 
