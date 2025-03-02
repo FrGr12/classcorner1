@@ -1,9 +1,37 @@
 
-import { createContext, useState, ReactNode, useContext } from "react";
+import { createContext, ReactNode, useContext } from "react";
 import { UseFormReturn } from "react-hook-form";
 
+export type CourseFormValues = {
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  locationType: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  onlineLink: string;
+  classDetails: string;
+  difficultyLevel: string;
+  price: string;
+  capacity: string;
+  minParticipants?: number;
+  maxParticipants?: number;
+  images: File[];
+  scheduleType: string;
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  recurringDays: string[];
+  whatToBring: string[];
+  learningOutcomes: string[];
+};
+
 type CourseFormContextType = {
-  form: UseFormReturn<any>;
+  form: UseFormReturn<CourseFormValues>;
   sessions: any[];
   setSessions: (sessions: any[]) => void;
 };
@@ -20,7 +48,7 @@ export const useCourseForm = () => {
 
 interface CourseFormProviderProps {
   children: ReactNode;
-  form: UseFormReturn<any>;
+  form: UseFormReturn<CourseFormValues>;
   sessions: any[];
   setSessions: (sessions: any[]) => void;
 }

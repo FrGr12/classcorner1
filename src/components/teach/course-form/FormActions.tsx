@@ -26,7 +26,7 @@ export const FormActions = ({
         type="button" 
         variant="outline" 
         onClick={onPrevious}
-        disabled={currentStep === 0}
+        disabled={currentStep === 0 || isSubmitting}
         size="lg"
       >
         Previous
@@ -38,6 +38,8 @@ export const FormActions = ({
           variant="secondary" 
           onClick={onSaveDraft}
           disabled={isSubmitting}
+          isLoading={isSubmitting && currentStep !== totalSteps - 1}
+          loadingText="Saving..."
           size="lg"
         >
           Save Draft
@@ -47,6 +49,7 @@ export const FormActions = ({
           <Button 
             type="button" 
             onClick={onNext}
+            disabled={isSubmitting}
             size="lg"
           >
             Next
@@ -58,7 +61,7 @@ export const FormActions = ({
             disabled={isSubmitting}
             size="lg"
             variant="success"
-            isLoading={isSubmitting}
+            isLoading={isSubmitting && currentStep === totalSteps - 1}
             loadingText="Creating Class..."
           >
             Create Class
