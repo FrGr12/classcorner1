@@ -1,68 +1,108 @@
 
-import { useState, useEffect } from "react";
-import { UseFormReturn } from "react-hook-form";
-import { supabase } from "@/integrations/supabase/client";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { defaultFormValues } from "../utils/formDefaults";
 import { CourseFormValues } from "../CourseFormContext";
 
-export const useCourseFormData = (form: UseFormReturn<CourseFormValues>) => {
-  const [sessions, setSessions] = useState<any[]>([]);
-  
+export const useCourseFormData = (courseId?: string) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const form = useForm<CourseFormValues>({
+    defaultValues: defaultFormValues,
+  });
+
   useEffect(() => {
-    const fetchDraft = async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+    const fetchCourseData = async () => {
+      if (!courseId) return;
+
+      setIsLoading(true);
+      setError(null);
 
       try {
-        const { data: draft } = await supabase
-          .from('courses')
-          .select('*')
-          .eq('instructor_id', userData.user.id)
-          .eq('status', 'draft')
-          .order('created_at', { ascending: false })
-          .limit(1)
-          .single();
+        // Simulate API call to fetch course data
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-        if (draft) {
-          form.reset({
-            title: draft.title || "",
-            description: draft.description || "",
-            category: draft.category || "",
-            location: draft.location || "",
-            locationType: draft.location_type || "inPerson",
-            address: draft.address || "",
-            city: draft.city || "",
-            state: draft.state || "",
-            zipCode: draft.zip_code || "",
-            onlineLink: draft.online_link || "",
-            classDetails: draft.class_details || "",
-            difficultyLevel: draft.difficulty_level || "beginner",
-            price: draft.price ? draft.price.toString() : "",
-            capacity: draft.capacity ? draft.capacity.toString() : "",
-            minParticipants: draft.min_participants || 1,
-            maxParticipants: draft.max_participants || 10,
-            images: draft.images || [],
-            scheduleType: draft.schedule_type || "oneTime",
-            startDate: draft.start_date || "",
-            endDate: draft.end_date || "",
-            startTime: draft.start_time || "",
-            endTime: draft.end_time || "",
-            recurringDays: draft.recurring_days || [],
-            whatToBring: draft.what_to_bring || [],
-            learningOutcomes: draft.learning_outcomes || [],
-          });
-          
-          // Load sessions if available
-          if (draft.sessions) {
-            setSessions(draft.sessions);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching draft:", error);
+        // Mock response data
+        const mockCourseData = {
+          id: parseInt(courseId),
+          title: "Ceramic Pottery Workshop",
+          description: "Learn the basics of pottery in this hands-on workshop",
+          category: "Crafts",
+          location: "Studio",
+          locationType: "inPerson",
+          address: "123 Main St",
+          city: "Stockholm",
+          state: "Stockholm",
+          zipCode: "10044",
+          onlineLink: "",
+          classDetails: "Bring your creativity and enthusiasm!",
+          difficultyLevel: "beginner",
+          price: "299",
+          capacity: "8",
+          minParticipants: 2,
+          maxParticipants: 8,
+          images: ["/placeholder.svg"],
+          scheduleType: "oneTime",
+          startDate: "2023-08-15",
+          endDate: "2023-08-15",
+          startTime: "14:00",
+          endTime: "17:00",
+          recurringDays: [],
+          whatToBring: ["Apron", "Notebook"],
+          learningOutcomes: ["Basic pottery techniques", "Glazing fundamentals"],
+          auto_promote_from_waitlist: true,
+          auto_send_waitlist_notification: true,
+          base_price_group: 200,
+          base_price_private: 350,
+          booking_deadline_hours: 24,
+          cancellation_policy: "24-hour notice required for refunds",
+          session_length_minutes: 180,
+          waitlist_enabled: true,
+          max_waitlist_size: 5,
+        };
+
+        form.reset({
+          title: mockCourseData.title,
+          description: mockCourseData.description,
+          category: mockCourseData.category,
+          location: mockCourseData.location,
+          locationType: mockCourseData.locationType,
+          address: mockCourseData.address,
+          city: mockCourseData.city,
+          state: mockCourseData.state,
+          zipCode: mockCourseData.zipCode,
+          onlineLink: mockCourseData.onlineLink,
+          classDetails: mockCourseData.classDetails,
+          difficultyLevel: mockCourseData.difficultyLevel,
+          price: mockCourseData.price,
+          capacity: mockCourseData.capacity,
+          minParticipants: mockCourseData.minParticipants,
+          maxParticipants: mockCourseData.maxParticipants,
+          images: mockCourseData.images,
+          scheduleType: mockCourseData.scheduleType,
+          startDate: mockCourseData.startDate,
+          endDate: mockCourseData.endDate,
+          startTime: mockCourseData.startTime,
+          endTime: mockCourseData.endTime,
+          recurringDays: mockCourseData.recurringDays,
+          whatToBring: mockCourseData.whatToBring,
+          learningOutcomes: mockCourseData.learningOutcomes,
+        });
+      } catch (err) {
+        console.error("Error fetching course data:", err);
+        setError("Failed to load course data. Please try again.");
+      } finally {
+        setIsLoading(false);
       }
     };
 
-    fetchDraft();
-  }, [form]);
+    fetchCourseData();
+  }, [courseId, form]);
 
-  return { sessions, setSessions };
+  return {
+    form,
+    isLoading,
+    error,
+  };
 };

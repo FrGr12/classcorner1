@@ -1,27 +1,26 @@
 
-import React, { createContext, useContext } from "react";
+import React, { createContext, useContext, ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-// Define the type for form values properly
 export interface CourseFormValues {
   title: string;
   description: string;
   category: string;
   location: string;
-  locationType: string;
+  locationType: "inPerson" | "online" | "hybrid";
   address: string;
   city: string;
   state: string;
   zipCode: string;
   onlineLink: string;
   classDetails: string;
-  difficultyLevel: string;
+  difficultyLevel: "beginner" | "intermediate" | "advanced" | "allLevels";
   price: string;
   capacity: string;
   minParticipants: number;
   maxParticipants: number;
-  images: File[];
-  scheduleType: string;
+  images: string[];
+  scheduleType: "oneTime" | "recurring" | "flexibleDates";
   startDate: string;
   endDate: string;
   startTime: string;
@@ -31,32 +30,17 @@ export interface CourseFormValues {
   learningOutcomes: string[];
 }
 
-// Create context with properly typed values
 interface CourseFormContextType {
   form: UseFormReturn<CourseFormValues>;
-  sessions: any[];
-  setSessions: (sessions: any[]) => void;
+  isSubmitting: boolean;
+  setIsSubmitting: (value: boolean) => void;
+  currentStep: string;
+  setCurrentStep: (step: string) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
 }
 
 const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
-
-export const CourseFormProvider = ({ 
-  children, 
-  form, 
-  sessions, 
-  setSessions 
-}: { 
-  children: React.ReactNode;
-  form: UseFormReturn<CourseFormValues>;
-  sessions: any[];
-  setSessions: (sessions: any[]) => void;
-}) => {
-  return (
-    <CourseFormContext.Provider value={{ form, sessions, setSessions }}>
-      {children}
-    </CourseFormContext.Provider>
-  );
-};
 
 export const useCourseForm = () => {
   const context = useContext(CourseFormContext);
@@ -64,4 +48,42 @@ export const useCourseForm = () => {
     throw new Error("useCourseForm must be used within a CourseFormProvider");
   }
   return context;
+};
+
+interface CourseFormProviderProps {
+  children: ReactNode;
+  form: UseFormReturn<CourseFormValues>;
+  isSubmitting: boolean;
+  setIsSubmitting: (value: boolean) => void;
+  currentStep: string;
+  setCurrentStep: (step: string) => void;
+  goToNextStep: () => void;
+  goToPreviousStep: () => void;
+}
+
+export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
+  children,
+  form,
+  isSubmitting,
+  setIsSubmitting,
+  currentStep,
+  setCurrentStep,
+  goToNextStep,
+  goToPreviousStep,
+}) => {
+  return (
+    <CourseFormContext.Provider
+      value={{
+        form,
+        isSubmitting,
+        setIsSubmitting,
+        currentStep,
+        setCurrentStep,
+        goToNextStep,
+        goToPreviousStep,
+      }}
+    >
+      {children}
+    </CourseFormContext.Provider>
+  );
 };
