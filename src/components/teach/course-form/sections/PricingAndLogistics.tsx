@@ -69,11 +69,10 @@ const PricingAndLogistics = ({ form }: PricingAndLogisticsProps) => {
               <FormLabel>Duration (minutes)</FormLabel>
               <FormControl>
                 <Input 
-                  type="number" 
-                  min={15} 
+                  type="text" 
                   placeholder="60"
                   {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))} 
+                  onChange={(e) => field.onChange(e.target.value)} 
                 />
               </FormControl>
               <FormMessage />

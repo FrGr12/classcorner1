@@ -24,6 +24,25 @@ export interface DialogManagerProps {
   onEditSuccess: () => void;
 }
 
+// Interfaces for the dialog components
+interface MessageDialogProps {
+  open: boolean;
+  onClose: () => void;
+  classData: ClassItem;
+}
+
+interface ShareDialogProps {
+  open: boolean;
+  onClose: () => void;
+  classData: ClassItem;
+}
+
+interface CancelCourseDialogProps {
+  open: boolean;
+  onClose: () => void;
+  classData: ClassItem;
+}
+
 const DialogManager: React.FC<DialogManagerProps> = ({
   isEditOpen,
   isDetailsOpen,
@@ -55,7 +74,7 @@ const DialogManager: React.FC<DialogManagerProps> = ({
 
       {isMessageOpen && (
         <MessageDialog
-          isOpen={isMessageOpen}
+          open={isMessageOpen}
           onClose={() => setIsMessageOpen(false)}
           classData={selectedClass}
         />
@@ -63,7 +82,7 @@ const DialogManager: React.FC<DialogManagerProps> = ({
 
       {isShareOpen && (
         <ShareDialog
-          isOpen={isShareOpen}
+          open={isShareOpen}
           onClose={() => setIsShareOpen(false)}
           classData={selectedClass}
         />
@@ -71,7 +90,7 @@ const DialogManager: React.FC<DialogManagerProps> = ({
 
       {isCancelOpen && setIsCancelOpen && (
         <CancelCourseDialog
-          isOpen={isCancelOpen}
+          open={isCancelOpen}
           onClose={() => setIsCancelOpen(false)}
           classData={selectedClass}
         />

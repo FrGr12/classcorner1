@@ -45,7 +45,7 @@ const CreateClassForm = ({
       is_online: false,
       capacity: 1,
       price: 0,
-      duration: 60,
+      duration: "60", // Store as string to match database
       sessions: [],
       learning_outcomes: [''],
       requirements: [''],
@@ -73,12 +73,7 @@ const CreateClassForm = ({
   const handleSubmitDraft = async () => {
     try {
       const formValues = form.getValues();
-      // Cast images to any to avoid type errors during transition
-      const fixedFormValues = {
-        ...formValues,
-        images: formValues.images as any
-      };
-
+      // Format form values to match database structure
       setIsSubmitting(true);
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
@@ -86,12 +81,22 @@ const CreateClassForm = ({
       // Make sure we're providing all required fields
       const courseData = {
         instructor_id: userData.user.id,
-        title: fixedFormValues.title || 'Untitled Course',
-        description: fixedFormValues.description || 'No description',
-        category: fixedFormValues.category || 'Uncategorized',
-        location: fixedFormValues.location || 'Unknown',
-        price: fixedFormValues.price || 0,
-        ...fixedFormValues
+        title: formValues.title || 'Untitled Course',
+        description: formValues.description || 'No description',
+        category: formValues.category || 'Uncategorized',
+        location: formValues.location || 'Unknown',
+        price: formValues.price || 0,
+        duration: formValues.duration, // Already correct type
+        capacity: formValues.capacity,
+        is_online: formValues.is_online,
+        address: formValues.address,
+        city: formValues.city,
+        learning_outcomes: formValues.learning_outcomes,
+        requirements: formValues.requirements,
+        items_to_bring: formValues.items_to_bring,
+        status: "draft",
+        images: formValues.images,
+        sessions: formValues.sessions
       };
   
       const { data, error } = await supabase
@@ -119,10 +124,6 @@ const CreateClassForm = ({
     try {
       setIsSubmitting(true);
       const formValues = form.getValues();
-      const fixedFormValues = {
-        ...formValues,
-        images: formValues.images as any
-      };
 
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
@@ -130,13 +131,22 @@ const CreateClassForm = ({
       // Make sure we're providing all required fields
       const courseData = {
         instructor_id: userData.user.id,
-        title: fixedFormValues.title || 'Untitled Course',
-        description: fixedFormValues.description || 'No description',
-        category: fixedFormValues.category || 'Uncategorized',
-        location: fixedFormValues.location || 'Unknown',
-        price: fixedFormValues.price || 0,
-        status: 'published',
-        ...fixedFormValues
+        title: formValues.title || 'Untitled Course',
+        description: formValues.description || 'No description',
+        category: formValues.category || 'Uncategorized',
+        location: formValues.location || 'Unknown',
+        price: formValues.price || 0,
+        duration: formValues.duration, // Already correct type
+        capacity: formValues.capacity,
+        is_online: formValues.is_online,
+        address: formValues.address,
+        city: formValues.city,
+        learning_outcomes: formValues.learning_outcomes,
+        requirements: formValues.requirements,
+        items_to_bring: formValues.items_to_bring,
+        status: "published",
+        images: formValues.images,
+        sessions: formValues.sessions
       };
   
       const { data, error } = await supabase
