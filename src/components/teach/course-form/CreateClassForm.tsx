@@ -16,6 +16,7 @@ import { Button } from "@/components/ui/button";
 import { ProgressIndicator } from "@/components/ui/progress-indicator";
 import { Card } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
+import { SessionsForm } from "@/components/teach/SessionsForm";
 
 interface CreateClassFormProps {
   isSubmitting: boolean;
@@ -41,6 +42,8 @@ const CreateClassForm = ({
 }: CreateClassFormProps) => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [sessions, setSessions] = useState<any[]>([]);
+  
   const form = useForm({
     defaultValues: {
       title: "",
@@ -109,6 +112,11 @@ const CreateClassForm = ({
           whatToBring: draft.what_to_bring || [],
           learningOutcomes: draft.learning_outcomes || [],
         });
+        
+        // Load sessions if available
+        if (draft.sessions) {
+          setSessions(draft.sessions);
+        }
       }
     };
 
@@ -148,6 +156,7 @@ const CreateClassForm = ({
         recurring_days: formValues.recurringDays,
         what_to_bring: formValues.whatToBring,
         learning_outcomes: formValues.learningOutcomes,
+        sessions: sessions,
         status: 'draft' as 'draft' | 'published' | 'archived'
       };
 
@@ -234,6 +243,7 @@ const CreateClassForm = ({
         recurring_days: formValues.recurringDays,
         what_to_bring: formValues.whatToBring,
         learning_outcomes: formValues.learningOutcomes,
+        sessions: sessions,
         status: 'published' as 'draft' | 'published' | 'archived',
         published_at: new Date().toISOString()
       };
@@ -321,9 +331,16 @@ const CreateClassForm = ({
         );
       case 5:
         return (
-          <ScheduleSection
-            form={form}
-          />
+          <div className="space-y-6">
+            <ScheduleSection form={form} />
+            <div className="border-t pt-6">
+              <h3 className="text-lg font-medium mb-4">Class Sessions</h3>
+              <SessionsForm 
+                sessions={sessions} 
+                setSessions={setSessions} 
+              />
+            </div>
+          </div>
         );
       case 6:
         return (
@@ -385,10 +402,8 @@ const CreateClassForm = ({
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
-                isLoading={isSubmitting}
-                loadingText="Creating Class..."
               >
-                Create Class
+                {isSubmitting ? "Creating Class..." : "Create Class"}
               </Button>
             )}
           </div>
