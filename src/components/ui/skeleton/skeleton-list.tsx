@@ -1,7 +1,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import Skeleton from "./skeleton";
+import { Skeleton } from "./skeleton";
 
 interface SkeletonListProps extends React.HTMLAttributes<HTMLDivElement> {
   count: number;

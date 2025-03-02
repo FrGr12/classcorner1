@@ -10,11 +10,11 @@ export interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-const Skeleton = ({
+export const Skeleton = ({
   variant = "rectangular",
   width,
   height,
-  animation = "pulse",
+  animation = "shimmer",
   className,
   ...props
 }: SkeletonProps) => {
@@ -25,7 +25,7 @@ const Skeleton = ({
       : animation === "wave" 
         ? "animate-skeleton-wave" 
         : animation === "shimmer"
-          ? "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
+          ? "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-shimmer before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
           : "";
   
   const baseClasses = "bg-neutral-200 dark:bg-neutral-700";
@@ -63,4 +63,3 @@ const Skeleton = ({
   );
 };
 
-export default Skeleton;

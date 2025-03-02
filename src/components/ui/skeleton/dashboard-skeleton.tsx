@@ -1,7 +1,7 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import Skeleton from "./skeleton";
+import { Skeleton } from "./skeleton";
 
 export const DashboardSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div 
