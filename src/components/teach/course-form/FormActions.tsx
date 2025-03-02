@@ -27,6 +27,7 @@ export const FormActions = ({
         variant="outline" 
         onClick={onPrevious}
         disabled={currentStep === 0}
+        size="lg"
       >
         Previous
       </Button>
@@ -34,9 +35,10 @@ export const FormActions = ({
       <div className="space-x-2">
         <Button 
           type="button" 
-          variant="outline" 
+          variant="secondary" 
           onClick={onSaveDraft}
           disabled={isSubmitting}
+          size="lg"
         >
           Save Draft
         </Button>
@@ -45,6 +47,8 @@ export const FormActions = ({
           <Button 
             type="button" 
             onClick={onNext}
+            size="lg"
+            variant="default"
           >
             Next
           </Button>
@@ -53,8 +57,12 @@ export const FormActions = ({
             type="button"
             onClick={onSubmit}
             disabled={isSubmitting}
+            size="lg"
+            variant="success"
+            isLoading={isSubmitting}
+            loadingText="Creating Class..."
           >
-            {isSubmitting ? "Creating Class..." : "Create Class"}
+            Create Class
           </Button>
         )}
       </div>
