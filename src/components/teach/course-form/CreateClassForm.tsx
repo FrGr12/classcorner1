@@ -1,15 +1,15 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CreateClassSchema, CreateClassFormValues } from "@/lib/validators/create-class";
-import { CourseFormContext } from "./CourseFormContext";
+import { CourseFormProvider } from "./CourseFormContext";
 import CourseFormStepManager from "./CourseFormStepManager";
 import GeneralInformation from "./sections/GeneralInformation";
 import ClassDetails from "./sections/ClassDetails";
 import SessionsWrapper from "./sections/SessionsWrapper";
 import PricingAndLogistics from "./sections/PricingAndLogistics";
 import Media from "./sections/Media";
-import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
@@ -31,7 +31,7 @@ const CreateClassForm = ({
   const { toast } = useToast();
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
-  const [imagesPreview, setImagesPreview] = useState<string[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
 
   const form = useForm<CreateClassFormValues>({
     resolver: zodResolver(CreateClassSchema),
@@ -56,13 +56,19 @@ const CreateClassForm = ({
     mode: "onChange",
   });
 
-  const { watch, getValues } = form;
-
   // Form step navigation
   const nextStep = () => setCurrentStep(currentStep + 1);
   const prevStep = () => setCurrentStep(currentStep - 1);
 
   const totalSteps = 5;
+  
+  // String values for step navigation
+  const currentStepString = String(currentStep);
+  const setCurrentStepString = (step: string) => setCurrentStep(Number(step));
+  
+  // Navigation functions
+  const goToNextStep = () => nextStep();
+  const goToPreviousStep = () => prevStep();
 
   const handleSubmitDraft = async () => {
     try {
@@ -143,43 +149,37 @@ const CreateClassForm = ({
     }
   };
 
-  const steps: any[] = [
-    {
-      label: 'General Info',
-      component: <GeneralInformation form={form} />,
-    },
-    {
-      label: 'Class Details',
-      component: <ClassDetails form={form} />,
-    },
-    {
-      label: 'Sessions',
-      component: <SessionsWrapper 
-        sessions={watch("sessions")} 
-        setSessions={(sessions: Session[]) => form.setValue("sessions", sessions)} 
-      />,
-    },
-    {
-      label: 'Pricing & Logistics',
-      component: <PricingAndLogistics form={form} />,
-    },
-    {
-      label: 'Media',
-      component: <Media 
-        form={form} 
-        imagesPreview={imagesPreview}
-        setImagesPreview={setImagesPreview}
-      />,
-    },
+  const steps = [
+    <GeneralInformation form={form} />,
+    <ClassDetails form={form} />,
+    <SessionsWrapper 
+      sessions={sessions} 
+      setSessions={setSessions} 
+    />,
+    <PricingAndLogistics form={form} />,
+    <Media 
+      form={form} 
+    />,
   ];
 
   return (
-    <CourseFormContext.Provider value={{ form, currentStep, setCurrentStep, imagesPreview, setImagesPreview }}>
+    <CourseFormProvider 
+      form={form}
+      isSubmitting={isSubmitting}
+      setIsSubmitting={setIsSubmitting}
+      currentStep={currentStepString}
+      setCurrentStep={setCurrentStepString}
+      goToNextStep={goToNextStep}
+      goToPreviousStep={goToPreviousStep}
+      sessions={sessions}
+      setSessions={setSessions}
+    >
       <CourseFormStepManager 
-        currentStep={currentStep} 
-        totalSteps={totalSteps} 
-        steps={steps} 
-      />
+        isSubmitting={isSubmitting}
+        setIsSubmitting={setIsSubmitting}
+      >
+        {steps[currentStep]}
+      </CourseFormStepManager>
 
       <FormActions 
         currentStep={currentStep}
@@ -190,7 +190,7 @@ const CreateClassForm = ({
         onSaveDraft={handleSubmitDraft}
         onSubmit={handleSubmitClass}
       />
-    </CourseFormContext.Provider>
+    </CourseFormProvider>
   );
 };
 

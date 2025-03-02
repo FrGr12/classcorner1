@@ -1,51 +1,34 @@
 
 import { CourseFormValues } from "../CourseFormContext";
 
-export const formSteps = [
-  "Basic Info",
-  "Location & Category",
-  "Location Details",
-  "Pricing & Capacity",
-  "Images",
-  "Schedule",
-  "What to Bring",
-  "Learning Outcomes",
-];
+export const getDefaultFormValues = (): CourseFormValues => {
+  return {
+    title: '',
+    description: '',
+    category: '',
+    location: '',
+    address: '',
+    city: '',
+    is_online: false,
+    capacity: 1,  // Changed from string to number
+    price: 0,     // Changed from string to number
+    duration: 60,
+    sessions: [],
+    learning_outcomes: [''],
+    requirements: [''],
+    items_to_bring: [''],
+    images: [],
+    status: 'draft',
+  };
+};
 
-export interface Step {
-  label: string;
-  value: string;
-}
-
-export const stepConfig: Step[] = formSteps.map((step, index) => ({
-  label: step,
-  value: `step-${index + 1}`
-}));
-
-export const defaultFormValues: CourseFormValues = {
-  title: "",
-  description: "",
-  category: "",
-  location: "",
-  locationType: "inPerson",
-  address: "",
-  city: "",
-  state: "",
-  zipCode: "",
-  onlineLink: "",
-  classDetails: "",
-  difficultyLevel: "beginner",
-  price: "",
-  capacity: "",
-  minParticipants: 1,
-  maxParticipants: 10,
-  images: [],
-  scheduleType: "oneTime",
-  startDate: "",
-  endDate: "",
-  startTime: "",
-  endTime: "",
-  recurringDays: [],
-  whatToBring: [],
-  learningOutcomes: [],
+export const getSessionDefaults = () => {
+  return {
+    date: new Date(),
+    start_time: '10:00',
+    end_time: '11:00',
+    is_recurring: false,
+    recurrence_pattern: 'weekly',
+    recurrence_end_date: new Date(new Date().setMonth(new Date().getMonth() + 1)),
+  };
 };

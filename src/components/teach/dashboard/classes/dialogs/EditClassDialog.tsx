@@ -1,105 +1,71 @@
+
 import { useState } from "react";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
-import { CourseFormValues } from "@/components/teach/course-form/CourseFormContext";
-import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
-import { handleError } from "@/utils/errorHandler";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useToast } from "@/hooks/use-toast";
+import { ClassItem } from "@/types/class";
 
 interface EditClassDialogProps {
   isOpen: boolean;
-  onOpenChange: (open: boolean) => void;
-  courseId: number;
-  initialValues: CourseFormValues;
+  onClose: () => void;
+  classData: ClassItem;
 }
 
-export const EditClassDialog = ({
-  isOpen,
-  onOpenChange,
-  courseId,
-  initialValues,
-}: EditClassDialogProps) => {
+export const EditClassDialog = ({ isOpen, onClose, classData }: EditClassDialogProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    title: classData.title,
+    // Add other form fields here
+  });
 
-  const handleSubmit = async (values: CourseFormValues): Promise<boolean> => {
+  const handleSubmit = async () => {
     try {
       setIsSubmitting(true);
+      
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return false;
+      if (!userData.user) {
+        throw new Error("User not authenticated");
+      }
+
+      // Convert duration to string if required by API
+      const updatedData = {
+        instructor_id: userData.user.id,
+        title: formData.title,
+        description: classData.description || "",
+        category: classData.category || "",
+        location: classData.city || "",
+        address: "",
+        city: classData.city || "",
+        is_online: false,
+        capacity: classData.maxParticipants || 10,
+        price: classData.price || 0,
+        duration: String(classData.duration || "60"), // Convert to string
+        sessions: [],
+        learning_outcomes: [],
+        requirements: [],
+        items_to_bring: [],
+        status: "published" as const
+      };
 
       const { error } = await supabase
         .from('courses')
-        .update({
-          ...values,
-          instructor_id: userData.user.id,
-        })
-        .eq('id', courseId);
+        .update(updatedData)
+        .eq('id', classData.id);
 
       if (error) throw error;
-
+      
       toast({
-        title: "Class Updated",
-        description: "Your class has been successfully updated.",
+        title: "Class updated",
+        description: "Your class has been successfully updated."
       });
-      onOpenChange(false);
-      return true;
+      
+      onClose();
     } catch (error: any) {
-      handleError(error, {
+      toast({
+        variant: "destructive",
         title: "Failed to update class",
-        description: error.message,
-      });
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleCancel = async (): Promise<boolean> => {
-    try {
-      setIsSubmitting(true);
-      onOpenChange(false);
-      return true;
-    } catch (error: any) {
-      handleError(error, {
-        title: "Failed to cancel",
-        description: error.message,
-      });
-      return false;
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      setIsSubmitting(true);
-      const { error } = await supabase
-        .from('courses')
-        .delete()
-        .eq('id', courseId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Class Deleted",
-        description: "Your class has been successfully deleted.",
-      });
-      onOpenChange(false);
-    } catch (error: any) {
-      handleError(error, {
-        title: "Failed to delete class",
-        description: error.message,
+        description: error.message
       });
     } finally {
       setIsSubmitting(false);
@@ -107,30 +73,27 @@ export const EditClassDialog = ({
   };
 
   return (
-    <AlertDialog open={isOpen} onOpenChange={onOpenChange}>
-      <AlertDialogTrigger asChild>
-        <Button variant="ghost">Edit</Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent>
-        <AlertDialogHeader>
-          <AlertDialogTitle>Edit Class</AlertDialogTitle>
-          <AlertDialogDescription>
-            Make changes to your class details. Be careful with what you
-            modify.
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        {/* <EditClassForm
-          courseId={courseId}
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          onCancel={handleCancel}
-        /> */}
-        <AlertDialogFooter>
-          <AlertDialogCancel disabled={isSubmitting}>Cancel</AlertDialogCancel>
-          <AlertDialogAction disabled={isSubmitting}>Continue</AlertDialogAction>
-        </AlertDialogFooter>
-      </AlertDialogContent>
-    </AlertDialog>
+    <Dialog open={isOpen} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[600px]">
+        <DialogHeader>
+          <DialogTitle>Edit Class</DialogTitle>
+        </DialogHeader>
+        
+        <div className="py-4">
+          {/* Form fields would go here */}
+          <p>Edit class form fields for: {formData.title}</p>
+        </div>
+        
+        <div className="flex justify-end space-x-2">
+          <button onClick={onClose}>Cancel</button>
+          <button 
+            onClick={handleSubmit} 
+            disabled={isSubmitting}
+          >
+            {isSubmitting ? "Updating..." : "Update Class"}
+          </button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };

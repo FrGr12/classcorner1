@@ -1,7 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CourseFormValues, courseFormSchema } from './CourseFormContext';
+import { CourseFormValues } from './CourseFormContext';
 import { useToast } from "@/hooks/use-toast";
 import { Session } from '@/types/session';
 
@@ -53,6 +53,7 @@ const CourseFormStepManager = ({
     prepareImagesPreview();
   }, [watch('images'), isSubmitting]);
 
+  // Clone children and pass props
   return (
     <>
       {React.Children.map(children, (child) => {
