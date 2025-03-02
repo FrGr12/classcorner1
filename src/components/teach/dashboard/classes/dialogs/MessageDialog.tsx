@@ -102,8 +102,10 @@ const MessageDialog = ({ open, onOpenChange, classId }: MessageDialogProps) => {
           <Button
             onClick={handleSendMessage}
             disabled={!message.trim() || isSending}
+            isLoading={isSending}
+            loadingText="Sending..."
           >
-            {isSending ? "Sending..." : "Send Message"}
+            Send Message
           </Button>
         </DialogFooter>
       </DialogContent>

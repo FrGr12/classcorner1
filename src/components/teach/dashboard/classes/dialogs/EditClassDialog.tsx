@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -23,7 +24,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
-import { Loader2 } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -316,15 +316,13 @@ const EditClassDialog = ({ open, onOpenChange, classId, onSuccess }: EditClassDi
                   >
                     Close
                   </Button>
-                  <Button type="submit" disabled={loading}>
-                    {loading ? (
-                      <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Saving...
-                      </>
-                    ) : (
-                      "Save Changes"
-                    )}
+                  <Button 
+                    type="submit" 
+                    disabled={loading}
+                    isLoading={loading}
+                    loadingText="Saving..."
+                  >
+                    Save Changes
                   </Button>
                 </div>
               </DialogFooter>

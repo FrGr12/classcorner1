@@ -19,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { SessionsForm } from "@/components/teach/SessionsForm";
 import { FormActions } from "./FormActions";
 import { CourseFormStepManager } from "./CourseFormStepManager";
-import { CourseFormContext, CourseFormProvider } from "./CourseFormContext";
+import { CourseFormProvider } from "./CourseFormContext";
 
 interface CreateClassFormProps {
   isSubmitting: boolean;
