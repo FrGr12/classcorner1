@@ -48,7 +48,6 @@ export const FormActions = ({
             type="button" 
             onClick={onNext}
             size="lg"
-            variant="default"
           >
             Next
           </Button>

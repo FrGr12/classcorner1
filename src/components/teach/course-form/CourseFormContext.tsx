@@ -8,7 +8,7 @@ type CourseFormContextType = {
   setSessions: (sessions: any[]) => void;
 };
 
-const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
+export const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
 
 export const useCourseForm = () => {
   const context = useContext(CourseFormContext);

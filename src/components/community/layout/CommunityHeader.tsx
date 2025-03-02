@@ -18,8 +18,8 @@ export const CommunityHeader = ({ onNewPostClick }: CommunityHeaderProps) => {
             </p>
           </div>
           <Button 
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white"
             onClick={onNewPostClick}
+            size="default"
           >
             <PlusCircle className="h-4 w-4 mr-2" />
             New Post

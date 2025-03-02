@@ -1,4 +1,6 @@
 
+import { Button } from "@/components/ui/button";
+
 interface ResourcesListProps {
   resource?: string;
   onResourceClick: (resourceName: string) => void;
@@ -18,17 +20,15 @@ export const ResourcesList = ({ resource, onResourceClick }: ResourcesListProps)
     <div className="space-y-1">
       <nav className="space-y-1">
         {resources.map(resourceName => (
-          <button
+          <Button
             key={resourceName}
             onClick={() => onResourceClick(resourceName)}
-            className={`w-full text-left px-3 py-2 text-sm font-medium hover:bg-accent rounded-lg transition-colors ${
-              resource === resourceName.toLowerCase().replace(/ /g, '-')
-                ? 'bg-accent text-accent-purple'
-                : 'text-neutral-700'
-            }`}
+            variant={resource === resourceName.toLowerCase().replace(/ /g, '-') ? "subtle" : "ghost"}
+            size="sm"
+            className="w-full justify-start text-left px-3 py-2 h-auto text-sm font-medium rounded-lg transition-colors"
           >
             {resourceName}
-          </button>
+          </Button>
         ))}
       </nav>
     </div>

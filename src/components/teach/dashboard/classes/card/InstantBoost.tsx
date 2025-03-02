@@ -96,6 +96,7 @@ const InstantBoost = ({ courseId }: InstantBoostProps) => {
           <AlertDialogAction
             onClick={handleBoost}
             disabled={isLoading}
+            className="bg-accent-purple hover:bg-accent-purple/90"
           >
             {isLoading ? "Activating..." : "Activate"}
           </AlertDialogAction>
