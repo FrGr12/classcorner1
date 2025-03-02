@@ -1,18 +1,18 @@
 
-import { baking } from "./classes/baking";
-import { candle } from "./classes/candle";
-import { ceramics } from "./classes/ceramics";
-import { cocktail } from "./classes/cocktail";
-import { cooking } from "./classes/cooking";
-import { featured } from "./classes/featured";
-import { flower } from "./classes/flower";
-import { jewellery } from "./classes/jewellery";
-import { music } from "./classes/music";
-import { painting } from "./classes/painting";
-import { paper } from "./classes/paper";
-import { photography } from "./classes/photography";
-import { textile } from "./classes/textile";
-import { wood } from "./classes/wood";
+import { bakingClasses, baking } from "./classes/baking";
+import { candleClasses, candle } from "./classes/candle";
+import { ceramicsClasses, ceramics } from "./classes/ceramics";
+import { cocktailClasses, cocktail } from "./classes/cocktail";
+import { cookingClasses, cooking } from "./classes/cooking";
+import { featuredClasses, featured } from "./classes/featured";
+import { flowerClasses, flower } from "./classes/flower";
+import { jewelleryClasses, jewellery } from "./classes/jewellery";
+import { musicClasses, music } from "./classes/music";
+import { paintingClasses, painting } from "./classes/painting";
+import { paperClasses, paper } from "./classes/paper";
+import { photographyClasses, photography } from "./classes/photography";
+import { textileClasses, textile } from "./classes/textile";
+import { woodClasses, wood } from "./classes/wood";
 import { ClassItem } from "@/types/class";
 
 // Add required description to all mock data
@@ -39,3 +39,5 @@ export const classes = {
   textile: addDescriptionToItems(textile),
   wood: addDescriptionToItems(wood)
 };
+
+export const mockClasses = classes;

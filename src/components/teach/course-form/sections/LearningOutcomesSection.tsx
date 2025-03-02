@@ -1,76 +1,80 @@
 
 import React from 'react';
-import { UseFormReturn, useFieldArray } from 'react-hook-form';
+import { UseFormReturn } from 'react-hook-form';
 import { Card } from '@/components/ui/card';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { X, Plus } from 'lucide-react';
-import { CourseFormValues } from '../CourseFormContext';
 import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { CourseFormValues } from '../CourseFormContext';
+import { X, Plus } from 'lucide-react';
 
 interface LearningOutcomesSectionProps {
   form: UseFormReturn<CourseFormValues>;
 }
 
 const LearningOutcomesSection = ({ form }: LearningOutcomesSectionProps) => {
-  const { control, register } = form;
-  
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: "learning_outcomes"
-  });
-  
-  const handleAddOutcome = () => {
-    append('');
+  const { setValue, getValues } = form;
+
+  const addOutcome = () => {
+    const currentOutcomes = getValues("learning_outcomes") || [];
+    setValue("learning_outcomes", [...currentOutcomes, '']);
+  };
+
+  const removeOutcome = (index: number) => {
+    const currentOutcomes = getValues("learning_outcomes") || [];
+    setValue(
+      "learning_outcomes",
+      currentOutcomes.filter((_, i) => i !== index)
+    );
+  };
+
+  const updateOutcome = (index: number, value: string) => {
+    const currentOutcomes = getValues("learning_outcomes") || [];
+    const updatedOutcomes = [...currentOutcomes];
+    updatedOutcomes[index] = value;
+    setValue("learning_outcomes", updatedOutcomes);
   };
 
   return (
-    <Card className="p-6">
+    <Card className="p-6 mt-6">
       <div className="space-y-6">
         <div>
           <h3 className="text-lg font-medium">Learning Outcomes</h3>
-          <p className="text-sm text-muted-foreground">Define what students will learn in your class</p>
+          <p className="text-sm text-muted-foreground">What will students learn from your class?</p>
         </div>
 
         <div className="space-y-4">
-          {fields.map((field, index) => (
-            <div key={field.id} className="flex items-center gap-2">
-              <FormField
-                control={control}
-                name={`learning_outcomes.${index}`}
-                render={({ field }) => (
-                  <FormItem className="flex-1">
-                    <FormControl>
-                      <Input 
-                        placeholder={`Outcome ${index + 1}`} 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
+          {(getValues("learning_outcomes") || []).map((outcome, index) => (
+            <div key={index} className="flex items-center gap-2">
+              <Input
+                value={outcome}
+                onChange={(e) => updateOutcome(index, e.target.value)}
+                placeholder={`Outcome ${index + 1}`}
+                className="flex-1"
               />
-              <Button 
-                type="button" 
-                variant="ghost" 
+              <Button
+                type="button"
+                variant="ghost"
                 size="icon"
-                onClick={() => remove(index)}
-                className="h-10 w-10"
+                onClick={() => removeOutcome(index)}
               >
                 <X className="h-4 w-4" />
               </Button>
             </div>
           ))}
-        </div>
 
-        <Button
-          type="button"
-          variant="outline"
-          className="w-full"
-          onClick={handleAddOutcome}
-        >
-          <Plus className="mr-2 h-4 w-4" /> Add Learning Outcome
-        </Button>
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={addOutcome}
+            className="flex items-center gap-1"
+          >
+            <Plus className="h-4 w-4" /> Add Outcome
+          </Button>
+        </div>
       </div>
     </Card>
   );

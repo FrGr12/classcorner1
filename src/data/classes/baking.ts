@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const bakingClasses: ClassItem[] = [
@@ -15,7 +16,8 @@ export const bakingClasses: ClassItem[] = [
     level: "Beginner",
     date: new Date('2024-04-15'),
     city: "Stockholm",
-    category: "Baking"
+    category: "Baking",
+    description: "Learn how to make delicious sourdough bread from scratch. This workshop covers starter cultivation, dough preparation, and baking techniques."
   },
   {
     id: 2,
@@ -31,7 +33,8 @@ export const bakingClasses: ClassItem[] = [
     level: "Intermediate",
     date: new Date('2024-04-20'),
     city: "Malmö",
-    category: "Baking"
+    category: "Baking",
+    description: "Master the art of French pastry in this hands-on workshop. You'll learn to make croissants, pain au chocolat, and other classic pastries."
   },
   {
     id: 3,
@@ -47,7 +50,8 @@ export const bakingClasses: ClassItem[] = [
     level: "Beginner",
     date: new Date('2024-04-25'),
     city: "Göteborg",
-    category: "Baking"
+    category: "Baking",
+    description: "This workshop introduces you to artisan bread making techniques. Learn to create rustic loaves with beautiful crusts and complex flavors."
   },
   {
     id: 4,
@@ -63,6 +67,9 @@ export const bakingClasses: ClassItem[] = [
     level: "Advanced",
     date: new Date('2024-05-01'),
     city: "Stockholm",
-    category: "Baking"
+    category: "Baking",
+    description: "Take your pastry skills to the next level with advanced techniques. This class covers laminated doughs, complex fillings, and decorative finishes."
   }
 ];
+
+export const baking = bakingClasses;

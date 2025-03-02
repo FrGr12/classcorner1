@@ -20,7 +20,8 @@ export const ceramicsClasses: ClassItem[] = [
       new Date('2024-04-29'),
       new Date('2024-05-06')
     ],
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "An introduction to pottery basics. You'll learn hand-building techniques, basic wheel throwing, and glazing methods."
   },
   { 
     id: 2, 
@@ -36,7 +37,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Beginner",
     category: "Pottery",
     date: new Date('2024-04-18'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Learn the fundamental techniques of wheel throwing. This class covers centering clay, shaping cylinders, and creating basic forms."
   },
   { 
     id: 3, 
@@ -52,7 +54,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Advanced",
     category: "Pottery",
     date: new Date('2024-04-22'),
-    city: "Malmö"
+    city: "Malmö",
+    description: "Explore advanced techniques in ceramic sculpture. This class focuses on creating complex forms, surface textures, and mixed media elements."
   },
   { 
     id: 4, 
@@ -68,7 +71,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Pottery",
     date: new Date('2024-04-30'),
-    city: "Uppsala"
+    city: "Uppsala",
+    description: "Master the art of glazing with a variety of techniques. Learn about glaze chemistry, application methods, and firing processes."
   },
   { 
     id: 5, 
@@ -84,7 +88,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Beginner",
     category: "Pottery",
     date: new Date('2024-05-05'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Discover the joy of hand building with clay. This workshop covers pinch pots, coil building, and slab construction techniques."
   },
   { 
     id: 6, 
@@ -100,7 +105,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Pottery",
     date: new Date('2024-05-10'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Learn decorative techniques to enhance your pottery. This class covers carving, stamping, and adding texture to clay surfaces."
   },
   { 
     id: 7, 
@@ -116,7 +122,8 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Advanced",
     category: "Pottery",
     date: new Date('2024-05-15'),
-    city: "Malmö"
+    city: "Malmö",
+    description: "Experience the excitement of Raku firing. This workshop covers the Raku process, including glazing, firing, and post-firing reduction techniques."
   },
   { 
     id: 8, 
@@ -132,6 +139,9 @@ export const ceramicsClasses: ClassItem[] = [
     level: "Beginner",
     category: "Pottery",
     date: new Date('2024-05-20'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Get started with clay modeling. This class introduces basic sculpting techniques, including additive and subtractive methods."
   },
 ];
+
+export const ceramics = ceramicsClasses;

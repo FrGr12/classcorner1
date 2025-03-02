@@ -52,6 +52,10 @@ const CreateClassForm = ({
       items_to_bring: [''],
       images: [],
       status: 'draft',
+      min_participants: undefined,
+      max_participants: undefined,
+      waitlist_enabled: false,
+      max_waitlist_size: undefined,
     },
     mode: "onChange",
   });
@@ -85,7 +89,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: String(formValues.duration), // Ensure duration is stored as string
+        duration: formValues.duration, // Already a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -95,7 +99,11 @@ const CreateClassForm = ({
         items_to_bring: formValues.items_to_bring,
         status: "draft" as const,
         images: formValues.images,
-        sessions: formValues.sessions
+        sessions: formValues.sessions,
+        min_participants: formValues.min_participants,
+        max_participants: formValues.max_participants,
+        waitlist_enabled: formValues.waitlist_enabled,
+        max_waitlist_size: formValues.max_waitlist_size
       };
   
       const { data, error } = await supabase
@@ -135,7 +143,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: String(formValues.duration), // Ensure duration is stored as string
+        duration: formValues.duration, // Already a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -145,7 +153,11 @@ const CreateClassForm = ({
         items_to_bring: formValues.items_to_bring,
         status: "published" as const,
         images: formValues.images,
-        sessions: formValues.sessions
+        sessions: formValues.sessions,
+        min_participants: formValues.min_participants,
+        max_participants: formValues.max_participants,
+        waitlist_enabled: formValues.waitlist_enabled,
+        max_waitlist_size: formValues.max_waitlist_size
       };
   
       const { data, error } = await supabase

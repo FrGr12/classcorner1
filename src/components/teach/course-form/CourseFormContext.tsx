@@ -24,6 +24,8 @@ export const courseFormSchema = z.object({
   status: z.enum(["draft", "published", "archived"]).default("draft"),
   min_participants: z.number().int().positive().optional(),
   max_participants: z.number().int().positive().optional(),
+  waitlist_enabled: z.boolean().optional(),
+  max_waitlist_size: z.number().int().positive().optional(),
 });
 
 export type CourseFormValues = z.infer<typeof courseFormSchema>;

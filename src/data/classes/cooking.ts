@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const cookingClasses: ClassItem[] = [
@@ -15,7 +16,8 @@ export const cookingClasses: ClassItem[] = [
     level: "Beginner",
     category: "Cooking",
     date: new Date('2024-04-25'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn the fundamentals of Italian cooking with a professional chef. This class covers pasta making, sauces, and classic recipes."
   },
   { 
     id: 2, 
@@ -31,6 +33,9 @@ export const cookingClasses: ClassItem[] = [
     level: "Advanced",
     category: "Cooking",
     date: new Date('2024-05-01'),
-    city: "Malmö"
+    city: "Malmö",
+    description: "Explore modern Nordic cuisine with a focus on local, seasonal ingredients and traditional preservation techniques."
   }
 ];
+
+export const cooking = cookingClasses;

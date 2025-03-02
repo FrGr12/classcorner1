@@ -1,11 +1,10 @@
 
 import React from "react";
-import { ClassDetailsDialog } from "../ClassDetailsDialog";
+import ClassDetailsDialog from "../ClassDetailsDialog";
 import { EditClassDialog } from "../dialogs/EditClassDialog";
-import { MessageDialog } from "../dialogs/MessageDialog";
-import { ShareDialog } from "../dialogs/ShareDialog";
-import { PromoteDialog } from "../dialogs/PromoteDialog";
-import { CancelCourseDialog } from "../dialogs/CancelCourseDialog";
+import MessageDialog from "../dialogs/MessageDialog";
+import ShareDialog from "../dialogs/ShareDialog";
+import CancelCourseDialog from "../dialogs/CancelCourseDialog";
 import { ClassItem } from "@/types/class";
 
 // Get class by ID from mock or API
@@ -67,7 +66,7 @@ const DialogManager = ({
       {isDetailsOpen && (
         <ClassDetailsDialog
           classData={selectedClass}
-          isOpen={isDetailsOpen}
+          open={isDetailsOpen}
           onOpenChange={setIsDetailsOpen}
         />
       )}
@@ -75,7 +74,7 @@ const DialogManager = ({
       {isEditOpen && (
         <EditClassDialog
           classData={selectedClass}
-          isOpen={isEditOpen}
+          open={isEditOpen}
           onOpenChange={setIsEditOpen}
           onSuccess={onEditSuccess}
         />
@@ -84,7 +83,7 @@ const DialogManager = ({
       {isMessageOpen && (
         <MessageDialog
           classId={selectedClass.id}
-          isOpen={isMessageOpen}
+          open={isMessageOpen}
           onOpenChange={setIsMessageOpen}
         />
       )}
@@ -92,18 +91,28 @@ const DialogManager = ({
       {isShareOpen && (
         <ShareDialog
           classData={selectedClass}
-          isOpen={isShareOpen}
+          open={isShareOpen}
           onOpenChange={setIsShareOpen}
         />
       )}
 
       {isPromoteOpen && (
-        <PromoteDialog
+        {/* Temporarily commenting out PromoteDialog since it can't be found */}
+        {/* <PromoteDialog
           classData={selectedClass}
-          isOpen={isPromoteOpen}
+          open={isPromoteOpen}
+          onOpenChange={setIsPromoteOpen}
+        /> */}
+      )}
+      
+      {/* CancelCourseDialog temporarily commented out */}
+      {/* {isPromoteOpen && (
+        <CancelCourseDialog
+          classData={selectedClass}
+          open={isPromoteOpen}
           onOpenChange={setIsPromoteOpen}
         />
-      )}
+      )} */}
     </>
   );
 };

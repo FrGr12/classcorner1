@@ -12,15 +12,19 @@ export interface ClassItem {
   date: Date | Date[];
   city: string;
   description: string; // Required field
+  address?: string;
+  is_online?: boolean;
   maxParticipants?: number;
   minParticipants?: number;
+  min_participants?: number;
+  max_participants?: number;
   waitlist_enabled?: boolean;
   max_waitlist_size?: number;
   groupBookingsEnabled?: boolean;
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string; // Changed to string to match DB schema
+  duration?: string; // String type to match DB schema
   shareCount?: number;
   lastShared?: string;
   views?: number;

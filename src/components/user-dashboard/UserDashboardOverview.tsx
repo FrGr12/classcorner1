@@ -37,7 +37,8 @@ const UserDashboardOverview = () => {
       level: "Advanced",
       date: new Date("2024-03-15"),
       city: "San Francisco",
-      category: "Pottery"
+      category: "Pottery",
+      description: "Advance your pottery skills in this hands-on workshop. Learn complex throwing techniques and advanced glazing methods."
     },
     {
       id: 2,
@@ -49,7 +50,8 @@ const UserDashboardOverview = () => {
       level: "Beginner",
       date: new Date("2024-03-20"),
       city: "Los Angeles",
-      category: "Painting"
+      category: "Painting",
+      description: "This beginner-friendly class introduces the fundamentals of watercolor painting. Learn about color mixing, brush techniques, and composition."
     },
     {
       id: 3,
@@ -61,7 +63,8 @@ const UserDashboardOverview = () => {
       level: "Intermediate",
       date: new Date("2024-03-25"),
       city: "New York",
-      category: "Jewelry"
+      category: "Jewelry",
+      description: "Create beautiful handmade jewelry in this intermediate workshop. Work with various metals and techniques to craft unique pieces."
     }
   ];
 
