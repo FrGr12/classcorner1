@@ -100,6 +100,7 @@ const Navigation = () => {
                 size="icon-sm"
                 className="hover:text-accent-purple"
                 onClick={handleBack}
+                aria-label="Go back"
               >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
