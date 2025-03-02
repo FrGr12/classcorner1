@@ -2,8 +2,9 @@
 import { useState, useEffect } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
+import { CourseFormValues } from "../CourseFormContext";
 
-export const useCourseFormData = (form: UseFormReturn<any>) => {
+export const useCourseFormData = (form: UseFormReturn<CourseFormValues>) => {
   const [sessions, setSessions] = useState<any[]>([]);
   
   useEffect(() => {

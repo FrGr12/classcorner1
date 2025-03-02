@@ -1,14 +1,14 @@
 
 import { useCourseForm } from "./CourseFormContext";
-import BasicInfoSection from "./BasicInfoSection";
-import LocationCategorySection from "./LocationCategorySection";
-import LocationCategoryDetailsSection from "./LocationCategoryDetailsSection";
-import PricingCapacitySection from "./PricingCapacitySection";
-import ImagesSection from "./ImagesSection";
-import ScheduleSection from "./ScheduleSection";
-import BringItemsSection from "./BringItemsSection";
-import LearningOutcomesSection from "./LearningOutcomesSection";
-import { SessionsForm } from "@/components/teach/SessionsForm";
+import BasicInfoSection from "./sections/BasicInfoSection";
+import LocationCategorySection from "./sections/LocationCategorySection";
+import LocationCategoryDetailsSection from "./sections/LocationCategoryDetailsSection";
+import PricingCapacitySection from "./sections/PricingCapacitySection";
+import ImagesSection from "./sections/ImagesSection";
+import ScheduleSection from "./sections/ScheduleSection";
+import BringItemsSection from "./sections/BringItemsSection";
+import LearningOutcomesSection from "./sections/LearningOutcomesSection";
+import SessionsWrapper from "./sections/SessionsWrapper";
 
 interface CourseFormStepManagerProps {
   currentStep: number;
@@ -37,13 +37,7 @@ export const CourseFormStepManager = ({ currentStep }: CourseFormStepManagerProp
       return (
         <div className="space-y-6">
           <ScheduleSection form={form} />
-          <div className="border-t pt-6">
-            <h3 className="text-lg font-medium mb-4">Class Sessions</h3>
-            <SessionsForm 
-              sessions={sessions} 
-              setSessions={setSessions} 
-            />
-          </div>
+          <SessionsWrapper sessions={sessions} setSessions={setSessions} />
         </div>
       );
     case 6:
