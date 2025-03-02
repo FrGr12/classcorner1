@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
+import { Session } from "@/types/session";
 
 export interface CourseFormValues {
   title: string;
@@ -38,6 +39,8 @@ interface CourseFormContextType {
   setCurrentStep: (step: string) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  sessions: Session[];
+  setSessions: (sessions: Session[]) => void;
 }
 
 const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
@@ -59,6 +62,8 @@ interface CourseFormProviderProps {
   setCurrentStep: (step: string) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
+  sessions: Session[];
+  setSessions: (sessions: Session[]) => void;
 }
 
 export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
@@ -70,6 +75,8 @@ export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
   setCurrentStep,
   goToNextStep,
   goToPreviousStep,
+  sessions,
+  setSessions,
 }) => {
   return (
     <CourseFormContext.Provider
@@ -81,6 +88,8 @@ export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
         setCurrentStep,
         goToNextStep,
         goToPreviousStep,
+        sessions,
+        setSessions,
       }}
     >
       {children}

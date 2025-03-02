@@ -18,9 +18,9 @@ const ScheduleSection = ({ form }: ScheduleSectionProps) => {
   const handleAddSession = () => {
     const newSession = {
       id: Date.now(),
-      date: "",
-      startTime: "",
-      endTime: "",
+      date: new Date(),
+      start_time: "",
+      end_time: "",
     };
     
     setSessions([...sessions, newSession]);

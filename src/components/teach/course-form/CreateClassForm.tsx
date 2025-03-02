@@ -12,6 +12,7 @@ import { CourseFormProvider, CourseFormValues } from "./CourseFormContext";
 import { formSteps, defaultFormValues } from "./utils/formDefaults";
 import { useCourseFormData } from "./hooks/useCourseFormData";
 import { saveDraftCourse, submitCourse } from "./utils/courseFormUtils";
+import { Session } from "@/types/session";
 
 interface CreateClassFormProps {
   isSubmitting: boolean;
@@ -26,12 +27,13 @@ const CreateClassForm = ({
 }: CreateClassFormProps) => {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [sessions, setSessions] = useState<Session[]>([]);
   
   const form = useForm<CourseFormValues>({
     defaultValues: defaultFormValues
   });
 
-  const { sessions, setSessions } = useCourseFormData(form);
+  const { isLoading, error } = useCourseFormData(form);
 
   const handleNext = () => {
     if (currentStep < formSteps.length - 1) {
@@ -56,7 +58,22 @@ const CreateClassForm = ({
   };
 
   return (
-    <CourseFormProvider form={form} sessions={sessions} setSessions={setSessions}>
+    <CourseFormProvider 
+      form={form} 
+      isSubmitting={isSubmitting}
+      setIsSubmitting={setIsSubmitting}
+      currentStep={formSteps[currentStep]}
+      setCurrentStep={(step) => {
+        const stepIndex = formSteps.indexOf(step);
+        if (stepIndex >= 0) {
+          setCurrentStep(stepIndex);
+        }
+      }}
+      goToNextStep={handleNext}
+      goToPreviousStep={handlePrevious}
+      sessions={sessions}
+      setSessions={setSessions}
+    >
       <FormWrapper>
         <Card className="p-6 mb-8">
           <ProgressIndicator 

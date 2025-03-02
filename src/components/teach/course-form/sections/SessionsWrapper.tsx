@@ -1,10 +1,11 @@
 
 import { SessionsForm } from "@/components/teach/SessionsForm";
 import { Card } from "@/components/ui/card";
+import { Session } from "@/types/session";
 
 interface SessionsWrapperProps {
-  sessions: any[];
-  setSessions: (sessions: any[]) => void;
+  sessions: Session[];
+  setSessions: (sessions: Session[]) => void;
 }
 
 const SessionsWrapper = ({ sessions, setSessions }: SessionsWrapperProps) => {
@@ -21,7 +22,6 @@ const SessionsWrapper = ({ sessions, setSessions }: SessionsWrapperProps) => {
         <SessionsForm 
           sessions={sessions} 
           setSessions={setSessions} 
-          aria-labelledby="sessions-heading"
         />
       </div>
     </Card>
