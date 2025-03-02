@@ -12,6 +12,16 @@ export const formSteps = [
   "Learning Outcomes",
 ];
 
+export interface Step {
+  label: string;
+  value: string;
+}
+
+export const stepConfig: Step[] = formSteps.map((step, index) => ({
+  label: step,
+  value: `step-${index + 1}`
+}));
+
 export const defaultFormValues: CourseFormValues = {
   title: "",
   description: "",
