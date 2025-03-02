@@ -92,7 +92,8 @@ export const SkeletonList = ({
           <Skeleton 
             key={index} 
             variant="text" 
-            height={height} 
+            height={height}
+            animation="shimmer" 
           />
         ))}
     </div>
@@ -108,13 +109,13 @@ export const CardSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLD
     aria-label="Loading card"
     {...props}
   >
-    <Skeleton variant="rectangular" height={200} />
-    <Skeleton variant="text" height={24} width="70%" />
-    <Skeleton variant="text" height={16} />
-    <Skeleton variant="text" height={16} />
+    <Skeleton variant="rectangular" height={200} animation="shimmer" />
+    <Skeleton variant="text" height={24} width="70%" animation="shimmer" />
+    <Skeleton variant="text" height={16} animation="shimmer" />
+    <Skeleton variant="text" height={16} animation="shimmer" />
     <div className="flex gap-2">
-      <Skeleton variant="button" height={36} width={100} />
-      <Skeleton variant="button" height={36} width={100} />
+      <Skeleton variant="button" height={36} width={100} animation="shimmer" />
+      <Skeleton variant="button" height={36} width={100} animation="shimmer" />
     </div>
   </div>
 );
@@ -139,7 +140,8 @@ export const TableRowSkeleton = ({
           key={index} 
           variant="text" 
           width={index === 0 ? "60%" : "80%"} 
-          height={20} 
+          height={20}
+          animation="shimmer" 
         />
       ))}
   </div>
@@ -154,8 +156,8 @@ export const FormFieldSkeleton = ({ className, ...props }: React.HTMLAttributes<
     aria-label="Loading form field"
     {...props}
   >
-    <Skeleton variant="text" height={16} width="40%" />
-    <Skeleton variant="input" height={40} />
+    <Skeleton variant="text" height={16} width="40%" animation="shimmer" />
+    <Skeleton variant="input" height={40} animation="shimmer" />
   </div>
 );
 
@@ -168,14 +170,14 @@ export const ProfileSkeleton = ({ className, ...props }: React.HTMLAttributes<HT
     aria-label="Loading profile"
     {...props}
   >
-    <Skeleton variant="avatar" height={80} width={80} className="shrink-0" />
+    <Skeleton variant="avatar" height={80} width={80} className="shrink-0" animation="shimmer" />
     <div className="space-y-4 w-full">
-      <Skeleton variant="text" height={28} width="60%" />
-      <Skeleton variant="text" height={16} width="40%" />
+      <Skeleton variant="text" height={28} width="60%" animation="shimmer" />
+      <Skeleton variant="text" height={16} width="40%" animation="shimmer" />
       <div className="flex flex-wrap gap-3">
-        <Skeleton variant="badge" height={24} width={80} />
-        <Skeleton variant="badge" height={24} width={80} />
-        <Skeleton variant="badge" height={24} width={80} />
+        <Skeleton variant="badge" height={24} width={80} animation="shimmer" />
+        <Skeleton variant="badge" height={24} width={80} animation="shimmer" />
+        <Skeleton variant="badge" height={24} width={80} animation="shimmer" />
       </div>
     </div>
   </div>
@@ -220,38 +222,38 @@ export const DashboardSkeleton = ({ className, ...props }: React.HTMLAttributes<
     {...props}
   >
     <div className="flex justify-between items-center">
-      <Skeleton variant="text" height={32} width={200} />
+      <Skeleton variant="text" height={32} width={200} animation="shimmer" />
       <div className="flex gap-2">
-        <Skeleton variant="button" height={40} width={100} />
-        <Skeleton variant="button" height={40} width={100} />
+        <Skeleton variant="button" height={40} width={100} animation="shimmer" />
+        <Skeleton variant="button" height={40} width={100} animation="shimmer" />
       </div>
     </div>
     
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {[1, 2, 3].map((i) => (
         <div key={i} className="border rounded-xl p-4 space-y-3">
-          <Skeleton variant="text" height={24} width="50%" />
-          <Skeleton variant="text" height={36} width="70%" />
+          <Skeleton variant="text" height={24} width="50%" animation="shimmer" />
+          <Skeleton variant="text" height={36} width="70%" animation="shimmer" />
         </div>
       ))}
     </div>
     
     <div className="border rounded-xl p-4 space-y-4">
-      <Skeleton variant="text" height={28} width="30%" />
-      <Skeleton variant="chart" height={200} />
+      <Skeleton variant="text" height={28} width="30%" animation="shimmer" />
+      <Skeleton variant="chart" height={200} animation="shimmer" />
     </div>
     
     <div className="border rounded-xl p-4 space-y-4">
-      <Skeleton variant="text" height={28} width="30%" />
+      <Skeleton variant="text" height={28} width="30%" animation="shimmer" />
       <div className="space-y-3">
         {[1, 2, 3, 4].map((i) => (
           <div key={i} className="flex items-center gap-3 border-b pb-3">
-            <Skeleton variant="avatar" height={40} width={40} />
+            <Skeleton variant="avatar" height={40} width={40} animation="shimmer" />
             <div className="flex-1">
-              <Skeleton variant="text" height={20} width="40%" />
-              <Skeleton variant="text" height={16} width="60%" className="mt-2" />
+              <Skeleton variant="text" height={20} width="40%" animation="shimmer" />
+              <Skeleton variant="text" height={16} width="60%" className="mt-2" animation="shimmer" />
             </div>
-            <Skeleton variant="badge" height={24} width={60} />
+            <Skeleton variant="badge" height={24} width={60} animation="shimmer" />
           </div>
         ))}
       </div>
