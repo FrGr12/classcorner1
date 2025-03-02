@@ -7,6 +7,7 @@ import { FormFieldSkeleton } from './skeleton/form-field-skeleton';
 import { ProfileSkeleton } from './skeleton/profile-skeleton';
 import { GridSkeleton } from './skeleton/grid-skeleton';
 import { DashboardSkeleton } from './skeleton/dashboard-skeleton';
+import type { SkeletonProps } from './skeleton/skeleton';
 
 export {
   Skeleton,
@@ -16,7 +17,8 @@ export {
   FormFieldSkeleton,
   ProfileSkeleton,
   GridSkeleton,
-  DashboardSkeleton
+  DashboardSkeleton,
+  SkeletonProps
 };
 
 export default Skeleton;
