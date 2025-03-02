@@ -1,98 +1,107 @@
 
-import React from 'react';
-import { EditClassDialog } from '../dialogs/EditClassDialog';
-import CancelCourseDialog from '../dialogs/CancelCourseDialog';
-import MessageDialog from '../dialogs/MessageDialog';
-import ShareDialog from '../dialogs/ShareDialog';
-import { ClassItem } from '@/types/class';
+import React from "react";
+import { ClassDetailsDialog } from "../ClassDetailsDialog";
+import { EditClassDialog } from "../dialogs/EditClassDialog";
+import { MessageDialog } from "../dialogs/MessageDialog";
+import { ShareDialog } from "../dialogs/ShareDialog";
+import { PromoteDialog } from "../dialogs/PromoteDialog";
+import { CancelCourseDialog } from "../dialogs/CancelCourseDialog";
+import { ClassItem } from "@/types/class";
 
-export interface DialogManagerProps {
-  isEditOpen: boolean;
-  isDetailsOpen: boolean;
+// Get class by ID from mock or API
+const getClassById = (classId: number | null): ClassItem | null => {
+  if (!classId) return null;
+  
+  // In a real app, this would fetch from API or state
+  // For demo, return a mock class
+  return {
+    id: classId,
+    title: "Demo Class",
+    instructor: "Jane Smith",
+    price: 49.99,
+    rating: 4.5,
+    images: ["/placeholder.svg"],
+    level: "beginner",
+    date: new Date(),
+    city: "New York",
+    category: "arts",
+    description: "A demo class for testing purposes" // Adding required description field
+  };
+};
+
+interface DialogManagerProps {
+  selectedClassId: number | null;
   isPromoteOpen: boolean;
   isMessageOpen: boolean;
   isShareOpen: boolean;
-  isCancelOpen?: boolean;
-  selectedClassId: number;
-  selectedClass?: ClassItem;
-  setIsEditOpen: (open: boolean) => void;
-  setIsDetailsOpen: (open: boolean) => void;
-  setIsPromoteOpen: (open: boolean) => void;
-  setIsMessageOpen: (open: boolean) => void;
-  setIsShareOpen: (open: boolean) => void;
-  setIsCancelOpen?: (open: boolean) => void;
+  isDetailsOpen: boolean;
+  isEditOpen: boolean;
+  setIsPromoteOpen: (isOpen: boolean) => void;
+  setIsMessageOpen: (isOpen: boolean) => void;
+  setIsShareOpen: (isOpen: boolean) => void;
+  setIsDetailsOpen: (isOpen: boolean) => void;
+  setIsEditOpen: (isOpen: boolean) => void;
   onEditSuccess: () => void;
 }
 
-// Type definitions for dialog components
-interface MessageDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
-interface ShareDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
-interface CancelCourseDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
-const DialogManager: React.FC<DialogManagerProps> = ({
-  isEditOpen,
-  isDetailsOpen,
+const DialogManager = ({
+  selectedClassId,
   isPromoteOpen,
   isMessageOpen,
   isShareOpen,
-  isCancelOpen = false,
-  selectedClassId,
-  selectedClass,
-  setIsEditOpen,
-  setIsDetailsOpen,
+  isDetailsOpen,
+  isEditOpen,
   setIsPromoteOpen,
   setIsMessageOpen,
   setIsShareOpen,
-  setIsCancelOpen = () => {},
+  setIsDetailsOpen,
+  setIsEditOpen,
   onEditSuccess
-}) => {
+}: DialogManagerProps) => {
+  const selectedClass = getClassById(selectedClassId);
+
   if (!selectedClass) return null;
 
   return (
     <>
+      {isDetailsOpen && (
+        <ClassDetailsDialog
+          classData={selectedClass}
+          isOpen={isDetailsOpen}
+          onOpenChange={setIsDetailsOpen}
+        />
+      )}
+
       {isEditOpen && (
         <EditClassDialog
-          isOpen={isEditOpen}
-          onClose={() => setIsEditOpen(false)}
           classData={selectedClass}
+          isOpen={isEditOpen}
+          onOpenChange={setIsEditOpen}
+          onSuccess={onEditSuccess}
         />
       )}
 
       {isMessageOpen && (
         <MessageDialog
-          open={isMessageOpen}
-          onClose={() => setIsMessageOpen(false)}
-          classData={selectedClass}
+          classId={selectedClass.id}
+          isOpen={isMessageOpen}
+          onOpenChange={setIsMessageOpen}
         />
       )}
 
       {isShareOpen && (
         <ShareDialog
-          open={isShareOpen}
-          onClose={() => setIsShareOpen(false)}
           classData={selectedClass}
+          isOpen={isShareOpen}
+          onOpenChange={setIsShareOpen}
         />
       )}
 
-      {isCancelOpen && setIsCancelOpen && (
-        <CancelCourseDialog
-          open={isCancelOpen}
-          onClose={() => setIsCancelOpen(false)}
+      {isPromoteOpen && (
+        <PromoteDialog
           classData={selectedClass}
+          isOpen={isPromoteOpen}
+          onOpenChange={setIsPromoteOpen}
         />
       )}
     </>

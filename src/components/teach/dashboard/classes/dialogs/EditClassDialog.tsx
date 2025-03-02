@@ -1,222 +1,123 @@
 
-import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CreateClassSchema } from '@/lib/validators/create-class';
-import { ClassItem } from '@/types/class';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
-import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { useState } from "react";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ClassItem } from "@/types/class";
+import { Button } from "@/components/ui/button";
+import { handleError } from "@/utils/errorHandler";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import EditClassFormFields from "./EditClassFormFields";
 
 interface EditClassDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
   classData: ClassItem;
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
   onSuccess?: () => void;
 }
 
-export const EditClassDialog: React.FC<EditClassDialogProps> = ({ isOpen, onClose, classData, onSuccess }) => {
-  const [isLoading, setIsLoading] = useState(false);
+export const EditClassDialog = ({ 
+  classData, 
+  isOpen, 
+  onOpenChange,
+  onSuccess 
+}: EditClassDialogProps) => {
   const { toast } = useToast();
-  
-  const form = useForm({
-    resolver: zodResolver(CreateClassSchema),
-    defaultValues: {
-      title: classData.title || '',
-      description: classData.description || '',
-      category: classData.category || '',
-      location: classData.city || '',
-      address: '',
-      city: classData.city || '',
-      is_online: false,
-      capacity: classData.maxParticipants || 1,
-      price: classData.price || 0,
-      duration: typeof classData.duration === 'number' ? String(classData.duration) : classData.duration || '60',
-      learning_outcomes: classData.learning_outcomes || [''],
-      requirements: classData.requirements || [''],
-      items_to_bring: classData.items_to_bring || [''],
-      status: (classData.status as "draft" | "published" | "archived") || 'published',
-    }
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    title: classData.title,
+    description: classData.description,
+    category: classData.category || '',
+    location: classData.city,
+    price: classData.price,
+    capacity: classData.maxParticipants || 10,
+    duration: classData.duration || "60", // Ensure duration is a string
   });
-  
-  const handleSubmit = async (values: any) => {
-    setIsLoading(true);
-    
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: name === 'price' ? parseFloat(value) : 
+              name === 'capacity' ? parseInt(value) : value
+    });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
     try {
       const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
-      
-      const formattedData = {
+      if (!userData.user) throw new Error('User not authenticated');
+
+      const updatedData = {
         instructor_id: userData.user.id,
-        title: values.title,
-        description: values.description,
-        category: values.category,
-        location: values.location,
-        address: values.address,
-        city: values.city,
-        is_online: values.is_online,
-        capacity: values.capacity,
-        price: values.price,
-        duration: String(values.duration), // Ensure duration is stored as string
-        learning_outcomes: values.learning_outcomes,
-        requirements: values.requirements,
-        items_to_bring: values.items_to_bring,
-        status: values.status as "draft" | "published" | "archived",
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        location: formData.location,
+        address: classData.address || '',
+        city: formData.location,
+        is_online: classData.is_online || false,
+        capacity: formData.capacity,
+        price: formData.price,
+        duration: String(formData.duration), // Ensure duration is stored as string
+        learning_outcomes: classData.learning_outcomes || [],
+        requirements: classData.requirements || [],
+        items_to_bring: classData.items_to_bring || [],
+        status: "published"
       };
-      
+
       const { error } = await supabase
         .from('courses')
-        .update(formattedData)
+        .update(updatedData)
         .eq('id', classData.id);
-        
+
       if (error) throw error;
-      
+
       toast({
-        title: 'Class updated',
-        description: 'Your changes have been saved.',
+        title: "Success!",
+        description: "Your class has been updated.",
       });
-      
+
+      onOpenChange(false);
       if (onSuccess) onSuccess();
-      onClose();
-    } catch (error: any) {
-      toast({
-        title: 'Error updating class',
-        description: error.message || 'An error occurred while updating the class',
-        variant: 'destructive',
+    } catch (error) {
+      handleError(error, {
+        title: "Failed to update class",
+        description: "Please check your connection and try again.",
       });
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
-  
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle>Edit Class</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="title"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Title</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <EditClassFormFields 
+            formData={formData} 
+            handleChange={handleChange} 
           />
           
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea {...field} className="min-h-32" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <div className="grid grid-cols-2 gap-4">
-            <FormField
-              control={form.control}
-              name="category"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Category</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Location</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Price</FormLabel>
-                  <FormControl>
-                    <Input 
-                      {...field} 
-                      type="number" 
-                      min="0" 
-                      onChange={(e) => field.onChange(parseFloat(e.target.value))} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="capacity"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Capacity</FormLabel>
-                  <FormControl>
-                    <Input 
-                      {...field} 
-                      type="number" 
-                      min="1" 
-                      onChange={(e) => field.onChange(parseInt(e.target.value))} 
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="duration"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Duration (minutes)</FormLabel>
-                  <FormControl>
-                    <Input {...field} type="text" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          
-          <div className="flex justify-end space-x-2">
-            <Button variant="outline" type="button" onClick={onClose}>
+          <div className="flex justify-end gap-2 pt-4">
+            <Button 
+              type="button" 
+              variant="outline" 
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : 'Save Changes'}
+            <Button 
+              type="submit" 
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>

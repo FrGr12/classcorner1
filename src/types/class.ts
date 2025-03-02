@@ -11,7 +11,7 @@ export interface ClassItem {
   category?: string;
   date: Date | Date[];
   city: string;
-  description: string;
+  description: string; // Required field
   maxParticipants?: number;
   minParticipants?: number;
   waitlist_enabled?: boolean;
@@ -20,7 +20,7 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string | number;
+  duration?: string; // Changed to string to match DB schema
   shareCount?: number;
   lastShared?: string;
   views?: number;
@@ -49,5 +49,5 @@ export interface ClassPreview {
   date: Date;
   city: string;
   category?: string;
-  description: string;
+  description: string; // Required field
 }

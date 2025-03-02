@@ -45,7 +45,7 @@ const CreateClassForm = ({
       is_online: false,
       capacity: 1,
       price: 0,
-      duration: "60", // Ensure string type to match database
+      duration: "60", // Ensure string type to match DB schema
       sessions: [],
       learning_outcomes: [''],
       requirements: [''],
