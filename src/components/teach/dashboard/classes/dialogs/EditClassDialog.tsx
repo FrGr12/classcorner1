@@ -1,70 +1,73 @@
 
-import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React, { useState, useEffect } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
+import { useForm } from 'react-hook-form';
 import { supabase } from '@/integrations/supabase/client';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { ClassItem } from '@/types/class';
-import { z } from 'zod';
+import { handleError } from '@/utils/errorHandler';
+import { useToast } from '@/hooks/use-toast';
 
-export interface EditClassDialogProps {
+interface EditClassDialogProps {
   isOpen: boolean;
   onClose: () => void;
   classData: ClassItem;
 }
 
-// Simple form schema for edit class
-const editClassSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  capacity: z.number().min(1, "Capacity must be at least 1"),
-  price: z.number().min(0, "Price cannot be negative"),
-  duration: z.string().or(z.number()).default("60"), // Accept both string and number
-  category: z.string().min(1, "Category is required"),
-});
-
-export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogProps) {
+export const EditClassDialog: React.FC<EditClassDialogProps> = ({ isOpen, onClose, classData }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   
-  const form = useForm({
-    resolver: zodResolver(editClassSchema),
+  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
-      title: classData.title || '',
-      description: classData.description || '',
+      title: classData.title,
+      description: classData.description,
       category: classData.category || '',
-      price: classData.price || 0,
+      location: classData.city,
+      // Ensure duration is set as a string
+      duration: typeof classData.duration === 'number' ? String(classData.duration) : classData.duration || '60',
+      price: classData.price,
       capacity: classData.maxParticipants || 10,
-      duration: classData.duration?.toString() || "60", // Convert to string
+      status: 'published'
     }
   });
 
-  const onSubmit = async (values: z.infer<typeof editClassSchema>) => {
-    setIsSubmitting(true);
+  useEffect(() => {
+    if (classData) {
+      setValue('title', classData.title);
+      setValue('description', classData.description);
+      setValue('category', classData.category || '');
+      setValue('location', classData.city);
+      setValue('duration', typeof classData.duration === 'number' ? String(classData.duration) : classData.duration || '60');
+      setValue('price', classData.price);
+      setValue('capacity', classData.maxParticipants || 10);
+    }
+  }, [classData, setValue]);
+
+  const onSubmit = async (data: any) => {
     try {
-      // Format data for database update
+      setIsSubmitting(true);
+      
+      // Prepare the data for the update operation
       const updateData = {
         instructor_id: classData.instructor_id,
-        title: values.title,
-        description: values.description,
-        category: values.category,
-        location: classData.city,
-        address: '',
-        city: classData.city,
+        title: data.title,
+        description: data.description,
+        category: data.category,
+        location: data.location,
+        address: classData.city,
+        city: data.location,
         is_online: false,
-        capacity: values.capacity,
-        price: values.price,
-        duration: values.duration.toString(), // Ensure duration is stored as string
-        learning_outcomes: [],
-        requirements: [],
-        items_to_bring: [],
-        images: classData.images,
+        capacity: data.capacity,
+        price: data.price,
+        duration: String(data.duration), // Ensure duration is stored as string
+        learning_outcomes: classData.learning_outcomes || [],
+        requirements: classData.requirements || [],
+        items_to_bring: classData.items_to_bring || [],
         status: "published"
       };
 
@@ -72,20 +75,19 @@ export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogP
         .from('courses')
         .update(updateData)
         .eq('id', classData.id);
-
+      
       if (error) throw error;
-
+      
       toast({
-        title: 'Class updated',
-        description: 'Your class has been successfully updated.',
+        title: "Class updated",
+        description: "Your changes have been saved successfully.",
       });
-
+      
       onClose();
-    } catch (error: any) {
-      toast({
-        title: 'Error',
-        description: error.message || 'Failed to update class',
-        variant: 'destructive',
+    } catch (error) {
+      handleError(error, {
+        title: "Update failed",
+        description: "There was a problem updating the class. Please try again.",
       });
     } finally {
       setIsSubmitting(false);
@@ -94,120 +96,86 @@ export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogP
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Class</DialogTitle>
         </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
+        
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="title">Title</Label>
+            <Input id="title" {...register('title', { required: true })} />
+            {errors.title && <p className="text-red-500 text-sm">Title is required</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="description">Description</Label>
+            <Textarea id="description" {...register('description', { required: true })} />
+            {errors.description && <p className="text-red-500 text-sm">Description is required</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="category">Category</Label>
+            <Select onValueChange={(value) => setValue('category', value)} defaultValue={classData.category}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="pottery">Pottery</SelectItem>
+                <SelectItem value="painting">Painting</SelectItem>
+                <SelectItem value="cooking">Cooking</SelectItem>
+                <SelectItem value="crafts">Crafts</SelectItem>
+                <SelectItem value="photography">Photography</SelectItem>
+              </SelectContent>
+            </Select>
+            {errors.category && <p className="text-red-500 text-sm">Category is required</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="location">Location</Label>
+            <Input id="location" {...register('location', { required: true })} />
+            {errors.location && <p className="text-red-500 text-sm">Location is required</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="duration">Duration (minutes)</Label>
+            <Input
+              id="duration"
+              type="number"
+              {...register('duration', { required: true })}
             />
-            
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Description</FormLabel>
-                  <FormControl>
-                    <Textarea className="min-h-[100px]" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
+            {errors.duration && <p className="text-red-500 text-sm">Duration is required</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="price">Price</Label>
+            <Input
+              id="price"
+              type="number"
+              step="0.01"
+              {...register('price', { required: true, min: 0 })}
             />
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Art">Art</SelectItem>
-                        <SelectItem value="Cooking">Cooking</SelectItem>
-                        <SelectItem value="Crafts">Crafts</SelectItem>
-                        <SelectItem value="Photography">Photography</SelectItem>
-                        <SelectItem value="Music">Music</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="price"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Price ($)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        {...field} 
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))} 
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="capacity"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Capacity</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        {...field} 
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10))} 
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration (minutes)</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+            {errors.price && <p className="text-red-500 text-sm">Price is required and must be a positive number</p>}
+          </div>
+          
+          <div className="space-y-2">
+            <Label htmlFor="capacity">Maximum Capacity</Label>
+            <Input
+              id="capacity"
+              type="number"
+              {...register('capacity', { required: true, min: 1 })}
+            />
+            {errors.capacity && <p className="text-red-500 text-sm">Capacity is required and must be at least 1</p>}
+          </div>
+          
+          <div className="flex justify-end space-x-2">
+            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Saving...' : 'Save Changes'}
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   );
-}
+};

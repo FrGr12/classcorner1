@@ -4,7 +4,7 @@ import { UseFormReturn } from "react-hook-form";
 import { Session } from "@/types/session";
 import * as z from "zod";
 
-// Define the schema for form validation
+// Define the schema for form validation - matching our CreateClassSchema
 export const courseFormSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -15,7 +15,7 @@ export const courseFormSchema = z.object({
   is_online: z.boolean().default(false),
   capacity: z.number().int().positive(),
   price: z.number().nonnegative(),
-  duration: z.string().or(z.number()).default("60"), // Accept both string and number
+  duration: z.coerce.string().default("60"), // Force string type to match DB schema
   sessions: z.array(z.any()),
   learning_outcomes: z.array(z.string()),
   requirements: z.array(z.string()),

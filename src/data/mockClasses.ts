@@ -20,7 +20,8 @@ const mockClasses: Record<string, ClassItem[]> = {
         new Date("2024-02-29")
       ],
       city: "London",
-      category: "Pottery"
+      category: "Pottery",
+      description: "Learn the fundamentals of pottery in this hands-on introductory class."
     },
     {
       id: 2,
@@ -40,7 +41,8 @@ const mockClasses: Record<string, ClassItem[]> = {
         new Date("2024-03-05")
       ],
       city: "Manchester",
-      category: "Pottery"
+      category: "Pottery",
+      description: "Master the pottery wheel with guided instruction for intermediate students."
     },
     {
       id: 9,
@@ -56,7 +58,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 80,
-      basePricePrivate: 120
+      basePricePrivate: 120,
+      description: "Refine your pottery skills with advanced techniques and projects."
     },
     {
       id: 10,
@@ -71,7 +74,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       category: "Pottery",
       groupBookingsEnabled: true,
       privateBookingsEnabled: false,
-      basePriceGroup: 70
+      basePriceGroup: 70,
+      description: "Explore sculptural techniques in ceramics and create unique art pieces."
     }
   ],
   "Cooking": [
@@ -85,7 +89,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       level: "Beginner",
       date: new Date("2024-02-18"),
       city: "Birmingham",
-      category: "Cooking"
+      category: "Cooking",
+      description: "Learn to make delicious Italian pasta dishes in this hands-on class."
     },
     {
       id: 4,
@@ -101,7 +106,8 @@ const mockClasses: Record<string, ClassItem[]> = {
         new Date("2024-03-08")
       ],
       city: "Leeds",
-      category: "Cooking"
+      category: "Cooking",
+      description: "Explore the flavors of Asian cuisine and create your own dishes."
     },
     {
       id: 11,
@@ -117,7 +123,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 65,
-      basePricePrivate: 100
+      basePricePrivate: 100,
+      description: "Master the art of Mediterranean cuisine and create delicious dishes."
     },
     {
       id: 12,
@@ -132,7 +139,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       category: "Cooking",
       groupBookingsEnabled: false,
       privateBookingsEnabled: true,
-      basePricePrivate: 150
+      basePricePrivate: 150,
+      description: "Experience the art of sushi making and create your own sushi rolls."
     }
   ],
   "Painting & Art": [
@@ -146,7 +154,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       level: "Beginner",
       date: new Date("2024-02-25"),
       city: "Bristol",
-      category: "Painting & Art"
+      category: "Painting & Art",
+      description: "Learn the basics of watercolor painting and create beautiful works of art."
     },
     {
       id: 6,
@@ -158,7 +167,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       level: "Advanced",
       date: [new Date("2024-02-28"), new Date("2024-03-07")],
       city: "Edinburgh",
-      category: "Painting & Art"
+      category: "Painting & Art",
+      description: "Master the art of oil painting and create stunning works of art."
     },
     {
       id: 13,
@@ -174,7 +184,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 60,
-      basePricePrivate: 110
+      basePricePrivate: 110,
+      description: "Explore abstract art techniques and create your own unique pieces."
     },
     {
       id: 14,
@@ -190,7 +201,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 70,
-      basePricePrivate: 120
+      basePricePrivate: 120,
+      description: "Master the art of portrait drawing and create stunning portraits."
     }
   ],
   "Photography": [
@@ -204,7 +216,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       level: "Beginner",
       date: new Date("2024-03-02"),
       city: "Glasgow",
-      category: "Photography"
+      category: "Photography",
+      description: "Learn the basics of DSLR photography and capture stunning images."
     },
     {
       id: 8,
@@ -216,7 +229,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       level: "Intermediate",
       date: [new Date("2024-03-05"), new Date("2024-03-12")],
       city: "Liverpool",
-      category: "Photography"
+      category: "Photography",
+      description: "Master the art of street photography and capture unique moments."
     },
     {
       id: 15,
@@ -232,7 +246,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 75,
-      basePricePrivate: 130
+      basePricePrivate: 130,
+      description: "Explore the art of night photography and capture stunning images."
     },
     {
       id: 16,
@@ -247,7 +262,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       category: "Photography",
       groupBookingsEnabled: false,
       privateBookingsEnabled: true,
-      basePricePrivate: 140
+      basePricePrivate: 140,
+      description: "Master the art of portrait photography and capture stunning portraits."
     }
   ],
   "Candle Making": [
@@ -265,7 +281,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 55,
-      basePricePrivate: 95
+      basePricePrivate: 95,
+      description: "Learn the art of luxury candle making and create beautiful candles."
     },
     {
       id: 18,
@@ -280,7 +297,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       category: "Candle Making",
       groupBookingsEnabled: true,
       privateBookingsEnabled: false,
-      basePriceGroup: 60
+      basePriceGroup: 60,
+      description: "Create seasonal scented candles and add a touch of fragrance to your home."
     }
   ],
   "Jewellery & Metal": [
@@ -298,7 +316,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       groupBookingsEnabled: true,
       privateBookingsEnabled: true,
       basePriceGroup: 85,
-      basePricePrivate: 150
+      basePricePrivate: 150,
+      description: "Learn the art of silver ring making and create beautiful jewelry."
     },
     {
       id: 20,
@@ -313,7 +332,8 @@ const mockClasses: Record<string, ClassItem[]> = {
       category: "Jewellery & Metal",
       groupBookingsEnabled: false,
       privateBookingsEnabled: true,
-      basePricePrivate: 130
+      basePricePrivate: 130,
+      description: "Learn the art of metal stamping and create beautiful jewelry."
     }
   ]
 };

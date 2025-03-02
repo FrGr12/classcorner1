@@ -73,12 +73,11 @@ const CreateClassForm = ({
   const handleSubmitDraft = async () => {
     try {
       const formValues = form.getValues();
-      // Format form values to match database structure
       setIsSubmitting(true);
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
   
-      // Make sure we're providing all required fields
+      // Prepare course data ensuring all types match the database schema
       const courseData = {
         instructor_id: userData.user.id,
         title: formValues.title || 'Untitled Course',
@@ -86,7 +85,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: String(formValues.duration), // Ensure duration is stored as string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -128,7 +127,7 @@ const CreateClassForm = ({
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
   
-      // Make sure we're providing all required fields
+      // Prepare course data ensuring all types match the database schema
       const courseData = {
         instructor_id: userData.user.id,
         title: formValues.title || 'Untitled Course',
@@ -136,7 +135,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: String(formValues.duration), // Ensure duration is stored as string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,

@@ -11,7 +11,7 @@ export const CreateClassSchema = z.object({
   is_online: z.boolean().default(false),
   capacity: z.number().int().positive().default(1),
   price: z.number().nonnegative().default(0),
-  duration: z.string().or(z.number()).default("60"), // Accept both string and number
+  duration: z.coerce.string().default("60"), // Force string type to match DB schema
   sessions: z.array(z.any()).default([]),
   learning_outcomes: z.array(z.string()).default(['']),
   requirements: z.array(z.string()).default(['']),

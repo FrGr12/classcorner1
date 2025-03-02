@@ -24,7 +24,7 @@ export interface DialogManagerProps {
   onEditSuccess: () => void;
 }
 
-// Interfaces for the dialog components
+// Type definitions for dialog components
 interface MessageDialogProps {
   open: boolean;
   onClose: () => void;

@@ -45,4 +45,5 @@ export interface ClassPreview {
   date: Date;
   city: string;
   category?: string;
+  description: string;
 }
