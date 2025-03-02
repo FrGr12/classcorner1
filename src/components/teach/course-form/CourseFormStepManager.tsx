@@ -53,17 +53,8 @@ const CourseFormStepManager = ({
     prepareImagesPreview();
   }, [watch('images'), isSubmitting]);
 
-  // Clone children and pass props
-  return (
-    <>
-      {React.Children.map(children, (child) => {
-        if (React.isValidElement(child)) {
-          return React.cloneElement(child, { imagesPreview });
-        }
-        return child;
-      })}
-    </>
-  );
+  // Only pass children without additional props
+  return <>{children}</>;
 };
 
 export default CourseFormStepManager;

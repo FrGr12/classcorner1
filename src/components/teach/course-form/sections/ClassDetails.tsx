@@ -29,7 +29,7 @@ const ClassDetails = ({ form }: ClassDetailsProps) => {
                 <Textarea 
                   placeholder="What will students learn?"
                   value={Array.isArray(field.value) ? field.value.join('\n') : ''}
-                  onChange={(e) => field.onChange(e.target.value.split('\n'))}
+                  onChange={(e) => field.onChange(e.target.value.split('\n').filter(item => item.trim() !== ''))}
                   className="min-h-24"
                 />
               </FormControl>
@@ -48,7 +48,26 @@ const ClassDetails = ({ form }: ClassDetailsProps) => {
                 <Textarea 
                   placeholder="What are the prerequisites for this class?"
                   value={Array.isArray(field.value) ? field.value.join('\n') : ''}
-                  onChange={(e) => field.onChange(e.target.value.split('\n'))}
+                  onChange={(e) => field.onChange(e.target.value.split('\n').filter(item => item.trim() !== ''))}
+                  className="min-h-24"
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="items_to_bring"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Items to Bring</FormLabel>
+              <FormControl>
+                <Textarea 
+                  placeholder="What should students bring to class?"
+                  value={Array.isArray(field.value) ? field.value.join('\n') : ''}
+                  onChange={(e) => field.onChange(e.target.value.split('\n').filter(item => item.trim() !== ''))}
                   className="min-h-24"
                 />
               </FormControl>

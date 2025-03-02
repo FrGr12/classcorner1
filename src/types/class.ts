@@ -1,3 +1,4 @@
+
 export interface ClassItem {
   id: number;
   title: string;
@@ -10,6 +11,7 @@ export interface ClassItem {
   category?: string;
   date: Date | Date[];
   city: string;
+  description?: string;
   maxParticipants?: number;
   minParticipants?: number;
   waitlist_enabled?: boolean;
@@ -18,7 +20,7 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string;
+  duration?: number | string;
   shareCount?: number;
   lastShared?: string;
   views?: number;

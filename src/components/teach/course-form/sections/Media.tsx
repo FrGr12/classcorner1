@@ -9,11 +9,38 @@ import { X } from 'lucide-react';
 
 interface MediaProps {
   form: UseFormReturn<CourseFormValues>;
-  imagesPreview?: string[];
-  setImagesPreview?: (urls: string[]) => void;
 }
 
-const Media = ({ form, imagesPreview = [] }: MediaProps) => {
+const Media = ({ form }: MediaProps) => {
+  const [imagesPreview, setImagesPreview] = React.useState<string[]>([]);
+
+  React.useEffect(() => {
+    const prepareImagesPreview = async () => {
+      const images = form.getValues('images') || [];
+      
+      if (images && images.length > 0) {
+        const previewURLs = await Promise.all(
+          images.map(async (image: File | string) => {
+            if (typeof image === 'string') {
+              return image; // It's already a URL
+            } else {
+              return new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(image);
+              });
+            }
+          })
+        );
+        setImagesPreview(previewURLs);
+      } else {
+        setImagesPreview([]);
+      }
+    };
+
+    prepareImagesPreview();
+  }, [form.watch('images')]);
+
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const newFiles = Array.from(e.target.files);

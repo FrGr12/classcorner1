@@ -83,14 +83,20 @@ const CreateClassForm = ({
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
   
+      // Make sure we're providing all required fields
+      const courseData = {
+        instructor_id: userData.user.id,
+        title: fixedFormValues.title || 'Untitled Course',
+        description: fixedFormValues.description || 'No description',
+        category: fixedFormValues.category || 'Uncategorized',
+        location: fixedFormValues.location || 'Unknown',
+        price: fixedFormValues.price || 0,
+        ...fixedFormValues
+      };
+  
       const { data, error } = await supabase
         .from('courses')
-        .insert([
-          { 
-            ...fixedFormValues,
-            instructor_id: userData.user.id,
-          }
-        ])
+        .insert(courseData)
         .select();
   
       if (error) throw error;
@@ -121,15 +127,21 @@ const CreateClassForm = ({
       const { data: userData } = await supabase.auth.getUser();
       if (!userData.user) return;
   
+      // Make sure we're providing all required fields
+      const courseData = {
+        instructor_id: userData.user.id,
+        title: fixedFormValues.title || 'Untitled Course',
+        description: fixedFormValues.description || 'No description',
+        category: fixedFormValues.category || 'Uncategorized',
+        location: fixedFormValues.location || 'Unknown',
+        price: fixedFormValues.price || 0,
+        status: 'published',
+        ...fixedFormValues
+      };
+  
       const { data, error } = await supabase
         .from('courses')
-        .insert([
-          { 
-            ...fixedFormValues,
-            instructor_id: userData.user.id,
-            status: 'published',
-          }
-        ])
+        .insert(courseData)
         .select();
   
       if (error) throw error;

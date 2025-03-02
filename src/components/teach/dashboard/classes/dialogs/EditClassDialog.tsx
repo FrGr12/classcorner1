@@ -28,7 +28,7 @@ export const EditClassDialog = ({ isOpen, onClose, classData }: EditClassDialogP
         throw new Error("User not authenticated");
       }
 
-      // Convert duration to string if required by API
+      // Convert duration to number to match database expectations
       const updatedData = {
         instructor_id: userData.user.id,
         title: formData.title,
@@ -40,7 +40,9 @@ export const EditClassDialog = ({ isOpen, onClose, classData }: EditClassDialogP
         is_online: false,
         capacity: classData.maxParticipants || 10,
         price: classData.price || 0,
-        duration: String(classData.duration || "60"), // Convert to string
+        duration: typeof classData.duration === 'string' 
+          ? parseInt(classData.duration, 10) || 60 
+          : classData.duration || 60,
         sessions: [],
         learning_outcomes: [],
         requirements: [],
@@ -97,3 +99,5 @@ export const EditClassDialog = ({ isOpen, onClose, classData }: EditClassDialogP
     </Dialog>
   );
 };
+
+export default EditClassDialog;

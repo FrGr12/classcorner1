@@ -1,68 +1,79 @@
 
 import React from 'react';
-import { CancelCourseDialog } from '../dialogs/CancelCourseDialog';
-import { MessageDialog } from '../dialogs/MessageDialog';
-import { ShareDialog } from '../dialogs/ShareDialog';
 import { EditClassDialog } from '../dialogs/EditClassDialog';
+import CancelCourseDialog from '../dialogs/CancelCourseDialog';
+import MessageDialog from '../dialogs/MessageDialog';
+import ShareDialog from '../dialogs/ShareDialog';
 import { ClassItem } from '@/types/class';
 
-interface DialogManagerProps {
-  dialogs: {
-    editClassDialog: {
-      isOpen: boolean;
-      onClose: () => void;
-      classData: ClassItem | null;
-    };
-    cancelDialog: {
-      isOpen: boolean;
-      onClose: () => void;
-      classId: number | null;
-    };
-    messageDialog: {
-      isOpen: boolean;
-      onClose: () => void;
-      classId: number | null;
-    };
-    shareDialog: {
-      isOpen: boolean;
-      onClose: () => void;
-      classData: ClassItem | null;
-    };
-  };
+export interface DialogManagerProps {
+  isEditOpen: boolean;
+  isDetailsOpen: boolean;
+  isPromoteOpen: boolean;
+  isMessageOpen: boolean;
+  isShareOpen: boolean;
+  isCancelOpen?: boolean;
+  selectedClassId: number;
+  selectedClass?: ClassItem;
+  setIsEditOpen: (open: boolean) => void;
+  setIsDetailsOpen: (open: boolean) => void;
+  setIsPromoteOpen: (open: boolean) => void;
+  setIsMessageOpen: (open: boolean) => void;
+  setIsShareOpen: (open: boolean) => void;
+  setIsCancelOpen?: (open: boolean) => void;
+  onEditSuccess: () => void;
 }
 
-const DialogManager = ({ dialogs }: DialogManagerProps) => {
+const DialogManager: React.FC<DialogManagerProps> = ({
+  isEditOpen,
+  isDetailsOpen,
+  isPromoteOpen,
+  isMessageOpen,
+  isShareOpen,
+  isCancelOpen = false,
+  selectedClassId,
+  selectedClass,
+  setIsEditOpen,
+  setIsDetailsOpen,
+  setIsPromoteOpen,
+  setIsMessageOpen,
+  setIsShareOpen,
+  setIsCancelOpen = () => {},
+  onEditSuccess
+}) => {
+  if (!selectedClass) return null;
+
   return (
     <>
-      {dialogs.editClassDialog.isOpen && dialogs.editClassDialog.classData && (
+      {isEditOpen && (
         <EditClassDialog
-          isOpen={dialogs.editClassDialog.isOpen}
-          onClose={dialogs.editClassDialog.onClose}
-          classData={dialogs.editClassDialog.classData}
+          isOpen={isEditOpen}
+          onClose={() => setIsEditOpen(false)}
+          classData={selectedClass}
         />
       )}
-      
-      {dialogs.cancelDialog.isOpen && dialogs.cancelDialog.classId && (
-        <CancelCourseDialog
-          isOpen={dialogs.cancelDialog.isOpen}
-          onClose={dialogs.cancelDialog.onClose}
-          classId={dialogs.cancelDialog.classId}
-        />
-      )}
-      
-      {dialogs.messageDialog.isOpen && dialogs.messageDialog.classId && (
+
+      {isMessageOpen && (
         <MessageDialog
-          isOpen={dialogs.messageDialog.isOpen}
-          onClose={dialogs.messageDialog.onClose}
-          classId={dialogs.messageDialog.classId}
+          isOpen={isMessageOpen}
+          onClose={() => setIsMessageOpen(false)}
+          classData={selectedClass}
         />
       )}
-      
-      {dialogs.shareDialog.isOpen && dialogs.shareDialog.classData && (
+
+      {isShareOpen && (
         <ShareDialog
-          isOpen={dialogs.shareDialog.isOpen}
-          onClose={dialogs.shareDialog.onClose}
-          classData={dialogs.shareDialog.classData}
+          isOpen={isShareOpen}
+          onClose={() => setIsShareOpen(false)}
+          classData={selectedClass}
+        />
+      )}
+
+      {isCancelOpen && setIsCancelOpen && (
+        <CancelCourseDialog
+          isOpen={isCancelOpen}
+          onClose={() => setIsCancelOpen(false)}
+          classData={selectedClass}
         />
       )}
     </>
