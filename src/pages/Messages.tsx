@@ -20,18 +20,17 @@ const Messages = () => {
     isLoading,
     selectedMessage,
     setSelectedMessage,
-    newMessage,
-    setNewMessage,
-    replyToMessage,
-    handleComposeSubmit,
-    markAsRead
+    searchQuery,
+    setSearchQuery,
+    statusFilter,
+    setStatusFilter,
+    messageContent,
+    setMessageContent,
+    handleSendMessage
   } = useMessages();
 
   const handleSelectMessage = (message: Message) => {
     setSelectedMessage(message);
-    if (message.is_unread) {
-      markAsRead(message.id);
-    }
   };
 
   const handleTabChange = (value: string) => {
@@ -49,11 +48,11 @@ const Messages = () => {
     );
   }
 
-  const filteredMessages = messages.filter(message => {
+  const filteredMessages = messages?.filter(message => {
     if (selectedTab === "unread") return message.is_unread;
     if (selectedTab === "sent") return message.status === "sent";
     return true;
-  });
+  }) || [];
 
   return (
     <div className="min-h-screen bg-neutral-100 flex justify-center py-8 px-4">
@@ -67,10 +66,11 @@ const Messages = () => {
             </TabsList>
             
             <MessageControls
+              searchQuery={searchQuery}
+              setSearchQuery={setSearchQuery}
+              statusFilter={statusFilter}
+              setStatusFilter={setStatusFilter}
               onComposeClick={() => setComposeOpen(true)}
-              onBackClick={() => {
-                navigate("/user-dashboard");
-              }}
             />
           </div>
 
@@ -79,22 +79,25 @@ const Messages = () => {
               <TabsContent value="all" className="mt-0">
                 <MessagesList 
                   messages={filteredMessages} 
+                  isLoading={isLoading} 
                   selectedMessage={selectedMessage} 
-                  onSelectMessage={handleSelectMessage} 
+                  setSelectedMessage={handleSelectMessage} 
                 />
               </TabsContent>
               <TabsContent value="unread" className="mt-0">
                 <MessagesList 
                   messages={filteredMessages} 
+                  isLoading={isLoading} 
                   selectedMessage={selectedMessage} 
-                  onSelectMessage={handleSelectMessage} 
+                  setSelectedMessage={handleSelectMessage} 
                 />
               </TabsContent>
               <TabsContent value="sent" className="mt-0">
                 <MessagesList 
                   messages={filteredMessages} 
+                  isLoading={isLoading} 
                   selectedMessage={selectedMessage} 
-                  onSelectMessage={handleSelectMessage} 
+                  setSelectedMessage={handleSelectMessage} 
                 />
               </TabsContent>
             </div>
@@ -102,10 +105,8 @@ const Messages = () => {
             <div className="w-2/3 overflow-y-auto">
               {selectedMessage ? (
                 <MessageDetail 
-                  message={selectedMessage}
-                  newMessage={newMessage}
-                  setNewMessage={setNewMessage}
-                  onSendReply={() => replyToMessage(selectedMessage.id)}
+                  selectedMessage={selectedMessage}
+                  isLoading={isLoading}
                 />
               ) : (
                 <div className="h-full flex items-center justify-center text-center p-6">
@@ -122,9 +123,11 @@ const Messages = () => {
         </Tabs>
 
         <ComposeMessageDialog
-          open={composeOpen}
+          isOpen={composeOpen}
           onOpenChange={setComposeOpen}
-          onSubmit={handleComposeSubmit}
+          messageContent={messageContent}
+          setMessageContent={setMessageContent}
+          onSendMessage={handleSendMessage}
         />
       </Card>
     </div>
