@@ -5,6 +5,7 @@ import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader
 import CreateClassForm from "@/components/teach/course-form/CreateClassForm";
 import { handleError } from "@/utils/errorHandler";
 import { Skeleton } from "@/components/ui/skeleton/skeleton";
+import { Button } from "@/components/ui/button";
 
 const CreateClass = () => {
   const [draftCount, setDraftCount] = useState(0);
