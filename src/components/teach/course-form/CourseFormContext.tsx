@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Session } from "@/types/session";
@@ -8,27 +7,18 @@ export interface CourseFormValues {
   description: string;
   category: string;
   location: string;
-  locationType: "inPerson" | "online" | "hybrid";
   address: string;
   city: string;
-  state: string;
-  zipCode: string;
-  onlineLink: string;
-  classDetails: string;
-  difficultyLevel: "beginner" | "intermediate" | "advanced" | "allLevels";
-  price: string;
-  capacity: string;
-  minParticipants: number;
-  maxParticipants: number;
-  images: string[];
-  scheduleType: "oneTime" | "recurring" | "flexibleDates";
-  startDate: string;
-  endDate: string;
-  startTime: string;
-  endTime: string;
-  recurringDays: string[];
-  whatToBring: string[];
-  learningOutcomes: string[];
+  is_online: boolean;
+  capacity: number;
+  price: number;
+  duration: number;
+  sessions: Session[];
+  learning_outcomes: string[];
+  requirements: string[];
+  items_to_bring: string[];
+  images: string[] | File[];
+  status: 'draft' | 'published';
 }
 
 interface CourseFormContextType {
