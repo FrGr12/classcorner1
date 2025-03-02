@@ -20,7 +20,7 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: number | string;
+  duration?: string | number;
   shareCount?: number;
   lastShared?: string;
   views?: number;
@@ -28,6 +28,10 @@ export interface ClassItem {
   adClicks?: number;
   instructorEmail?: string;
   instructorPhone?: string;
+  learning_outcomes?: string[];
+  requirements?: string[];
+  items_to_bring?: string[];
+  status?: "draft" | "published" | "archived";
 }
 
 export interface ClassData {

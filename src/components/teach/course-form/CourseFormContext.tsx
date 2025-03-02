@@ -15,13 +15,13 @@ export const courseFormSchema = z.object({
   is_online: z.boolean().default(false),
   capacity: z.number().int().positive(),
   price: z.number().nonnegative(),
-  duration: z.coerce.string().default("60"), // Force string type to match DB schema
+  duration: z.string().default("60"), // Force string type to match DB schema
   sessions: z.array(z.any()),
   learning_outcomes: z.array(z.string()),
   requirements: z.array(z.string()),
   items_to_bring: z.array(z.string()),
   images: z.array(z.any()),
-  status: z.enum(["draft", "published"]).default("draft"),
+  status: z.enum(["draft", "published", "archived"]).default("draft"),
 });
 
 export type CourseFormValues = z.infer<typeof courseFormSchema>;

@@ -45,7 +45,7 @@ const CreateClassForm = ({
       is_online: false,
       capacity: 1,
       price: 0,
-      duration: "60", // Store as string to match database
+      duration: "60", // Ensure string type to match database
       sessions: [],
       learning_outcomes: [''],
       requirements: [''],
@@ -93,7 +93,7 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
-        status: "draft",
+        status: "draft" as const,
         images: formValues.images,
         sessions: formValues.sessions
       };
@@ -143,7 +143,7 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
-        status: "published",
+        status: "published" as const,
         images: formValues.images,
         sessions: formValues.sessions
       };

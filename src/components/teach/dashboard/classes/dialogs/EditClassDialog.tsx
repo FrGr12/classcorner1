@@ -1,177 +1,222 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useForm } from 'react-hook-form';
-import { supabase } from '@/integrations/supabase/client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { CreateClassSchema } from '@/lib/validators/create-class';
 import { ClassItem } from '@/types/class';
-import { handleError } from '@/utils/errorHandler';
+import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { FormField, FormItem, FormLabel, FormControl, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 
 interface EditClassDialogProps {
   isOpen: boolean;
   onClose: () => void;
   classData: ClassItem;
+  onSuccess?: () => void;
 }
 
-export const EditClassDialog: React.FC<EditClassDialogProps> = ({ isOpen, onClose, classData }) => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
+export const EditClassDialog: React.FC<EditClassDialogProps> = ({ isOpen, onClose, classData, onSuccess }) => {
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   
-  const { register, handleSubmit, setValue, formState: { errors } } = useForm({
+  const form = useForm({
+    resolver: zodResolver(CreateClassSchema),
     defaultValues: {
-      title: classData.title,
-      description: classData.description,
+      title: classData.title || '',
+      description: classData.description || '',
       category: classData.category || '',
-      location: classData.city,
-      // Ensure duration is set as a string
+      location: classData.city || '',
+      address: '',
+      city: classData.city || '',
+      is_online: false,
+      capacity: classData.maxParticipants || 1,
+      price: classData.price || 0,
       duration: typeof classData.duration === 'number' ? String(classData.duration) : classData.duration || '60',
-      price: classData.price,
-      capacity: classData.maxParticipants || 10,
-      status: 'published'
+      learning_outcomes: classData.learning_outcomes || [''],
+      requirements: classData.requirements || [''],
+      items_to_bring: classData.items_to_bring || [''],
+      status: (classData.status as "draft" | "published" | "archived") || 'published',
     }
   });
-
-  useEffect(() => {
-    if (classData) {
-      setValue('title', classData.title);
-      setValue('description', classData.description);
-      setValue('category', classData.category || '');
-      setValue('location', classData.city);
-      setValue('duration', typeof classData.duration === 'number' ? String(classData.duration) : classData.duration || '60');
-      setValue('price', classData.price);
-      setValue('capacity', classData.maxParticipants || 10);
-    }
-  }, [classData, setValue]);
-
-  const onSubmit = async (data: any) => {
+  
+  const handleSubmit = async (values: any) => {
+    setIsLoading(true);
+    
     try {
-      setIsSubmitting(true);
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
       
-      // Prepare the data for the update operation
-      const updateData = {
-        instructor_id: classData.instructor_id,
-        title: data.title,
-        description: data.description,
-        category: data.category,
-        location: data.location,
-        address: classData.city,
-        city: data.location,
-        is_online: false,
-        capacity: data.capacity,
-        price: data.price,
-        duration: String(data.duration), // Ensure duration is stored as string
-        learning_outcomes: classData.learning_outcomes || [],
-        requirements: classData.requirements || [],
-        items_to_bring: classData.items_to_bring || [],
-        status: "published"
+      const formattedData = {
+        instructor_id: userData.user.id,
+        title: values.title,
+        description: values.description,
+        category: values.category,
+        location: values.location,
+        address: values.address,
+        city: values.city,
+        is_online: values.is_online,
+        capacity: values.capacity,
+        price: values.price,
+        duration: String(values.duration), // Ensure duration is stored as string
+        learning_outcomes: values.learning_outcomes,
+        requirements: values.requirements,
+        items_to_bring: values.items_to_bring,
+        status: values.status as "draft" | "published" | "archived",
       };
-
+      
       const { error } = await supabase
         .from('courses')
-        .update(updateData)
+        .update(formattedData)
         .eq('id', classData.id);
-      
+        
       if (error) throw error;
       
       toast({
-        title: "Class updated",
-        description: "Your changes have been saved successfully.",
+        title: 'Class updated',
+        description: 'Your changes have been saved.',
       });
       
+      if (onSuccess) onSuccess();
       onClose();
-    } catch (error) {
-      handleError(error, {
-        title: "Update failed",
-        description: "There was a problem updating the class. Please try again.",
+    } catch (error: any) {
+      toast({
+        title: 'Error updating class',
+        description: error.message || 'An error occurred while updating the class',
+        variant: 'destructive',
       });
     } finally {
-      setIsSubmitting(false);
+      setIsLoading(false);
     }
   };
-
+  
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Edit Class</DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="title">Title</Label>
-            <Input id="title" {...register('title', { required: true })} />
-            {errors.title && <p className="text-red-500 text-sm">Title is required</p>}
-          </div>
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
-          <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
-            <Textarea id="description" {...register('description', { required: true })} />
-            {errors.description && <p className="text-red-500 text-sm">Description is required</p>}
-          </div>
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} className="min-h-32" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           
-          <div className="space-y-2">
-            <Label htmlFor="category">Category</Label>
-            <Select onValueChange={(value) => setValue('category', value)} defaultValue={classData.category}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="pottery">Pottery</SelectItem>
-                <SelectItem value="painting">Painting</SelectItem>
-                <SelectItem value="cooking">Cooking</SelectItem>
-                <SelectItem value="crafts">Crafts</SelectItem>
-                <SelectItem value="photography">Photography</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.category && <p className="text-red-500 text-sm">Category is required</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input id="location" {...register('location', { required: true })} />
-            {errors.location && <p className="text-red-500 text-sm">Location is required</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="duration">Duration (minutes)</Label>
-            <Input
-              id="duration"
-              type="number"
-              {...register('duration', { required: true })}
+          <div className="grid grid-cols-2 gap-4">
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.duration && <p className="text-red-500 text-sm">Duration is required</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="price">Price</Label>
-            <Input
-              id="price"
-              type="number"
-              step="0.01"
-              {...register('price', { required: true, min: 0 })}
+            
+            <FormField
+              control={form.control}
+              name="location"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Location</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.price && <p className="text-red-500 text-sm">Price is required and must be a positive number</p>}
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="capacity">Maximum Capacity</Label>
-            <Input
-              id="capacity"
-              type="number"
-              {...register('capacity', { required: true, min: 1 })}
+            
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field} 
+                      type="number" 
+                      min="0" 
+                      onChange={(e) => field.onChange(parseFloat(e.target.value))} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.capacity && <p className="text-red-500 text-sm">Capacity is required and must be at least 1</p>}
+            
+            <FormField
+              control={form.control}
+              name="capacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Capacity</FormLabel>
+                  <FormControl>
+                    <Input 
+                      {...field} 
+                      type="number" 
+                      min="1" 
+                      onChange={(e) => field.onChange(parseInt(e.target.value))} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="duration"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Duration (minutes)</FormLabel>
+                  <FormControl>
+                    <Input {...field} type="text" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
           
           <div className="flex justify-end space-x-2">
-            <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Saving...' : 'Save Changes'}
+            <Button variant="outline" type="button" onClick={onClose}>
+              Cancel
+            </Button>
+            <Button type="submit" disabled={isLoading}>
+              {isLoading ? 'Saving...' : 'Save Changes'}
             </Button>
           </div>
         </form>
