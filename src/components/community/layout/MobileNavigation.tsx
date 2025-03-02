@@ -9,33 +9,36 @@ interface MobileNavigationProps {
 
 export const MobileNavigation = ({ activeTab, onTabClick }: MobileNavigationProps) => {
   return (
-    <div className="lg:hidden bg-background border rounded-lg mb-6">
+    <nav className="lg:hidden bg-background border rounded-lg mb-6" aria-label="Mobile navigation">
       <div className="flex items-center justify-around p-2">
         <Button 
-          variant={activeTab === 'topics' ? "subtle" : "ghost"}
+          variant={activeTab === 'topics' ? "default" : "ghost"}
           className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
           onClick={() => onTabClick('topics')}
+          aria-current={activeTab === 'topics' ? 'page' : undefined}
         >
-          <Hash className="h-5 w-5" />
+          <Hash className="h-5 w-5" aria-hidden="true" />
           <span className="text-sm font-medium">Topics</span>
         </Button>
         <Button 
-          variant={activeTab === 'groups' ? "subtle" : "ghost"}
+          variant={activeTab === 'groups' ? "default" : "ghost"}
           className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
           onClick={() => onTabClick('groups')}
+          aria-current={activeTab === 'groups' ? 'page' : undefined}
         >
-          <Users className="h-5 w-5" />
+          <Users className="h-5 w-5" aria-hidden="true" />
           <span className="text-sm font-medium">Groups</span>
         </Button>
         <Button 
-          variant={activeTab === 'resources' ? "subtle" : "ghost"}
+          variant={activeTab === 'resources' ? "default" : "ghost"}
           className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
           onClick={() => onTabClick('resources')}
+          aria-current={activeTab === 'resources' ? 'page' : undefined}
         >
-          <BookOpen className="h-5 w-5" />
+          <BookOpen className="h-5 w-5" aria-hidden="true" />
           <span className="text-sm font-medium">Resources</span>
         </Button>
       </div>
-    </div>
+    </nav>
   );
 };

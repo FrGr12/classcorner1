@@ -8,7 +8,7 @@ import { Card } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { FormActions } from "./FormActions";
 import { CourseFormStepManager } from "./CourseFormStepManager";
-import { CourseFormProvider } from "./CourseFormContext";
+import { CourseFormProvider, CourseFormValues } from "./CourseFormContext";
 import { formSteps, defaultFormValues } from "./utils/formDefaults";
 import { useCourseFormData } from "./hooks/useCourseFormData";
 import { saveDraftCourse, submitCourse } from "./utils/courseFormUtils";
@@ -27,7 +27,7 @@ const CreateClassForm = ({
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   
-  const form = useForm({
+  const form = useForm<CourseFormValues>({
     defaultValues: defaultFormValues
   });
 
@@ -63,6 +63,7 @@ const CreateClassForm = ({
             steps={formSteps} 
             currentStep={currentStep} 
             className="mb-8" 
+            aria-label="Course creation progress"
           />
           
           <CourseFormStepManager 

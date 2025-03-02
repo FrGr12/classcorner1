@@ -27,8 +27,8 @@ const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
   };
 
   return (
-    <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-      <CardContent className="p-4">
+    <Card className="p-6">
+      <CardContent className="px-0 pt-4 pb-0">
         {error && (
           <Alert variant="destructive" className="mb-4">
             <AlertCircle className="h-4 w-4" />
@@ -36,9 +36,9 @@ const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
           </Alert>
         )}
         
-        <div className="mb-3">
-          <h3 className="text-sm font-medium text-neutral-700">Course Images</h3>
-          <p className="text-xs text-neutral-500">
+        <div className="mb-4">
+          <h3 className="text-lg font-medium" id="images-heading">Course Images</h3>
+          <p className="text-sm text-muted-foreground">
             Add up to 5 high-quality images (max 5MB each). First image will be used as the course thumbnail.
           </p>
         </div>
@@ -47,6 +47,7 @@ const ImagesSection = ({ images, setImages }: ImagesSectionProps) => {
           images={images}
           setImages={handleImagesChange}
           maxImages={5}
+          aria-labelledby="images-heading"
         />
       </CardContent>
     </Card>

@@ -28,11 +28,12 @@ export const FormActions = ({
         onClick={onPrevious}
         disabled={currentStep === 0 || isSubmitting}
         size="lg"
+        aria-label="Previous step"
       >
         Previous
       </Button>
       
-      <div className="space-x-2">
+      <div className="space-x-3">
         <Button 
           type="button" 
           variant="secondary" 
@@ -41,6 +42,7 @@ export const FormActions = ({
           isLoading={isSubmitting && currentStep !== totalSteps - 1}
           loadingText="Saving..."
           size="lg"
+          aria-label="Save draft"
         >
           Save Draft
         </Button>
@@ -48,9 +50,11 @@ export const FormActions = ({
         {currentStep < totalSteps - 1 ? (
           <Button 
             type="button" 
+            variant="default"
             onClick={onNext}
             disabled={isSubmitting}
             size="lg"
+            aria-label="Next step"
           >
             Next
           </Button>
@@ -60,9 +64,10 @@ export const FormActions = ({
             onClick={onSubmit}
             disabled={isSubmitting}
             size="lg"
-            variant="success"
+            variant="default"
             isLoading={isSubmitting && currentStep === totalSteps - 1}
             loadingText="Creating Class..."
+            aria-label="Submit and create class"
           >
             Create Class
           </Button>

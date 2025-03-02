@@ -1,8 +1,9 @@
 
-import { createContext, ReactNode, useContext } from "react";
+import React, { createContext, useContext } from "react";
 import { UseFormReturn } from "react-hook-form";
 
-export type CourseFormValues = {
+// Define the type for form values properly
+export interface CourseFormValues {
   title: string;
   description: string;
   category: string;
@@ -17,8 +18,8 @@ export type CourseFormValues = {
   difficultyLevel: string;
   price: string;
   capacity: string;
-  minParticipants?: number;
-  maxParticipants?: number;
+  minParticipants: number;
+  maxParticipants: number;
   images: File[];
   scheduleType: string;
   startDate: string;
@@ -28,15 +29,34 @@ export type CourseFormValues = {
   recurringDays: string[];
   whatToBring: string[];
   learningOutcomes: string[];
-};
+}
 
-type CourseFormContextType = {
+// Create context with properly typed values
+interface CourseFormContextType {
   form: UseFormReturn<CourseFormValues>;
   sessions: any[];
   setSessions: (sessions: any[]) => void;
-};
+}
 
-export const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
+const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
+
+export const CourseFormProvider = ({ 
+  children, 
+  form, 
+  sessions, 
+  setSessions 
+}: { 
+  children: React.ReactNode;
+  form: UseFormReturn<CourseFormValues>;
+  sessions: any[];
+  setSessions: (sessions: any[]) => void;
+}) => {
+  return (
+    <CourseFormContext.Provider value={{ form, sessions, setSessions }}>
+      {children}
+    </CourseFormContext.Provider>
+  );
+};
 
 export const useCourseForm = () => {
   const context = useContext(CourseFormContext);
@@ -44,24 +64,4 @@ export const useCourseForm = () => {
     throw new Error("useCourseForm must be used within a CourseFormProvider");
   }
   return context;
-};
-
-interface CourseFormProviderProps {
-  children: ReactNode;
-  form: UseFormReturn<CourseFormValues>;
-  sessions: any[];
-  setSessions: (sessions: any[]) => void;
-}
-
-export const CourseFormProvider = ({
-  children,
-  form,
-  sessions,
-  setSessions,
-}: CourseFormProviderProps) => {
-  return (
-    <CourseFormContext.Provider value={{ form, sessions, setSessions }}>
-      {children}
-    </CourseFormContext.Provider>
-  );
 };

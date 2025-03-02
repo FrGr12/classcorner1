@@ -45,8 +45,8 @@ export function MobileSidebar({
 }: MobileSidebarProps) {
   return (
     <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-      <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0">
-        <div className="h-full py-4 px-3">
+      <SheetContent side="left" className="w-[280px] sm:w-[320px] p-0" aria-label="Community navigation">
+        <div className="h-full py-4 px-3 overflow-y-auto">
           <CommunitySidebar 
             topic={topic} 
             category={category} 

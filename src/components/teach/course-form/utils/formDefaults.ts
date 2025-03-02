@@ -1,5 +1,18 @@
 
-export const defaultFormValues = {
+import { CourseFormValues } from "../CourseFormContext";
+
+export const formSteps = [
+  "Basic Info",
+  "Location & Category",
+  "Location Details",
+  "Pricing & Capacity",
+  "Images",
+  "Schedule",
+  "What to Bring",
+  "Learning Outcomes",
+];
+
+export const defaultFormValues: CourseFormValues = {
   title: "",
   description: "",
   category: "",
@@ -16,24 +29,13 @@ export const defaultFormValues = {
   capacity: "",
   minParticipants: 1,
   maxParticipants: 10,
-  images: [] as File[],
+  images: [],
   scheduleType: "oneTime",
   startDate: "",
   endDate: "",
   startTime: "",
   endTime: "",
-  recurringDays: [] as string[],
-  whatToBring: [] as string[],
-  learningOutcomes: [] as string[],
+  recurringDays: [],
+  whatToBring: [],
+  learningOutcomes: [],
 };
-
-export const formSteps = [
-  { id: "basic-info", label: "Basic Info" },
-  { id: "location-category", label: "Location & Category" },
-  { id: "details", label: "Details" },
-  { id: "pricing", label: "Pricing & Capacity" },
-  { id: "images", label: "Images" },
-  { id: "schedule", label: "Schedule" },
-  { id: "bring-items", label: "Items to Bring" },
-  { id: "learning", label: "Learning Outcomes" },
-];
