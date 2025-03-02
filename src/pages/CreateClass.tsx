@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader";
 import CreateClassForm from "@/components/teach/course-form/CreateClassForm";
 import { handleError } from "@/utils/errorHandler";
-import Skeleton from "@/components/ui/skeleton-loader";
+import { Skeleton } from "@/components/ui/skeleton-loader";
 
 const CreateClass = () => {
   const [draftCount, setDraftCount] = useState(0);

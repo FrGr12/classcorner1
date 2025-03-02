@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { format } from "date-fns";
-import Skeleton, { SkeletonList } from "@/components/ui/skeleton-loader";
+import { Skeleton, SkeletonList, SkeletonProps } from "@/components/ui/skeleton-loader";
 import { handleError } from "@/utils/errorHandler";
 
 interface Message {
