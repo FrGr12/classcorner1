@@ -16,10 +16,14 @@ export interface ClassItemLocal {
   image?: string;
   status: "active" | "draft" | "completed" | "cancelled";
   waitlist?: number;
-  // Adding missing properties to match ClassItem
   instructor: string;
   rating: number;
   images: string[];
   level: string;
   city: string;
+  // Adding fields needed for ClassesTable component
+  views?: number;
+  saves?: number;
+  adClicks?: number;
+  maxParticipants?: number;
 }
