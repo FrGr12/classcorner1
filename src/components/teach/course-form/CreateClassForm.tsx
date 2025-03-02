@@ -17,6 +17,9 @@ import { ProgressIndicator } from "@/components/ui/progress-indicator";
 import { Card } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { SessionsForm } from "@/components/teach/SessionsForm";
+import { FormActions } from "./FormActions";
+import { CourseFormStepManager } from "./CourseFormStepManager";
+import { CourseFormContext, CourseFormProvider } from "./CourseFormContext";
 
 interface CreateClassFormProps {
   isSubmitting: boolean;
@@ -123,165 +126,6 @@ const CreateClassForm = ({
     fetchDraft();
   }, [form]);
 
-  const handleSaveDraft = async () => {
-    setIsSubmitting(true);
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Not authenticated");
-
-      const formValues = form.getValues();
-      
-      const courseData = {
-        instructor_id: userData.user.id,
-        title: formValues.title,
-        description: formValues.description,
-        category: formValues.category,
-        location: formValues.location,
-        location_type: formValues.locationType,
-        address: formValues.address,
-        city: formValues.city,
-        state: formValues.state,
-        zip_code: formValues.zipCode,
-        online_link: formValues.onlineLink,
-        class_details: formValues.classDetails,
-        difficulty_level: formValues.difficultyLevel,
-        price: parseFloat(formValues.price) || 0,
-        capacity: parseInt(formValues.capacity) || 0,
-        images: formValues.images,
-        schedule_type: formValues.scheduleType,
-        start_date: formValues.startDate,
-        end_date: formValues.endDate,
-        start_time: formValues.startTime,
-        end_time: formValues.endTime,
-        recurring_days: formValues.recurringDays,
-        what_to_bring: formValues.whatToBring,
-        learning_outcomes: formValues.learningOutcomes,
-        sessions: sessions,
-        status: 'draft' as 'draft' | 'published' | 'archived'
-      };
-
-      const { data: existingDraft } = await supabase
-        .from('courses')
-        .select('id')
-        .eq('instructor_id', userData.user.id)
-        .eq('status', 'draft')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (existingDraft) {
-        const { error } = await supabase
-          .from('courses')
-          .update(courseData)
-          .eq('id', existingDraft.id);
-
-        if (error) throw error;
-        toast.success("Draft saved successfully!");
-      } else {
-        const { error } = await supabase
-          .from('courses')
-          .insert(courseData);
-
-        if (error) throw error;
-        toast.success("Draft saved successfully!");
-      }
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Not authenticated");
-      
-      const formValues = form.getValues();
-
-      if (
-        !formValues.title ||
-        !formValues.description ||
-        !formValues.category ||
-        !formValues.classDetails ||
-        !formValues.price ||
-        !formValues.capacity ||
-        !formValues.images.length ||
-        !formValues.startDate ||
-        !formValues.startTime ||
-        !formValues.endTime ||
-        (formValues.scheduleType === 'recurring' && !formValues.recurringDays.length)
-      ) {
-        toast.error("Please fill in all required fields.");
-        setIsSubmitting(false);
-        return;
-      }
-
-      const courseData = {
-        instructor_id: userData.user.id,
-        title: formValues.title,
-        description: formValues.description,
-        category: formValues.category,
-        location: formValues.location,
-        location_type: formValues.locationType,
-        address: formValues.address,
-        city: formValues.city,
-        state: formValues.state,
-        zip_code: formValues.zipCode,
-        online_link: formValues.onlineLink,
-        class_details: formValues.classDetails,
-        difficulty_level: formValues.difficultyLevel,
-        price: parseFloat(formValues.price) || 0,
-        capacity: parseInt(formValues.capacity) || 0,
-        images: formValues.images,
-        schedule_type: formValues.scheduleType,
-        start_date: formValues.startDate,
-        end_date: formValues.endDate,
-        start_time: formValues.startTime,
-        end_time: formValues.endTime,
-        recurring_days: formValues.recurringDays,
-        what_to_bring: formValues.whatToBring,
-        learning_outcomes: formValues.learningOutcomes,
-        sessions: sessions,
-        status: 'published' as 'draft' | 'published' | 'archived',
-        published_at: new Date().toISOString()
-      };
-
-      const { data: existingDraft } = await supabase
-        .from('courses')
-        .select('id')
-        .eq('instructor_id', userData.user.id)
-        .eq('status', 'draft')
-        .order('created_at', { ascending: false })
-        .limit(1)
-        .single();
-
-      if (existingDraft) {
-        const { error } = await supabase
-          .from('courses')
-          .update(courseData)
-          .eq('id', existingDraft.id);
-
-        if (error) throw error;
-        toast.success("Class created successfully!");
-      } else {
-        const { error } = await supabase
-          .from('courses')
-          .insert(courseData);
-
-        if (error) throw error;
-        toast.success("Class created successfully!");
-      }
-
-      navigate('/dashboard');
-    } catch (error: any) {
-      toast.error(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   const handleNext = () => {
     if (currentStep < formSteps.length - 1) {
       setCurrentStep(currentStep + 1);
@@ -296,121 +140,198 @@ const CreateClassForm = ({
     }
   };
 
-  const renderCurrentStep = () => {
-    switch (currentStep) {
-      case 0:
-        return (
-          <BasicInfoSection
-            form={form}
-          />
-        );
-      case 1:
-        return (
-          <LocationCategorySection
-            form={form}
-          />
-        );
-      case 2:
-        return (
-          <LocationCategoryDetailsSection
-            form={form}
-          />
-        );
-      case 3:
-        return (
-          <PricingCapacitySection
-            form={form}
-          />
-        );
-      case 4:
-        return (
-          <ImagesSection
-            images={form.watch("images")}
-            setImages={(images) => form.setValue("images", images)}
-          />
-        );
-      case 5:
-        return (
-          <div className="space-y-6">
-            <ScheduleSection form={form} />
-            <div className="border-t pt-6">
-              <h3 className="text-lg font-medium mb-4">Class Sessions</h3>
-              <SessionsForm 
-                sessions={sessions} 
-                setSessions={setSessions} 
-              />
-            </div>
-          </div>
-        );
-      case 6:
-        return (
-          <BringItemsSection
-            form={form}
-          />
-        );
-      case 7:
-        return (
-          <LearningOutcomesSection
-            form={form}
-          />
-        );
-      default:
-        return null;
-    }
-  };
-
   return (
-    <FormWrapper>
-      <Card className="p-6 mb-8">
-        <ProgressIndicator 
-          steps={formSteps} 
-          currentStep={currentStep} 
-          className="mb-8" 
-        />
-        
-        {renderCurrentStep()}
-        
-        <div className="flex justify-between mt-8">
-          <Button 
-            type="button" 
-            variant="outline" 
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-          >
-            Previous
-          </Button>
+    <CourseFormProvider form={form} sessions={sessions} setSessions={setSessions}>
+      <FormWrapper>
+        <Card className="p-6 mb-8">
+          <ProgressIndicator 
+            steps={formSteps} 
+            currentStep={currentStep} 
+            className="mb-8" 
+          />
           
-          <div className="space-x-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              onClick={handleSaveDraft}
-              disabled={isSubmitting}
-            >
-              Save Draft
-            </Button>
-            
-            {currentStep < formSteps.length - 1 ? (
-              <Button 
-                type="button" 
-                onClick={handleNext}
-              >
-                Next
-              </Button>
-            ) : (
-              <Button 
-                type="button"
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-              >
-                {isSubmitting ? "Creating Class..." : "Create Class"}
-              </Button>
-            )}
-          </div>
-        </div>
-      </Card>
-    </FormWrapper>
+          <CourseFormStepManager 
+            currentStep={currentStep} 
+          />
+          
+          <FormActions 
+            currentStep={currentStep}
+            totalSteps={formSteps.length}
+            isSubmitting={isSubmitting}
+            onPrevious={handlePrevious}
+            onNext={handleNext}
+            onSaveDraft={() => handleSaveDraft(form, sessions, setIsSubmitting)}
+            onSubmit={() => handleSubmit(form, sessions, setIsSubmitting, navigate)}
+          />
+        </Card>
+      </FormWrapper>
+    </CourseFormProvider>
   );
+};
+
+// Helper functions extracted to improve readability
+const handleSaveDraft = async (form: any, sessions: any[], setIsSubmitting: (state: boolean) => void) => {
+  setIsSubmitting(true);
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) throw new Error("Not authenticated");
+
+    const formValues = form.getValues();
+    
+    const courseData = {
+      instructor_id: userData.user.id,
+      title: formValues.title,
+      description: formValues.description,
+      category: formValues.category,
+      location: formValues.location,
+      location_type: formValues.locationType,
+      address: formValues.address,
+      city: formValues.city,
+      state: formValues.state,
+      zip_code: formValues.zipCode,
+      online_link: formValues.onlineLink,
+      class_details: formValues.classDetails,
+      difficulty_level: formValues.difficultyLevel,
+      price: parseFloat(formValues.price) || 0,
+      capacity: parseInt(formValues.capacity) || 0,
+      images: formValues.images,
+      schedule_type: formValues.scheduleType,
+      start_date: formValues.startDate,
+      end_date: formValues.endDate,
+      start_time: formValues.startTime,
+      end_time: formValues.endTime,
+      recurring_days: formValues.recurringDays,
+      what_to_bring: formValues.whatToBring,
+      learning_outcomes: formValues.learningOutcomes,
+      sessions: sessions,
+      status: 'draft' as 'draft' | 'published' | 'archived'
+    };
+
+    const { data: existingDraft } = await supabase
+      .from('courses')
+      .select('id')
+      .eq('instructor_id', userData.user.id)
+      .eq('status', 'draft')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (existingDraft) {
+      const { error } = await supabase
+        .from('courses')
+        .update(courseData)
+        .eq('id', existingDraft.id);
+
+      if (error) throw error;
+      toast.success("Draft saved successfully!");
+    } else {
+      const { error } = await supabase
+        .from('courses')
+        .insert(courseData);
+
+      if (error) throw error;
+      toast.success("Draft saved successfully!");
+    }
+  } catch (error: any) {
+    toast.error(error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
+const handleSubmit = async (
+  form: any, 
+  sessions: any[], 
+  setIsSubmitting: (state: boolean) => void,
+  navigate: any
+) => {
+  setIsSubmitting(true);
+  try {
+    const { data: userData } = await supabase.auth.getUser();
+    if (!userData.user) throw new Error("Not authenticated");
+    
+    const formValues = form.getValues();
+
+    if (
+      !formValues.title ||
+      !formValues.description ||
+      !formValues.category ||
+      !formValues.classDetails ||
+      !formValues.price ||
+      !formValues.capacity ||
+      !formValues.images.length ||
+      !formValues.startDate ||
+      !formValues.startTime ||
+      !formValues.endTime ||
+      (formValues.scheduleType === 'recurring' && !formValues.recurringDays.length)
+    ) {
+      toast.error("Please fill in all required fields.");
+      setIsSubmitting(false);
+      return;
+    }
+
+    const courseData = {
+      instructor_id: userData.user.id,
+      title: formValues.title,
+      description: formValues.description,
+      category: formValues.category,
+      location: formValues.location,
+      location_type: formValues.locationType,
+      address: formValues.address,
+      city: formValues.city,
+      state: formValues.state,
+      zip_code: formValues.zipCode,
+      online_link: formValues.onlineLink,
+      class_details: formValues.classDetails,
+      difficulty_level: formValues.difficultyLevel,
+      price: parseFloat(formValues.price) || 0,
+      capacity: parseInt(formValues.capacity) || 0,
+      images: formValues.images,
+      schedule_type: formValues.scheduleType,
+      start_date: formValues.startDate,
+      end_date: formValues.endDate,
+      start_time: formValues.startTime,
+      end_time: formValues.endTime,
+      recurring_days: formValues.recurringDays,
+      what_to_bring: formValues.whatToBring,
+      learning_outcomes: formValues.learningOutcomes,
+      sessions: sessions,
+      status: 'published' as 'draft' | 'published' | 'archived',
+      published_at: new Date().toISOString()
+    };
+
+    const { data: existingDraft } = await supabase
+      .from('courses')
+      .select('id')
+      .eq('instructor_id', userData.user.id)
+      .eq('status', 'draft')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    if (existingDraft) {
+      const { error } = await supabase
+        .from('courses')
+        .update(courseData)
+        .eq('id', existingDraft.id);
+
+      if (error) throw error;
+      toast.success("Class created successfully!");
+    } else {
+      const { error } = await supabase
+        .from('courses')
+        .insert(courseData);
+
+      if (error) throw error;
+      toast.success("Class created successfully!");
+    }
+
+    navigate('/dashboard');
+  } catch (error: any) {
+    toast.error(error.message);
+  } finally {
+    setIsSubmitting(false);
+  }
 };
 
 export default CreateClassForm;

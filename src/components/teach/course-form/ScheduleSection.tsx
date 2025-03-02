@@ -2,15 +2,13 @@
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { SessionsForm } from "@/components/teach/SessionsForm";
+import { UseFormReturn } from "react-hook-form";
 
-const ScheduleSection = ({ 
-  sessions,
-  setSessions
-}: { 
-  sessions: any[];
-  setSessions: (sessions: any[]) => void;
-}) => {
+interface ScheduleSectionProps {
+  form: UseFormReturn<any>;
+}
+
+const ScheduleSection = ({ form }: ScheduleSectionProps) => {
   return (
     <Card className="p-6">
       <div className="space-y-6">
@@ -24,8 +22,8 @@ const ScheduleSection = ({
         <Separator />
         
         <div className="space-y-4">
-          <Label className="text-base">Session Details</Label>
-          <SessionsForm sessions={sessions} setSessions={setSessions} />
+          <Label className="text-base">Schedule Type</Label>
+          {/* Form fields for schedule type, dates, times */}
         </div>
       </div>
     </Card>
