@@ -59,6 +59,7 @@ export default {
         "fade-up": "fadeUp 0.5s ease-out forwards",
         "fade-in": "fadeIn 0.5s ease-out forwards",
         "skeleton-wave": "skeletonWave 1.5s ease-in-out infinite",
+        "shimmer": "shimmer 2s infinite",
       },
       keyframes: {
         fadeUp: {
@@ -72,6 +73,9 @@ export default {
         skeletonWave: {
           "0%": { backgroundPosition: "-200% 0" },
           "100%": { backgroundPosition: "200% 0" },
+        },
+        shimmer: {
+          "100%": { transform: "translateX(100%)" },
         },
       },
       backdropBlur: {

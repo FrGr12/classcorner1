@@ -3,10 +3,11 @@ import React from "react";
 import { cn } from "@/lib/utils";
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "text" | "circular" | "rectangular" | "button" | "card" | "avatar" | "badge";
+  variant?: "text" | "circular" | "rectangular" | "button" | "card" | "avatar" | "badge" | "input" | "media" | "chart";
   width?: number | string;
   height?: number | string;
-  animation?: "pulse" | "wave" | "none";
+  animation?: "pulse" | "wave" | "shimmer" | "none";
+  className?: string;
 }
 
 const Skeleton = ({
@@ -17,11 +18,15 @@ const Skeleton = ({
   className,
   ...props
 }: SkeletonProps) => {
-  const animationClass = animation === "pulse" 
-    ? "animate-pulse" 
-    : animation === "wave" 
-      ? "animate-skeleton-wave" 
-      : "";
+  // Determine animation class
+  const animationClass = 
+    animation === "pulse" 
+      ? "animate-pulse" 
+      : animation === "wave" 
+        ? "animate-skeleton-wave" 
+        : animation === "shimmer"
+          ? "relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent"
+          : "";
   
   const baseClasses = "bg-neutral-200 dark:bg-neutral-700";
   
@@ -33,6 +38,9 @@ const Skeleton = ({
     card: "rounded-xl",
     avatar: "rounded-full h-10 w-10",
     badge: "h-6 w-16 rounded-full",
+    input: "h-10 rounded-md",
+    media: "rounded-md h-40 w-full",
+    chart: "h-40 rounded-md",
   };
 
   return (
@@ -134,6 +142,120 @@ export const TableRowSkeleton = ({
           height={20} 
         />
       ))}
+  </div>
+);
+
+// Form field skeleton
+export const FormFieldSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div 
+    className={cn("space-y-2", className)} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading form field"
+    {...props}
+  >
+    <Skeleton variant="text" height={16} width="40%" />
+    <Skeleton variant="input" height={40} />
+  </div>
+);
+
+// Profile skeleton
+export const ProfileSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div 
+    className={cn("flex flex-col sm:flex-row items-center sm:items-start gap-6", className)} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading profile"
+    {...props}
+  >
+    <Skeleton variant="avatar" height={80} width={80} className="shrink-0" />
+    <div className="space-y-4 w-full">
+      <Skeleton variant="text" height={28} width="60%" />
+      <Skeleton variant="text" height={16} width="40%" />
+      <div className="flex flex-wrap gap-3">
+        <Skeleton variant="badge" height={24} width={80} />
+        <Skeleton variant="badge" height={24} width={80} />
+        <Skeleton variant="badge" height={24} width={80} />
+      </div>
+    </div>
+  </div>
+);
+
+// Grid skeleton
+export const GridSkeleton = ({ 
+  columns = 3, 
+  rows = 2, 
+  className,
+  ...props
+}: { columns?: number; rows?: number } & React.HTMLAttributes<HTMLDivElement>) => (
+  <div 
+    className={cn(
+      "grid gap-4",
+      columns === 1 ? "grid-cols-1" : 
+      columns === 2 ? "grid-cols-1 sm:grid-cols-2" : 
+      columns === 3 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" :
+      columns === 4 ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" : "grid-cols-1",
+      className
+    )} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading grid items"
+    {...props}
+  >
+    {Array(columns * rows)
+      .fill(0)
+      .map((_, index) => (
+        <CardSkeleton key={index} />
+      ))}
+  </div>
+);
+
+// Dashboard skeleton
+export const DashboardSkeleton = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div 
+    className={cn("space-y-6", className)} 
+    role="status"
+    aria-busy="true"
+    aria-label="Loading dashboard"
+    {...props}
+  >
+    <div className="flex justify-between items-center">
+      <Skeleton variant="text" height={32} width={200} />
+      <div className="flex gap-2">
+        <Skeleton variant="button" height={40} width={100} />
+        <Skeleton variant="button" height={40} width={100} />
+      </div>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {[1, 2, 3].map((i) => (
+        <div key={i} className="border rounded-xl p-4 space-y-3">
+          <Skeleton variant="text" height={24} width="50%" />
+          <Skeleton variant="text" height={36} width="70%" />
+        </div>
+      ))}
+    </div>
+    
+    <div className="border rounded-xl p-4 space-y-4">
+      <Skeleton variant="text" height={28} width="30%" />
+      <Skeleton variant="chart" height={200} />
+    </div>
+    
+    <div className="border rounded-xl p-4 space-y-4">
+      <Skeleton variant="text" height={28} width="30%" />
+      <div className="space-y-3">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="flex items-center gap-3 border-b pb-3">
+            <Skeleton variant="avatar" height={40} width={40} />
+            <div className="flex-1">
+              <Skeleton variant="text" height={20} width="40%" />
+              <Skeleton variant="text" height={16} width="60%" className="mt-2" />
+            </div>
+            <Skeleton variant="badge" height={24} width={60} />
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
 );
 
