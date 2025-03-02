@@ -15,6 +15,7 @@ const Messages = () => {
   const navigate = useNavigate();
   const [composeOpen, setComposeOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("all");
+  const [isMobileView, setIsMobileView] = useState(false);
   const {
     messages,
     isLoading,
@@ -31,11 +32,21 @@ const Messages = () => {
 
   const handleSelectMessage = (message: Message) => {
     setSelectedMessage(message);
+    // On mobile, when a message is selected, switch to detail view
+    if (window.innerWidth < 768) {
+      setIsMobileView(true);
+    }
+  };
+
+  const handleBackClick = () => {
+    setIsMobileView(false);
+    setSelectedMessage(null);
   };
 
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
     setSelectedMessage(null);
+    setIsMobileView(false);
   };
 
   if (isLoading) {
@@ -58,8 +69,8 @@ const Messages = () => {
     <div className="min-h-screen bg-neutral-100 flex justify-center py-8 px-4">
       <Card className="w-full max-w-4xl shadow-md">
         <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
-          <div className="flex items-center justify-between border-b p-4">
-            <TabsList>
+          <div className="flex items-center justify-between border-b p-4 flex-wrap gap-3">
+            <TabsList className="h-auto">
               <TabsTrigger value="all">All Messages</TabsTrigger>
               <TabsTrigger value="unread">Unread</TabsTrigger>
               <TabsTrigger value="sent">Sent</TabsTrigger>
@@ -71,11 +82,13 @@ const Messages = () => {
               statusFilter={statusFilter}
               setStatusFilter={setStatusFilter}
               onComposeClick={() => setComposeOpen(true)}
+              onBackClick={isMobileView ? handleBackClick : undefined}
             />
           </div>
 
-          <div className="flex h-[600px] max-h-[80vh]">
-            <div className="w-1/3 border-r overflow-y-auto">
+          <div className="flex md:h-[600px] max-h-[80vh] flex-col md:flex-row">
+            {/* Message list - hide on mobile when viewing a message */}
+            <div className={`${isMobileView ? 'hidden' : 'block'} md:block md:w-1/3 border-r overflow-y-auto`}>
               <TabsContent value="all" className="mt-0">
                 <MessagesList 
                   messages={filteredMessages} 
@@ -102,7 +115,8 @@ const Messages = () => {
               </TabsContent>
             </div>
             
-            <div className="w-2/3 overflow-y-auto">
+            {/* Message detail - show on mobile only when a message is selected */}
+            <div className={`${isMobileView || selectedMessage ? 'block' : 'hidden md:block'} w-full md:w-2/3 overflow-y-auto`}>
               {selectedMessage ? (
                 <MessageDetail 
                   selectedMessage={selectedMessage}
