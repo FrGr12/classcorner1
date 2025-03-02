@@ -4,6 +4,7 @@ import Auth from "@/pages/Auth";
 import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 import Onboarding from "@/pages/Onboarding";
+import Messages from "@/pages/Messages";
 
 export const authRoutes: RouteObject[] = [
   {
@@ -21,5 +22,9 @@ export const authRoutes: RouteObject[] = [
   {
     path: "/onboarding",
     element: <Onboarding />,
+  },
+  {
+    path: "/messages",
+    element: <Messages />,
   },
 ];
