@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader";
 import CreateClassForm from "@/components/teach/course-form/CreateClassForm";
 import { handleError } from "@/utils/errorHandler";
-import { Skeleton } from "@/components/ui/skeleton-loader";
+import { Skeleton } from "@/components/ui/skeleton/skeleton";
 
 const CreateClass = () => {
   const [draftCount, setDraftCount] = useState(0);
@@ -51,13 +51,13 @@ const CreateClass = () => {
     return (
       <div className="space-y-4 sm:space-y-8 max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         <div className="space-y-4">
-          <Skeleton variant="text" width="60%" height={40} />
-          <Skeleton variant="text" width="40%" height={24} />
+          <Skeleton className="h-10 w-3/5" />
+          <Skeleton className="h-6 w-2/5" />
         </div>
         <div className="space-y-6">
-          <Skeleton variant="card" height={200} />
-          <Skeleton variant="card" height={300} />
-          <Skeleton variant="card" height={250} />
+          <Skeleton className="h-[200px] w-full rounded-xl" />
+          <Skeleton className="h-[300px] w-full rounded-xl" />
+          <Skeleton className="h-[250px] w-full rounded-xl" />
         </div>
       </div>
     );
