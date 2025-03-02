@@ -1,101 +1,96 @@
 
-import * as React from "react";
+import { Check } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface ProgressStep {
+interface Step {
   id: string;
   label: string;
-  description?: string;
 }
 
 interface ProgressIndicatorProps {
-  steps: ProgressStep[];
+  steps: Step[];
   currentStep: number;
   className?: string;
 }
 
-export function ProgressIndicator({
+export const ProgressIndicator = ({
   steps,
   currentStep,
-  className,
-}: ProgressIndicatorProps) {
+  className
+}: ProgressIndicatorProps) => {
   return (
     <div className={cn("w-full", className)}>
-      {/* Mobile view - simple step counter */}
-      <div className="md:hidden flex items-center justify-between mb-4">
+      {/* Mobile steps (text only) */}
+      <div className="flex items-center justify-between md:hidden">
         <span className="text-sm font-medium">
           Step {currentStep + 1} of {steps.length}
         </span>
-        <span className="text-sm text-muted-foreground">
-          {steps[currentStep]?.label}
+        <span className="text-sm font-medium text-muted-foreground">
+          {steps[currentStep]?.label || ""}
         </span>
       </div>
 
-      {/* Desktop view - full progress bar */}
-      <div className="hidden md:block">
-        <ol className="flex items-center w-full">
-          {steps.map((step, index) => {
-            const isActive = index === currentStep;
-            const isCompleted = index < currentStep;
-            
-            return (
-              <li 
-                key={step.id} 
-                className={cn(
-                  "flex items-center",
-                  index !== steps.length - 1 ? "w-full" : "",
-                )}
-              >
-                <div className="flex flex-col items-center">
-                  <div 
-                    className={cn(
-                      "flex items-center justify-center w-8 h-8 rounded-full shrink-0 text-sm font-medium border",
-                      isActive && "border-accent-purple bg-accent-purple text-white",
-                      isCompleted && "border-accent-purple bg-accent-purple/20 text-accent-purple",
-                      !isActive && !isCompleted && "border-gray-300 text-gray-500",
-                    )}
-                  >
-                    {isCompleted ? (
-                      <svg className="w-3.5 h-3.5 text-accent-purple" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 16 12">
-                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 5.917 5.724 10.5 15 1.5"/>
-                      </svg>
-                    ) : (
-                      index + 1
-                    )}
-                  </div>
-                  <span 
-                    className={cn(
-                      "mt-2 text-xs font-medium",
-                      isActive && "text-accent-purple",
-                      isCompleted && "text-accent-purple",
-                      !isActive && !isCompleted && "text-gray-500"
-                    )}
-                  >
-                    {step.label}
-                  </span>
-                </div>
-                
-                {index !== steps.length - 1 && (
-                  <div 
-                    className={cn(
-                      "w-full h-0.5 mx-2",
-                      index < currentStep ? "bg-accent-purple" : "bg-gray-200"
-                    )}
-                  ></div>
-                )}
-              </li>
-            );
-          })}
-        </ol>
-      </div>
+      {/* Desktop steps (full indicator) */}
+      <ol className="hidden md:flex items-center w-full">
+        {steps.map((step, index) => {
+          const isCompleted = index < currentStep;
+          const isCurrent = index === currentStep;
 
-      {/* Progress bar for both views */}
-      <div className="w-full bg-gray-200 rounded-full h-2.5 mt-4">
+          return (
+            <li 
+              key={step.id} 
+              className={cn(
+                "flex items-center relative",
+                index < steps.length - 1 ? "flex-1" : ""
+              )}
+            >
+              <div className="flex items-center">
+                <div 
+                  className={cn(
+                    "rounded-full flex items-center justify-center transition-colors",
+                    isCompleted ? "bg-accent-purple text-white h-8 w-8" :
+                    isCurrent ? "bg-accent-purple/20 border border-accent-purple text-accent-purple h-8 w-8" :
+                    "bg-muted border border-input text-muted-foreground h-8 w-8"
+                  )}
+                >
+                  {isCompleted ? (
+                    <Check className="h-4 w-4" />
+                  ) : (
+                    <span className="text-sm">{index + 1}</span>
+                  )}
+                </div>
+                <span 
+                  className={cn(
+                    "ml-2 text-sm font-medium",
+                    isCurrent ? "text-accent-purple" : 
+                    isCompleted ? "text-muted-foreground" : "text-muted-foreground"
+                  )}
+                >
+                  {step.label}
+                </span>
+              </div>
+
+              {/* Connector line between steps */}
+              {index < steps.length - 1 && (
+                <div 
+                  className={cn(
+                    "h-0.5 w-full ml-2",
+                    isCompleted ? "bg-accent-purple" : "bg-muted"
+                  )}
+                />
+              )}
+            </li>
+          );
+        })}
+      </ol>
+
+      {/* Progress bar for mobile */}
+      <div className="mt-2 h-2 w-full bg-muted rounded-full overflow-hidden md:hidden">
         <div 
-          className="bg-accent-purple h-2.5 rounded-full transition-all duration-300 ease-in-out" 
+          className="h-full bg-accent-purple transition-all duration-300 ease-in-out rounded-full"
           style={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
-        ></div>
+        />
       </div>
     </div>
   );
-}
+};

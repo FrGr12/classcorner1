@@ -6,10 +6,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { FormWrapper } from "./FormWrapper";
 import BasicInfoSection from "./BasicInfoSection";
 import LocationCategorySection from "./LocationCategorySection";
-import { LocationCategoryDetailsSection } from "../course-form/LocationCategoryDetailsSection";
+import LocationCategoryDetailsSection from "./LocationCategoryDetailsSection";
 import PricingCapacitySection from "./PricingCapacitySection";
 import ImagesSection from "./ImagesSection";
-import { ScheduleSection } from "../course-form/ScheduleSection";
+import ScheduleSection from "./ScheduleSection";
 import BringItemsSection from "./BringItemsSection";
 import LearningOutcomesSection from "./LearningOutcomesSection";
 import { Button } from "@/components/ui/button";
@@ -89,25 +89,25 @@ const CreateClassForm = ({
           description: draft.description || "",
           category: draft.category || "",
           location: draft.location || "",
-          locationType: draft.locationType || "inPerson",
+          locationType: draft.location_type || "inPerson",
           address: draft.address || "",
           city: draft.city || "",
           state: draft.state || "",
-          zipCode: draft.zipCode || "",
-          onlineLink: draft.onlineLink || "",
-          classDetails: draft.classDetails || "",
-          difficultyLevel: draft.difficultyLevel || "beginner",
+          zipCode: draft.zip_code || "",
+          onlineLink: draft.online_link || "",
+          classDetails: draft.class_details || "",
+          difficultyLevel: draft.difficulty_level || "beginner",
           price: draft.price ? draft.price.toString() : "",
           capacity: draft.capacity ? draft.capacity.toString() : "",
           images: draft.images || [],
-          scheduleType: draft.scheduleType || "oneTime",
-          startDate: draft.startDate || "",
-          endDate: draft.endDate || "",
-          startTime: draft.startTime || "",
-          endTime: draft.endTime || "",
-          recurringDays: draft.recurringDays || [],
-          whatToBring: draft.whatToBring || [],
-          learningOutcomes: draft.learningOutcomes || [],
+          scheduleType: draft.schedule_type || "oneTime",
+          startDate: draft.start_date || "",
+          endDate: draft.end_date || "",
+          startTime: draft.start_time || "",
+          endTime: draft.end_time || "",
+          recurringDays: draft.recurring_days || [],
+          whatToBring: draft.what_to_bring || [],
+          learningOutcomes: draft.learning_outcomes || [],
         });
       }
     };
@@ -129,25 +129,25 @@ const CreateClassForm = ({
         description: formValues.description,
         category: formValues.category,
         location: formValues.location,
-        locationType: formValues.locationType,
+        location_type: formValues.locationType,
         address: formValues.address,
         city: formValues.city,
         state: formValues.state,
-        zipCode: formValues.zipCode,
-        onlineLink: formValues.onlineLink,
-        classDetails: formValues.classDetails,
-        difficultyLevel: formValues.difficultyLevel,
+        zip_code: formValues.zipCode,
+        online_link: formValues.onlineLink,
+        class_details: formValues.classDetails,
+        difficulty_level: formValues.difficultyLevel,
         price: parseFloat(formValues.price) || 0,
         capacity: parseInt(formValues.capacity) || 0,
         images: formValues.images,
-        scheduleType: formValues.scheduleType,
-        startDate: formValues.startDate,
-        endDate: formValues.endDate,
-        startTime: formValues.startTime,
-        endTime: formValues.endTime,
-        recurringDays: formValues.recurringDays,
-        whatToBring: formValues.whatToBring,
-        learningOutcomes: formValues.learningOutcomes,
+        schedule_type: formValues.scheduleType,
+        start_date: formValues.startDate,
+        end_date: formValues.endDate,
+        start_time: formValues.startTime,
+        end_time: formValues.endTime,
+        recurring_days: formValues.recurringDays,
+        what_to_bring: formValues.whatToBring,
+        learning_outcomes: formValues.learningOutcomes,
         status: 'draft' as 'draft' | 'published' | 'archived'
       };
 
@@ -215,25 +215,25 @@ const CreateClassForm = ({
         description: formValues.description,
         category: formValues.category,
         location: formValues.location,
-        locationType: formValues.locationType,
+        location_type: formValues.locationType,
         address: formValues.address,
         city: formValues.city,
         state: formValues.state,
-        zipCode: formValues.zipCode,
-        onlineLink: formValues.onlineLink,
-        classDetails: formValues.classDetails,
-        difficultyLevel: formValues.difficultyLevel,
+        zip_code: formValues.zipCode,
+        online_link: formValues.onlineLink,
+        class_details: formValues.classDetails,
+        difficulty_level: formValues.difficultyLevel,
         price: parseFloat(formValues.price) || 0,
         capacity: parseInt(formValues.capacity) || 0,
         images: formValues.images,
-        scheduleType: formValues.scheduleType,
-        startDate: formValues.startDate,
-        endDate: formValues.endDate,
-        startTime: formValues.startTime,
-        endTime: formValues.endTime,
-        recurringDays: formValues.recurringDays,
-        whatToBring: formValues.whatToBring,
-        learningOutcomes: formValues.learningOutcomes,
+        schedule_type: formValues.scheduleType,
+        start_date: formValues.startDate,
+        end_date: formValues.endDate,
+        start_time: formValues.startTime,
+        end_time: formValues.endTime,
+        recurring_days: formValues.recurringDays,
+        what_to_bring: formValues.whatToBring,
+        learning_outcomes: formValues.learningOutcomes,
         status: 'published' as 'draft' | 'published' | 'archived',
         published_at: new Date().toISOString()
       };
@@ -385,8 +385,10 @@ const CreateClassForm = ({
                 type="button"
                 onClick={handleSubmit}
                 disabled={isSubmitting}
+                isLoading={isSubmitting}
+                loadingText="Creating Class..."
               >
-                {isSubmitting ? "Creating Class..." : "Create Class"}
+                Create Class
               </Button>
             )}
           </div>
