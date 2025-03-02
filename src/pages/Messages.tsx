@@ -10,9 +10,11 @@ import { MessageControls } from "@/components/user-dashboard/messages/MessageCon
 import { useMessages } from "@/components/user-dashboard/messages/useMessages";
 import { Message } from "@/components/user-dashboard/messages/types";
 import { ComposeMessageDialog } from "@/components/user-dashboard/messages/ComposeMessageDialog";
+import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 const Messages = () => {
   const navigate = useNavigate();
+  const breadcrumbs = useBreadcrumbs();
   const [composeOpen, setComposeOpen] = useState(false);
   const [selectedTab, setSelectedTab] = useState("all");
   const [isMobileView, setIsMobileView] = useState(false);
@@ -66,8 +68,12 @@ const Messages = () => {
   }) || [];
 
   return (
-    <div className="min-h-screen bg-neutral-100 flex justify-center py-8 px-4">
-      <Card className="w-full max-w-4xl shadow-md">
+    <div className="min-h-screen bg-neutral-100 flex flex-col justify-center py-8 px-4">
+      <div className="w-full max-w-4xl mx-auto mb-4">
+        <Breadcrumbs items={breadcrumbs} />
+      </div>
+      
+      <Card className="w-full max-w-4xl shadow-md mx-auto">
         <Tabs value={selectedTab} onValueChange={handleTabChange} className="w-full">
           <div className="flex items-center justify-between border-b p-4 flex-wrap gap-3">
             <TabsList className="h-auto">

@@ -5,6 +5,7 @@ import EmailVerification from "@/pages/EmailVerification";
 import PasswordReset from "@/pages/PasswordReset";
 import Onboarding from "@/pages/Onboarding";
 import Messages from "@/pages/Messages";
+import AuthGuard from "@/components/auth/AuthGuard";
 
 export const authRoutes: RouteObject[] = [
   {
@@ -23,8 +24,13 @@ export const authRoutes: RouteObject[] = [
     path: "/onboarding",
     element: <Onboarding />,
   },
+  // Messages is now protected by AuthGuard
   {
     path: "/messages",
-    element: <Messages />,
+    element: (
+      <AuthGuard>
+        <Messages />
+      </AuthGuard>
+    ),
   },
 ];

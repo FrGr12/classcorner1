@@ -7,23 +7,24 @@ import { dashboardRoutes } from "@/routes/dashboard-routes";
 import { paymentRoutes } from "@/routes/payment-routes";
 import { communityRoutes } from "@/routes/community-routes";
 
+// Central router configuration that organizes all routes
 const router = createBrowserRouter([
-  // Public routes
+  // Public routes - accessible to all users
   ...publicRoutes,
   
-  // Authentication routes
+  // Authentication routes - login, registration, password reset, etc.
   ...authRoutes,
   
-  // Dashboard routes
+  // Dashboard routes - protected routes for authenticated users
   ...dashboardRoutes,
   
-  // Payment routes
+  // Payment routes - routes related to payment processing
   ...paymentRoutes,
   
-  // Community routes
+  // Community routes - routes related to community features
   ...communityRoutes,
   
-  // Catch-all route
+  // Catch-all route for 404 pages
   {
     path: "*",
     element: <NotFound />,
