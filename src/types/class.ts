@@ -11,7 +11,7 @@ export interface ClassItem {
   category?: string;
   date: Date | Date[];
   city: string;
-  description: string;
+  description?: string; // Making description optional to fix existing data
   maxParticipants?: number;
   minParticipants?: number;
   waitlist_enabled?: boolean;
