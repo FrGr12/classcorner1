@@ -3,7 +3,6 @@ import React, { createContext, useContext, ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { Session } from "@/types/session";
 import * as z from "zod";
-import { ClassStatus } from "@/lib/validators/create-class";
 
 // Define the schema for form validation
 export const courseFormSchema = z.object({
@@ -22,7 +21,7 @@ export const courseFormSchema = z.object({
   requirements: z.array(z.string()),
   items_to_bring: z.array(z.string()),
   images: z.array(z.any()),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
+  status: z.enum(["draft", "published"]).default("draft"),
   maxParticipants: z.number().int().positive().optional(),
   minParticipants: z.number().int().positive().optional()
 });
