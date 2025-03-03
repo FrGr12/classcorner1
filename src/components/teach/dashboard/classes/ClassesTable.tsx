@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { memo } from "react";
 import { ClassItem } from "@/types/class";
 import { Table, TableBody } from "@/components/ui/table";
 import { useTableDialogs } from "./hooks/useTableDialogs";
@@ -14,7 +14,7 @@ interface ClassesTableProps {
   onAction: (action: string, classId: number) => void;
 }
 
-const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
+const ClassesTable = memo(({ classes, onAction }: ClassesTableProps) => {
   const {
     selectedClassId,
     setSelectedClassId,
@@ -64,34 +64,46 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <Table className="text-xs sm:text-sm" aria-label="Classes list">
-        <ClassesTableHeader 
-          filters={filters} 
-          onFilterChange={handleFilter} 
-        />
-        <TableBody>
-          {classes.map((classItem) => (
-            <React.Fragment key={classItem.id}>
-              <ClassRowMobile
-                classItem={classItem}
-                onDetails={handleClassSelect}
-                onEdit={handleEdit}
-                onMessage={handleMessage}
-                onPromote={handlePromote}
-                onShare={handleShare}
-              />
-              <ClassRowDesktop
-                classItem={classItem}
-                onDetails={handleClassSelect}
-                onEdit={handleEdit}
-                onMessage={handleMessage}
-                onPromote={handlePromote}
-                onShare={handleShare}
-              />
-            </React.Fragment>
-          ))}
-        </TableBody>
-      </Table>
+      <div role="region" aria-label="Classes management table">
+        <Table className="text-xs sm:text-sm" aria-label="Classes list">
+          <ClassesTableHeader 
+            filters={filters} 
+            onFilterChange={handleFilter} 
+          />
+          <TableBody>
+            {classes.map((classItem) => (
+              <React.Fragment key={classItem.id}>
+                <ClassRowMobile
+                  classItem={classItem}
+                  onDetails={handleClassSelect}
+                  onEdit={handleEdit}
+                  onMessage={handleMessage}
+                  onPromote={handlePromote}
+                  onShare={handleShare}
+                />
+                <ClassRowDesktop
+                  classItem={classItem}
+                  onDetails={handleClassSelect}
+                  onEdit={handleEdit}
+                  onMessage={handleMessage}
+                  onPromote={handlePromote}
+                  onShare={handleShare}
+                />
+              </React.Fragment>
+            ))}
+          </TableBody>
+        </Table>
+        
+        {classes.length === 0 && (
+          <div 
+            className="text-center py-8 text-muted-foreground"
+            role="status"
+            aria-live="polite"
+          >
+            No classes found. Try adjusting your filters.
+          </div>
+        )}
+      </div>
 
       <DialogManager
         selectedClassId={selectedClassId}
@@ -109,6 +121,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       />
     </>
   );
-};
+});
+
+ClassesTable.displayName = 'ClassesTable';
 
 export default ClassesTable;

@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { memo } from 'react';
 import { EditClassDialog } from '../dialogs/EditClassDialog';
 import CancelCourseDialog from '../dialogs/CancelCourseDialog';
 import MessageDialog from '../dialogs/MessageDialog';
@@ -24,7 +24,7 @@ export interface DialogManagerProps {
   onEditSuccess: () => void;
 }
 
-const DialogManager: React.FC<DialogManagerProps> = ({
+const DialogManager = memo(({
   isEditOpen,
   isDetailsOpen,
   isPromoteOpen,
@@ -40,8 +40,8 @@ const DialogManager: React.FC<DialogManagerProps> = ({
   setIsShareOpen,
   setIsCancelOpen = () => {},
   onEditSuccess
-}) => {
-  if (!selectedClass) return null;
+}: DialogManagerProps) => {
+  if (!selectedClass && selectedClassId === 0) return null;
 
   // Handle course cancellation
   const handleCancelConfirm = async (): Promise<boolean> => {
@@ -59,7 +59,7 @@ const DialogManager: React.FC<DialogManagerProps> = ({
   };
 
   return (
-    <>
+    <div aria-live="polite">
       {isEditOpen && (
         <EditClassDialog
           isOpen={isEditOpen}
@@ -92,8 +92,10 @@ const DialogManager: React.FC<DialogManagerProps> = ({
           onConfirm={handleCancelConfirm}
         />
       )}
-    </>
+    </div>
   );
-};
+});
+
+DialogManager.displayName = 'DialogManager';
 
 export default DialogManager;
