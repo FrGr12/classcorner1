@@ -24,17 +24,17 @@ const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarou
   
   const wrapperClasses = cn(
     "relative w-full h-full",
-    variant === 'large' ? "max-w-7xl mx-auto px-2 sm:px-6 lg:px-8" : ""
+    variant === 'large' ? "max-w-full mx-auto px-0 sm:max-w-7xl sm:px-6 lg:px-8" : ""
   );
 
   const containerClasses = cn(
     "relative w-full h-full",
-    variant === 'large' ? "aspect-[16/9] sm:aspect-[21/9]" : "aspect-[4/3]"
+    variant === 'large' ? "aspect-[4/3] sm:aspect-[16/9] md:aspect-[21/9]" : "aspect-[4/3]"
   );
 
   const imageClasses = cn(
     "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-    variant === 'large' && "rounded-lg"
+    variant === 'large' && "sm:rounded-lg"
   );
 
   const handlePrevious = (e: React.MouseEvent) => {

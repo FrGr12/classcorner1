@@ -72,7 +72,7 @@ const ClassDetails = () => {
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
       <div className="w-full mt-[72px] bg-white py-4 sm:py-8">
-        <div className="sm:container mx-auto sm:px-6 px-0">
+        <div className="w-full mx-auto">
           <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
         </div>
       </div>
