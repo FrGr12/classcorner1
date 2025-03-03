@@ -15,15 +15,13 @@ export const courseFormSchema = z.object({
   is_online: z.boolean().default(false),
   capacity: z.number().int().positive(),
   price: z.number().nonnegative(),
-  duration: z.string().default("60"), // Store as string consistently
+  duration: z.string().or(z.number()).default("60"), // Accept both string and number
   sessions: z.array(z.any()),
   learning_outcomes: z.array(z.string()),
   requirements: z.array(z.string()),
   items_to_bring: z.array(z.string()),
   images: z.array(z.any()),
   status: z.enum(["draft", "published"]).default("draft"),
-  maxParticipants: z.number().int().positive().optional(),
-  minParticipants: z.number().int().positive().optional()
 });
 
 export type CourseFormValues = z.infer<typeof courseFormSchema>;

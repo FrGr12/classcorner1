@@ -25,7 +25,7 @@ const editClassSchema = z.object({
   description: z.string().min(1, "Description is required"),
   capacity: z.number().min(1, "Capacity must be at least 1"),
   price: z.number().min(0, "Price cannot be negative"),
-  duration: z.string().default("60"), // Always use string for duration
+  duration: z.string().or(z.number()).default("60"), // Accept both string and number
   category: z.string().min(1, "Category is required"),
 });
 
@@ -65,7 +65,7 @@ export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogP
         requirements: [],
         items_to_bring: [],
         images: classData.images,
-        status: "published" as const // Use const assertion to fix status type
+        status: "published"
       };
 
       const { error } = await supabase
