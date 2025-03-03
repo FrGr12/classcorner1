@@ -35,7 +35,7 @@ const Reviews = () => {
     <section className="py-12 sm:py-16 border-y border-neutral-200 bg-white/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-10">
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">What Our Students Say</h2>
+          <h2 className="text-2xl sm:text-3xl font-display font-normal mb-4">What Our Students Say</h2>
           <div className="flex items-center justify-center gap-2">
             <div className="flex">
               {[1, 2, 3, 4, 5].map((star) => (

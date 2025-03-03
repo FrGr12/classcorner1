@@ -14,7 +14,7 @@ const InstructorHighlights = () => {
   return (
     <section className="py-16 bg-gradient-to-b from-white to-neutral-50">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Learn from Expert Instructors</h2>
+        <h2 className="text-3xl font-display font-normal text-center mb-8">Learn from Expert Instructors</h2>
         <p className="text-center text-neutral-600 max-w-2xl mx-auto mb-12">
           Discover unique classes taught by talented instructors with real-world experience and passion for teaching.
         </p>
@@ -33,7 +33,7 @@ const InstructorHighlights = () => {
                 </div>
               </div>
               <div className="p-5">
-                <h3 className="font-semibold text-lg">Instructor Name</h3>
+                <h3 className="font-display font-normal text-lg">Instructor Name</h3>
                 <p className="text-accent-purple font-medium">Specialty</p>
                 <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
                   Passionate instructor with years of experience. Join their classes to learn hands-on skills in a supportive environment.

@@ -36,7 +36,7 @@ const Features = () => {
           <span className="bg-accent-purple/10 text-accent-purple px-4 py-1.5 rounded-full text-sm font-medium">
             HOW IT WORKS
           </span>
-          <h2 className="heading-lg mt-6">Connect, Create, and Learn</h2>
+          <h2 className="heading-lg mt-6 font-display font-normal">Connect, Create, and Learn</h2>
           <p className="text-neutral-600 mt-4 max-w-2xl mx-auto">
             ClassCorner brings together craft enthusiasts and skilled artisans in your local community.
           </p>
@@ -54,7 +54,7 @@ const Features = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex-1">
-              <h3 className="text-2xl font-bold mb-4">{feature.title}</h3>
+              <h3 className="text-2xl font-display font-normal mb-4">{feature.title}</h3>
               <p className="text-neutral-600 mb-6">{feature.description}</p>
               <ul className="space-y-4">
                 {feature.points.map(point => (
