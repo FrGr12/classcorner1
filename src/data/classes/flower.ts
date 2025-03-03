@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const flowerClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const flowerClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-25'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn the art of flower arrangement from an expert. This class will teach you how to create beautiful bouquets and arrangements for any occasion."
   },
   {
     id: 2,
@@ -29,6 +31,8 @@ export const flowerClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-05-02'),
-    city: "Uppsala"
+    city: "Uppsala",
+    description: "Learn essential techniques for caring for your houseplants. This class covers watering, light requirements, and common problems."
   },
 ];
+

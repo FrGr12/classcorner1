@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const woodClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-21'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "An introduction to woodworking tools and techniques. Learn to create simple projects while developing fundamental skills."
   },
   {
     id: 2,
@@ -29,6 +31,8 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-28'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Design and build your own furniture piece in this hands-on workshop. Perfect for those with some woodworking experience."
   },
 ];
+

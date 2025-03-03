@@ -12,6 +12,7 @@ interface ClassDetailsDialogProps {
 const ClassDetailsDialog = ({ open, onOpenChange, classId }: ClassDetailsDialogProps) => {
   const { participants, waitlist, classDetails } = useClassDetails(classId, open);
 
+  // Don't render anything if no classId is provided
   if (!classId) return null;
 
   return (
@@ -21,7 +22,7 @@ const ClassDetailsDialog = ({ open, onOpenChange, classId }: ClassDetailsDialogP
           <DialogTitle>{classDetails?.title || 'Class Details'}</DialogTitle>
         </DialogHeader>
         
-        <ClassDetailsTabs participants={participants} waitlist={waitlist} />
+        <ClassDetailsTabs participants={participants || []} waitlist={waitlist || []} />
       </DialogContent>
     </Dialog>
   );
