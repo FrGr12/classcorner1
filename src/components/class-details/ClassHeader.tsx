@@ -9,10 +9,13 @@ import { handleError } from "@/utils/errorHandler";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Link } from "react-router-dom";
+
 interface ClassHeaderProps {
   classItem: ClassItem;
   onBooking: () => void;
 }
+
 const ClassHeader = ({
   classItem,
   onBooking
@@ -26,6 +29,7 @@ const ClassHeader = ({
   const [question, setQuestion] = useState("");
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,6 +43,7 @@ const ClassHeader = ({
     };
     fetchData();
   }, [classItem.id]);
+
   const checkInstructor = async () => {
     try {
       const {
@@ -55,6 +60,7 @@ const ClassHeader = ({
       throw new Error("Failed to verify instructor status");
     }
   };
+
   const checkFollowStatus = async () => {
     try {
       const {
@@ -71,6 +77,7 @@ const ClassHeader = ({
       console.error("Error checking follow status:", error);
     }
   };
+
   const handlePrivateRequest = async () => {
     try {
       setIsLoading(true);
@@ -115,6 +122,7 @@ const ClassHeader = ({
       setIsLoading(false);
     }
   };
+
   const handleFollow = async () => {
     try {
       setIsLoading(true);
@@ -155,6 +163,7 @@ const ClassHeader = ({
       setIsLoading(false);
     }
   };
+
   const handleAskQuestion = async () => {
     try {
       setIsLoading(true);
@@ -209,9 +218,11 @@ const ClassHeader = ({
       setIsLoading(false);
     }
   };
+
   const handleQuestion = () => {
     navigate(`/community/post/new?courseId=${classItem.id}&type=question`);
   };
+
   const scrollToReviews = () => {
     const reviewsSection = document.getElementById('reviews-section');
     if (reviewsSection) {
@@ -220,11 +231,13 @@ const ClassHeader = ({
       });
     }
   };
+
   const getParticipantRange = () => {
     const min = classItem.minParticipants ?? 1;
     const max = classItem.maxParticipants ?? 10;
     return `${min}-${max} people`;
   };
+
   return <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4 text-left">
         <div>
@@ -245,6 +258,12 @@ const ClassHeader = ({
             <Users className="h-4 w-4" />
             <span>{getParticipantRange()}</span>
           </div>
+          <Link 
+            to={`/instructor/${classItem.instructor_id || '1'}`} 
+            className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer"
+          >
+            <span>{classItem.instructor}</span>
+          </Link>
           <button onClick={scrollToReviews} className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer">
             <Star className="h-4 w-4 fill-accent-purple text-accent-purple" />
             <span>{classItem.rating}</span>
@@ -361,4 +380,5 @@ const ClassHeader = ({
       </Dialog>
     </div>;
 };
+
 export default ClassHeader;
