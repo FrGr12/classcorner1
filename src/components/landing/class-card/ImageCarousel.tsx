@@ -24,12 +24,12 @@ const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarou
   
   const wrapperClasses = cn(
     "relative w-full h-full",
-    variant === 'large' ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : ""
+    variant === 'large' ? "max-w-7xl mx-auto px-2 sm:px-6 lg:px-8" : ""
   );
 
   const containerClasses = cn(
     "relative w-full h-full",
-    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9]" : "aspect-[4/3]"
+    variant === 'large' ? "aspect-[16/9] sm:aspect-[21/9]" : "aspect-[4/3]"
   );
 
   const imageClasses = cn(
@@ -72,20 +72,20 @@ const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarou
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md"
+                  className="absolute left-2 sm:left-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10"
                   onClick={handlePrevious}
                 >
-                  <ChevronLeft className="h-6 w-6" />
+                  <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
                 </Button>
                 <Button
                   variant="secondary"
                   size="icon"
-                  className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md"
+                  className="absolute right-2 sm:right-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md z-10"
                   onClick={handleNext}
                 >
-                  <ChevronRight className="h-6 w-6" />
+                  <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
                 </Button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
                   {images.map((_, index) => (
                     <button
                       key={index}
