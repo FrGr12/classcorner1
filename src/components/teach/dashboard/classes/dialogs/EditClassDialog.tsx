@@ -17,6 +17,7 @@ export interface EditClassDialogProps {
   isOpen: boolean;
   onClose: () => void;
   classData: ClassItem;
+  onSuccess?: () => void;
 }
 
 // Simple form schema for edit class
@@ -29,7 +30,7 @@ const editClassSchema = z.object({
   category: z.string().min(1, "Category is required"),
 });
 
-export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogProps) {
+export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditClassDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   
@@ -80,6 +81,9 @@ export function EditClassDialog({ isOpen, onClose, classData }: EditClassDialogP
         description: 'Your class has been successfully updated.',
       });
 
+      if (onSuccess) {
+        onSuccess();
+      }
       onClose();
     } catch (error: any) {
       toast({

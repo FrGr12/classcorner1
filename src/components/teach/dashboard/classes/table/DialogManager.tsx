@@ -24,25 +24,6 @@ export interface DialogManagerProps {
   onEditSuccess: () => void;
 }
 
-// Interfaces for the dialog components
-interface MessageDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
-interface ShareDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
-interface CancelCourseDialogProps {
-  open: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-}
-
 const DialogManager: React.FC<DialogManagerProps> = ({
   isEditOpen,
   isDetailsOpen,
@@ -62,6 +43,21 @@ const DialogManager: React.FC<DialogManagerProps> = ({
 }) => {
   if (!selectedClass) return null;
 
+  // Handle course cancellation
+  const handleCancelConfirm = async (): Promise<boolean> => {
+    try {
+      // In a real implementation, this would call an API to cancel the course
+      console.log(`Cancelling course ${selectedClassId}`);
+      
+      // Close the dialog after successful cancellation
+      setIsCancelOpen(false);
+      return true;
+    } catch (error) {
+      console.error('Error cancelling course:', error);
+      return false;
+    }
+  };
+
   return (
     <>
       {isEditOpen && (
@@ -69,30 +65,31 @@ const DialogManager: React.FC<DialogManagerProps> = ({
           isOpen={isEditOpen}
           onClose={() => setIsEditOpen(false)}
           classData={selectedClass}
+          onSuccess={onEditSuccess}
         />
       )}
 
       {isMessageOpen && (
         <MessageDialog
           open={isMessageOpen}
-          onClose={() => setIsMessageOpen(false)}
-          classData={selectedClass}
+          onOpenChange={setIsMessageOpen}
+          classId={selectedClassId}
         />
       )}
 
       {isShareOpen && (
         <ShareDialog
           open={isShareOpen}
-          onClose={() => setIsShareOpen(false)}
-          classData={selectedClass}
+          onOpenChange={setIsShareOpen}
+          classId={selectedClassId}
         />
       )}
 
-      {isCancelOpen && setIsCancelOpen && (
+      {isCancelOpen && (
         <CancelCourseDialog
           open={isCancelOpen}
-          onClose={() => setIsCancelOpen(false)}
-          classData={selectedClass}
+          onOpenChange={setIsCancelOpen}
+          onConfirm={handleCancelConfirm}
         />
       )}
     </>
