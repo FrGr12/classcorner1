@@ -1,6 +1,10 @@
 
 import * as z from "zod";
 
+// Define a correct status type that matches the database requirements
+const ClassStatusEnum = z.enum(["draft", "published", "archived"]);
+export type ClassStatus = z.infer<typeof ClassStatusEnum>;
+
 export const CreateClassSchema = z.object({
   title: z.string().min(1, "Title is required"),
   description: z.string().min(1, "Description is required"),
@@ -18,7 +22,7 @@ export const CreateClassSchema = z.object({
   requirements: z.array(z.string()).default(['']),
   items_to_bring: z.array(z.string()).default(['']),
   images: z.array(z.any()).default([]),
-  status: z.enum(["draft", "published"]).default("draft"),
+  status: ClassStatusEnum.default("draft"),
   // Add min/max participants for consistency
   maxParticipants: z.number().int().positive().optional(),
   minParticipants: z.number().int().positive().optional()

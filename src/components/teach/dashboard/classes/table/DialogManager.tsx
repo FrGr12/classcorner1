@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { EditClassDialog } from '../dialogs/EditClassDialog';
-import { MessageDialog } from '../dialogs/MessageDialog';
-import { ShareDialog } from '../dialogs/ShareDialog';
-import { CancelCourseDialog } from '../dialogs/CancelCourseDialog';
+import EditClassDialog from '../dialogs/EditClassDialog';
+import MessageDialog from '../dialogs/MessageDialog';
+import ShareDialog from '../dialogs/ShareDialog';
+import CancelCourseDialog from '../dialogs/CancelCourseDialog';
 import { ClassItem } from '@/types/class';
 
 interface DialogManagerProps {
@@ -67,3 +67,5 @@ export const DialogManager: React.FC<DialogManagerProps> = ({
     </>
   );
 };
+
+export default DialogManager;
