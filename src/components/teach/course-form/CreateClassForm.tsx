@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CreateClassSchema, CreateClassFormValues } from "@/lib/validators/create-class";
-import { CourseFormProvider } from "./CourseFormContext";
+import { CourseFormProvider, courseFormSchema, CourseFormValues } from "./CourseFormContext";
 import CourseFormStepManager from "./CourseFormStepManager";
 import GeneralInformation from "./sections/GeneralInformation";
 import ClassDetails from "./sections/ClassDetails";
@@ -33,8 +32,8 @@ const CreateClassForm = ({
   const [currentStep, setCurrentStep] = useState(0);
   const [sessions, setSessions] = useState<Session[]>([]);
 
-  const form = useForm<CreateClassFormValues>({
-    resolver: zodResolver(CreateClassSchema),
+  const form = useForm<CourseFormValues>({
+    resolver: zodResolver(courseFormSchema),
     defaultValues: {
       title: '',
       description: '',
@@ -52,6 +51,8 @@ const CreateClassForm = ({
       items_to_bring: [''],
       images: [],
       status: 'draft',
+      min_participants: 1,
+      max_participants: 10,
     },
     mode: "onChange",
   });
@@ -86,7 +87,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: String(formValues.duration), // Ensure duration is always a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -94,9 +95,11 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
-        status: "draft",
+        status: "draft" as const,
         images: formValues.images,
-        sessions: formValues.sessions
+        sessions: formValues.sessions,
+        min_participants: formValues.min_participants,
+        max_participants: formValues.max_participants
       };
   
       const { data, error } = await supabase
@@ -136,7 +139,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: String(formValues.duration), // Ensure duration is always a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -144,9 +147,11 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
-        status: "published",
+        status: "published" as const,
         images: formValues.images,
-        sessions: formValues.sessions
+        sessions: formValues.sessions,
+        min_participants: formValues.min_participants,
+        max_participants: formValues.max_participants
       };
   
       const { data, error } = await supabase

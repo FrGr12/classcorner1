@@ -1,94 +1,114 @@
 
 import React, { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Form, FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
-import { supabase } from '@/integrations/supabase/client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 import { ClassItem } from '@/types/class';
-import { z } from 'zod';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-export interface EditClassDialogProps {
+interface EditClassDialogProps {
   isOpen: boolean;
   onClose: () => void;
   classData: ClassItem;
-  onSuccess?: () => void;
+  onSuccess: () => void;
 }
 
-// Simple form schema for edit class
-const editClassSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  capacity: z.number().min(1, "Capacity must be at least 1"),
-  price: z.number().min(0, "Price cannot be negative"),
-  duration: z.string().or(z.number()).default("60"), // Accept both string and number
-  category: z.string().min(1, "Category is required"),
+// Create the form schema
+const formSchema = z.object({
+  title: z.string().min(1, 'Title is required'),
+  description: z.string().min(1, 'Description is required'),
+  category: z.string().min(1, 'Category is required'),
+  location: z.string().min(1, 'Location is required'),
+  address: z.string().optional(),
+  city: z.string().optional(),
+  is_online: z.boolean().default(false),
+  capacity: z.number().int().positive().default(1),
+  price: z.number().nonnegative().default(0),
+  duration: z.string().default("60"),
+  status: z.enum(["draft", "published", "archived"]).default("draft"),
 });
 
-export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditClassDialogProps) {
+export const EditClassDialog: React.FC<EditClassDialogProps> = ({
+  isOpen,
+  onClose,
+  classData,
+  onSuccess,
+}) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  
+
   const form = useForm({
-    resolver: zodResolver(editClassSchema),
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      title: classData.title || '',
-      description: classData.description || '',
-      category: classData.category || '',
-      price: classData.price || 0,
-      capacity: classData.maxParticipants || 10,
-      duration: classData.duration?.toString() || "60", // Convert to string
-    }
+      title: classData.title,
+      description: classData.description,
+      category: classData.category,
+      location: classData.location,
+      address: classData.address || '',
+      city: classData.city || '',
+      is_online: classData.is_online,
+      capacity: classData.capacity,
+      price: classData.price,
+      duration: String(classData.duration),
+      status: classData.status as "draft" | "published" | "archived",
+    },
   });
 
-  const onSubmit = async (values: z.infer<typeof editClassSchema>) => {
-    setIsSubmitting(true);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Format data for database update
-      const updateData = {
+      setIsSubmitting(true);
+      const courseData = {
         instructor_id: classData.instructor_id,
         title: values.title,
         description: values.description,
         category: values.category,
-        location: classData.city,
-        address: '',
-        city: classData.city,
-        is_online: false,
+        location: values.location,
+        address: values.address,
+        city: values.city,
+        is_online: values.is_online,
         capacity: values.capacity,
         price: values.price,
-        duration: values.duration.toString(), // Ensure duration is stored as string
-        learning_outcomes: [],
-        requirements: [],
-        items_to_bring: [],
-        images: classData.images,
-        status: "published"
+        duration: values.duration,
+        status: values.status,
       };
 
       const { error } = await supabase
         .from('courses')
-        .update(updateData)
+        .update(courseData)
         .eq('id', classData.id);
 
       if (error) throw error;
 
       toast({
         title: 'Class updated',
-        description: 'Your class has been successfully updated.',
+        description: 'Your class information has been updated.',
       });
-
-      if (onSuccess) {
-        onSuccess();
-      }
+      onSuccess();
       onClose();
-    } catch (error: any) {
+    } catch (error) {
+      console.error('Error updating class:', error);
       toast({
         title: 'Error',
-        description: error.message || 'Failed to update class',
+        description: 'Failed to update class. Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -97,11 +117,15 @@ export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditC
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
           <DialogTitle>Edit Class</DialogTitle>
+          <DialogDescription>
+            Update your class details. Click save when you're finished.
+          </DialogDescription>
         </DialogHeader>
+
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
@@ -113,10 +137,11 @@ export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditC
                   <FormControl>
                     <Input {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-            
+
             <FormField
               control={form.control}
               name="description"
@@ -124,54 +149,34 @@ export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditC
                 <FormItem>
                   <FormLabel>Description</FormLabel>
                   <FormControl>
-                    <Textarea className="min-h-[100px]" {...field} />
+                    <Textarea {...field} />
                   </FormControl>
+                  <FormMessage />
                 </FormItem>
               )}
             />
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Category</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select a category" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="Art">Art</SelectItem>
-                        <SelectItem value="Cooking">Cooking</SelectItem>
-                        <SelectItem value="Crafts">Crafts</SelectItem>
-                        <SelectItem value="Photography">Photography</SelectItem>
-                        <SelectItem value="Music">Music</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </FormItem>
-                )}
-              />
-              
+
+            <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
                 name="price"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Price ($)</FormLabel>
+                    <FormLabel>Price</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        {...field} 
-                        onChange={(e) => field.onChange(parseFloat(e.target.value))} 
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(Number(e.target.value));
+                        }}
                       />
                     </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="capacity"
@@ -179,32 +184,24 @@ export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditC
                   <FormItem>
                     <FormLabel>Capacity</FormLabel>
                     <FormControl>
-                      <Input 
-                        type="number" 
-                        {...field} 
-                        onChange={(e) => field.onChange(parseInt(e.target.value, 10))} 
+                      <Input
+                        type="number"
+                        {...field}
+                        onChange={(e) => {
+                          field.onChange(Number(e.target.value));
+                        }}
                       />
                     </FormControl>
-                  </FormItem>
-                )}
-              />
-              
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration (minutes)</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
-            
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
+
+            <div className="mt-4 flex justify-end space-x-2">
+              <Button type="button" variant="outline" onClick={onClose}>
+                Cancel
+              </Button>
               <Button type="submit" disabled={isSubmitting}>
                 {isSubmitting ? 'Saving...' : 'Save Changes'}
               </Button>
@@ -214,4 +211,4 @@ export function EditClassDialog({ isOpen, onClose, classData, onSuccess }: EditC
       </DialogContent>
     </Dialog>
   );
-}
+};
