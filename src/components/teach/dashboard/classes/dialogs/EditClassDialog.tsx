@@ -37,13 +37,9 @@ const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   category: z.string().min(1, 'Category is required'),
-  location: z.string().min(1, 'Location is required'),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  is_online: z.boolean().default(false),
-  capacity: z.number().int().positive().default(1),
   price: z.number().nonnegative().default(0),
   duration: z.string().default("60"),
+  // Use enum for status to ensure valid values
   status: z.enum(["draft", "published", "archived"]).default("draft"),
 });
 
@@ -60,16 +56,15 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: classData.title,
-      description: classData.description,
-      category: classData.category,
-      location: classData.location,
-      address: classData.address || '',
-      city: classData.city || '',
-      is_online: classData.is_online,
-      capacity: classData.capacity,
+      description: classData.description || '',
+      category: classData.category || '',
       price: classData.price,
-      duration: String(classData.duration),
-      status: classData.status as "draft" | "published" | "archived",
+      // Convert duration to string if it's a number
+      duration: typeof classData.duration === 'number' 
+        ? String(classData.duration) 
+        : (classData.duration || "60"),
+      // Default to draft if status is missing
+      status: (classData.status as "draft" | "published" | "archived") || "draft",
     },
   });
 
@@ -81,11 +76,6 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
         title: values.title,
         description: values.description,
         category: values.category,
-        location: values.location,
-        address: values.address,
-        city: values.city,
-        is_online: values.is_online,
-        capacity: values.capacity,
         price: values.price,
         duration: values.duration,
         status: values.status,
@@ -156,6 +146,20 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
               )}
             />
 
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -179,17 +183,14 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
 
               <FormField
                 control={form.control}
-                name="capacity"
+                name="duration"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Capacity</FormLabel>
+                    <FormLabel>Duration (minutes)</FormLabel>
                     <FormControl>
                       <Input
-                        type="number"
+                        type="text"
                         {...field}
-                        onChange={(e) => {
-                          field.onChange(Number(e.target.value));
-                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -197,6 +198,27 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
                 )}
               />
             </div>
+
+            <FormField
+              control={form.control}
+              name="status"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Status</FormLabel>
+                  <FormControl>
+                    <select
+                      className="w-full p-2 border border-gray-300 rounded"
+                      {...field}
+                    >
+                      <option value="draft">Draft</option>
+                      <option value="published">Published</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
             <div className="mt-4 flex justify-end space-x-2">
               <Button type="button" variant="outline" onClick={onClose}>
