@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const featuredClasses: ClassItem[] = [
@@ -15,7 +16,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Ceramics",
     date: new Date('2024-04-15'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn the basics of pottery with hands-on instruction from an expert. Perfect for beginners."
   },
   { 
     id: 2, 
@@ -31,7 +33,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Advanced",
     category: "Painting",
     date: new Date('2024-04-20'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Take your oil painting skills to the next level with this advanced masterclass."
   },
   { 
     id: 3, 
@@ -47,7 +50,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Cooking",
     date: new Date('2024-04-25'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn to create authentic Italian cuisine with traditional recipes and techniques."
   },
   { 
     id: 4, 
@@ -63,7 +67,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Photography",
     date: new Date('2024-04-30'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Master the art of portrait photography with expert lighting and posing techniques."
   },
   { 
     id: 5, 
@@ -79,7 +84,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Woodworking",
     date: new Date('2024-05-05'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Get started with woodworking and learn to use essential tools and techniques for beginners."
   },
   { 
     id: 6, 
@@ -95,7 +101,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Jewelry",
     date: new Date('2024-05-10'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Create your own custom silver ring in this hands-on metalsmithing workshop."
   },
   { 
     id: 7, 
@@ -111,7 +118,8 @@ export const featuredClasses: ClassItem[] = [
     level: "Advanced",
     category: "Ceramics",
     date: new Date('2024-05-15'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Explore advanced sculptural techniques in clay with a focus on form and texture."
   },
   { 
     id: 8, 
@@ -127,6 +135,9 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Painting",
     date: new Date('2024-05-20'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Learn to paint beautiful watercolor landscapes with an emphasis on light and atmosphere."
   },
 ];
+
+export const featured = featuredClasses;

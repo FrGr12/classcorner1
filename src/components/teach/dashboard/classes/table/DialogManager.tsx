@@ -1,11 +1,9 @@
 
 import { useState } from 'react';
 import ClassDetailsDialog from "../ClassDetailsDialog";
-import EditClassDialog from "../dialogs/EditClassDialog";
+import { EditClassDialog } from "../dialogs/EditClassDialog";
 import MessageDialog from "../dialogs/MessageDialog";
 import ShareDialog from "../dialogs/ShareDialog";
-// Import or comment out the problematic import
-// import PromoteDialog from "../dialogs/PromoteDialog";
 import CancelCourseDialog from "../dialogs/CancelCourseDialog";
 import { ClassItem } from '@/types/class';
 
@@ -51,7 +49,7 @@ const DialogManager = ({ selectedDialog, setSelectedDialog, selectedClassId, cla
         <MessageDialog
           open={true}
           onOpenChange={handleCloseDialog}
-          classData={classData}
+          classId={selectedClassId}
         />
       )}
 
@@ -60,25 +58,20 @@ const DialogManager = ({ selectedDialog, setSelectedDialog, selectedClassId, cla
         <ShareDialog
           open={true}
           onOpenChange={handleCloseDialog}
-          classData={classData}
+          classId={selectedClassId}
         />
       )}
-
-      {/* Promote Dialog - Commented out as it has issues */}
-      {/* {selectedDialog === 'promote' && classData && (
-        <PromoteDialog
-          open={true}
-          onOpenChange={handleCloseDialog}
-          classData={classData}
-        />
-      )} */}
 
       {/* Cancel Dialog */}
       {selectedDialog === 'cancel' && classData && (
         <CancelCourseDialog
           open={true}
           onOpenChange={handleCloseDialog}
-          classData={classData}
+          onConfirm={async () => {
+            // This is a placeholder for the cancel course functionality
+            console.log("Cancelling course:", selectedClassId);
+            return true;
+          }}
         />
       )}
     </>

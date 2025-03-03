@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ClassItem } from "@/types/class";
 import { Table, TableBody } from "@/components/ui/table";
@@ -17,16 +18,8 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
   const {
     selectedClassId,
     setSelectedClassId,
-    isPromoteOpen,
-    setIsPromoteOpen,
-    isMessageOpen,
-    setIsMessageOpen,
-    isShareOpen,
-    setIsShareOpen,
-    isDetailsOpen,
-    setIsDetailsOpen,
-    isEditOpen,
-    setIsEditOpen,
+    selectedDialog,
+    setSelectedDialog,
     handleEditSuccess
   } = useTableDialogs(onAction);
 
@@ -34,31 +27,36 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const handleClassSelect = (classId: number) => {
     setSelectedClassId(classId);
-    setIsDetailsOpen(true);
+    setSelectedDialog('details');
   };
 
   const handleEdit = (e: React.MouseEvent, classId: number) => {
     e.stopPropagation();
     setSelectedClassId(classId);
-    setIsEditOpen(true);
+    setSelectedDialog('edit');
   };
 
   const handleMessage = (e: React.MouseEvent, classId: number) => {
     e.stopPropagation();
     setSelectedClassId(classId);
-    setIsMessageOpen(true);
+    setSelectedDialog('message');
   };
 
   const handlePromote = (e: React.MouseEvent, classId: number) => {
     e.stopPropagation();
     setSelectedClassId(classId);
-    setIsPromoteOpen(true);
+    setSelectedDialog('promote');
   };
 
   const handleShare = (e: React.MouseEvent, classId: number) => {
     e.stopPropagation();
     setSelectedClassId(classId);
-    setIsShareOpen(true);
+    setSelectedDialog('share');
+  };
+
+  const getSelectedClassData = (): ClassItem | null => {
+    if (!selectedClassId) return null;
+    return classes.find((c) => c.id === selectedClassId) || null;
   };
 
   return (
@@ -93,18 +91,10 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
       </Table>
 
       <DialogManager
+        selectedDialog={selectedDialog}
+        setSelectedDialog={setSelectedDialog}
         selectedClassId={selectedClassId}
-        isPromoteOpen={isPromoteOpen}
-        isMessageOpen={isMessageOpen}
-        isShareOpen={isShareOpen}
-        isDetailsOpen={isDetailsOpen}
-        isEditOpen={isEditOpen}
-        setIsPromoteOpen={setIsPromoteOpen}
-        setIsMessageOpen={setIsMessageOpen}
-        setIsShareOpen={setIsShareOpen}
-        setIsDetailsOpen={setIsDetailsOpen}
-        setIsEditOpen={setIsEditOpen}
-        onEditSuccess={handleEditSuccess}
+        classData={getSelectedClassData()}
       />
     </>
   );

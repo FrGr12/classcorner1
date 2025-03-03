@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const photographyClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const photographyClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-16'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Master the fundamentals of DSLR photography including exposure, composition, and camera settings."
   },
   {
     id: 2,
@@ -29,6 +31,9 @@ export const photographyClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-23'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Learn advanced techniques for capturing stunning portraits with natural and artificial lighting."
   },
 ];
+
+export const photography = photographyClasses;
