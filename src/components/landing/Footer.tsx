@@ -1,13 +1,11 @@
-
 const Footer = () => {
-  return (
-    <footer className="border-t border-neutral-200 bg-white">
+  return <footer className="border-t border-neutral-200 bg-white">
       <div className="container-padding py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           <div>
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-primary rounded-full"></div>
-              <span className="text-base sm:text-xl font-display text-neutral-800">classcorner</span>
+              
+              <span className="text-base sm:text-xl font-display text-accent-purple">classcorner</span>
             </div>
             <p className="text-neutral-600 text-sm">
               Connect with Local Craft Classes
@@ -60,8 +58,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
