@@ -68,10 +68,10 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="pt-20 sm:pt-24 md:pt-32">
+      <div className="pt-16 sm:pt-20 md:pt-24">
         <Hero />
       </div>
-      <div className="space-y-8 sm:space-y-12 md:space-y-16">
+      <div className="space-y-4 sm:space-y-8 md:space-y-12">
         <Categories />
         <Suspense fallback={<div className="container mx-auto px-4 py-16"><Skeleton className="h-96 w-full" /></div>}>
           <InstructorHighlights />
