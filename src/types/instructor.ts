@@ -1,6 +1,6 @@
 
 import { ClassItem } from "./class";
-import { UserType } from "./user";
+import { UserType, InstructorClassification } from "./user";
 
 /**
  * InstructorProfile represents a teacher's complete profile information
@@ -24,6 +24,7 @@ export interface InstructorProfile {
   totalReviews: number;
   totalStudents: number;
   totalClasses: number;
+  classification?: InstructorClassification;
   socialMedia?: {
     instagram?: string;
     linkedin?: string;

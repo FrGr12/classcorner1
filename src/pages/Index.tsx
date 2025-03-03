@@ -8,6 +8,7 @@ import Features from "@/components/landing/Features";
 import Footer from "@/components/landing/Footer";
 import TestimonialSection from "@/components/class-details/TestimonialSection";
 import { Skeleton } from "@/components/ui/skeleton";
+import InstructorBadge from "@/components/instructor-profile/InstructorBadge";
 
 // New component for the instructor highlights section
 const InstructorHighlights = () => {
@@ -20,27 +21,69 @@ const InstructorHighlights = () => {
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {/* Instructor Cards - These would ideally be populated from an API */}
-          {[1, 2, 3].map((id) => (
-            <a 
-              key={id} 
-              href={`/instructor/${id}`} 
-              className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col"
-            >
-              <div className="h-48 bg-neutral-200 relative">
-                <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
-                  Instructor Photo
-                </div>
+          {/* Instructor Cards - With classification badges */}
+          <a 
+            href="/instructor/1" 
+            className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col"
+          >
+            <div className="h-48 bg-neutral-200 relative">
+              <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                Instructor Photo
               </div>
-              <div className="p-5">
-                <h3 className="font-sans font-medium text-lg">Instructor Name</h3>
-                <p className="text-accent-purple font-medium">Specialty</p>
-                <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
-                  Passionate instructor with years of experience. Join their classes to learn hands-on skills in a supportive environment.
-                </p>
+            </div>
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-1">
+                <h3 className="font-sans font-medium text-lg">Sarah Johnson</h3>
+                <InstructorBadge classification="certified" size="sm" />
               </div>
-            </a>
-          ))}
+              <p className="text-accent-purple font-medium">Pottery Expert</p>
+              <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
+                Certified pottery instructor with 10+ years of experience teaching all skill levels. Join Sarah's classes for expert guidance in a supportive environment.
+              </p>
+            </div>
+          </a>
+          
+          <a 
+            href="/instructor/2" 
+            className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col"
+          >
+            <div className="h-48 bg-neutral-200 relative">
+              <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                Instructor Photo
+              </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-1">
+                <h3 className="font-sans font-medium text-lg">Michael Chen</h3>
+                <InstructorBadge classification="host" size="sm" />
+              </div>
+              <p className="text-accent-purple font-medium">Cooking Enthusiast</p>
+              <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
+                Passionate home cook sharing family recipes and cooking techniques. Michael's classes are perfect for those wanting to learn authentic Asian cuisine.
+              </p>
+            </div>
+          </a>
+          
+          <a 
+            href="/instructor/3" 
+            className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex flex-col"
+          >
+            <div className="h-48 bg-neutral-200 relative">
+              <div className="absolute inset-0 flex items-center justify-center text-neutral-400">
+                Instructor Photo
+              </div>
+            </div>
+            <div className="p-5">
+              <div className="flex items-start justify-between gap-1">
+                <h3 className="font-sans font-medium text-lg">Emma Wilson</h3>
+                <InstructorBadge classification="certified" size="sm" />
+              </div>
+              <p className="text-accent-purple font-medium">Photography Pro</p>
+              <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
+                Award-winning photographer with a focus on teaching practical skills. Emma's classes cover everything from basic techniques to advanced editing.
+              </p>
+            </div>
+          </a>
         </div>
         
         <div className="text-center mt-10">

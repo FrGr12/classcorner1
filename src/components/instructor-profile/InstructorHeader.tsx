@@ -2,6 +2,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { InstructorProfile } from "@/types/instructor";
+import InstructorBadge from "./InstructorBadge";
 
 interface InstructorHeaderProps {
   instructor: InstructorProfile;
@@ -19,7 +20,12 @@ const InstructorHeader = ({ instructor }: InstructorHeaderProps) => {
       
       <div className="space-y-2 sm:space-y-4 text-center sm:text-left">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{instructor.displayName}</h1>
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
+            <h1 className="text-2xl sm:text-3xl font-bold">{instructor.displayName}</h1>
+            {instructor.classification && (
+              <InstructorBadge classification={instructor.classification} />
+            )}
+          </div>
           <p className="text-neutral-600 mt-1">{instructor.location}</p>
         </div>
         
