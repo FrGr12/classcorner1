@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const flowerClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const flowerClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-25'),
-    city: "Stockholm",
-    description: "Learn how to create stunning flower arrangements with professional florist Rose Garden."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,10 +29,6 @@ export const flowerClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-05-02'),
-    city: "Uppsala",
-    description: "Master the essentials of indoor and outdoor plant care in this informative workshop."
+    city: "Uppsala"
   },
 ];
-
-// Export for compatibility with mockClasses.ts
-export const flower = flowerClasses;

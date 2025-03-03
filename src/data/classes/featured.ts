@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const featuredClasses: ClassItem[] = [
@@ -16,8 +15,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Ceramics",
     date: new Date('2024-04-15'),
-    city: "Stockholm",
-    description: "Learn the basics of pottery with expert instructor Jane Smith in this hands-on workshop."
+    city: "Stockholm"
   },
   { 
     id: 2, 
@@ -33,8 +31,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Advanced",
     category: "Painting",
     date: new Date('2024-04-20'),
-    city: "Gothenburg",
-    description: "Develop advanced oil painting techniques with master artist Robert Ross."
+    city: "Gothenburg"
   },
   { 
     id: 3, 
@@ -50,8 +47,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Cooking",
     date: new Date('2024-04-25'),
-    city: "Stockholm",
-    description: "Learn to prepare authentic Italian dishes with Chef Marco Rossi."
+    city: "Stockholm"
   },
   { 
     id: 4, 
@@ -67,8 +63,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Photography",
     date: new Date('2024-04-30'),
-    city: "Gothenburg",
-    description: "Master the art of portrait photography with professional photographer Sarah Lee."
+    city: "Gothenburg"
   },
   { 
     id: 5, 
@@ -84,8 +79,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Beginner",
     category: "Woodworking",
     date: new Date('2024-05-05'),
-    city: "Stockholm",
-    description: "Learn essential woodworking skills and create your own wooden project."
+    city: "Stockholm"
   },
   { 
     id: 6, 
@@ -101,8 +95,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Jewelry",
     date: new Date('2024-05-10'),
-    city: "Gothenburg",
-    description: "Design and create your own unique silver ring in this hands-on jewelry workshop."
+    city: "Gothenburg"
   },
   { 
     id: 7, 
@@ -118,8 +111,7 @@ export const featuredClasses: ClassItem[] = [
     level: "Advanced",
     category: "Ceramics",
     date: new Date('2024-05-15'),
-    city: "Stockholm",
-    description: "Create complex ceramic sculptures with advanced techniques and expert guidance."
+    city: "Stockholm"
   },
   { 
     id: 8, 
@@ -135,10 +127,6 @@ export const featuredClasses: ClassItem[] = [
     level: "Intermediate",
     category: "Painting",
     date: new Date('2024-05-20'),
-    city: "Gothenburg",
-    description: "Paint beautiful watercolor landscapes with guidance from professional artist Maria Chen."
+    city: "Gothenburg"
   },
 ];
-
-// Export for compatibility with mockClasses.ts
-export const featured = featuredClasses;

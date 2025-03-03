@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const cocktailClasses: ClassItem[] = [
@@ -16,8 +15,7 @@ export const cocktailClasses: ClassItem[] = [
     level: "Beginner",
     category: "Cocktail & Wine",
     date: new Date('2024-04-18'),
-    city: "Stockholm",
-    description: "Learn the basics of cocktail making, including bar tools, basic spirits, mixing techniques, and classic recipes."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -33,9 +31,6 @@ export const cocktailClasses: ClassItem[] = [
     level: "Beginner",
     category: "Cocktail & Wine",
     date: new Date('2024-04-25'),
-    city: "Gothenburg",
-    description: "Discover the art of wine tasting with a professional sommelier. Learn about different varietals, regions, and how to properly taste and identify flavors."
+    city: "Gothenburg"
   },
 ];
-
-export const cocktail = cocktailClasses;

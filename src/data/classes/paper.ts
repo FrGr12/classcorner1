@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const paperClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const paperClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-24'),
-    city: "Stockholm",
-    description: "Learn the beautiful art of origami with expert instruction from Yuki Paper."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,10 +29,6 @@ export const paperClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-05-01'),
-    city: "Uppsala",
-    description: "Master the intricate art of paper quilling in this hands-on workshop with Anna Craft."
+    city: "Uppsala"
   },
 ];
-
-// Export for compatibility with mockClasses.ts
-export const paper = paperClasses;

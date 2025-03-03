@@ -1,4 +1,3 @@
-
 import React from "react";
 import { ClassItem } from "@/types/class";
 import { Table, TableBody } from "@/components/ui/table";

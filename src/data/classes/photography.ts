@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const photographyClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const photographyClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-16'),
-    city: "Stockholm",
-    description: "Master your DSLR camera and learn fundamentals of photography in this hands-on class."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,10 +29,6 @@ export const photographyClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-23'),
-    city: "Gothenburg",
-    description: "Learn the art of capturing stunning portraits with professional photographer Sarah Frame."
+    city: "Gothenburg"
   },
 ];
-
-// Export for compatibility with mockClasses.ts
-export const photography = photographyClasses;

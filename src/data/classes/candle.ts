@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const candleClasses: ClassItem[] = [
@@ -16,8 +15,7 @@ export const candleClasses: ClassItem[] = [
     level: "Beginner",
     category: "Candle Making",
     date: new Date('2024-04-19'),
-    city: "Uppsala",
-    description: "Learn to make beautiful and eco-friendly soy candles. This workshop covers wax selection, fragrances, coloring, and container choices."
+    city: "Uppsala"
   },
   {
     id: 2,
@@ -33,9 +31,6 @@ export const candleClasses: ClassItem[] = [
     level: "Advanced",
     category: "Candle Making",
     date: new Date('2024-04-26'),
-    city: "Stockholm",
-    description: "Take your candle-making skills to the next level with this advanced workshop. Learn layering techniques, embedding objects, and custom molds."
+    city: "Stockholm"
   },
 ];
-
-export const candle = candleClasses;

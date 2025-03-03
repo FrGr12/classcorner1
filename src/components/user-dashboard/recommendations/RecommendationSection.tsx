@@ -1,107 +1,146 @@
 
-import { useState, useEffect } from "react";
-import { ClassPreview } from "@/types/class";
-import ClassCard from "@/components/landing/ClassCard";
-import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Loader2 } from "lucide-react";
+import SectionWrapper from "../overview/SectionWrapper";
+import ClassesGrid from "../overview/ClassesGrid";
+import type { ClassPreview } from "@/types/class";
 
 const RecommendationSection = () => {
-  const [recommendedClasses, setRecommendedClasses] = useState<ClassPreview[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [recommendations, setRecommendations] = useState<ClassPreview[]>([]);
+  const [alternativeClasses, setAlternativeClasses] = useState<ClassPreview[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
 
-  // Mock data for demonstration
-  const mockRecommendations: ClassPreview[] = [
+  const dummyRecommendations: ClassPreview[] = [
     {
-      id: 101,
-      title: "Ceramic Bowl Making",
-      instructor: "Maya Johnson",
-      price: 79,
+      id: 4,
+      title: "Digital Photography Masterclass",
+      instructor: "Alex Thompson",
+      price: 95,
+      rating: 4.9,
+      images: ["https://images.unsplash.com/photo-1452587925148-ce544e77e70d"],
+      level: "Intermediate",
+      date: new Date("2024-04-01"),
+      city: "Chicago",
+      category: "Photography"
+    },
+    {
+      id: 5,
+      title: "Floral Design Workshop",
+      instructor: "Jessica Lee",
+      price: 85,
       rating: 4.8,
-      images: ["https://images.unsplash.com/photo-1493106641515-6b5631de4bb9"],
+      images: ["https://images.unsplash.com/photo-1526047932273-341f2a7631f9"],
+      level: "Beginner",
+      date: new Date("2024-04-05"),
+      city: "Portland",
+      category: "Floral Design"
+    }
+  ];
+
+  const dummyAlternatives: ClassPreview[] = [
+    {
+      id: 6,
+      title: "Oil Painting for Beginners",
+      instructor: "Robert Chen",
+      price: 78,
+      rating: 4.7,
+      images: ["https://images.unsplash.com/photo-1579783900882-c0d3dad7b119"],
       level: "Beginner",
       date: new Date("2024-04-10"),
-      city: "San Francisco",
-      category: "Pottery",
-      description: "Learn the basics of hand-building a beautiful ceramic bowl. Perfect for beginners wanting to get their hands dirty with clay."
+      city: "Seattle",
+      category: "Painting"
     },
     {
-      id: 102,
-      title: "Natural Soap Making",
-      instructor: "Daniel Green",
-      price: 55,
+      id: 7,
+      title: "Ceramic Bowl Making",
+      instructor: "Maria Garcia",
+      price: 82,
       rating: 4.9,
-      images: ["https://images.unsplash.com/photo-1624454002302-52288334e6af"],
+      images: ["https://images.unsplash.com/photo-1565193298357-c394a6bf6519"],
       level: "Beginner",
       date: new Date("2024-04-15"),
-      city: "Portland",
-      category: "Crafts",
-      description: "Create your own natural, handmade soaps using essential oils and botanical ingredients. Take home 3 beautiful bars to enjoy."
-    },
-    {
-      id: 103,
-      title: "Macramé Wall Hanging",
-      instructor: "Olivia Knot",
-      price: 65,
-      rating: 4.7,
-      images: ["https://images.unsplash.com/photo-1526304640581-d334cdbbf45e"],
-      level: "Intermediate",
-      date: new Date("2024-04-20"),
       city: "Austin",
-      category: "Textile",
-      description: "Learn various macramé knots and techniques to create a beautiful wall hanging. This workshop is perfect for those with some basic crafting experience."
-    },
-    {
-      id: 104,
-      title: "Italian Pasta Making",
-      instructor: "Marco Rossi",
-      price: 85,
-      rating: 4.9,
-      images: ["https://images.unsplash.com/photo-1556760544-74068565f05c"],
-      level: "Beginner",
-      date: new Date("2024-04-12"),
-      city: "Chicago",
-      category: "Cooking",
-      description: "Learn authentic Italian techniques for making fresh pasta from scratch. You'll create three different pasta shapes and classic sauces."
+      category: "Ceramics"
     }
   ];
 
   useEffect(() => {
-    // Simulate API call
-    setTimeout(() => {
-      setRecommendedClasses(mockRecommendations);
-      setIsLoading(false);
-    }, 800);
-  }, []);
+    const loadRecommendations = async () => {
+      try {
+        // Simulate API call
+        await new Promise(resolve => setTimeout(resolve, 1500));
+        setRecommendations(dummyRecommendations);
+        setAlternativeClasses(dummyAlternatives);
+      } catch (error) {
+        toast({
+          title: "Error loading recommendations",
+          description: "Please try refreshing the page.",
+          variant: "destructive"
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  if (isLoading) {
+    loadRecommendations();
+  }, [toast]);
+
+  if (loading) {
     return (
-      <div className="space-y-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-xl font-medium">Recommended for You</h3>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[...Array(4)].map((_, i) => (
-            <Card key={i} className="animate-pulse h-64 bg-gray-100" />
-          ))}
-        </div>
+      <div className="space-y-6">
+        <SectionWrapper
+          title="Recommended For You"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <div className="flex items-center justify-center p-12">
+            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          </div>
+        </SectionWrapper>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-medium">Recommended for You</h3>
-        <Button variant="ghost" className="text-primary flex items-center gap-1">
-          View all <ArrowRight className="h-4 w-4" />
-        </Button>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {recommendedClasses.map((classItem) => (
-          <ClassCard key={classItem.id} {...classItem} />
-        ))}
-      </div>
+    <div className="space-y-6">
+      {recommendations.length > 0 && (
+        <SectionWrapper
+          title="Recommended For You"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <ClassesGrid
+            classes={recommendations}
+            emptyMessage="No recommendations available yet"
+          />
+        </SectionWrapper>
+      )}
+
+      {alternativeClasses.length > 0 && (
+        <SectionWrapper
+          title="Similar Classes You Might Like"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <ClassesGrid
+            classes={alternativeClasses}
+            emptyMessage="No similar classes found"
+          />
+        </SectionWrapper>
+      )}
+
+      {recommendations.length === 0 && alternativeClasses.length === 0 && !loading && (
+        <SectionWrapper 
+          title="Recommendations"
+          viewAllLink="/student-dashboard/recommendations"
+        >
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">
+              No recommendations available yet. Try browsing more classes or updating your preferences.
+            </p>
+          </div>
+        </SectionWrapper>
+      )}
     </div>
   );
 };

@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const jewelleryClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const jewelleryClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-22'),
-    city: "Stockholm",
-    description: "Create your own beautiful silver ring in this hands-on jewelry making workshop."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,10 +29,6 @@ export const jewelleryClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-29'),
-    city: "Gothenburg",
-    description: "Explore metal smithing techniques and create unique jewelry pieces in this intermediate class."
+    city: "Gothenburg"
   },
 ];
-
-// Export for compatibility with mockClasses.ts
-export const jewellery = jewelleryClasses;

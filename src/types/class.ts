@@ -11,20 +11,16 @@ export interface ClassItem {
   category?: string;
   date: Date | Date[];
   city: string;
-  description: string; // Required field
-  address?: string;
-  is_online?: boolean;
+  description: string;
   maxParticipants?: number;
   minParticipants?: number;
-  min_participants?: number;
-  max_participants?: number;
   waitlist_enabled?: boolean;
   max_waitlist_size?: number;
   groupBookingsEnabled?: boolean;
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string; // String type to match DB schema
+  duration?: number | string;
   shareCount?: number;
   lastShared?: string;
   views?: number;
@@ -32,10 +28,6 @@ export interface ClassItem {
   adClicks?: number;
   instructorEmail?: string;
   instructorPhone?: string;
-  learning_outcomes?: string[];
-  requirements?: string[];
-  items_to_bring?: string[];
-  status?: "draft" | "published" | "archived";
 }
 
 export interface ClassData {
@@ -53,5 +45,4 @@ export interface ClassPreview {
   date: Date;
   city: string;
   category?: string;
-  description: string; // Required field
 }
