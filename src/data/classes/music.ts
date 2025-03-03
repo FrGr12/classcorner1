@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const musicClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const musicClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-17'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Start your musical journey with this beginner-friendly guitar class for all ages."
   },
   {
     id: 2,
@@ -29,6 +31,10 @@ export const musicClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-24'),
-    city: "Malmö"
+    city: "Malmö",
+    description: "Learn the fundamentals of Latin dance styles in this energetic and fun class."
   },
 ];
+
+// Export for compatibility with mockClasses.ts
+export const music = musicClasses;

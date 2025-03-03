@@ -24,37 +24,37 @@ const getClassById = (classId: number | null): ClassItem | null => {
     date: new Date(),
     city: "New York",
     category: "arts",
-    description: "A demo class for testing purposes" // Adding required description field
+    description: "A demo class for testing purposes"
   };
 };
 
 interface DialogManagerProps {
   selectedClassId: number | null;
-  isPromoteOpen: boolean;
-  isMessageOpen: boolean;
-  isShareOpen: boolean;
   isDetailsOpen: boolean;
   isEditOpen: boolean;
-  setIsPromoteOpen: (isOpen: boolean) => void;
-  setIsMessageOpen: (isOpen: boolean) => void;
-  setIsShareOpen: (isOpen: boolean) => void;
+  isMessageOpen: boolean;
+  isShareOpen: boolean;
+  isPromoteOpen: boolean;
   setIsDetailsOpen: (isOpen: boolean) => void;
   setIsEditOpen: (isOpen: boolean) => void;
+  setIsMessageOpen: (isOpen: boolean) => void;
+  setIsShareOpen: (isOpen: boolean) => void;
+  setIsPromoteOpen: (isOpen: boolean) => void;
   onEditSuccess: () => void;
 }
 
 const DialogManager = ({
   selectedClassId,
-  isPromoteOpen,
-  isMessageOpen,
-  isShareOpen,
   isDetailsOpen,
   isEditOpen,
-  setIsPromoteOpen,
-  setIsMessageOpen,
-  setIsShareOpen,
+  isMessageOpen,
+  isShareOpen,
+  isPromoteOpen,
   setIsDetailsOpen,
   setIsEditOpen,
+  setIsMessageOpen,
+  setIsShareOpen,
+  setIsPromoteOpen,
   onEditSuccess
 }: DialogManagerProps) => {
   const selectedClass = getClassById(selectedClassId);
@@ -65,9 +65,9 @@ const DialogManager = ({
     <>
       {isDetailsOpen && (
         <ClassDetailsDialog
-          classData={selectedClass}
           open={isDetailsOpen}
           onOpenChange={setIsDetailsOpen}
+          classId={selectedClass.id}
         />
       )}
 
@@ -90,25 +90,24 @@ const DialogManager = ({
 
       {isShareOpen && (
         <ShareDialog
-          classData={selectedClass}
+          classId={selectedClass.id}
           open={isShareOpen}
           onOpenChange={setIsShareOpen}
         />
       )}
 
-      {isPromoteOpen && (
-        {/* Temporarily commenting out PromoteDialog since it can't be found */}
-        {/* <PromoteDialog
-          classData={selectedClass}
+      {/* Temporarily commenting out since it can't be found */}
+      {/* {isPromoteOpen && (
+        <PromoteDialog
+          classId={selectedClass.id}
           open={isPromoteOpen}
           onOpenChange={setIsPromoteOpen}
-        /> */}
-      )}
+        />
+      )} */}
       
-      {/* CancelCourseDialog temporarily commented out */}
       {/* {isPromoteOpen && (
         <CancelCourseDialog
-          classData={selectedClass}
+          classId={selectedClass.id}
           open={isPromoteOpen}
           onOpenChange={setIsPromoteOpen}
         />

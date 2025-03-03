@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const woodClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-21'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn the fundamentals of woodworking in this hands-on class for beginners."
   },
   {
     id: 2,
@@ -29,6 +31,10 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-28'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Create your own furniture piece in this comprehensive woodworking class."
   },
 ];
+
+// Export for compatibility with mockClasses.ts
+export const wood = woodClasses;

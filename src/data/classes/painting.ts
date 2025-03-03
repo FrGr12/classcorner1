@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const paintingClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const paintingClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-20'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Master the fundamentals of oil painting with renowned artist Robert Ross."
   },
   { 
     id: 2, 
@@ -29,6 +31,10 @@ export const paintingClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-22'),
-    city: "Gothenburg"
+    city: "Gothenburg",
+    description: "Explore advanced watercolor techniques and create beautiful paintings with professional artist Maria Chen."
   },
 ];
+
+// Export for compatibility with mockClasses.ts
+export const painting = paintingClasses;

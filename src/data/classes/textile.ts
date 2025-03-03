@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 export const textileClasses: ClassItem[] = [
@@ -14,7 +15,8 @@ export const textileClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-23'),
-    city: "Stockholm"
+    city: "Stockholm",
+    description: "Learn the basics of knitting in this welcoming class for complete beginners."
   },
   {
     id: 2,
@@ -29,6 +31,10 @@ export const textileClasses: ClassItem[] = [
     ],
     level: "Advanced",
     date: new Date('2024-04-30'),
-    city: "Malmö"
+    city: "Malmö",
+    description: "Take your weaving skills to the next level with advanced techniques and patterns."
   },
 ];
+
+// Export for compatibility with mockClasses.ts
+export const textile = textileClasses;
