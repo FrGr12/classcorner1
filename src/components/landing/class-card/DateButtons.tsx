@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Calendar } from "lucide-react";
+import { memo, useCallback } from "react";
 
 export interface DateButtonsProps {
   dates: Date[];
@@ -15,7 +16,8 @@ export interface DateButtonsProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const DateButtons = ({ 
+// Memoize the component to prevent unnecessary re-renders
+const DateButtons = memo(({ 
   dates, 
   price, 
   classId, 
@@ -27,10 +29,13 @@ const DateButtons = ({
   const navigate = useNavigate();
   const location = useLocation();
   const isDetailsPage = location.pathname.includes('/class/');
+  
+  // Memoized values that don't need to be recalculated on every render
   const visibleDates = dates.slice(0, 2);
   const hasMoreDates = dates.length > 2;
 
-  const handleDateClick = (date: Date, e: React.MouseEvent) => {
+  // Memoize handlers to prevent recreation on each render
+  const handleDateClick = useCallback((date: Date, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (onDateSelect) {
@@ -40,12 +45,18 @@ const DateButtons = ({
         state: { selectedDate: date }
       });
     }
-  };
+  }, [onDateSelect, classId, category, navigate]);
 
-  const isSelected = (date: Date) => {
+  const handleViewMoreDates = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    classId && category && navigate(`/class/${category}/${classId}`);
+  }, [classId, category, navigate]);
+
+  const isSelected = useCallback((date: Date) => {
     if (!selectedDate) return false;
     return format(new Date(date), 'yyyy-MM-dd') === format(new Date(selectedDate), 'yyyy-MM-dd');
-  };
+  }, [selectedDate]);
 
   if (isDetailsPage) {
     return (
@@ -74,6 +85,7 @@ const DateButtons = ({
                 variant={isSelected(date) ? "default" : "outline"}
                 className={`${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
                 onClick={(e) => handleDateClick(date, e)}
+                aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
                 Book Now
               </Button>
@@ -85,11 +97,8 @@ const DateButtons = ({
             <Button
               variant="ghost"
               className="w-full flex items-center justify-center gap-2 text-base"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                classId && category && navigate(`/class/${category}/${classId}`);
-              }}
+              onClick={handleViewMoreDates}
+              aria-label="View all available class dates"
             >
               <Calendar className="w-5 h-5" />
               View more dates
@@ -110,6 +119,7 @@ const DateButtons = ({
             size="sm"
             className="text-xs w-full bg-white hover:bg-neutral-50 border-neutral-200"
             onClick={(e) => handleDateClick(date, e)}
+            aria-label={`Select ${format(new Date(date), 'MMM d')}`}
           >
             {format(new Date(date), 'EEE, d MMM')}
           </Button>
@@ -119,11 +129,8 @@ const DateButtons = ({
             variant="ghost"
             size="sm"
             className="text-xs w-full flex items-center justify-center gap-1"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              classId && category && navigate(`/class/${category}/${classId}`);
-            }}
+            onClick={handleViewMoreDates}
+            aria-label="View more class dates"
           >
             <Calendar className="w-3 h-3" />
             View more dates
@@ -132,6 +139,9 @@ const DateButtons = ({
       </div>
     </div>
   );
-};
+});
+
+// Add display name for debugging purposes
+DateButtons.displayName = "DateButtons";
 
 export default DateButtons;

@@ -2,7 +2,7 @@ import { Clock, MapPin, Users, Star, Edit, MessageCircle, Phone, Mail } from "lu
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback, memo } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { handleError } from "@/utils/errorHandler";
@@ -16,10 +16,7 @@ interface ClassHeaderProps {
   onBooking: () => void;
 }
 
-const ClassHeader = ({
-  classItem,
-  onBooking
-}: ClassHeaderProps) => {
+const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
   const navigate = useNavigate();
   const [isInstructor, setIsInstructor] = useState(false);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
@@ -44,48 +41,32 @@ const ClassHeader = ({
     fetchData();
   }, [classItem.id]);
 
-  const checkInstructor = async () => {
+  const checkInstructor = useCallback(async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const {
-        data: course
-      } = await supabase.from("courses").select("instructor_id").eq("id", classItem.id).single();
+      const { data: course } = await supabase.from("courses").select("instructor_id").eq("id", classItem.id).single();
       setIsInstructor(course?.instructor_id === user.id);
     } catch (error) {
       throw new Error("Failed to verify instructor status");
     }
-  };
+  }, [classItem.id]);
 
-  const checkFollowStatus = async () => {
+  const checkFollowStatus = useCallback(async () => {
     try {
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const {
-        data: followData
-      } = await supabase.from("teacher_follows").select("id").eq("student_id", user.id).eq("teacher_id", classItem.instructor_id).eq("status", "active").single();
+      const { data: followData } = await supabase.from("teacher_follows").select("id").eq("student_id", user.id).eq("teacher_id", classItem.instructor_id).eq("status", "active").single();
       setIsFollowing(!!followData);
     } catch (error) {
       console.error("Error checking follow status:", error);
     }
-  };
+  }, [classItem.instructor_id]);
 
-  const handlePrivateRequest = async () => {
+  const handlePrivateRequest = useCallback(async () => {
     try {
       setIsLoading(true);
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to request a private class"
@@ -97,9 +78,7 @@ const ClassHeader = ({
         });
         return;
       }
-      const {
-        error: messageError
-      } = await supabase.from("communications").insert({
+      const { error: messageError } = await supabase.from("communications").insert({
         student_id: user.id,
         instructor_id: classItem.instructor_id,
         course_id: classItem.id,
@@ -121,16 +100,12 @@ const ClassHeader = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [classItem.id, classItem.instructor_id, navigate, privateMessage]);
 
-  const handleFollow = async () => {
+  const handleFollow = useCallback(async () => {
     try {
       setIsLoading(true);
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to follow instructors"
@@ -162,16 +137,12 @@ const ClassHeader = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [isFollowing, classItem.instructor_id, navigate]);
 
-  const handleAskQuestion = async () => {
+  const handleAskQuestion = useCallback(async () => {
     try {
       setIsLoading(true);
-      const {
-        data: {
-          user
-        }
-      } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to ask a question"
@@ -183,9 +154,7 @@ const ClassHeader = ({
         });
         return;
       }
-      const {
-        error: questionError
-      } = await supabase.from("communications").insert({
+      const { error: questionError } = await supabase.from("communications").insert({
         student_id: user.id,
         instructor_id: classItem.instructor_id,
         course_id: classItem.id,
@@ -194,9 +163,7 @@ const ClassHeader = ({
         status: "pending"
       });
       if (questionError) throw questionError;
-      const {
-        error: notificationError
-      } = await supabase.from("notification_logs").insert({
+      const { error: notificationError } = await supabase.from("notification_logs").insert({
         user_id: classItem.instructor_id,
         notification_type: "question",
         content: `New question from a student about ${classItem.title}`,
@@ -217,26 +184,26 @@ const ClassHeader = ({
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [question, classItem.id, classItem.instructor_id, classItem.title, navigate]);
 
-  const handleQuestion = () => {
+  const handleQuestion = useCallback(() => {
     navigate(`/community/post/new?courseId=${classItem.id}&type=question`);
-  };
+  }, [classItem.id, navigate]);
 
-  const scrollToReviews = () => {
+  const scrollToReviews = useCallback(() => {
     const reviewsSection = document.getElementById('reviews-section');
     if (reviewsSection) {
       reviewsSection.scrollIntoView({
         behavior: 'smooth'
       });
     }
-  };
+  }, []);
 
-  const getParticipantRange = () => {
+  const getParticipantRange = useCallback(() => {
     const min = classItem.minParticipants ?? 1;
     const max = classItem.maxParticipants ?? 10;
     return `${min}-${max} people`;
-  };
+  }, [classItem.minParticipants, classItem.maxParticipants]);
 
   return <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4 text-left">
@@ -379,6 +346,6 @@ const ClassHeader = ({
         </DialogContent>
       </Dialog>
     </div>;
-};
+});
 
 export default ClassHeader;
