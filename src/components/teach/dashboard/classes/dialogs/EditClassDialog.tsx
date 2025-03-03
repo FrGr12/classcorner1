@@ -63,8 +63,8 @@ export const EditClassDialog: React.FC<EditClassDialogProps> = ({
       duration: typeof classData.duration === 'number' 
         ? String(classData.duration) 
         : (classData.duration || "60"),
-      // Default to draft if status is missing
-      status: (classData.status as "draft" | "published" | "archived") || "draft",
+      // Since status doesn't exist in ClassItem, provide a default value
+      status: "draft" as "draft" | "published" | "archived",
     },
   });
 
