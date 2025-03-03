@@ -31,8 +31,8 @@ const DateButtons = memo(({
   const isDetailsPage = location.pathname.includes('/class/');
   
   // Memoized values that don't need to be recalculated on every render
-  const visibleDates = dates.slice(0, 2);
-  const hasMoreDates = dates.length > 2;
+  const visibleDates = dates.slice(0, isDetailsPage ? 3 : 2);
+  const hasMoreDates = dates.length > (isDetailsPage ? 3 : 2);
 
   // Memoize handlers to prevent recreation on each render
   const handleDateClick = useCallback((date: Date, e: React.MouseEvent) => {
@@ -60,11 +60,11 @@ const DateButtons = memo(({
 
   if (isDetailsPage) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {visibleDates.map((date, index) => (
           <div 
             key={index}
-            className={`p-4 bg-white rounded-lg border ${isSelected(date) ? 'border-accent-purple' : 'border-neutral-200'} hover:border-accent-purple transition-colors`}
+            className={`p-3 sm:p-4 bg-white rounded-lg border ${isSelected(date) ? 'border-accent-purple' : 'border-neutral-200'} hover:border-accent-purple transition-colors`}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -83,11 +83,11 @@ const DateButtons = memo(({
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                className={`${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
+                className={`ml-2 ${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
                 onClick={(e) => handleDateClick(date, e)}
                 aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
-                Book Now
+                Book
               </Button>
             </div>
           </div>

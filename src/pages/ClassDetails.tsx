@@ -80,7 +80,7 @@ const ClassDetails = () => {
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 mt-6 sm:mt-8">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
-          <div id="dates-section">
+          <div id="dates-section" className="mt-2 sm:mt-4">
             <ClassDates 
               classItem={classItem} 
               selectedDate={selectedDate}

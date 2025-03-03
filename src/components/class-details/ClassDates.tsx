@@ -37,15 +37,15 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
   
   return (
     <>
-      <Separator className="my-6" />
-      <div className="space-y-4">
+      <Separator className="my-4 sm:my-6" />
+      <div className="space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-medium">Available Dates</h3>
         </div>
         
         {selectedDate && (
-          <div className="p-4 bg-neutral-50 rounded-lg">
-            <h4 className="font-medium mb-2">Selected Date:</h4>
+          <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg">
+            <h4 className="font-medium mb-1 sm:mb-2">Selected Date:</h4>
             <p className="text-neutral-600">
               {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}
             </p>
@@ -55,14 +55,16 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
           </div>
         )}
         
-        <DateButtons 
-          dates={dates}
-          price={classItem.price}
-          selectedDate={selectedDate}
-          classId={classItem.id}
-          category={classItem.category}
-          onDateSelect={handleBooking}
-        />
+        <div className="mt-2">
+          <DateButtons 
+            dates={dates}
+            price={classItem.price}
+            selectedDate={selectedDate}
+            classId={classItem.id}
+            category={classItem.category}
+            onDateSelect={handleBooking}
+          />
+        </div>
       </div>
     </>
   );
