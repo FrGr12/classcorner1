@@ -45,13 +45,15 @@ const CreateClassForm = ({
       is_online: false,
       capacity: 1,
       price: 0,
-      duration: "60", // Store as string to match database
+      duration: "60", // Consistently use string for duration
       sessions: [],
       learning_outcomes: [''],
       requirements: [''],
       items_to_bring: [''],
       images: [],
       status: 'draft',
+      maxParticipants: 10,
+      minParticipants: 1
     },
     mode: "onChange",
   });
@@ -86,7 +88,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: formValues.duration.toString(), // Ensure duration is a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -94,6 +96,8 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
+        max_participants: formValues.maxParticipants,
+        min_participants: formValues.minParticipants,
         status: "draft",
         images: formValues.images,
         sessions: formValues.sessions
@@ -136,7 +140,7 @@ const CreateClassForm = ({
         category: formValues.category || 'Uncategorized',
         location: formValues.location || 'Unknown',
         price: formValues.price || 0,
-        duration: formValues.duration, // Already correct type
+        duration: formValues.duration.toString(), // Ensure duration is a string
         capacity: formValues.capacity,
         is_online: formValues.is_online,
         address: formValues.address,
@@ -144,6 +148,8 @@ const CreateClassForm = ({
         learning_outcomes: formValues.learning_outcomes,
         requirements: formValues.requirements,
         items_to_bring: formValues.items_to_bring,
+        max_participants: formValues.maxParticipants,
+        min_participants: formValues.minParticipants,
         status: "published",
         images: formValues.images,
         sessions: formValues.sessions

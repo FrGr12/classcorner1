@@ -18,33 +18,26 @@ export const useCourseFormData = (form: UseFormReturn<CourseFormValues>) => {
         // Simulate API call to load course data
         await new Promise(resolve => setTimeout(resolve, 500));
 
-        // Simulate loaded data
+        // Simulate loaded data with proper types
         const mockData = {
           title: "Introduction to Pottery",
           description: "Learn the basics of pottery making in this hands-on class.",
           category: "arts-and-crafts",
           location: "studio",
-          locationType: "inPerson" as const,
           address: "123 Studio Street",
           city: "Portland",
-          state: "OR",
-          zipCode: "97201",
-          onlineLink: "",
-          classDetails: "All materials included. No experience necessary.",
-          difficultyLevel: "beginner" as const,
-          price: "75",
-          capacity: "10",
+          is_online: false,
+          price: 75,
+          capacity: 10,
+          duration: "180", // Store as string
+          sessions: [],
+          learning_outcomes: ["Create a small ceramic bowl", "Learn basic glazing techniques"],
+          requirements: ["No experience necessary"],
+          items_to_bring: ["Comfortable clothes", "Water bottle"],
+          images: [],
+          status: "draft" as const,
           minParticipants: 3,
-          maxParticipants: 10,
-          images: [] as string[],
-          scheduleType: "oneTime" as const,
-          startDate: "",
-          endDate: "",
-          startTime: "10:00",
-          endTime: "13:00",
-          recurringDays: [],
-          whatToBring: ["Comfortable clothes", "Water bottle"],
-          learningOutcomes: ["Create a small ceramic bowl", "Learn basic glazing techniques"],
+          maxParticipants: 10
         };
 
         // Reset form with loaded data

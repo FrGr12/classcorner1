@@ -11,13 +11,17 @@ export const CreateClassSchema = z.object({
   is_online: z.boolean().default(false),
   capacity: z.number().int().positive().default(1),
   price: z.number().nonnegative().default(0),
-  duration: z.string().or(z.number()).default("60"), // Accept both string and number
+  // Always store duration as string to match database requirements
+  duration: z.string().default("60"),
   sessions: z.array(z.any()).default([]),
   learning_outcomes: z.array(z.string()).default(['']),
   requirements: z.array(z.string()).default(['']),
   items_to_bring: z.array(z.string()).default(['']),
   images: z.array(z.any()).default([]),
   status: z.enum(["draft", "published"]).default("draft"),
+  // Add min/max participants for consistency
+  maxParticipants: z.number().int().positive().optional(),
+  minParticipants: z.number().int().positive().optional()
 });
 
 export type CreateClassFormValues = z.infer<typeof CreateClassSchema>;
