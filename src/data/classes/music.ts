@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const musicClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const musicClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-17'),
-    city: "Stockholm",
-    description: "Learn the basics of guitar playing with easy chords and songs for complete beginners."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,9 +29,6 @@ export const musicClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-24'),
-    city: "Malmö",
-    description: "Get introduced to the fundamentals of Latin dance styles including salsa, merengue, and bachata."
+    city: "Malmö"
   },
 ];
-
-export const music = musicClasses;

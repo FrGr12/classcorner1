@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const paintingClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const paintingClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-20'),
-    city: "Stockholm",
-    description: "Learn the basics of oil painting including color mixing, brush techniques, and composition."
+    city: "Stockholm"
   },
   { 
     id: 2, 
@@ -31,9 +29,6 @@ export const paintingClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-22'),
-    city: "Gothenburg",
-    description: "Explore various watercolor techniques to create stunning transparent effects and textures."
+    city: "Gothenburg"
   },
 ];
-
-export const painting = paintingClasses;

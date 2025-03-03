@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const woodClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-21'),
-    city: "Stockholm",
-    description: "Learn essential woodworking skills and safely use basic tools to create simple projects."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,9 +29,6 @@ export const woodClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-28'),
-    city: "Gothenburg",
-    description: "Design and build your own custom furniture piece with guidance from an experienced craftsman."
+    city: "Gothenburg"
   },
 ];
-
-export const wood = woodClasses;

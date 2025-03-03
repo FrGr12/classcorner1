@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const textileClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const textileClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-23'),
-    city: "Stockholm",
-    description: "Learn the basics of knitting and create your first scarf with expert guidance."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,9 +29,6 @@ export const textileClasses: ClassItem[] = [
     ],
     level: "Advanced",
     date: new Date('2024-04-30'),
-    city: "Malmö",
-    description: "Take your weaving skills to the next level with advanced patterns and techniques."
+    city: "Malmö"
   },
 ];
-
-export const textile = textileClasses;

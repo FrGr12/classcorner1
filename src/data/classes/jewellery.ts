@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const jewelleryClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const jewelleryClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-22'),
-    city: "Stockholm",
-    description: "Learn to create beautiful silver rings with basic metalsmithing techniques in this hands-on workshop."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,9 +29,6 @@ export const jewelleryClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-04-29'),
-    city: "Gothenburg",
-    description: "Expand your metalworking skills with advanced techniques for creating unique jewelry pieces."
+    city: "Gothenburg"
   },
 ];
-
-export const jewellery = jewelleryClasses;
