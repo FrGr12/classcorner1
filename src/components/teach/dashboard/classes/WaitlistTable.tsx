@@ -46,7 +46,7 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'waiting':
-        return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" />Waiting</Badge>;
+        return <Badge variant="secondary"><Clock className="h-3 w-3 mr-1" aria-hidden="true" />Waiting</Badge>;
       case 'notified':
         return <Badge variant="secondary">Notified</Badge>;
       case 'promoted':
@@ -58,7 +58,7 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
 
   if (!entries || entries.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground">
+      <div className="text-sm text-muted-foreground" aria-label="Empty waitlist">
         No one is currently on the waitlist
       </div>
     );
@@ -68,13 +68,15 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <Badge variant="secondary" className="gap-1">
-          <UserPlus className="h-3 w-3" />
-          {entries.length} {entries.length === 1 ? 'person' : 'people'}
-          {maxSize && ` / ${maxSize}`}
+          <UserPlus className="h-3 w-3" aria-hidden="true" />
+          <span aria-live="polite" aria-atomic="true">
+            {entries.length} {entries.length === 1 ? 'person' : 'people'}
+            {maxSize && ` / ${maxSize}`}
+          </span>
         </Badge>
       </div>
 
-      <Table>
+      <Table aria-label="Waitlist entries">
         <TableHeader>
           <TableRow>
             <TableHead>Position</TableHead>
@@ -82,7 +84,7 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
             <TableHead>Contact</TableHead>
             <TableHead>Joined</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead></TableHead>
+            <TableHead><span className="sr-only">Actions</span></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -107,15 +109,16 @@ const WaitlistTable = ({ entries = [], maxSize, onPromote }: WaitlistTableProps)
                       size="sm" 
                       variant="ghost"
                       disabled={entry.status === 'promoted'}
+                      aria-label={`Promote ${entry.profile?.first_name || 'user'} from waitlist`}
                     >
-                      <ArrowUp className="h-4 w-4 mr-1" />
+                      <ArrowUp className="h-4 w-4 mr-1" aria-hidden="true" />
                       Promote
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent>
+                  <AlertDialogContent aria-labelledby="promote-dialog-title" aria-describedby="promote-dialog-description">
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Promote from Waitlist</AlertDialogTitle>
-                      <AlertDialogDescription>
+                      <AlertDialogTitle id="promote-dialog-title">Promote from Waitlist</AlertDialogTitle>
+                      <AlertDialogDescription id="promote-dialog-description">
                         Are you sure you want to promote this person from the waitlist?
                         They will be notified immediately.
                       </AlertDialogDescription>

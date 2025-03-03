@@ -1,3 +1,4 @@
+
 import React from "react";
 import { ClassItem } from "@/types/class";
 import { Table, TableBody } from "@/components/ui/table";
@@ -63,7 +64,7 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <Table className="text-xs sm:text-sm">
+      <Table className="text-xs sm:text-sm" aria-label="Classes list">
         <ClassesTableHeader 
           filters={filters} 
           onFilterChange={handleFilter} 
