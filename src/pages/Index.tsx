@@ -33,7 +33,7 @@ const InstructorHighlights = () => {
                 </div>
               </div>
               <div className="p-5">
-                <h3 className="font-display font-normal text-lg">Instructor Name</h3>
+                <h3 className="font-sans font-medium text-lg">Instructor Name</h3>
                 <p className="text-accent-purple font-medium">Specialty</p>
                 <p className="mt-2 text-neutral-600 text-sm line-clamp-3">
                   Passionate instructor with years of experience. Join their classes to learn hands-on skills in a supportive environment.

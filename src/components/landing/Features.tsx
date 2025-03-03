@@ -54,7 +54,7 @@ const Features = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             <div className="flex-1">
-              <h3 className="text-2xl font-display font-normal mb-4">{feature.title}</h3>
+              <h3 className="text-2xl font-sans font-medium mb-4">{feature.title}</h3>
               <p className="text-neutral-600 mb-6">{feature.description}</p>
               <ul className="space-y-4">
                 {feature.points.map(point => (
