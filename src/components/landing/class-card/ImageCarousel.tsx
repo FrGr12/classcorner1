@@ -29,9 +29,7 @@ const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarou
 
   const containerClasses = cn(
     "relative w-full h-full",
-    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9]" : "aspect-[4/3]",
-    // Enhanced mobile version - taller aspect ratio on small screens when large variant
-    variant === 'large' && "aspect-[3/4] xs:aspect-[4/4] sm:aspect-[21/9]"
+    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9]" : "aspect-[4/3]"
   );
 
   const imageClasses = cn(

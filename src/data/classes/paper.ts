@@ -1,4 +1,3 @@
-
 import { ClassItem } from "@/types/class";
 
 export const paperClasses: ClassItem[] = [
@@ -15,8 +14,7 @@ export const paperClasses: ClassItem[] = [
     ],
     level: "Beginner",
     date: new Date('2024-04-24'),
-    city: "Stockholm",
-    description: "Learn the Japanese art of paper folding. Create beautiful shapes and figures using traditional origami techniques."
+    city: "Stockholm"
   },
   {
     id: 2,
@@ -31,8 +29,6 @@ export const paperClasses: ClassItem[] = [
     ],
     level: "Intermediate",
     date: new Date('2024-05-01'),
-    city: "Uppsala",
-    description: "Master the art of paper quilling to create intricate designs. This class will teach you various techniques for creating beautiful paper art."
+    city: "Uppsala"
   },
 ];
-
