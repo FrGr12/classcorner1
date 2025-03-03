@@ -2,7 +2,7 @@
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
-import { mockClasses } from "@/data/mockClasses";
+import { classes } from "@/data/mockClasses";
 import ImageCarousel from "@/components/landing/class-card/ImageCarousel";
 import SaveButton from "@/components/landing/class-card/SaveButton";
 import ClassHeader from "@/components/class-details/ClassHeader";
@@ -25,13 +25,13 @@ const ClassDetails = () => {
   const findClassItem = () => {
     if (!category || !id) return null;
 
-    const categoryKey = Object.keys(mockClasses).find(key => 
+    const categoryKey = Object.keys(classes).find(key => 
       key.toLowerCase().startsWith(category.toLowerCase())
     );
 
     if (!categoryKey) return null;
 
-    return mockClasses[categoryKey]?.find(c => c.id === Number(id));
+    return classes[categoryKey]?.find(c => c.id === Number(id));
   };
 
   const classItem = findClassItem();
@@ -71,12 +71,12 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="w-full mt-[72px] bg-white py-6 sm:py-8">
+      <div className="w-full mt-[72px] bg-white py-2 sm:py-6 md:py-8">
         <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
-        <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 mt-6 sm:mt-8">
+        <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 mt-4 sm:mt-8">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section">
             <ClassDates 
