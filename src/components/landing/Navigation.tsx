@@ -1,7 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import DesktopMenu from "./navigation/DesktopMenu";
-import MobileMenu from "./navigation/MobileMenu";
+import { DesktopMenu } from "./navigation/DesktopMenu";
+import { MobileMenu } from "./navigation/MobileMenu";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { useLanguage } from "@/contexts/LanguageContext";
 import LanguageSwitcher from "../language/LanguageSwitcher";
