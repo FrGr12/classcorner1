@@ -6,10 +6,9 @@ import DateButtons from "@/components/landing/class-card/DateButtons";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
+import { useState } from "react";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -17,24 +16,31 @@ interface ClassDatesProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) => {
+const ClassDates = ({ classItem, selectedDate: initialSelectedDate, onDateSelect }: ClassDatesProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialSelectedDate);
 
-  const handleBooking = async (date: Date) => {
-    try {
-      navigate("/booking-confirmation", { 
-        state: { 
-          classItem: {
-            ...classItem,
-            date
-          }
-        }
-      });
-    } catch (error: any) {
-      console.error('Booking error:', error);
-      toast.error("Failed to process booking. Please try again.");
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+    if (onDateSelect) {
+      onDateSelect(date);
     }
+  };
+
+  const handleBooking = () => {
+    if (!selectedDate) {
+      return;
+    }
+    
+    navigate("/booking-confirmation", { 
+      state: { 
+        classItem: {
+          ...classItem,
+          date: selectedDate
+        }
+      }
+    });
   };
   
   return (
@@ -63,6 +69,14 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
             <p className="text-sm text-neutral-500 mt-1">
               Class duration: {classItem.duration || '2 hours'}
             </p>
+            <div className="mt-4">
+              <Button 
+                onClick={handleBooking}
+                className="w-full sm:w-auto"
+              >
+                Continue to Booking
+              </Button>
+            </div>
           </div>
         )}
         
@@ -73,7 +87,7 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
             selectedDate={selectedDate}
             classId={classItem.id}
             category={classItem.category}
-            onDateSelect={handleBooking}
+            onDateSelect={handleDateSelect}
           />
         </div>
       </div>

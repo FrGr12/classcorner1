@@ -38,9 +38,11 @@ const DateButtons = memo(({
   const handleDateClick = useCallback((date: Date, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (onDateSelect) {
       onDateSelect(date);
     } else if (classId && category) {
+      // If we're not on the details page, navigate to it with the selected date
       navigate(`/class/${category}/${classId}`, { 
         state: { selectedDate: date }
       });
