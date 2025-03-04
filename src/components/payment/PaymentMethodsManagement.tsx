@@ -13,7 +13,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import AddPaymentMethodForm from "./AddPaymentMethodForm";
 import SavedPaymentMethods from "./SavedPaymentMethods";
 
-const stripePromise = loadStripe("pk_test_your_stripe_publishable_key");
+// Use the environment variable from Supabase
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 
 const PaymentMethodsManagement = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);

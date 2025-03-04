@@ -1,11 +1,42 @@
+
+import { useEffect, useState } from "react";
 import { Auth as SupabaseAuth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [session, setSession] = useState<any>(null);
+  
+  // Get return path from state (if available)
+  const returnTo = location.state?.returnTo || "/";
+
+  useEffect(() => {
+    // Check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      
+      // If user is already logged in, redirect them
+      if (session) {
+        navigate(returnTo);
+      }
+    });
+
+    // Set up auth listener
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      
+      // If user logs in, redirect them to the return path
+      if (session) {
+        navigate(returnTo);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, [navigate, returnTo]);
 
   return (
     <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">
@@ -29,6 +60,7 @@ const Auth = () => {
             }
           }}
           providers={["google"]}
+          redirectTo={`${window.location.origin}/auth/callback`}
         />
 
         <div className="mt-6 text-center space-y-2">
