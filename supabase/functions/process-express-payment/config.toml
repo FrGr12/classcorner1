@@ -1,0 +1,11 @@
+
+# config.toml
+
+app_version = 1
+entrypoint = "index.ts"
+follow_redirects = true
+keep_alive_timeout_seconds = 30
+[http_options]
+  connect_timeout_seconds = 30
+  read_timeout_seconds = 30
+  send_timeout_seconds = 30

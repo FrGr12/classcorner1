@@ -180,6 +180,7 @@ const BookingConfirmation = () => {
               isGuestBooking={isGuestBooking}
               handleAction={isGuestBooking ? handleGuestBooking : handleProceedToPayment}
               isDisabled={isSubmitting || (isGuestBooking && (!guestEmail || !firstName || !lastName))}
+              classItem={classItem}
             />
           </CardFooter>
         </Card>
