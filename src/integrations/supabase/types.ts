@@ -2171,6 +2171,8 @@ export type Database = {
           created_at: string
           currency: string
           id: number
+          is_express_checkout: boolean | null
+          payment_method_id: string | null
           payment_status: string
           receipt_url: string | null
           stripe_client_secret: string | null
@@ -2183,6 +2185,8 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: never
+          is_express_checkout?: boolean | null
+          payment_method_id?: string | null
           payment_status?: string
           receipt_url?: string | null
           stripe_client_secret?: string | null
@@ -2195,6 +2199,8 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: never
+          is_express_checkout?: boolean | null
+          payment_method_id?: string | null
           payment_status?: string
           receipt_url?: string | null
           stripe_client_secret?: string | null
@@ -2776,6 +2782,42 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_payment_methods: {
+        Row: {
+          brand: string
+          created_at: string
+          exp_month: number
+          exp_year: number
+          id: string
+          is_default: boolean
+          last4: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          brand: string
+          created_at?: string
+          exp_month: number
+          exp_year: number
+          id: string
+          is_default?: boolean
+          last4: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          brand?: string
+          created_at?: string
+          exp_month?: number
+          exp_year?: number
+          id?: string
+          is_default?: boolean
+          last4?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_preferences: {
         Row: {

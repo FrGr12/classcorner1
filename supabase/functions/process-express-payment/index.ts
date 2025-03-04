@@ -42,19 +42,23 @@ serve(async (req) => {
     // Get booking details
     const { data: booking, error: bookingError } = await supabaseClient
       .from('bookings')
-      .select('*, student:student_id(*)')
+      .select('*, student:profiles!bookings_student_id_fkey(*)')
       .eq('id', bookingId)
       .single();
 
     if (bookingError) throw bookingError;
     if (!booking) throw new Error("Booking not found");
 
+    if (!booking.student.stripe_customer_id) {
+      throw new Error("Student has no associated Stripe customer");
+    }
+
     // Create payment intent using the saved payment method
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
       currency: "usd",
       payment_method: paymentMethodId,
-      customer: booking.student?.stripe_customer_id,
+      customer: booking.student.stripe_customer_id,
       confirm: true,
       return_url: `${req.headers.get("origin") || ""}/payment-receipt?booking_id=${bookingId}`,
       off_session: true,

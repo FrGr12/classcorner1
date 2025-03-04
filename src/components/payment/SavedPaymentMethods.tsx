@@ -22,13 +22,15 @@ export interface SavedPaymentMethod {
 }
 
 interface SavedPaymentMethodsProps {
-  onSelect: (paymentMethod: SavedPaymentMethod) => void;
+  onSelect?: (paymentMethod: SavedPaymentMethod) => void;
   selectedId?: string;
+  refreshTrigger?: number;
 }
 
 export const SavedPaymentMethods = ({ 
   onSelect, 
-  selectedId 
+  selectedId,
+  refreshTrigger = 0
 }: SavedPaymentMethodsProps) => {
   const [paymentMethods, setPaymentMethods] = useState<SavedPaymentMethod[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -50,7 +52,7 @@ export const SavedPaymentMethods = ({
         setPaymentMethods(data || []);
         
         // Auto-select default payment method if none is selected
-        if (data?.length && !selectedId && data.some(pm => pm.is_default)) {
+        if (data?.length && !selectedId && data.some(pm => pm.is_default) && onSelect) {
           const defaultMethod = data.find(pm => pm.is_default);
           if (defaultMethod) onSelect(defaultMethod);
         }
@@ -66,7 +68,7 @@ export const SavedPaymentMethods = ({
     };
 
     fetchPaymentMethods();
-  }, [onSelect, selectedId, toast]);
+  }, [onSelect, selectedId, toast, refreshTrigger]);
 
   if (isLoading) {
     return (
@@ -99,7 +101,7 @@ export const SavedPaymentMethods = ({
                 ${isSelected ? 'border-accent-purple bg-accent-purple/5' : 'border-neutral-200'}
                 ${isExpired ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer hover:border-accent-purple/50'}
               `}
-              onClick={() => !isExpired && onSelect(method)}
+              onClick={() => !isExpired && onSelect && onSelect(method)}
             >
               <div className="flex items-center gap-3">
                 <div className="flex items-center justify-center w-10 h-10 bg-neutral-100 rounded-full">
