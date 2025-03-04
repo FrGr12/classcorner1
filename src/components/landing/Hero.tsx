@@ -8,7 +8,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="relative container-padding md:py-6 lg:py-8 py-[60px] mt-20 sm:mt-24 md:mt-20">
+    <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-20 sm:mt-24 md:mt-20">
       <motion.div 
         className="absolute inset-0 bg-gradient-to-r from-accent-purple/10 to-transparent rounded-xl"
         initial={{ opacity: 0 }}
@@ -18,7 +18,7 @@ const Hero = () => {
       
       <div className="max-w-4xl mx-auto text-center relative z-10">
         <motion.h1 
-          className="text-4xl sm:text-5xl md:text-6xl font-display mb-4 leading-tight tracking-tight text-accent-purple"
+          className="text-3xl sm:text-5xl md:text-6xl font-display mb-3 sm:mb-4 leading-tight tracking-tight text-accent-purple"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
@@ -27,7 +27,7 @@ const Hero = () => {
         </motion.h1>
 
         <motion.p 
-          className="text-lg sm:text-xl text-neutral-600 max-w-2xl mx-auto px-4 leading-relaxed mb-6"
+          className="text-base sm:text-xl text-neutral-600 max-w-2xl mx-auto px-4 leading-relaxed mb-4 sm:mb-6"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
@@ -37,7 +37,7 @@ const Hero = () => {
         </motion.p>
 
         <motion.div
-          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -61,7 +61,7 @@ const Hero = () => {
         </motion.div>
         
         <motion.div 
-          className="mt-8 flex items-center justify-center gap-2 sm:gap-6 text-xs sm:text-sm text-neutral-600"
+          className="mt-4 sm:mt-8 flex items-center justify-center gap-2 sm:gap-6 text-xs sm:text-sm text-neutral-600"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.3 }}
