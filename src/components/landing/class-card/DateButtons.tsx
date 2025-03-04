@@ -40,6 +40,7 @@ const DateButtons = memo(({
     e.stopPropagation();
     
     if (onDateSelect) {
+      console.log("DateButtons: onDateSelect called with date:", date);
       onDateSelect(date);
     } else if (classId && category) {
       // If we're not on the details page, navigate to it with the selected date

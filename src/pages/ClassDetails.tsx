@@ -17,6 +17,7 @@ import PolicyInfo from "@/components/class-details/PolicyInfo";
 import CustomFAQSection from "@/components/class-details/CustomFAQSection";
 import ClassVideo from "@/components/class-details/ClassVideo";
 import { useState, useEffect } from "react";
+import { toast } from "sonner";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
@@ -28,6 +29,7 @@ const ClassDetails = () => {
   // Update selected date when location state changes
   useEffect(() => {
     if (location.state?.selectedDate) {
+      console.log("ClassDetails: location.state.selectedDate changed:", location.state.selectedDate);
       setSelectedDate(location.state.selectedDate);
     }
   }, [location.state]);
@@ -54,6 +56,7 @@ const ClassDetails = () => {
 
   const handleBooking = () => {
     if (!selectedDate) {
+      toast.error("Please select a date before proceeding");
       const datesSection = document.querySelector('#dates-section');
       if (datesSection) {
         datesSection.scrollIntoView({ behavior: 'smooth' });
@@ -61,6 +64,8 @@ const ClassDetails = () => {
       return;
     }
 
+    console.log("ClassDetails: handleBooking - navigating to booking-confirmation with date:", selectedDate);
+    
     // Directly navigate to booking confirmation with the selected date
     navigate("/booking-confirmation", { 
       state: { 

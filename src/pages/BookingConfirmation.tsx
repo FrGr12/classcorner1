@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -19,7 +19,9 @@ import BookingFooterActions from "@/components/booking/BookingFooterActions";
 const BookingConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const classItem = location.state?.classItem as (ClassItem & { sessionId?: number });
+  const [classItem, setClassItem] = useState<ClassItem & { sessionId?: number } | null>(
+    location.state?.classItem || null
+  );
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const [isCancellationOpen, setIsCancellationOpen] = useState(false);
   const [booking, setBooking] = useState<Booking | null>(null);
@@ -29,17 +31,28 @@ const BookingConfirmation = () => {
   const [lastName, setLastName] = useState("");
   const [isGuestBooking, setIsGuestBooking] = useState(false);
 
-  if (!classItem) {
-    navigate("/browse", { 
-      replace: true,
-      state: { error: "No class selected. Please choose a class first." }
-    });
-    return null;
-  }
+  // Check for classItem in location state when component mounts or location changes
+  useEffect(() => {
+    console.log("BookingConfirmation: location.state:", location.state);
+    if (location.state?.classItem) {
+      setClassItem(location.state.classItem);
+    } else if (!classItem) {
+      console.log("BookingConfirmation: No class item found, redirecting to browse");
+      navigate("/browse", { 
+        replace: true,
+        state: { error: "No class selected. Please choose a class first." }
+      });
+    }
+  }, [location, navigate]);
 
   const handleGuestBooking = async () => {
     try {
       setIsSubmitting(true);
+      
+      if (!classItem) {
+        toast.error("No class selected. Please choose a class first.");
+        return;
+      }
       
       const { data, error } = await supabase
         .from('guest_bookings')
@@ -75,6 +88,11 @@ const BookingConfirmation = () => {
   const handleProceedToPayment = async () => {
     try {
       setIsSubmitting(true);
+      
+      if (!classItem) {
+        toast.error("No class selected. Please choose a class first.");
+        return;
+      }
       
       const { data: { user } } = await supabase.auth.getUser();
       
@@ -117,12 +135,17 @@ const BookingConfirmation = () => {
       return;
     }
 
-    if (classItem.id && classItem.category) {
+    if (classItem?.id && classItem?.category) {
       navigate(`/class/${classItem.category}/${classItem.id}`);
     } else {
       navigate("/browse");
     }
   };
+
+  // If we're still checking or no class item was found, don't render the full page
+  if (!classItem) {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-neutral-100">

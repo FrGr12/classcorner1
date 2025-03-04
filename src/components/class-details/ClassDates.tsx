@@ -23,10 +23,14 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
 
   // Update selected date when prop changes
   useEffect(() => {
-    setSelectedDate(propSelectedDate);
+    if (propSelectedDate) {
+      console.log("ClassDates: propSelectedDate changed:", propSelectedDate);
+      setSelectedDate(propSelectedDate);
+    }
   }, [propSelectedDate]);
 
   const handleDateSelect = (date: Date) => {
+    console.log("ClassDates: handleDateSelect called with date:", date);
     setSelectedDate(date);
     if (onDateSelect) {
       onDateSelect(date);
@@ -38,6 +42,7 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
       return;
     }
     
+    console.log("ClassDates: handleBooking - navigating to booking-confirmation with date:", selectedDate);
     navigate("/booking-confirmation", { 
       state: { 
         classItem: {
@@ -77,7 +82,7 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
             <div className="mt-4">
               <Button 
                 onClick={handleBooking}
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto bg-accent-purple hover:bg-accent-purple/90"
               >
                 Continue to Booking
               </Button>
