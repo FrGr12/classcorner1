@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Calendar } from "lucide-react";
 import { memo, useCallback } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export interface DateButtonsProps {
   dates: Date[];
@@ -28,6 +29,7 @@ const DateButtons = memo(({
 }: DateButtonsProps) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
   const isDetailsPage = location.pathname.includes('/class/');
   
   // Memoized values that don't need to be recalculated on every render
@@ -85,7 +87,7 @@ const DateButtons = memo(({
                   {maxParticipants} spots left
                 </div>
                 <div className="text-sm font-medium">
-                  ${price} per person
+                  ${price} {t("booking.perPerson")}
                 </div>
               </div>
               <Button
@@ -94,7 +96,7 @@ const DateButtons = memo(({
                 onClick={(e) => handleDateClick(date, e)}
                 aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
-                {isSelected(date) ? 'Selected' : 'Select'}
+                {isSelected(date) ? t("action.selected") : t("action.selectDate")}
               </Button>
             </div>
           </div>
@@ -108,7 +110,7 @@ const DateButtons = memo(({
               aria-label="View all available class dates"
             >
               <Calendar className="w-5 h-5" />
-              View more dates
+              {t("action.viewMoreDates")}
             </Button>
           </div>
         )}
@@ -140,7 +142,7 @@ const DateButtons = memo(({
             aria-label="View more class dates"
           >
             <Calendar className="w-3 h-3" />
-            View more dates
+            {t("action.viewMoreDates")}
           </Button>
         )}
       </div>
