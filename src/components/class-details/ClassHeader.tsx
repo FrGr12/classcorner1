@@ -10,13 +10,14 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Link } from "react-router-dom";
-
 interface ClassHeaderProps {
   classItem: ClassItem;
   onBooking: () => void;
 }
-
-const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
+const ClassHeader = memo(({
+  classItem,
+  onBooking
+}: ClassHeaderProps) => {
   const navigate = useNavigate();
   const [isInstructor, setIsInstructor] = useState(false);
   const [isMessageOpen, setIsMessageOpen] = useState(false);
@@ -26,7 +27,6 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
   const [question, setQuestion] = useState("");
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -40,33 +40,46 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
     };
     fetchData();
   }, [classItem.id]);
-
   const checkInstructor = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) return;
-      const { data: course } = await supabase.from("courses").select("instructor_id").eq("id", classItem.id).single();
+      const {
+        data: course
+      } = await supabase.from("courses").select("instructor_id").eq("id", classItem.id).single();
       setIsInstructor(course?.instructor_id === user.id);
     } catch (error) {
       throw new Error("Failed to verify instructor status");
     }
   }, [classItem.id]);
-
   const checkFollowStatus = useCallback(async () => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) return;
-      const { data: followData } = await supabase.from("teacher_follows").select("id").eq("student_id", user.id).eq("teacher_id", classItem.instructor_id).eq("status", "active").single();
+      const {
+        data: followData
+      } = await supabase.from("teacher_follows").select("id").eq("student_id", user.id).eq("teacher_id", classItem.instructor_id).eq("status", "active").single();
       setIsFollowing(!!followData);
     } catch (error) {
       console.error("Error checking follow status:", error);
     }
   }, [classItem.instructor_id]);
-
   const handlePrivateRequest = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to request a private class"
@@ -78,7 +91,9 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
         });
         return;
       }
-      const { error: messageError } = await supabase.from("communications").insert({
+      const {
+        error: messageError
+      } = await supabase.from("communications").insert({
         student_id: user.id,
         instructor_id: classItem.instructor_id,
         course_id: classItem.id,
@@ -101,11 +116,14 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(false);
     }
   }, [classItem.id, classItem.instructor_id, navigate, privateMessage]);
-
   const handleFollow = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to follow instructors"
@@ -138,11 +156,14 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(false);
     }
   }, [isFollowing, classItem.instructor_id, navigate]);
-
   const handleAskQuestion = useCallback(async () => {
     try {
       setIsLoading(true);
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
       if (!user) {
         toast.error("Authentication required", {
           description: "Please sign in to ask a question"
@@ -154,7 +175,9 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
         });
         return;
       }
-      const { error: questionError } = await supabase.from("communications").insert({
+      const {
+        error: questionError
+      } = await supabase.from("communications").insert({
         student_id: user.id,
         instructor_id: classItem.instructor_id,
         course_id: classItem.id,
@@ -163,7 +186,9 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
         status: "pending"
       });
       if (questionError) throw questionError;
-      const { error: notificationError } = await supabase.from("notification_logs").insert({
+      const {
+        error: notificationError
+      } = await supabase.from("notification_logs").insert({
         user_id: classItem.instructor_id,
         notification_type: "question",
         content: `New question from a student about ${classItem.title}`,
@@ -185,11 +210,9 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
       setIsLoading(false);
     }
   }, [question, classItem.id, classItem.instructor_id, classItem.title, navigate]);
-
   const handleQuestion = useCallback(() => {
     navigate(`/community/post/new?courseId=${classItem.id}&type=question`);
   }, [classItem.id, navigate]);
-
   const scrollToReviews = useCallback(() => {
     const reviewsSection = document.getElementById('reviews-section');
     if (reviewsSection) {
@@ -198,17 +221,15 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
       });
     }
   }, []);
-
   const getParticipantRange = useCallback(() => {
     const min = classItem.minParticipants ?? 1;
     const max = classItem.maxParticipants ?? 10;
     return `${min}-${max} people`;
   }, [classItem.minParticipants, classItem.maxParticipants]);
-
   return <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
       <div className="space-y-4 text-left">
         <div>
-          <h1 className="font-bold mb-2 text-left text-xl">{classItem.title}</h1>
+          <h1 className="font-bold mb-2 text-left text-2xl">{classItem.title}</h1>
           <p className="text-neutral-600 text-left">{classItem.category}</p>
         </div>
         
@@ -225,18 +246,10 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
             <Users className="h-4 w-4" aria-hidden="true" />
             <span>{getParticipantRange()}</span>
           </div>
-          <Link 
-            to={`/instructor/${classItem.instructor_id || '1'}`} 
-            className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer"
-            aria-label={`Instructor: ${classItem.instructor}`}
-          >
+          <Link to={`/instructor/${classItem.instructor_id || '1'}`} className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer" aria-label={`Instructor: ${classItem.instructor}`}>
             <span>{classItem.instructor}</span>
           </Link>
-          <button 
-            onClick={scrollToReviews} 
-            className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer"
-            aria-label={`Rating: ${classItem.rating} stars. Click to view reviews`}
-          >
+          <button onClick={scrollToReviews} className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer" aria-label={`Rating: ${classItem.rating} stars. Click to view reviews`}>
             <Star className="h-4 w-4 fill-accent-purple text-accent-purple" aria-hidden="true" />
             <span>{classItem.rating}</span>
           </button>
@@ -249,59 +262,24 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
           <p className="text-sm text-neutral-600">per person</p>
         </div>
         <div className="flex gap-2">
-          {isInstructor ? <Button 
-              size="lg" 
-              variant="outline" 
-              className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
-              onClick={() => navigate(`/teach/edit/${classItem.id}`)}
-              aria-label="Edit this course"
-            >
+          {isInstructor ? <Button size="lg" variant="outline" className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" onClick={() => navigate(`/teach/edit/${classItem.id}`)} aria-label="Edit this course">
               <Edit className="h-4 w-4 mr-2" aria-hidden="true" />
               Edit Course
             </Button> : <div className="flex flex-wrap gap-2">
-              <Button 
-                size="lg" 
-                className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90" 
-                onClick={onBooking}
-                aria-label="Book this class now"
-              >
+              <Button size="lg" className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90" onClick={onBooking} aria-label="Book this class now">
                 Book Now
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
-                onClick={() => setIsMessageOpen(true)}
-                aria-label="Request a private class"
-              >
+              <Button size="lg" variant="outline" className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" onClick={() => setIsMessageOpen(true)} aria-label="Request a private class">
                 Request Private Class
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto" 
-                onClick={() => setIsContactDialogOpen(true)}
-                aria-label="Contact the instructor"
-              >
+              <Button variant="outline" className="w-full md:w-auto" onClick={() => setIsContactDialogOpen(true)} aria-label="Contact the instructor">
                 <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
                 Contact
               </Button>
-              <Button 
-                variant={isFollowing ? "default" : "outline"} 
-                className={`w-full md:w-auto ${isFollowing ? 'bg-accent-purple hover:bg-accent-purple/90' : ''}`} 
-                onClick={handleFollow} 
-                disabled={isLoading}
-                aria-label={isFollowing ? "Unfollow instructor" : "Follow instructor"}
-                aria-pressed={isFollowing}
-              >
+              <Button variant={isFollowing ? "default" : "outline"} className={`w-full md:w-auto ${isFollowing ? 'bg-accent-purple hover:bg-accent-purple/90' : ''}`} onClick={handleFollow} disabled={isLoading} aria-label={isFollowing ? "Unfollow instructor" : "Follow instructor"} aria-pressed={isFollowing}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Button>
-              <Button 
-                variant="outline" 
-                className="w-full md:w-auto" 
-                onClick={() => setIsQuestionDialogOpen(true)} 
-                data-question-trigger
-                aria-label="Ask a question about this class"
-              >
+              <Button variant="outline" className="w-full md:w-auto" onClick={() => setIsQuestionDialogOpen(true)} data-question-trigger aria-label="Ask a question about this class">
                 <MessageCircle className="h-4 w-4 mr-2" aria-hidden="true" />
                 Ask a Question
               </Button>
@@ -320,25 +298,14 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="message">Message</Label>
-              <Textarea 
-                id="message" 
-                placeholder="Tell the instructor about your private class request..." 
-                value={privateMessage} 
-                onChange={e => setPrivateMessage(e.target.value)} 
-                className="min-h-[100px]"
-                aria-required="true"
-              />
+              <Textarea id="message" placeholder="Tell the instructor about your private class request..." value={privateMessage} onChange={e => setPrivateMessage(e.target.value)} className="min-h-[100px]" aria-required="true" />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsMessageOpen(false)}>
               Cancel
             </Button>
-            <Button 
-              onClick={handlePrivateRequest} 
-              disabled={isLoading || !privateMessage.trim()}
-              aria-busy={isLoading}
-            >
+            <Button onClick={handlePrivateRequest} disabled={isLoading || !privateMessage.trim()} aria-busy={isLoading}>
               Send Request
             </Button>
           </DialogFooter>
@@ -354,27 +321,17 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
-            <Button 
-              variant="outline" 
-              className="w-full justify-start" 
-              onClick={() => {
-                window.location.href = `mailto:${classItem.instructorEmail}`;
-                setIsContactDialogOpen(false);
-              }}
-              aria-label={`Send email to ${classItem.instructor}`}
-            >
+            <Button variant="outline" className="w-full justify-start" onClick={() => {
+            window.location.href = `mailto:${classItem.instructorEmail}`;
+            setIsContactDialogOpen(false);
+          }} aria-label={`Send email to ${classItem.instructor}`}>
               <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
               Send Email
             </Button>
-            <Button 
-              variant="outline" 
-              className="w-full justify-start" 
-              onClick={() => {
-                window.location.href = `tel:${classItem.instructorPhone}`;
-                setIsContactDialogOpen(false);
-              }}
-              aria-label={`Call ${classItem.instructor}`}
-            >
+            <Button variant="outline" className="w-full justify-start" onClick={() => {
+            window.location.href = `tel:${classItem.instructorPhone}`;
+            setIsContactDialogOpen(false);
+          }} aria-label={`Call ${classItem.instructor}`}>
               <Phone className="h-4 w-4 mr-2" aria-hidden="true" />
               Call
             </Button>
@@ -393,25 +350,14 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
           <div className="grid gap-4 py-4">
             <div className="grid gap-2">
               <Label htmlFor="question">Your Question</Label>
-              <Textarea 
-                id="question" 
-                placeholder="What would you like to know about this class?" 
-                value={question} 
-                onChange={e => setQuestion(e.target.value)} 
-                className="min-h-[100px]"
-                aria-required="true"
-              />
+              <Textarea id="question" placeholder="What would you like to know about this class?" value={question} onChange={e => setQuestion(e.target.value)} className="min-h-[100px]" aria-required="true" />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsQuestionDialogOpen(false)}>
               Cancel
             </Button>
-            <Button 
-              onClick={handleAskQuestion} 
-              disabled={isLoading || !question.trim()}
-              aria-busy={isLoading}
-            >
+            <Button onClick={handleAskQuestion} disabled={isLoading || !question.trim()} aria-busy={isLoading}>
               Send Question
             </Button>
           </DialogFooter>
@@ -422,5 +368,4 @@ const ClassHeader = memo(({ classItem, onBooking }: ClassHeaderProps) => {
 
 // Add display name for debugging purposes
 ClassHeader.displayName = 'ClassHeader';
-
 export default ClassHeader;
