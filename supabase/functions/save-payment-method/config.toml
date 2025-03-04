@@ -1,6 +1,4 @@
 
-# config.toml
-
 app_version = 1
 entrypoint = "index.ts"
 follow_redirects = true

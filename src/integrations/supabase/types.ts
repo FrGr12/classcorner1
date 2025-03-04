@@ -2352,6 +2352,7 @@ export type Database = {
           search_text: string | null
           sms_notifications: boolean | null
           social_media: Json | null
+          stripe_customer_id: string | null
           tags: string[] | null
           teaching_experience: string | null
           timezone: string | null
@@ -2387,6 +2388,7 @@ export type Database = {
           search_text?: string | null
           sms_notifications?: boolean | null
           social_media?: Json | null
+          stripe_customer_id?: string | null
           tags?: string[] | null
           teaching_experience?: string | null
           timezone?: string | null
@@ -2422,6 +2424,7 @@ export type Database = {
           search_text?: string | null
           sms_notifications?: boolean | null
           social_media?: Json | null
+          stripe_customer_id?: string | null
           tags?: string[] | null
           teaching_experience?: string | null
           timezone?: string | null
