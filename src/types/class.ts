@@ -7,6 +7,7 @@ export interface ClassItem {
   price: number;
   rating: number;
   images: string[];
+  videoUrl?: string; // New field for video URL
   level: string;
   category?: string;
   date: Date | Date[];

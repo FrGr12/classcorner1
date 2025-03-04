@@ -13,6 +13,7 @@ const mockClasses: Record<string, ClassItem[]> = {
         "/og-image.svg",
         "/placeholder.svg"
       ],
+      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       level: "Beginner",
       date: [
         new Date("2024-02-15"),
