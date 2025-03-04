@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Loader2, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import SavedPaymentMethods, { SavedPaymentMethod } from "./SavedPaymentMethods";
+import SavedPaymentMethods, { PaymentMethod } from "./SavedPaymentMethods";
 import { ClassItem } from "@/types/class";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -14,7 +14,7 @@ interface ExpressCheckoutProps {
 }
 
 const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<SavedPaymentMethod | null>(null);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 

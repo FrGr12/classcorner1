@@ -6,7 +6,7 @@ import { Trash2, AlertCircle, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
-interface PaymentMethod {
+export interface PaymentMethod {
   id: string;
   brand: string;
   last4: string;
@@ -17,9 +17,15 @@ interface PaymentMethod {
 
 interface SavedPaymentMethodsProps {
   refreshTrigger?: number;
+  onSelect?: (method: PaymentMethod) => void;
+  selectedId?: string;
 }
 
-const SavedPaymentMethods = ({ refreshTrigger = 0 }: SavedPaymentMethodsProps) => {
+const SavedPaymentMethods = ({ 
+  refreshTrigger = 0, 
+  onSelect, 
+  selectedId 
+}: SavedPaymentMethodsProps) => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast: uiToast } = useToast();
@@ -127,16 +133,24 @@ const SavedPaymentMethods = ({ refreshTrigger = 0 }: SavedPaymentMethodsProps) =
           key={method.id}
           className={`flex items-center justify-between p-4 rounded-lg border ${
             method.is_default ? "bg-primary/5 border-primary/20" : ""
+          } ${selectedId === method.id ? "ring-2 ring-primary" : ""} ${
+            onSelect ? "cursor-pointer" : ""
           }`}
+          onClick={() => onSelect && onSelect(method)}
         >
           <div className="flex items-center gap-3">
             {getBrandIcon(method.brand)}
             <div>
               <p className="font-medium capitalize">
                 {method.brand} •••• {method.last4}
-                {method.is_default && (
+                {method.is_default && !selectedId && (
                   <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
                     Default
+                  </span>
+                )}
+                {selectedId === method.id && (
+                  <span className="ml-2 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+                    Selected
                   </span>
                 )}
               </p>
@@ -145,24 +159,32 @@ const SavedPaymentMethods = ({ refreshTrigger = 0 }: SavedPaymentMethodsProps) =
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
-            {!method.is_default && (
+          {!onSelect && (
+            <div className="flex items-center gap-2">
+              {!method.is_default && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleMakeDefault(method.id);
+                  }}
+                >
+                  Make Default
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 size="sm"
-                onClick={() => handleMakeDefault(method.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDeletePaymentMethod(method.id);
+                }}
               >
-                Make Default
+                <Trash2 className="h-4 w-4 text-destructive" />
               </Button>
-            )}
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => handleDeletePaymentMethod(method.id)}
-            >
-              <Trash2 className="h-4 w-4 text-destructive" />
-            </Button>
-          </div>
+            </div>
+          )}
         </div>
       ))}
     </div>
