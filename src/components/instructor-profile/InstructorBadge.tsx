@@ -32,7 +32,7 @@ export const InstructorBadge = ({ classification, size = "md" }: InstructorBadge
           className={`bg-emerald-500 hover:bg-emerald-600 flex items-center gap-1 ${sizeClasses[size]}`}
         >
           <Shield className={`fill-white ${iconSizes[size]}`} />
-          <span>Certified Instructor</span>
+          <span className="md:inline truncate max-w-[80px] md:max-w-none">Certified Instructor</span>
         </Badge>
       );
     } else if (classification === "host") {
@@ -42,7 +42,7 @@ export const InstructorBadge = ({ classification, size = "md" }: InstructorBadge
           className={`bg-amber-500 hover:bg-amber-600 flex items-center gap-1 ${sizeClasses[size]}`}
         >
           <Award className={`${iconSizes[size]}`} />
-          <span>Skill Host</span>
+          <span className="md:inline truncate max-w-[60px] md:max-w-none">Skill Host</span>
         </Badge>
       );
     }
