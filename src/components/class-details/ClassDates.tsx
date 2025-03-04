@@ -8,7 +8,7 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -16,10 +16,15 @@ interface ClassDatesProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const ClassDates = ({ classItem, selectedDate: initialSelectedDate, onDateSelect }: ClassDatesProps) => {
+const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }: ClassDatesProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialSelectedDate);
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(propSelectedDate);
+
+  // Update selected date when prop changes
+  useEffect(() => {
+    setSelectedDate(propSelectedDate);
+  }, [propSelectedDate]);
 
   const handleDateSelect = (date: Date) => {
     setSelectedDate(date);

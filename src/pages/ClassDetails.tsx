@@ -61,6 +61,7 @@ const ClassDetails = () => {
       return;
     }
 
+    // Directly navigate to booking confirmation with the selected date
     navigate("/booking-confirmation", { 
       state: { 
         classItem: {
@@ -72,6 +73,7 @@ const ClassDetails = () => {
   };
 
   const handleDateSelect = (date: Date) => {
+    console.log("Date selected in ClassDetails:", date);
     setSelectedDate(date);
   };
 
