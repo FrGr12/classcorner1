@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Info } from "lucide-react";
 import { useState, useEffect } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -19,7 +18,6 @@ interface ClassDatesProps {
 
 const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }: ClassDatesProps) => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(propSelectedDate);
 
@@ -60,33 +58,33 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
       <Separator className="my-4 sm:my-6" />
       <div className="space-y-3 sm:space-y-4">
         <div className="flex items-center justify-between">
-          <h3 className="font-medium">{t("class.availableDates")}</h3>
+          <h3 className="font-medium">Available Dates</h3>
         </div>
         
         {!selectedDate && (
           <Alert variant="default" className="bg-accent-purple/5 border-accent-purple/20 text-accent-purple">
             <Info className="h-4 w-4" />
             <AlertDescription>
-              {t("class.selectDate")}
+              Please select a date below to continue with your booking.
             </AlertDescription>
           </Alert>
         )}
         
         {selectedDate && (
           <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg border border-accent-purple/20">
-            <h4 className="font-medium mb-1 sm:mb-2">{t("class.selectedDate")}</h4>
+            <h4 className="font-medium mb-1 sm:mb-2">Selected Date:</h4>
             <p className="text-neutral-600">
               {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}
             </p>
             <p className="text-sm text-neutral-500 mt-1">
-              {t("class.duration")} {classItem.duration || '2 hours'}
+              Class duration: {classItem.duration || '2 hours'}
             </p>
             <div className="mt-4">
               <Button 
                 onClick={handleBooking}
                 className="w-full sm:w-auto bg-accent-purple hover:bg-accent-purple/90"
               >
-                {t("class.continueBooking")}
+                Continue to Booking
               </Button>
             </div>
           </div>
