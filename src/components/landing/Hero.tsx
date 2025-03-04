@@ -8,7 +8,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="relative container-padding md:py-6 lg:py-8 py-[60px] mt-14 sm:mt-16 md:mt-10">
+    <header className="relative container-padding md:py-6 lg:py-8 py-[60px] mt-20 sm:mt-24 md:mt-20">
       <motion.div 
         className="absolute inset-0 bg-gradient-to-r from-accent-purple/10 to-transparent rounded-xl"
         initial={{ opacity: 0 }}
