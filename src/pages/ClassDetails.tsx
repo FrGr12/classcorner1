@@ -16,12 +16,21 @@ import TestimonialSection from "@/components/class-details/TestimonialSection";
 import PolicyInfo from "@/components/class-details/PolicyInfo";
 import CustomFAQSection from "@/components/class-details/CustomFAQSection";
 import ClassVideo from "@/components/class-details/ClassVideo";
+import { useState, useEffect } from "react";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const selectedDate = location.state?.selectedDate;
+  const initialSelectedDate = location.state?.selectedDate;
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialSelectedDate);
+
+  // Update selected date when location state changes
+  useEffect(() => {
+    if (location.state?.selectedDate) {
+      setSelectedDate(location.state.selectedDate);
+    }
+  }, [location.state]);
 
   const findClassItem = () => {
     if (!category || !id) return null;
@@ -62,6 +71,10 @@ const ClassDetails = () => {
     });
   };
 
+  const handleDateSelect = (date: Date) => {
+    setSelectedDate(date);
+  };
+
   const handleShowQuestion = () => {
     const questionButton = document.querySelector('[data-question-trigger]') as HTMLButtonElement;
     if (questionButton) {
@@ -85,6 +98,7 @@ const ClassDetails = () => {
             <ClassDates 
               classItem={classItem} 
               selectedDate={selectedDate}
+              onDateSelect={handleDateSelect}
             />
           </div>
         </div>
