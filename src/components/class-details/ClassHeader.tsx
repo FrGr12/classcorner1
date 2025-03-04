@@ -9,7 +9,7 @@ import ClassMetadata from "./class-header/ClassMetadata";
 import PriceDisplay from "./class-header/PriceDisplay";
 import ClassActions from "./class-header/ClassActions";
 import PrivateClassDialog from "./class-header/PrivateClassDialog";
-import ContactDialog from "./class-header/ContactDialog";
+import InstructorContactDialog from "./instructor/InstructorContactDialog";
 import QuestionDialog from "./class-header/QuestionDialog";
 
 interface ClassHeaderProps {
@@ -69,7 +69,7 @@ const ClassHeader = memo(({
         onSubmit={handlePrivateRequest}
       />
 
-      <ContactDialog 
+      <InstructorContactDialog 
         isOpen={isContactDialogOpen}
         onClose={() => setIsContactDialogOpen(false)}
         classItem={classItem}
