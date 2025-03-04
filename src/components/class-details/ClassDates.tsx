@@ -8,6 +8,8 @@ import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Info } from "lucide-react";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -43,8 +45,17 @@ const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) 
           <h3 className="font-medium">Available Dates</h3>
         </div>
         
+        {!selectedDate && (
+          <Alert variant="default" className="bg-accent-purple/5 border-accent-purple/20 text-accent-purple">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Please select a date below to continue with your booking.
+            </AlertDescription>
+          </Alert>
+        )}
+        
         {selectedDate && (
-          <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg">
+          <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg border border-accent-purple/20">
             <h4 className="font-medium mb-1 sm:mb-2">Selected Date:</h4>
             <p className="text-neutral-600">
               {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}

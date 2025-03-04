@@ -64,7 +64,11 @@ const DateButtons = memo(({
         {visibleDates.map((date, index) => (
           <div 
             key={index}
-            className={`p-3 sm:p-4 bg-white rounded-lg border ${isSelected(date) ? 'border-accent-purple' : 'border-neutral-200'} hover:border-accent-purple transition-colors`}
+            className={`p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
+              isSelected(date) 
+                ? 'border-accent-purple bg-accent-purple/5 shadow-sm' 
+                : 'border-neutral-200 bg-white hover:border-accent-purple/50 hover:bg-neutral-50'
+            }`}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -83,11 +87,11 @@ const DateButtons = memo(({
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                className={`ml-2 ${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
+                className={`ml-2 ${isSelected(date) ? 'bg-accent-purple hover:bg-accent-purple/90' : 'border-accent-purple text-accent-purple hover:bg-accent-purple/10'}`}
                 onClick={(e) => handleDateClick(date, e)}
                 aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
-                Book
+                {isSelected(date) ? 'Selected' : 'Select'}
               </Button>
             </div>
           </div>
