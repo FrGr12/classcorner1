@@ -3,9 +3,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-40 sm:mt-36 md:mt-32 lg:mt-28">
@@ -23,7 +25,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Upptäck och boka fantastiska kurser
+          {t("hero.title")}
         </motion.h1>
 
         <motion.p 
@@ -32,8 +34,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Hitta den perfekta kursen för att lära dig något nytt, träffa fantastiska människor
-          och släpp loss din kreativitet.
+          {t("hero.subtitle")}
         </motion.p>
 
         <motion.div
@@ -47,7 +48,7 @@ const Hero = () => {
             className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8 w-[200px]"
             onClick={() => navigate('/browse')}
           >
-            Utforska kurser
+            {t("hero.cta")}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button 
@@ -56,7 +57,7 @@ const Hero = () => {
             className="border-accent-purple text-accent-purple hover:bg-accent-purple/10 w-[200px]"
             onClick={() => navigate('/auth', { state: { returnTo: '/dashboard/create-class' } })}
           >
-            Bli instruktör
+            {t("nav.startTeaching")}
           </Button>
         </motion.div>
         
