@@ -6,17 +6,26 @@ import { toast } from "sonner";
 
 interface AuthGuardProps {
   children: ReactNode;
+  allowBypass?: boolean; // New prop to allow bypassing auth
 }
 
-const AuthGuard = ({ children }: AuthGuardProps) => {
+const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Check if we're in demo/admin mode - allows direct dashboard access
+  const isDemoMode = localStorage.getItem("admin_mode") === "true";
+
   useEffect(() => {
+    // If bypass is allowed and we're in demo mode, skip auth check
+    if (allowBypass && isDemoMode) {
+      setIsAuthenticated(true);
+      return;
+    }
+
     const checkAuth = async () => {
       try {
-        console.log("Authentication error:");
         const { data, error } = await supabase.auth.getUser();
         
         if (error) throw error;
@@ -29,8 +38,6 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
           // Don't redirect if we're already on the auth page
           if (!location.pathname.includes('/auth')) {
             // Store the current location to redirect back after login
-            console.log("Current URL:", window.location.href);
-            console.log("Redirect URL will be:", `${window.location.origin}/auth/callback`);
             navigate('/auth', { state: { returnTo: location.pathname } });
             toast.error("Please sign in to access this page");
           }
@@ -62,8 +69,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
       } else if (event === 'SIGNED_OUT') {
         setIsAuthenticated(false);
         
-        // Don't redirect if we're already on the auth page
-        if (!location.pathname.includes('/auth')) {
+        // Don't redirect if we're already on the auth page or if bypass is allowed
+        if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
           navigate('/auth', { state: { returnTo: location.pathname } });
         }
       }
@@ -72,7 +79,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [navigate, location]);
+  }, [navigate, location, allowBypass, isDemoMode]);
 
   // Show loading state while checking authentication
   if (isAuthenticated === null) {
@@ -83,8 +90,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     );
   }
 
-  // If authenticated, render children
-  return isAuthenticated ? <>{children}</> : null;
+  // If authenticated or bypass is allowed, render children
+  return (isAuthenticated || (allowBypass && isDemoMode)) ? <>{children}</> : null;
 };
 
 export default AuthGuard;

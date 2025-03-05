@@ -18,7 +18,7 @@ const Dashboard = () => {
   const breadcrumbs = useBreadcrumbs();
   
   return (
-    <AuthGuard>
+    <AuthGuard allowBypass={true}>
       <div className="min-h-screen flex flex-col w-full bg-gray-50">
         <DashboardHeader />
         <main className="flex-1 p-2 sm:p-4 md:p-6 overflow-auto">

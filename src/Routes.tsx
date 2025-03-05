@@ -8,6 +8,18 @@ import { paymentRoutes } from "@/routes/payment-routes";
 import { communityRoutes } from "@/routes/community-routes";
 import Dashboard from "@/pages/Dashboard";
 import UserDashboard from "@/pages/UserDashboard";
+import AdminModeToggle from "@/components/admin/AdminModeToggle";
+import { Fragment } from "react";
+
+// Wrapper component to include AdminModeToggle with any route
+const withAdminToggle = (element: React.ReactNode) => {
+  return (
+    <Fragment>
+      {element}
+      <AdminModeToggle />
+    </Fragment>
+  );
+};
 
 // Central router configuration that organizes all routes
 const router = createBrowserRouter([
@@ -29,13 +41,13 @@ const router = createBrowserRouter([
   // Teacher Dashboard route - don't wrap in AuthGuard here since it's handled inside the component
   {
     path: "/dashboard/*",
-    element: <Dashboard />,
+    element: withAdminToggle(<Dashboard />),
   },
   
   // Student Dashboard route - don't wrap in AuthGuard here since it's handled inside the component
   {
     path: "/user-dashboard/*",
-    element: <UserDashboard />,
+    element: withAdminToggle(<UserDashboard />),
   },
   
   // Catch-all route for 404 pages
