@@ -9,11 +9,14 @@ import { ArrowLeft } from "lucide-react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { DesktopMenu } from "./navigation/DesktopMenu";
 import { UserType } from "@/types/user";
+import { useLanguage } from "@/contexts/LanguageContext";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Navigation = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -125,13 +128,17 @@ const Navigation = () => {
         
         {!isBrowsePage && <IntegratedSearch />}
 
-        <DesktopMenu
-          session={session}
-          handleDashboardClick={handleDashboardClick}
-          handleLogout={handleLogout}
-          handleAuthClick={handleAuthClick}
-          loading={loading}
-        />
+        <div className="hidden md:flex items-center gap-2 ml-auto">
+          <LanguageSwitcher />
+          
+          <DesktopMenu
+            session={session}
+            handleDashboardClick={handleDashboardClick}
+            handleLogout={handleLogout}
+            handleAuthClick={handleAuthClick}
+            loading={loading}
+          />
+        </div>
       </div>
     </nav>
   );

@@ -1,4 +1,6 @@
 
+import { useLanguage } from "@/contexts/LanguageContext";
+
 interface PriceDisplayProps {
   price: number;
   groupBookingsEnabled?: boolean;
@@ -14,6 +16,7 @@ const PriceDisplay = ({
   basePriceGroup,
 }: PriceDisplayProps) => {
   const hasAlternativeBookings = groupBookingsEnabled || privateBookingsEnabled;
+  const { t } = useLanguage();
 
   return (
     <div className="text-[14px] font-medium mt-1 text-left">
