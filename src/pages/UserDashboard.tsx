@@ -13,7 +13,6 @@ import UserReviews from "@/components/user-dashboard/UserReviews";
 import UserWaitlist from "@/components/user-dashboard/UserWaitlist";
 import UserPayments from "@/components/user-dashboard/UserPayments";
 import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
-import AuthGuard from "@/components/auth/AuthGuard";
 
 // Check if we're in a preview environment
 const isPreviewMode = window.location.hostname.includes('stackblitz') || 
@@ -31,31 +30,29 @@ const UserDashboard = () => {
   const breadcrumbs = useBreadcrumbs();
   
   return (
-    <AuthGuard allowBypass={true}>
-      <div className="min-h-screen flex flex-col w-full bg-gray-50">
-        <UserDashboardHeader />
-        <main className="flex-1 p-4 md:p-6 overflow-auto">
-          <div className="max-w-6xl mx-auto">
-            <Breadcrumbs items={breadcrumbs} showHome={false} />
-            
-            <Routes>
-              <Route index element={<UserDashboardOverview />} />
-              <Route path="overview" element={<UserDashboardOverview />} />
-              <Route path="bookings" element={<UserBookings />} />
-              <Route path="messages" element={<UserMessages />} />
-              <Route path="notifications" element={<UserNotifications />} />
-              <Route path="matches" element={<UserMatches />} />
-              <Route path="saved" element={<UserSavedClasses />} />
-              <Route path="profile" element={<UserProfile />} />
-              <Route path="preferences" element={<UserPreferences />} />
-              <Route path="reviews" element={<UserReviews />} />
-              <Route path="waitlist" element={<UserWaitlist />} />
-              <Route path="payments" element={<UserPayments />} />
-            </Routes>
-          </div>
-        </main>
-      </div>
-    </AuthGuard>
+    <div className="min-h-screen flex flex-col w-full bg-gray-50">
+      <UserDashboardHeader />
+      <main className="flex-1 p-4 md:p-6 overflow-auto">
+        <div className="max-w-6xl mx-auto">
+          <Breadcrumbs items={breadcrumbs} showHome={false} />
+          
+          <Routes>
+            <Route index element={<UserDashboardOverview />} />
+            <Route path="overview" element={<UserDashboardOverview />} />
+            <Route path="bookings" element={<UserBookings />} />
+            <Route path="messages" element={<UserMessages />} />
+            <Route path="notifications" element={<UserNotifications />} />
+            <Route path="matches" element={<UserMatches />} />
+            <Route path="saved" element={<UserSavedClasses />} />
+            <Route path="profile" element={<UserProfile />} />
+            <Route path="preferences" element={<UserPreferences />} />
+            <Route path="reviews" element={<UserReviews />} />
+            <Route path="waitlist" element={<UserWaitlist />} />
+            <Route path="payments" element={<UserPayments />} />
+          </Routes>
+        </div>
+      </main>
+    </div>
   );
 };
 
