@@ -20,30 +20,36 @@ const Navigation = () => {
   const [userType, setUserType] = useState<UserType>('teacher');
   const isHomePage = location.pathname === "/";
   const isBrowsePage = location.pathname === "/browse";
+  const isAdminMode = localStorage.getItem("admin_mode") === "true";
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      
-      // If we have a session, try to get the user type
-      if (session?.user?.id) {
-        getUserType(session.user.id);
-      }
-    });
+    if (!isAdminMode) {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session);
+        
+        // If we have a session, try to get the user type
+        if (session?.user?.id) {
+          getUserType(session.user.id);
+        }
+      });
 
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      setSession(session);
-      
-      // Update user type when auth state changes
-      if (session?.user?.id) {
-        getUserType(session.user.id);
-      }
-    });
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange(async (_event, session) => {
+        setSession(session);
+        
+        // Update user type when auth state changes
+        if (session?.user?.id) {
+          getUserType(session.user.id);
+        }
+      });
 
-    return () => subscription.unsubscribe();
-  }, []);
+      return () => subscription.unsubscribe();
+    } else {
+      // In admin mode, set a mock session
+      setSession({ user: { id: 'admin-user' } });
+    }
+  }, [isAdminMode]);
 
   const getUserType = async (userId: string) => {
     try {
@@ -70,6 +76,16 @@ const Navigation = () => {
   };
 
   const handleLogout = async () => {
+    if (isAdminMode) {
+      // In admin mode, just disable admin mode
+      localStorage.removeItem("admin_mode");
+      toast({
+        title: "Admin mode disabled",
+      });
+      window.location.reload();
+      return;
+    }
+    
     try {
       setLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -114,7 +130,7 @@ const Navigation = () => {
           <MobileMenu
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            session={session}
+            session={session || (isAdminMode ? { user: { id: 'admin-user' } } : null)}
             handleDashboardClick={handleDashboardClick}
             handleLogout={handleLogout}
             handleAuthClick={handleAuthClick}
@@ -126,7 +142,7 @@ const Navigation = () => {
         {!isBrowsePage && <IntegratedSearch />}
 
         <DesktopMenu
-          session={session}
+          session={session || (isAdminMode ? { user: { id: 'admin-user' } } : null)}
           handleDashboardClick={handleDashboardClick}
           handleLogout={handleLogout}
           handleAuthClick={handleAuthClick}

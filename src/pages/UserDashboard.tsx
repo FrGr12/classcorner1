@@ -1,9 +1,7 @@
 
-import { Routes, Route, Navigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import UserDashboardHeader from "@/components/user-dashboard/UserDashboardHeader";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
-import UserHome from "@/components/user-dashboard/UserHome";
 import UserBookings from "@/components/user-dashboard/UserBookings";
 import UserMessages from "@/components/user-dashboard/UserMessages";
 import UserNotifications from "@/components/user-dashboard/UserNotifications";

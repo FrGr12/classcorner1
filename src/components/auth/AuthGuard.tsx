@@ -6,7 +6,7 @@ import { toast } from "sonner";
 
 interface AuthGuardProps {
   children: ReactNode;
-  allowBypass?: boolean; // New prop to allow bypassing auth
+  allowBypass?: boolean; // Prop to allow bypassing auth
 }
 
 const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
@@ -14,12 +14,16 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Check if we're in demo/admin mode - allows direct dashboard access
+  // Check if we're in admin mode - allows direct dashboard access
   const isDemoMode = localStorage.getItem("admin_mode") === "true";
 
   useEffect(() => {
-    // If bypass is allowed and we're in demo mode, skip auth check
+    console.log("Current URL:", window.location.href);
+    console.log("Redirect URL will be:", new URL('/auth/callback', window.location.href).toString());
+    
+    // If bypass is allowed and we're in admin mode, skip auth check completely
     if (allowBypass && isDemoMode) {
+      console.log("Admin mode enabled, bypassing auth check");
       setIsAuthenticated(true);
       return;
     }
@@ -28,15 +32,18 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
       try {
         const { data, error } = await supabase.auth.getUser();
         
-        if (error) throw error;
+        if (error) {
+          console.error("Authentication error:", error);
+          throw error;
+        }
         
         if (data?.user) {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
           
-          // Don't redirect if we're already on the auth page
-          if (!location.pathname.includes('/auth')) {
+          // Don't redirect if we're already on the auth page or if bypass is allowed
+          if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
             // Store the current location to redirect back after login
             navigate('/auth', { state: { returnTo: location.pathname } });
             toast.error("Please sign in to access this page");
@@ -46,16 +53,20 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
         console.error("Authentication error:", error);
         setIsAuthenticated(false);
         
-        // Don't redirect if we're already on the auth page
-        if (!location.pathname.includes('/auth')) {
+        // Don't redirect if we're already on the auth page or if bypass is allowed
+        if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
           navigate('/auth', { state: { returnTo: location.pathname } });
         }
       }
     };
 
-    checkAuth();
+    // Only run auth check if we're not bypassing
+    if (!(allowBypass && isDemoMode)) {
+      console.log("Auth: Initial session check:", isAuthenticated);
+      checkAuth();
+    }
     
-    // Listen for auth state changes
+    // Listen for auth state changes - only if not in admin mode
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session);
       if (event === 'SIGNED_IN' && session) {
@@ -81,8 +92,8 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     };
   }, [navigate, location, allowBypass, isDemoMode]);
 
-  // Show loading state while checking authentication
-  if (isAuthenticated === null) {
+  // Show loading state while checking authentication, but only if we're not in admin mode bypass
+  if (isAuthenticated === null && !(allowBypass && isDemoMode)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-accent-purple border-t-transparent rounded-full"></div>
@@ -90,7 +101,7 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     );
   }
 
-  // If authenticated or bypass is allowed, render children
+  // If authenticated or bypass is allowed with admin mode, render children
   return (isAuthenticated || (allowBypass && isDemoMode)) ? <>{children}</> : null;
 };
 

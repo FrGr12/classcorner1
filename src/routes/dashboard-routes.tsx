@@ -12,7 +12,7 @@ export const dashboardRoutes: RouteObject[] = [
   {
     path: "/student-dashboard",
     element: (
-      <AuthGuard>
+      <AuthGuard allowBypass={true}>
         <StudentDashboardLayout />
       </AuthGuard>
     ),

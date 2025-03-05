@@ -10,8 +10,12 @@ const AdminModeToggle = () => {
 
   const toggleAdminMode = () => {
     const newMode = !isAdminMode;
+    
+    // Set the mode in localStorage
     localStorage.setItem("admin_mode", newMode.toString());
     setIsAdminMode(newMode);
+    
+    // Show toast notification
     toast.success(`Admin mode ${newMode ? "enabled" : "disabled"}`);
     
     // Reload the page to apply changes
