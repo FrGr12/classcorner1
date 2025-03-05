@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,7 @@ export const SessionsForm = ({ sessions, setSessions }) => {
     if (newDate && newStartTime) {
       const newSession: Session = {
         id: Date.now(),
-        date: newDate, // This will now accept Date directly
+        date: newDate,
         start_time: newStartTime,
         end_time: newEndTime,
         is_recurring: isRecurring,
@@ -39,7 +38,6 @@ export const SessionsForm = ({ sessions, setSessions }) => {
       
       setSessions([...sessions, newSession]);
       
-      // Reset form
       setNewDate(undefined);
       setNewStartTime("");
       setNewEndTime("");

@@ -42,6 +42,10 @@ const BookingConfirmation = () => {
     try {
       setIsSubmitting(true);
       
+      const selectedDateString = Array.isArray(classItem.date) 
+        ? format(new Date(classItem.date[0]), 'yyyy-MM-dd')
+        : format(new Date(classItem.date), 'yyyy-MM-dd');
+      
       const { data, error } = await supabase
         .from('guest_bookings')
         .insert({
@@ -49,7 +53,7 @@ const BookingConfirmation = () => {
           first_name: firstName,
           last_name: lastName,
           course_id: classItem.id,
-          selected_date: classItem.date,
+          selected_date: selectedDateString,
           total_price: classItem.price,
           status: 'pending'
         })
@@ -84,12 +88,16 @@ const BookingConfirmation = () => {
         return;
       }
 
+      const selectedDateString = Array.isArray(classItem.date) 
+        ? format(new Date(classItem.date[0]), 'yyyy-MM-dd')
+        : format(new Date(classItem.date), 'yyyy-MM-dd');
+
       const { data: newBooking, error } = await supabase
         .from('bookings')
         .insert({
           course_id: classItem.id,
           student_id: user.id,
-          selected_date: classItem.date,
+          selected_date: selectedDateString,
           total_price: classItem.price,
           status: 'pending'
         })

@@ -1,7 +1,7 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { UseFormReturn } from "react-hook-form";
-import SessionsForm from "@/components/teach/SessionsForm";
+import { SessionsForm } from "@/components/teach/SessionsForm";
 import { Session } from "@/types/session";
 
 interface ScheduleSectionProps {
