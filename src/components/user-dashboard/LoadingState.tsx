@@ -1,15 +1,20 @@
 
-import { Loader2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
-const LoadingState = () => {
+export const LoadingState = () => {
   return (
-    <Card className="p-6">
-      <div className="flex items-center justify-center">
-        <Loader2 className="h-6 w-6 animate-spin" />
+    <div className="space-y-6">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-4 w-2/3" />
+      
+      <div className="grid gap-6 md:grid-cols-2">
+        <div className="space-y-4">
+          <Skeleton className="h-40 w-full rounded-md" />
+        </div>
+        <div className="space-y-4">
+          <Skeleton className="h-40 w-full rounded-md" />
+        </div>
       </div>
-    </Card>
+    </div>
   );
 };
-
-export default LoadingState;

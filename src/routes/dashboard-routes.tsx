@@ -21,6 +21,8 @@ import UserPayments from "@/components/user-dashboard/UserPayments";
 import UserPaymentMethods from "@/components/user-dashboard/UserPaymentMethods";
 import UserDashboardOverview from "@/components/user-dashboard/UserDashboardOverview";
 import UserMessages from "@/components/user-dashboard/UserMessages";
+import UserPreferencesPage from "@/components/user-dashboard/UserPreferencesPage";
+import UserProfile from "@/components/user-dashboard/UserProfile";
 
 export const dashboardRoutes: RouteObject[] = [
   // Teacher Dashboard Routes
@@ -115,6 +117,14 @@ export const dashboardRoutes: RouteObject[] = [
       {
         path: "waitlist",
         element: <UserWaitlist />,
+      },
+      {
+        path: "preferences",
+        element: <UserPreferencesPage />,
+      },
+      {
+        path: "profile",
+        element: <UserProfile />,
       },
     ],
   },
