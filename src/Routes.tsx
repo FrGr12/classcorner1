@@ -21,25 +21,30 @@ import BookingConfirmation from "@/pages/BookingConfirmation";
 import Community from "@/pages/Community";
 import PostDetail from "@/components/community/PostDetail";
 import Groups from "@/pages/Groups";
-import Resources from "@/pages/Resources";
 import AuthGuard from "@/components/auth/AuthGuard";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
-import GroupPage from "@/pages/GroupPage";
-import About from "@/pages/About";
-import TeacherContacts from "@/pages/TeacherContacts";
-import TeacherInbox from "@/pages/TeacherInbox";
-import ContactManagement from "@/pages/ContactManagement";
 
 const router = createBrowserRouter([
-  // Public routes
   {
     path: "/",
     element: <Index />,
     errorElement: <ErrorPage />,
   },
   {
-    path: "/about",
-    element: <About />,
+    path: "/auth",
+    element: <Auth />,
+  },
+  {
+    path: "/email-verification",
+    element: <EmailVerification />,
+  },
+  {
+    path: "/password-reset",
+    element: <PasswordReset />,
+  },
+  {
+    path: "/onboarding",
+    element: <Onboarding />,
   },
   {
     path: "/browse",
@@ -57,38 +62,6 @@ const router = createBrowserRouter([
       </ErrorBoundary>
     ),
   },
-
-  // Authentication routes
-  {
-    path: "/auth",
-    element: <Auth />,
-  },
-  {
-    path: "/email-verification",
-    element: <EmailVerification />,
-  },
-  {
-    path: "/password-reset",
-    element: <PasswordReset />,
-  },
-  {
-    path: "/onboarding",
-    element: <Onboarding />,
-  },
-
-  // Protected student routes
-  {
-    path: "/student-dashboard/*",
-    element: (
-      <AuthGuard>
-        <ErrorBoundary>
-          <UserDashboard />
-        </ErrorBoundary>
-      </AuthGuard>
-    ),
-  },
-
-  // Protected teacher dashboard routes
   {
     path: "/dashboard/*",
     element: (
@@ -99,8 +72,36 @@ const router = createBrowserRouter([
       </AuthGuard>
     ),
   },
-
-  // Payment routes
+  {
+    path: "/student-dashboard/*",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <UserDashboard />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/edit-course/:id",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <EditCourse />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "/booking-confirmation",
+    element: (
+      <AuthGuard>
+        <ErrorBoundary>
+          <BookingConfirmation />
+        </ErrorBoundary>
+      </AuthGuard>
+    ),
+  },
   {
     path: "/payment",
     element: (
@@ -132,16 +133,6 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/booking-confirmation",
-    element: (
-      <ErrorBoundary>
-        <BookingConfirmation />
-      </ErrorBoundary>
-    ),
-  },
-
-  // Community routes
-  {
     path: "/community",
     element: (
       <ErrorBoundary>
@@ -162,22 +153,6 @@ const router = createBrowserRouter([
     element: (
       <ErrorBoundary>
         <Groups />
-      </ErrorBoundary>
-    ),
-  },
-  {
-    path: "/community/groups/:id",
-    element: (
-      <ErrorBoundary>
-        <GroupPage />
-      </ErrorBoundary>
-    ),
-  },
-  {
-    path: "/community/resources",
-    element: (
-      <ErrorBoundary>
-        <Resources />
       </ErrorBoundary>
     ),
   },
@@ -205,8 +180,6 @@ const router = createBrowserRouter([
       </ErrorBoundary>
     ),
   },
-
-  // Catch-all route
   {
     path: "*",
     element: <NotFound />,

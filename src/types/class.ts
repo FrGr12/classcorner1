@@ -1,8 +1,8 @@
+
 export interface ClassItem {
   id: number;
   title: string;
   instructor: string;
-  instructor_id?: string;
   price: number;
   rating: number;
   images: string[];
@@ -11,7 +11,6 @@ export interface ClassItem {
   date: Date | Date[];
   city: string;
   maxParticipants?: number;
-  minParticipants?: number;
   waitlist_enabled?: boolean;
   max_waitlist_size?: number;
   groupBookingsEnabled?: boolean;
@@ -24,23 +23,9 @@ export interface ClassItem {
   views?: number;
   saves?: number;
   adClicks?: number;
-  instructorEmail?: string;
-  instructorPhone?: string;
 }
 
 export interface ClassData {
   [key: string]: ClassItem[];
 }
 
-export interface ClassPreview {
-  id: number;
-  title: string;
-  instructor: string;
-  price: number;
-  rating: number;
-  images: string[];
-  level: string;
-  date: Date;
-  city: string;
-  category?: string;
-}

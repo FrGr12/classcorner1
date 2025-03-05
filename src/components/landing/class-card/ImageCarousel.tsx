@@ -1,14 +1,19 @@
 
-import { Image, ChevronLeft, ChevronRight } from "lucide-react";
+import { Image, ArrowLeft, ArrowRight } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
 
 interface ImageCarouselProps {
   images: string[];
   title: string;
   variant?: 'large' | 'small';
-  onError?: () => void;
 }
 
 const PlaceholderImage = () => (
@@ -17,93 +22,107 @@ const PlaceholderImage = () => (
   </div>
 );
 
-const ImageCarousel = ({ images, title, variant = 'small', onError }: ImageCarouselProps) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const hasMultipleImages = images && images.length > 1;
-  const currentImage = images && images.length > 0 ? images[currentIndex] : null;
-  
-  const wrapperClasses = cn(
-    "relative w-full h-full",
-    variant === 'large' ? "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" : ""
-  );
+const ImageCarousel = ({ images, title, variant = 'small' }: ImageCarouselProps) => {
+  const [api, setApi] = useState<any>();
+  const [current, setCurrent] = useState(0);
 
-  const containerClasses = cn(
-    "relative w-full h-full",
-    variant === 'large' ? "aspect-[2/1] sm:aspect-[21/9]" : "aspect-[4/3]"
-  );
+  useEffect(() => {
+    if (!api) {
+      return;
+    }
 
-  const imageClasses = cn(
-    "absolute inset-0 w-full h-full object-cover transition-opacity duration-300",
-    variant === 'large' && "rounded-lg"
-  );
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
-  const handlePrevious = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev === 0 ? images.length - 1 : prev - 1));
+  const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const width = rect.width;
+    
+    if (x > width * 0.7) {
+      e.stopPropagation();
+      api?.scrollNext();
+    }
   };
 
-  const handleNext = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    setCurrentIndex((prev) => (prev === images.length - 1 ? 0 : prev + 1));
-  };
-
-  const handleDotClick = (e: React.MouseEvent, index: number) => {
-    e.stopPropagation();
-    setCurrentIndex(index);
-  };
-
-  const handleImageError = () => {
-    onError?.();
-  };
-
-  return (
-    <div className={wrapperClasses}>
-      <div className={containerClasses}>
-        {currentImage ? (
-          <div className="relative w-full h-full overflow-hidden">
-            <img
-              src={currentImage}
-              alt={`${title} - Image ${currentIndex + 1}`}
-              className={imageClasses}
-              onError={handleImageError}
-            />
-            {variant === 'large' && hasMultipleImages && (
-              <>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="absolute left-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md"
-                  onClick={handlePrevious}
-                >
-                  <ChevronLeft className="h-6 w-6" />
-                </Button>
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="absolute right-6 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white shadow-md"
-                  onClick={handleNext}
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </Button>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                  {images.map((_, index) => (
-                    <button
-                      key={index}
-                      className={cn(
-                        "w-2 h-2 rounded-full transition-all",
-                        index === currentIndex ? "bg-white" : "bg-white/50"
-                      )}
-                      onClick={(e) => handleDotClick(e, index)}
-                    />
-                  ))}
-                </div>
-              </>
-            )}
-          </div>
+  // If we're in a class card (on the main page), just show the first image
+  const isClassCard = location.pathname === '/';
+  if (isClassCard) {
+    const image = images && images.length > 0 ? images[0] : null;
+    return (
+      <div className="absolute inset-0">
+        {image ? (
+          <img
+            src={image}
+            alt={`${title}`}
+            className="w-full h-full object-cover"
+          />
         ) : (
-          <PlaceholderImage />
+          <div className="w-full h-full">
+            <PlaceholderImage />
+          </div>
         )}
       </div>
+    );
+  }
+
+  const displayImages = images && images.length > 0 
+    ? images 
+    : Array(6).fill(null);
+
+  const carouselItemClass = variant === 'large' 
+    ? "pl-2 md:pl-4 basis-full md:basis-1/2 lg:basis-1/3"
+    : "pl-2 md:pl-4 basis-1/2 md:basis-1/3 lg:basis-1/4";
+
+  return (
+    <div className="relative group h-full" onClick={handleClick}>
+      <Carousel 
+        className="w-full h-full" 
+        setApi={setApi}
+        opts={{
+          align: "start",
+          loop: true,
+          skipSnaps: false,
+          dragFree: true
+        }}
+      >
+        <CarouselContent className="-ml-2 md:-ml-4">
+          {displayImages.map((image, index) => (
+            <CarouselItem key={index} className={carouselItemClass}>
+              <div className="relative aspect-square overflow-hidden rounded-lg">
+                {image ? (
+                  <img
+                    src={image}
+                    alt={`${title} - Image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full">
+                    <PlaceholderImage />
+                  </div>
+                )}
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+
+        {displayImages.length > 1 && (
+          <>
+            <CarouselPrevious 
+              className="absolute left-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-200 border-none z-20" 
+            />
+            <CarouselNext 
+              className="absolute right-2 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full 
+                        bg-white/80 hover:bg-white opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-200 border-none z-20" 
+            />
+          </>
+        )}
+      </Carousel>
     </div>
   );
 };

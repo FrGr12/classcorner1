@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { DesktopMenu } from "./navigation/DesktopMenu";
-import { UserType } from "@/types/user";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -17,44 +16,22 @@ const Navigation = () => {
   const [loading, setLoading] = useState(false);
   const [session, setSession] = useState<any>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [userType, setUserType] = useState<UserType>('teacher');
   const isHomePage = location.pathname === "/";
   const isBrowsePage = location.pathname === "/browse";
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      
-      // If we have a session, try to get the user type
-      if (session?.user?.id) {
-        getUserType(session.user.id);
-      }
     });
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+    } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
-      
-      // Update user type when auth state changes
-      if (session?.user?.id) {
-        getUserType(session.user.id);
-      }
     });
 
     return () => subscription.unsubscribe();
   }, []);
-
-  const getUserType = async (userId: string) => {
-    try {
-      // This is a placeholder - in a real app, you would fetch the user type from your database
-      // For example: const { data } = await supabase.from('profiles').select('user_type').eq('id', userId).single();
-      // Here we're defaulting to 'teacher' since that's the main flow in your app
-      setUserType('teacher');
-    } catch (error) {
-      console.error('Error fetching user type:', error);
-    }
-  };
 
   const handleAuthClick = () => {
     navigate("/auth");
@@ -65,8 +42,7 @@ const Navigation = () => {
   };
 
   const handleDashboardClick = () => {
-    // Redirect to the appropriate dashboard based on user type
-    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
+    navigate("/dashboard");
   };
 
   const handleLogout = async () => {
@@ -118,7 +94,6 @@ const Navigation = () => {
             handleLogout={handleLogout}
             handleAuthClick={handleAuthClick}
             loading={loading}
-            userType={userType}
           />
         </div>
         

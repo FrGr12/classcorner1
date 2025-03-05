@@ -325,64 +325,6 @@ export type Database = {
         }
         Relationships: []
       }
-      class_materials: {
-        Row: {
-          course_id: number | null
-          created_at: string | null
-          description: string | null
-          estimated_cost: number | null
-          id: number
-          name: string
-          optional: boolean | null
-          provided_by_instructor: boolean | null
-          quantity_needed: number | null
-        }
-        Insert: {
-          course_id?: number | null
-          created_at?: string | null
-          description?: string | null
-          estimated_cost?: number | null
-          id?: never
-          name: string
-          optional?: boolean | null
-          provided_by_instructor?: boolean | null
-          quantity_needed?: number | null
-        }
-        Update: {
-          course_id?: number | null
-          created_at?: string | null
-          description?: string | null
-          estimated_cost?: number | null
-          id?: never
-          name?: string
-          optional?: boolean | null
-          provided_by_instructor?: boolean | null
-          quantity_needed?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_materials_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_materials_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_engagement_metrics"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "class_materials_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_revenue_insights"
-            referencedColumns: ["course_id"]
-          },
-        ]
-      }
       class_promotions: {
         Row: {
           amount_paid: number
@@ -431,64 +373,6 @@ export type Database = {
           },
           {
             foreignKeyName: "class_promotions_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_revenue_insights"
-            referencedColumns: ["course_id"]
-          },
-        ]
-      }
-      class_schedule_patterns: {
-        Row: {
-          course_id: number | null
-          created_at: string | null
-          day_of_week: number[] | null
-          end_time: string
-          id: number
-          recurrence_ends_at: string | null
-          recurring_type: string | null
-          start_time: string
-          updated_at: string | null
-        }
-        Insert: {
-          course_id?: number | null
-          created_at?: string | null
-          day_of_week?: number[] | null
-          end_time: string
-          id?: never
-          recurrence_ends_at?: string | null
-          recurring_type?: string | null
-          start_time: string
-          updated_at?: string | null
-        }
-        Update: {
-          course_id?: number | null
-          created_at?: string | null
-          day_of_week?: number[] | null
-          end_time?: string
-          id?: never
-          recurrence_ends_at?: string | null
-          recurring_type?: string | null
-          start_time?: string
-          updated_at?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "class_schedule_patterns_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "class_schedule_patterns_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_engagement_metrics"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "class_schedule_patterns_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "teacher_revenue_insights"
@@ -943,7 +827,6 @@ export type Database = {
         Row: {
           course_id: number | null
           id: number
-          is_saved: boolean | null
           last_viewed_section: string | null
           user_id: string | null
           view_duration: number | null
@@ -952,7 +835,6 @@ export type Database = {
         Insert: {
           course_id?: number | null
           id?: never
-          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
@@ -961,7 +843,6 @@ export type Database = {
         Update: {
           course_id?: number | null
           id?: never
-          is_saved?: boolean | null
           last_viewed_section?: string | null
           user_id?: string | null
           view_duration?: number | null
@@ -1097,58 +978,6 @@ export type Database = {
           },
           {
             foreignKeyName: "course_discounts_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_revenue_insights"
-            referencedColumns: ["course_id"]
-          },
-        ]
-      }
-      course_faqs: {
-        Row: {
-          answer: string
-          course_id: number | null
-          created_at: string
-          display_order: number | null
-          id: number
-          question: string
-          updated_at: string
-        }
-        Insert: {
-          answer: string
-          course_id?: number | null
-          created_at?: string
-          display_order?: number | null
-          id?: number
-          question: string
-          updated_at?: string
-        }
-        Update: {
-          answer?: string
-          course_id?: number | null
-          created_at?: string
-          display_order?: number | null
-          id?: number
-          question?: string
-          updated_at?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "course_faqs_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "course_faqs_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_engagement_metrics"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "course_faqs_course_id_fkey"
             columns: ["course_id"]
             isOneToOne: false
             referencedRelation: "teacher_revenue_insights"
@@ -1438,11 +1267,7 @@ export type Database = {
           auto_send_waitlist_notification: boolean | null
           base_price_group: number | null
           base_price_private: number | null
-          booking_deadline_hours: number | null
-          cancellation_policy: string | null
           category: string
-          class_format: string | null
-          class_requirements: string[] | null
           created_at: string
           description: string
           duration: string | null
@@ -1454,23 +1279,18 @@ export type Database = {
           learning_outcomes: string[] | null
           location: string
           materials_included: string | null
-          materials_provided: string[] | null
           max_group_size: number | null
           max_participants: number | null
           max_waitlist_size: number | null
           min_group_size: number | null
-          min_participants: number | null
           payment_timing: string | null
-          prerequisites: string[] | null
           price: number
           private_bookings_enabled: boolean | null
           search_vector: unknown | null
           setup_instructions: string | null
           share_count: number | null
-          skill_level: string | null
           status: Database["public"]["Enums"]["course_status"] | null
           tags: string[] | null
-          target_audience: string[] | null
           title: string
           updated_at: string
           waitlist_enabled: boolean | null
@@ -1481,11 +1301,7 @@ export type Database = {
           auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
-          booking_deadline_hours?: number | null
-          cancellation_policy?: string | null
           category: string
-          class_format?: string | null
-          class_requirements?: string[] | null
           created_at?: string
           description: string
           duration?: string | null
@@ -1497,23 +1313,18 @@ export type Database = {
           learning_outcomes?: string[] | null
           location: string
           materials_included?: string | null
-          materials_provided?: string[] | null
           max_group_size?: number | null
           max_participants?: number | null
           max_waitlist_size?: number | null
           min_group_size?: number | null
-          min_participants?: number | null
           payment_timing?: string | null
-          prerequisites?: string[] | null
           price: number
           private_bookings_enabled?: boolean | null
           search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
-          skill_level?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
-          target_audience?: string[] | null
           title: string
           updated_at?: string
           waitlist_enabled?: boolean | null
@@ -1524,11 +1335,7 @@ export type Database = {
           auto_send_waitlist_notification?: boolean | null
           base_price_group?: number | null
           base_price_private?: number | null
-          booking_deadline_hours?: number | null
-          cancellation_policy?: string | null
           category?: string
-          class_format?: string | null
-          class_requirements?: string[] | null
           created_at?: string
           description?: string
           duration?: string | null
@@ -1540,23 +1347,18 @@ export type Database = {
           learning_outcomes?: string[] | null
           location?: string
           materials_included?: string | null
-          materials_provided?: string[] | null
           max_group_size?: number | null
           max_participants?: number | null
           max_waitlist_size?: number | null
           min_group_size?: number | null
-          min_participants?: number | null
           payment_timing?: string | null
-          prerequisites?: string[] | null
           price?: number
           private_bookings_enabled?: boolean | null
           search_vector?: unknown | null
           setup_instructions?: string | null
           share_count?: number | null
-          skill_level?: string | null
           status?: Database["public"]["Enums"]["course_status"] | null
           tags?: string[] | null
-          target_audience?: string[] | null
           title?: string
           updated_at?: string
           waitlist_enabled?: boolean | null
@@ -1593,55 +1395,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "community_events"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      faq_questions: {
-        Row: {
-          course_id: number | null
-          created_at: string
-          id: number
-          question: string
-          status: string | null
-          student_id: string | null
-        }
-        Insert: {
-          course_id?: number | null
-          created_at?: string
-          id?: number
-          question: string
-          status?: string | null
-          student_id?: string | null
-        }
-        Update: {
-          course_id?: number | null
-          created_at?: string
-          id?: number
-          question?: string
-          status?: string | null
-          student_id?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "faq_questions_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "faq_questions_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_engagement_metrics"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "faq_questions_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_revenue_insights"
-            referencedColumns: ["course_id"]
           },
         ]
       }
@@ -1835,83 +1588,6 @@ export type Database = {
             columns: ["group_id"]
             isOneToOne: false
             referencedRelation: "community_groups"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
-      guest_bookings: {
-        Row: {
-          course_id: number | null
-          created_at: string | null
-          email: string
-          expires_at: string | null
-          first_name: string | null
-          id: string
-          last_name: string | null
-          selected_date: string | null
-          session_id: number | null
-          special_requests: string | null
-          status: string | null
-          token: string | null
-          total_price: number | null
-        }
-        Insert: {
-          course_id?: number | null
-          created_at?: string | null
-          email: string
-          expires_at?: string | null
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          selected_date?: string | null
-          session_id?: number | null
-          special_requests?: string | null
-          status?: string | null
-          token?: string | null
-          total_price?: number | null
-        }
-        Update: {
-          course_id?: number | null
-          created_at?: string | null
-          email?: string
-          expires_at?: string | null
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-          selected_date?: string | null
-          session_id?: number | null
-          special_requests?: string | null
-          status?: string | null
-          token?: string | null
-          total_price?: number | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "guest_bookings_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "guest_bookings_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_engagement_metrics"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "guest_bookings_course_id_fkey"
-            columns: ["course_id"]
-            isOneToOne: false
-            referencedRelation: "teacher_revenue_insights"
-            referencedColumns: ["course_id"]
-          },
-          {
-            foreignKeyName: "guest_bookings_session_id_fkey"
-            columns: ["session_id"]
-            isOneToOne: false
-            referencedRelation: "course_sessions"
             referencedColumns: ["id"]
           },
         ]
@@ -2174,8 +1850,6 @@ export type Database = {
           created_at: string
           currency: string
           id: number
-          is_express_checkout: boolean | null
-          payment_method_id: string | null
           payment_status: string
           receipt_url: string | null
           stripe_client_secret: string | null
@@ -2188,8 +1862,6 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: never
-          is_express_checkout?: boolean | null
-          payment_method_id?: string | null
           payment_status?: string
           receipt_url?: string | null
           stripe_client_secret?: string | null
@@ -2202,8 +1874,6 @@ export type Database = {
           created_at?: string
           currency?: string
           id?: never
-          is_express_checkout?: boolean | null
-          payment_method_id?: string | null
           payment_status?: string
           receipt_url?: string | null
           stripe_client_secret?: string | null
@@ -2355,7 +2025,6 @@ export type Database = {
           search_text: string | null
           sms_notifications: boolean | null
           social_media: Json | null
-          stripe_customer_id: string | null
           tags: string[] | null
           teaching_experience: string | null
           timezone: string | null
@@ -2391,7 +2060,6 @@ export type Database = {
           search_text?: string | null
           sms_notifications?: boolean | null
           social_media?: Json | null
-          stripe_customer_id?: string | null
           tags?: string[] | null
           teaching_experience?: string | null
           timezone?: string | null
@@ -2427,7 +2095,6 @@ export type Database = {
           search_text?: string | null
           sms_notifications?: boolean | null
           social_media?: Json | null
-          stripe_customer_id?: string | null
           tags?: string[] | null
           teaching_experience?: string | null
           timezone?: string | null
@@ -2649,33 +2316,6 @@ export type Database = {
           },
         ]
       }
-      teacher_follows: {
-        Row: {
-          created_at: string
-          id: string
-          status: Database["public"]["Enums"]["follow_status"]
-          student_id: string
-          teacher_id: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          id?: string
-          status?: Database["public"]["Enums"]["follow_status"]
-          student_id: string
-          teacher_id: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          id?: string
-          status?: Database["public"]["Enums"]["follow_status"]
-          student_id?: string
-          teacher_id?: string
-          updated_at?: string
-        }
-        Relationships: []
-      }
       teacher_metrics: {
         Row: {
           avg_rating: number | null
@@ -2788,42 +2428,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      user_payment_methods: {
-        Row: {
-          brand: string
-          created_at: string
-          exp_month: number
-          exp_year: number
-          id: string
-          is_default: boolean
-          last4: string
-          updated_at: string
-          user_id: string
-        }
-        Insert: {
-          brand: string
-          created_at?: string
-          exp_month: number
-          exp_year: number
-          id: string
-          is_default?: boolean
-          last4: string
-          updated_at?: string
-          user_id: string
-        }
-        Update: {
-          brand?: string
-          created_at?: string
-          exp_month?: number
-          exp_year?: number
-          id?: string
-          is_default?: boolean
-          last4?: string
-          updated_at?: string
-          user_id?: string
-        }
-        Relationships: []
       }
       user_preferences: {
         Row: {
@@ -3027,10 +2631,6 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
-      cleanup_expired_guest_bookings: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
       cleanup_old_activity_logs: {
         Args: Record<PropertyKey, never>
         Returns: undefined
@@ -3062,7 +2662,6 @@ export type Database = {
         | "beginner_friendly"
         | "advanced_course"
         | "family_friendly"
-      follow_status: "pending" | "active" | "blocked"
       group_type: "open" | "private"
       notification_preference: "email" | "in_app" | "both" | "none"
       user_type: "student" | "teacher" | "admin"

@@ -1,20 +1,13 @@
-
-import { Badge } from "@/components/ui/badge";
-import { cn } from "@/lib/utils";
+import CategoryBadge from "./CategoryBadge";
 
 interface CategoryBadgesProps {
   displayCategory: string;
-  className?: string;
 }
 
-const CategoryBadges = ({ displayCategory, className }: CategoryBadgesProps) => {
+const CategoryBadges = ({ displayCategory }: CategoryBadgesProps) => {
   return (
-    <div className={cn("absolute top-3 left-3 z-10", className)}>
-      <Badge 
-        className="font-sans text-xs font-semibold bg-white/90 text-black hover:bg-white/80"
-      >
-        {displayCategory}
-      </Badge>
+    <div className="absolute top-2 left-2 flex flex-wrap gap-1.5">
+      <CategoryBadge category={displayCategory} />
     </div>
   );
 };

@@ -42,9 +42,9 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
-      return date.length > 0 ? format(date[0], 'MM/dd/yy') : '-';
+      return date.length > 0 ? format(date[0], 'PPP') : 'No date set';
     }
-    return format(date, 'MM/dd/yy');
+    return format(date, 'PPP');
   };
 
   const handleEditSuccess = () => {
@@ -53,55 +53,22 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
 
   return (
     <>
-      <Table className="text-xs sm:text-sm">
+      <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-              <ColumnFilter
-                column="Title"
-                value={filters.title}
-                onChange={(value) => handleFilter('title', value)}
-              />
-            </TableHead>
-            <TableHead>
-              <ColumnFilter
-                column="Date"
-                value={filters.date}
-                onChange={(value) => handleFilter('date', value)}
-              />
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">
-              <ColumnFilter
-                column="Capacity"
-                value={filters.capacity}
-                onChange={(value) => handleFilter('capacity', value)}
-              />
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">
-              <ColumnFilter
-                column="Attendees"
-                value={filters.attendees}
-                onChange={(value) => handleFilter('attendees', value)}
-              />
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">
-              <ColumnFilter
-                column="Waitlist"
-                value={filters.waitlist}
-                onChange={(value) => handleFilter('waitlist', value)}
-              />
-            </TableHead>
-            <TableHead className="hidden sm:table-cell">
-              <ColumnFilter
-                column="Paid"
-                value={filters.paid}
-                onChange={(value) => handleFilter('paid', value)}
-              />
-            </TableHead>
-            <TableHead className="hidden sm:table-cell text-center">Views</TableHead>
-            <TableHead className="hidden sm:table-cell text-center">Saves</TableHead>
-            <TableHead className="hidden sm:table-cell text-center">Clicks</TableHead>
-            <TableHead className="hidden sm:table-cell">Actions</TableHead>
+            {Object.keys(filters).map((column) => (
+              <TableHead key={column}>
+                <ColumnFilter
+                  column={column.charAt(0).toUpperCase() + column.slice(1)}
+                  value={filters[column as keyof typeof filters]}
+                  onChange={(value) => handleFilter(column, value)}
+                />
+              </TableHead>
+            ))}
+            <TableHead className="text-center">Views</TableHead>
+            <TableHead className="text-center">Saves</TableHead>
+            <TableHead className="text-center">Clicks</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -115,94 +82,17 @@ const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
               }}
             >
               <TableCell className="font-medium">{classItem.title}</TableCell>
-              <TableCell>
-                <div className="flex flex-col sm:block">
-                  <div className="flex items-center justify-between gap-2">
-                    <span className="whitespace-nowrap">{formatClassDate(classItem.date)}</span>
-                    <div className="sm:hidden">
-                      <ClassActions
-                        classId={classItem.id}
-                        onEdit={(e) => {
-                          e.stopPropagation();
-                          setSelectedClassId(classItem.id);
-                          setIsEditOpen(true);
-                        }}
-                        onMessage={(e) => {
-                          e.stopPropagation();
-                          setSelectedClassId(classItem.id);
-                          setIsMessageOpen(true);
-                        }}
-                        onPromote={(e) => {
-                          e.stopPropagation();
-                          setSelectedClassId(classItem.id);
-                          setIsPromoteOpen(true);
-                        }}
-                        onShare={(e) => {
-                          e.stopPropagation();
-                          setSelectedClassId(classItem.id);
-                          setIsShareOpen(true);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <div className="grid grid-cols-4 gap-1 mt-2 sm:hidden">
-                    <div className="text-center">
-                      <span className="block text-[10px] text-muted-foreground">Cap</span>
-                      <span>{classItem.maxParticipants || '-'}</span>
-                    </div>
-                    <div className="text-center">
-                      <span className="block text-[10px] text-muted-foreground">Att</span>
-                      <span>0</span>
-                    </div>
-                    <div className="text-center">
-                      <span className="block text-[10px] text-muted-foreground">Wait</span>
-                      <span>0</span>
-                    </div>
-                    <div className="text-center">
-                      <span className="block text-[10px] text-muted-foreground">Paid</span>
-                      <span>0</span>
-                    </div>
-                  </div>
-                  <div className="flex justify-between mt-2 border-t pt-1 sm:hidden">
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] text-muted-foreground">Views:</span>
-                      <span>{classItem.views || 0}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] text-muted-foreground">Saves:</span>
-                      <span>{classItem.saves || 0}</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] text-muted-foreground">Clicks:</span>
-                      <span>{classItem.adClicks || 0}</span>
-                    </div>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell className="hidden sm:table-cell text-center">{classItem.maxParticipants || '-'}</TableCell>
-              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
-              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
-              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
-              <TableCell className="hidden sm:table-cell p-0" colSpan={3}>
-                <div className="grid grid-cols-3">
-                  <div className="text-center px-1 sm:px-4">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="text-xs sm:text-sm">{classItem.views || 0}</span>
-                    </div>
-                  </div>
-                  <div className="text-center px-1 sm:px-4">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="text-xs sm:text-sm">{classItem.saves || 0}</span>
-                    </div>
-                  </div>
-                  <div className="text-center px-1 sm:px-4">
-                    <div className="flex items-center justify-center gap-1">
-                      <span className="text-xs sm:text-sm">{classItem.adClicks || 0}</span>
-                    </div>
-                  </div>
-                </div>
-              </TableCell>
-              <TableCell onClick={(e) => e.stopPropagation()} className="hidden sm:table-cell">
+              <TableCell>{formatClassDate(classItem.date)}</TableCell>
+              <TableCell>{classItem.maxParticipants || '-'}</TableCell>
+              <TableCell>0</TableCell>
+              <TableCell>0</TableCell>
+              <TableCell>0</TableCell>
+              <StatsDisplay
+                views={classItem.views || 0}
+                saves={classItem.saves || 0}
+                adClicks={classItem.adClicks || 0}
+              />
+              <TableCell onClick={(e) => e.stopPropagation()}>
                 <ClassActions
                   classId={classItem.id}
                   onEdit={(e) => {

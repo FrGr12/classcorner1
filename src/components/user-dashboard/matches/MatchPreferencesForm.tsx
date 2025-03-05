@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Bell, X } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
 
 const categories = ["Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making", "Jewellery & Metal", "Cocktail & Wine", "Photography", "Music & Dance", "Wood Craft", "Textile Craft", "Paper Craft", "Flower & Plants"];
 const cities = ["Stockholm", "Göteborg", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Helsingborg", "Jönköping", "Norrköping"];
@@ -23,29 +22,12 @@ const MatchPreferencesForm = ({
   const [location, setLocation] = useState(initialLocation);
   const [selectedCategories, setSelectedCategories] = useState<string[]>(initialCategories);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { toast } = useToast();
 
   const handleAddCategory = () => {
-    if (!selectedCategory) {
-      toast({
-        title: "No category selected",
-        description: "Please select a category to add",
-        variant: "destructive",
-      });
-      return;
+    if (selectedCategory && !selectedCategories.includes(selectedCategory)) {
+      setSelectedCategories([...selectedCategories, selectedCategory]);
+      setSelectedCategory("");
     }
-
-    if (selectedCategories.includes(selectedCategory)) {
-      toast({
-        title: "Category already added",
-        description: "This category is already in your interests",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    setSelectedCategories(prev => [...prev, selectedCategory]);
-    setSelectedCategory("");
   };
 
   const handleRemoveCategory = (category: string) => {
@@ -83,7 +65,6 @@ const MatchPreferencesForm = ({
                   <button
                     onClick={() => handleRemoveCategory(category)}
                     className="ml-1 hover:text-destructive"
-                    aria-label={`Remove ${category}`}
                   >
                     <X className="h-3 w-3" />
                   </button>
@@ -106,6 +87,7 @@ const MatchPreferencesForm = ({
               <Button 
                 onClick={handleAddCategory}
                 className="bg-[#6E44FF] hover:bg-[#6E44FF]/90"
+                disabled={!selectedCategory}
               >
                 Add Interest
               </Button>

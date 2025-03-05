@@ -1,5 +1,10 @@
 
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Info } from "lucide-react";
 
 const PolicyInfo = () => {
@@ -21,10 +26,10 @@ const PolicyInfo = () => {
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <div className="p-4 rounded-lg space-y-2 text-left bg-primary-foreground">
-            <p className="font-medium">Our flexible refund policy:</p>
+          <div className="bg-neutral-50 p-4 rounded-lg space-y-2">
+            <p className="text-left font-medium">Our flexible refund policy:</p>
             <ul className="list-disc pl-5 space-y-2">
-              <li className="text-left">
+              <li>
                 Cancel more than 48 hours before class: Full refund
                 <TooltipProvider>
                   <Tooltip>
@@ -37,7 +42,7 @@ const PolicyInfo = () => {
                   </Tooltip>
                 </TooltipProvider>
               </li>
-              <li className="text-left">
+              <li>
                 Cancel within 48 hours of class: No refund
                 <TooltipProvider>
                   <Tooltip>
@@ -50,8 +55,8 @@ const PolicyInfo = () => {
                   </Tooltip>
                 </TooltipProvider>
               </li>
-              <li className="text-left">All refunds are automatically processed to your original payment method</li>
-              <li className="text-left">Refunds typically take 5-7 business days to appear in your account</li>
+              <li>All refunds are automatically processed to your original payment method</li>
+              <li>Refunds typically take 5-7 business days to appear in your account</li>
             </ul>
           </div>
         </div>

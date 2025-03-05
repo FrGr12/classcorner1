@@ -1,3 +1,4 @@
+
 import { ClassItem } from "@/types/class";
 
 const mockClasses: Record<string, ClassItem[]> = {
@@ -8,11 +9,7 @@ const mockClasses: Record<string, ClassItem[]> = {
       instructor: "Sarah Johnson",
       price: 75,
       rating: 4.8,
-      images: [
-        "/placeholder.svg",
-        "/og-image.svg",
-        "/placeholder.svg"
-      ],
+      images: [],
       level: "Beginner",
       date: [
         new Date("2024-02-15"),
@@ -28,11 +25,7 @@ const mockClasses: Record<string, ClassItem[]> = {
       instructor: "Michael Chen",
       price: 90,
       rating: 4.9,
-      images: [
-        "/placeholder.svg",
-        "/og-image.svg",
-        "/placeholder.svg"
-      ],
+      images: [],
       level: "Intermediate",
       date: [
         new Date("2024-02-20"), 

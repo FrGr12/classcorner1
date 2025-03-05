@@ -1,327 +1,68 @@
 
-import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { PlusCircle, Calendar, Users, Clock, ArrowUpRight } from "lucide-react";
-import ClassCard from "./classes/ClassCard";
-import ClassesTable from "./classes/ClassesTable";
-import ClassesHeader from "./classes/ClassesHeader";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
+import { mockClasses } from "@/data/mockClasses";
+import ClassesHeader from "./classes/ClassesHeader";
 import ClassesTabs from "./classes/ClassesTabs";
-import { ClassItem } from "@/types/class";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { AlertTriangle } from "lucide-react";
 
-// Define a local ClassItemLocal type that matches what we're using
-interface ClassItemLocal {
-  id: number;
-  title: string;
-  category: string;
-  date: string;
-  time: string;
-  duration: string;
-  location: string;
-  price: number;
-  capacity: {
-    total: number;
-    booked: number;
-  };
-  image?: string;
-  status: "active" | "draft" | "completed" | "cancelled";
-  waitlist?: number;
-  // Adding missing properties to match ClassItem
-  instructor: string;
-  rating: number;
-  images: string[];
-  level: string;
-  city: string;
-}
-
-export default function TeacherClasses() {
+const TeacherClasses = () => {
   const navigate = useNavigate();
-  const [viewType, setViewType] = useState<"cards" | "list">("cards");
-  const [selectedClass, setSelectedClass] = useState<ClassItemLocal | null>(null);
-  const [selectedTab, setSelectedTab] = useState("all");
-
-  // Mock data for classes with all required properties
-  const classes: ClassItemLocal[] = [
-    {
-      id: 1,
-      title: "Introduction to Pottery",
-      category: "Pottery",
-      date: "2023-07-15",
-      time: "10:00 AM",
-      duration: "2 hours",
-      location: "Studio A",
-      price: 75,
-      capacity: {
-        total: 10,
-        booked: 8
-      },
-      status: "active",
-      waitlist: 3,
-      instructor: "Jane Doe",
-      rating: 4.8,
-      images: ["/placeholder.svg"],
-      level: "Beginner",
-      city: "Stockholm"
-    },
-    {
-      id: 2,
-      title: "Watercolor Basics",
-      category: "Painting",
-      date: "2023-07-18",
-      time: "2:00 PM",
-      duration: "3 hours",
-      location: "Studio B",
-      price: 60,
-      capacity: {
-        total: 12,
-        booked: 6
-      },
-      status: "active",
-      instructor: "John Smith",
-      rating: 4.5,
-      images: ["/placeholder.svg"],
-      level: "Beginner",
-      city: "Stockholm"
-    },
-    {
-      id: 3,
-      title: "Advanced Pottery Techniques",
-      category: "Pottery",
-      date: "2023-07-25",
-      time: "1:00 PM",
-      duration: "4 hours",
-      location: "Studio A",
-      price: 120,
-      capacity: {
-        total: 8,
-        booked: 3
-      },
-      status: "draft",
-      instructor: "Jane Doe",
-      rating: 4.9,
-      images: ["/placeholder.svg"],
-      level: "Advanced",
-      city: "Stockholm"
-    }
-  ];
-
-  const filteredClasses = classes.filter(classItem => {
-    if (selectedTab === "all") return true;
-    if (selectedTab === "active") return classItem.status === "active";
-    if (selectedTab === "draft") return classItem.status === "draft";
-    if (selectedTab === "completed") return classItem.status === "completed";
-    return true;
-  });
+  const allClasses = Object.values(mockClasses).flat();
 
   const handleAction = (action: string, classId: number) => {
-    // Handle actions like edit, delete, etc.
-    console.log(`Action: ${action}, Class ID: ${classId}`);
-    
-    if (action === "edit") {
-      navigate(`/dashboard/classes/edit/${classId}`);
-    } else if (action === "view") {
-      // Set the selected class for the detailed view
-      const classItem = classes.find(c => c.id === classId);
-      if (classItem) {
-        setSelectedClass(classItem);
+    try {
+      switch (action) {
+        case "edit":
+          navigate(`/dashboard/classes/${classId}/edit`);
+          break;
+        case "message":
+          toast("Opening message composer...");
+          break;
+        case "boost":
+          if (!classId) {
+            throw new Error("Class ID is required to boost a class");
+          }
+          toast("Boost feature coming soon!");
+          break;
+        case "cancel":
+          if (!classId) {
+            throw new Error("Class ID is required to cancel a class");
+          }
+          toast("Class cancelled successfully", {
+            description: "All registered students will be notified automatically."
+          });
+          break;
+        default:
+          throw new Error(`Unknown action: ${action}`);
       }
-    } else if (action === "duplicate") {
-      navigate(`/dashboard/classes/duplicate/${classId}`);
+    } catch (error: any) {
+      toast.error(error.message || "An error occurred while performing this action");
     }
   };
 
-  return (
-    <div className="space-y-8">
-      <div>
-        {/* Using a div instead of ClassesHeader to avoid type errors */}
-        <Card className="mb-4 sm:mb-8 rounded-none sm:rounded-md border-x-0 sm:border-x">
-          <CardContent className="p-3 sm:p-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-              <div className="text-left">
-                <h1 className="text-xl sm:text-2xl font-bold">Your Classes</h1>
-                <p className="text-muted-foreground mt-1 text-xs sm:text-sm">
-                  Manage and create your classes
-                </p>
-              </div>
-              <div className="flex gap-2 sm:gap-3">
-                <Button 
-                  variant="outline" 
-                  className="text-xs sm:text-sm h-8 sm:h-10"
-                  onClick={() => navigate("/dashboard/classes/create")}
-                >
-                  Create Class
-                </Button>
-                <Button 
-                  className="bg-accent-purple hover:bg-accent-purple/90 text-white text-xs sm:text-sm h-8 sm:h-10"
-                  onClick={() => navigate("/dashboard/classes/create")}
-                >
-                  New Class
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+  if (!allClasses.length) {
+    return (
+      <div className="space-y-6">
+        <ClassesHeader />
+        <Alert variant="warning">
+          <AlertTriangle className="h-4 w-4" />
+          <AlertTitle>No Classes Found</AlertTitle>
+          <AlertDescription>
+            You haven't created any classes yet. Click the "Create Class" button above to get started.
+          </AlertDescription>
+        </Alert>
       </div>
+    );
+  }
 
-      <Card>
-        <CardHeader className="flex flex-col space-y-2 sm:flex-row sm:items-center sm:justify-between sm:space-y-0 pb-2">
-          <div className="space-y-0.5">
-            <CardTitle>Your Classes</CardTitle>
-            <CardDescription>
-              Manage and organize your scheduled classes
-            </CardDescription>
-          </div>
-          <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => navigate("/dashboard/classes/create")}
-            >
-              <PlusCircle className="mr-2 h-4 w-4" />
-              Create Class
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs
-            defaultValue="all"
-            value={selectedTab}
-            onValueChange={setSelectedTab}
-            className="space-y-4"
-          >
-            <div className="flex justify-between items-center">
-              <TabsList>
-                <TabsTrigger value="all">All Classes</TabsTrigger>
-                <TabsTrigger value="active">Active</TabsTrigger>
-                <TabsTrigger value="draft">Drafts</TabsTrigger>
-                <TabsTrigger value="completed">Completed</TabsTrigger>
-              </TabsList>
-              <div className="flex space-x-2">
-                <Button
-                  variant={viewType === "cards" ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setViewType("cards")}
-                  className="h-8 w-8 p-0"
-                >
-                  <Calendar className="h-4 w-4" />
-                </Button>
-                <Button
-                  variant={viewType === "list" ? "secondary" : "outline"}
-                  size="sm"
-                  onClick={() => setViewType("list")}
-                  className="h-8 w-8 p-0"
-                >
-                  <Users className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-
-            <TabsContent value="all" className="space-y-4">
-              {viewType === "cards" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredClasses.map((classItem) => (
-                    <ClassCard 
-                      key={classItem.id}
-                      classItem={classItem as any}
-                      onAction={(action) => handleAction(action, classItem.id)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ClassesTable 
-                  classes={filteredClasses as any}
-                  onAction={(action, classId) => handleAction(action, classId)}
-                />
-              )}
-            </TabsContent>
-            
-            <TabsContent value="active" className="space-y-4">
-              {viewType === "cards" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredClasses.map((classItem) => (
-                    <ClassCard 
-                      key={classItem.id}
-                      classItem={classItem as any}
-                      onAction={(action) => handleAction(action, classItem.id)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ClassesTable 
-                  classes={filteredClasses as any}
-                  onAction={(action, classId) => handleAction(action, classId)}
-                />
-              )}
-            </TabsContent>
-            
-            <TabsContent value="draft" className="space-y-4">
-              {viewType === "cards" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredClasses.map((classItem) => (
-                    <ClassCard 
-                      key={classItem.id}
-                      classItem={classItem as any}
-                      onAction={(action) => handleAction(action, classItem.id)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ClassesTable 
-                  classes={filteredClasses as any}
-                  onAction={(action, classId) => handleAction(action, classId)}
-                />
-              )}
-            </TabsContent>
-            
-            <TabsContent value="completed" className="space-y-4">
-              {viewType === "cards" ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredClasses.map((classItem) => (
-                    <ClassCard 
-                      key={classItem.id}
-                      classItem={classItem as any}
-                      onAction={(action) => handleAction(action, classItem.id)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ClassesTable 
-                  classes={filteredClasses as any}
-                  onAction={(action, classId) => handleAction(action, classId)}
-                />
-              )}
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-
-      {selectedClass && (
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <div className="space-y-1">
-              <CardTitle className="text-2xl">{selectedClass.title}</CardTitle>
-              <div className="flex items-center space-x-2">
-                <Badge variant="secondary" className="text-xs">
-                  {selectedClass.category}
-                </Badge>
-                <span className="text-sm text-muted-foreground">
-                  {selectedClass.duration}
-                </span>
-              </div>
-            </div>
-            <Button variant="outline" size="sm" onClick={() => navigate(`/class/${selectedClass.id}`)}>
-              <ArrowUpRight className="mr-2 h-4 w-4" />
-              View Public Page
-            </Button>
-          </CardHeader>
-          <CardContent className="pt-6">
-            <ClassesTabs />
-          </CardContent>
-        </Card>
-      )}
+  return (
+    <div className="space-y-6">
+      <ClassesHeader />
+      <ClassesTabs classes={allClasses} onAction={handleAction} />
     </div>
   );
-}
+};
+
+export default TeacherClasses;

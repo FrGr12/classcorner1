@@ -1,14 +1,12 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle, Loader2, Image } from "lucide-react";
+import { PlusCircle, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-
 export function CreatePostDialog() {
   const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState("");
@@ -16,10 +14,9 @@ export function CreatePostDialog() {
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [images, setImages] = useState<File[]>([]);
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const { toast } = useToast();
-
+  const {
+    toast
+  } = useToast();
   const handleAddTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && tagInput.trim()) {
       e.preventDefault();
@@ -29,25 +26,9 @@ export function CreatePostDialog() {
       setTagInput("");
     }
   };
-
   const removeTag = (tagToRemove: string) => {
     setTags(tags.filter(tag => tag !== tagToRemove));
   };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    setImages(prevImages => [...prevImages, ...files]);
-    
-    // Create preview URLs
-    const urls = files.map(file => URL.createObjectURL(file));
-    setImageUrls(prevUrls => [...prevUrls, ...urls]);
-  };
-
-  const removeImage = (index: number) => {
-    setImages(prevImages => prevImages.filter((_, i) => i !== index));
-    setImageUrls(prevUrls => prevUrls.filter((_, i) => i !== index));
-  };
-
   const handleSubmit = async () => {
     if (!title.trim() || !content.trim()) {
       toast({
@@ -58,7 +39,12 @@ export function CreatePostDialog() {
       return;
     }
 
-    const { data: { user } } = await supabase.auth.getUser();
+    // Get the current user
+    const {
+      data: {
+        user
+      }
+    } = await supabase.auth.getUser();
     if (!user) {
       toast({
         title: "Error",
@@ -67,71 +53,38 @@ export function CreatePostDialog() {
       });
       return;
     }
-
     setIsLoading(true);
-
-    try {
-      // Upload images if any
-      const uploadedImageUrls = [];
-      
-      for (const image of images) {
-        const fileExt = image.name.split('.').pop();
-        const filePath = `${crypto.randomUUID()}.${fileExt}`;
-        
-        const { error: uploadError } = await supabase.storage
-          .from('post-images')
-          .upload(filePath, image);
-          
-        if (uploadError) throw uploadError;
-        
-        const { data: { publicUrl } } = supabase.storage
-          .from('post-images')
-          .getPublicUrl(filePath);
-          
-        uploadedImageUrls.push(publicUrl);
-      }
-
-      const { error } = await supabase.from('posts').insert({
-        title: title.trim(),
-        content: content.trim(),
-        tags,
-        author_id: user.id,
-        votes: 0,
-        images: uploadedImageUrls
-      });
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Post created successfully!"
-      });
-      
-      setIsOpen(false);
-      setTitle("");
-      setContent("");
-      setTags([]);
-      setImages([]);
-      setImageUrls([]);
-      
-    } catch (error) {
+    const {
+      error
+    } = await supabase.from('posts').insert({
+      title: title.trim(),
+      content: content.trim(),
+      tags,
+      author_id: user.id,
+      votes: 0
+    });
+    setIsLoading(false);
+    if (error) {
       toast({
         title: "Error",
         description: "Failed to create post. Please try again.",
         variant: "destructive"
       });
-    } finally {
-      setIsLoading(false);
+      return;
     }
+    toast({
+      title: "Success",
+      description: "Post created successfully!"
+    });
+    setIsOpen(false);
+    setTitle("");
+    setContent("");
+    setTags([]);
   };
-
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+  return <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button 
-          className="bg-accent-purple hover:bg-accent-purple/90 text-white"
-        >
-          <PlusCircle className="h-4 w-4 mr-2" />
+        <Button variant="outline" size="sm" className="text-primary-foreground bg-accent-purple">
+          <PlusCircle className="w-4 h-4 mr-2" />
           New Post
         </Button>
       </DialogTrigger>
@@ -141,79 +94,18 @@ export function CreatePostDialog() {
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
-            <Input 
-              placeholder="Post title" 
-              value={title} 
-              onChange={e => setTitle(e.target.value)}
-            />
+            <Input placeholder="Post title" value={title} onChange={e => setTitle(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Textarea 
-              placeholder="Write your post content here..." 
-              className="min-h-[200px]" 
-              value={content} 
-              onChange={e => setContent(e.target.value)}
-            />
+            <Textarea placeholder="Write your post content here..." className="min-h-[200px]" value={content} onChange={e => setContent(e.target.value)} />
           </div>
           <div className="space-y-2">
-            <Input 
-              placeholder="Add tags (press Enter to add)" 
-              value={tagInput} 
-              onChange={e => setTagInput(e.target.value)} 
-              onKeyDown={handleAddTag}
-            />
+            <Input placeholder="Add tags (press Enter to add)" value={tagInput} onChange={e => setTagInput(e.target.value)} onKeyDown={handleAddTag} />
             <div className="flex flex-wrap gap-2 mt-2">
-              {tags.map(tag => (
-                <Badge 
-                  key={tag} 
-                  variant="secondary" 
-                  className="cursor-pointer" 
-                  onClick={() => removeTag(tag)}
-                >
+              {tags.map(tag => <Badge key={tag} variant="secondary" className="cursor-pointer" onClick={() => removeTag(tag)}>
                   {tag} ×
-                </Badge>
-              ))}
+                </Badge>)}
             </div>
-          </div>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => document.getElementById('image-upload')?.click()}
-              >
-                <Image className="h-4 w-4 mr-2" />
-                Add Images
-              </Button>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                multiple
-                className="hidden"
-                onChange={handleImageUpload}
-              />
-            </div>
-            {imageUrls.length > 0 && (
-              <div className="grid grid-cols-2 gap-2 mt-2">
-                {imageUrls.map((url, index) => (
-                  <div key={index} className="relative group">
-                    <img
-                      src={url}
-                      alt={`Preview ${index + 1}`}
-                      className="w-full h-32 object-cover rounded-md"
-                    />
-                    <button
-                      className="absolute top-1 right-1 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                      onClick={() => removeImage(index)}
-                    >
-                      ×
-                    </button>
-                  </div>
-                ))}
-              </div>
-            )}
           </div>
           <div className="flex justify-end">
             <Button onClick={handleSubmit} disabled={isLoading}>
@@ -223,6 +115,5 @@ export function CreatePostDialog() {
           </div>
         </div>
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 }

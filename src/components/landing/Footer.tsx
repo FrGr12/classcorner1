@@ -1,4 +1,3 @@
-
 const Footer = () => {
   return (
     <footer className="border-t border-neutral-200 bg-white">
@@ -17,7 +16,6 @@ const Footer = () => {
           <div>
             <h4 className="font-semibold mb-4">Discover</h4>
             <ul className="space-y-3 text-sm text-neutral-600">
-              <li><a href="/about" className="hover:text-primary transition-colors">About Us</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Browse Classes</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Categories</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Teachers</a></li>

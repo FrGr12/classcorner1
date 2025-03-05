@@ -1,5 +1,22 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
 interface MetricsChartProps {
   metrics: Array<{
     date: string;
@@ -10,13 +27,13 @@ interface MetricsChartProps {
     matches: number;
   }>;
 }
-const MetricsChart = ({
-  metrics
-}: MetricsChartProps) => {
-  return <Card>
+
+const MetricsChart = ({ metrics }: MetricsChartProps) => {
+  return (
+    <Card>
       <CardHeader>
-        <CardTitle className="text-left">Promotion Overview</CardTitle>
-        <CardDescription className="text-left">
+        <CardTitle>Promotion Overview</CardTitle>
+        <CardDescription>
           Track your class engagement and promotional metrics
         </CardDescription>
       </CardHeader>
@@ -37,6 +54,8 @@ const MetricsChart = ({
           </ResponsiveContainer>
         </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default MetricsChart;

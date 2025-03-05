@@ -15,20 +15,17 @@ interface LocationCategorySectionProps {
 
 const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-2 gap-4">
       <FormField
         control={form.control}
         name="category"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs sm:text-sm">Category</FormLabel>
+            <FormLabel>Category</FormLabel>
             <FormControl>
-              <Input 
-                {...field} 
-                className="h-9 sm:h-10 text-xs sm:text-sm"
-              />
+              <Input {...field} />
             </FormControl>
-            <FormMessage className="text-xs sm:text-sm" />
+            <FormMessage />
           </FormItem>
         )}
       />
@@ -38,14 +35,11 @@ const LocationCategorySection = ({ form }: LocationCategorySectionProps) => {
         name="location"
         render={({ field }) => (
           <FormItem>
-            <FormLabel className="text-xs sm:text-sm">Location</FormLabel>
+            <FormLabel>Location</FormLabel>
             <FormControl>
-              <Input 
-                {...field} 
-                className="h-9 sm:h-10 text-xs sm:text-sm"
-              />
+              <Input {...field} />
             </FormControl>
-            <FormMessage className="text-xs sm:text-sm" />
+            <FormMessage />
           </FormItem>
         )}
       />
