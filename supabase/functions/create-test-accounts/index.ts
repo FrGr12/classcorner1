@@ -79,37 +79,43 @@ serve(async (req) => {
       try {
         console.log(`Processing account: ${account.email}`);
         
-        // Try to delete the user first if it exists
-        // This ensures we start with a clean slate
-        try {
-          console.log(`Looking for existing user with email: ${account.email}`);
-          const { data: existingUser, error: findError } = await supabaseAdmin
-            .from('profiles')
-            .select('id')
-            .eq('email', account.email.toLowerCase())
-            .single();
-            
-          if (findError) {
-            console.log(`Error finding user in profiles: ${findError.message}`);
-          } else if (existingUser) {
-            console.log(`Found existing user in profiles with ID: ${existingUser.id}`);
-            
-            // Delete from auth.users if exists
-            const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
-              existingUser.id
-            );
-            
-            if (deleteError) {
-              console.log(`Error deleting existing user: ${deleteError.message}`);
-            } else {
-              console.log(`Successfully deleted existing user: ${account.email}`);
-            }
+        // CRITICAL FIX: First check if the user exists using auth.admin.listUsers 
+        // This ensures we're checking the auth.users table directly
+        console.log(`Checking if user already exists: ${account.email}`);
+        const { data: existingUsers, error: userError } = await supabaseAdmin.auth.admin.listUsers({
+          filter: {
+            email: account.email.toLowerCase()
           }
-        } catch (e) {
-          console.error(`Error during user cleanup: ${e.message || e}`);
+        });
+        
+        if (userError) {
+          console.error(`Error checking existing user: ${userError.message}`);
         }
         
-        // Create the user fresh
+        // If user exists, delete it first to start clean
+        if (existingUsers?.users?.length > 0) {
+          const existingUser = existingUsers.users[0];
+          console.log(`Found existing user with ID: ${existingUser.id}`);
+          
+          // Delete the user using admin.deleteUser
+          const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
+            existingUser.id
+          );
+          
+          if (deleteError) {
+            console.log(`Error deleting existing user: ${deleteError.message}`);
+            throw new Error(`Failed to delete existing user: ${deleteError.message}`);
+          } else {
+            console.log(`Successfully deleted existing user: ${account.email}`);
+            
+            // Add a small delay to ensure deletion propagates
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        } else {
+          console.log(`No existing user found with email: ${account.email}`);
+        }
+        
+        // Create the user fresh with admin.createUser
         console.log(`Creating new user: ${account.email}`);
         const { data, error } = await supabaseAdmin.auth.admin.createUser({
           email: account.email.toLowerCase(),
@@ -129,21 +135,27 @@ serve(async (req) => {
         } else {
           console.log(`Successfully created user ${account.email} with ID: ${data.user.id}`);
           
-          // Double-check the user was created
-          const { data: checkData, error: checkError } = await supabaseAdmin.auth.admin.getUserById(data.user.id);
+          // Verify the user was created successfully 
+          const { data: getUserData, error: getUserError } = await supabaseAdmin.auth.admin.getUserById(data.user.id);
           
-          if (checkError) {
-            console.error(`Error verifying user creation: ${checkError.message}`);
+          if (getUserError) {
+            console.error(`Error verifying user creation: ${getUserError.message}`);
+            results.push({
+              email: account.email,
+              status: "warning",
+              message: `User created but verification failed: ${getUserError.message}`,
+              password: account.password,
+              userId: data.user.id
+            });
           } else {
-            console.log(`Verified user exists with email: ${checkData.user.email}`);
+            console.log(`Verified user exists with email: ${getUserData.user.email}`);
+            results.push({
+              email: account.email,
+              status: "created",
+              password: account.password,
+              userId: data.user.id
+            });
           }
-          
-          results.push({
-            email: account.email,
-            status: "created",
-            password: account.password,
-            userId: data.user.id
-          });
         }
       } catch (accountError) {
         console.error(`Unexpected error processing account ${account.email}:`, accountError);

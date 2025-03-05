@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2, Info, ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CreateTestAccounts = () => {
@@ -13,6 +13,7 @@ const CreateTestAccounts = () => {
   const [accounts, setAccounts] = useState<any[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loginTested, setLoginTested] = useState(false);
+  const [processingTestLogin, setProcessingTestLogin] = useState(false);
 
   const handleCreateTestAccounts = async () => {
     setLoading(true);
@@ -53,7 +54,13 @@ const CreateTestAccounts = () => {
 
   const testLogin = async (email: string, password: string) => {
     try {
+      setProcessingTestLogin(true);
       console.log(`Testing login for ${email}`);
+      
+      // First sign out if already signed in
+      await supabase.auth.signOut();
+      
+      // Now attempt to sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -74,6 +81,8 @@ const CreateTestAccounts = () => {
     } catch (error: any) {
       console.error('Login test failed:', error);
       toast.error(`Login test failed: ${error.message}`);
+    } finally {
+      setProcessingTestLogin(false);
     }
   };
 
@@ -126,6 +135,24 @@ const CreateTestAccounts = () => {
               <h3 className="text-lg font-medium mb-4">Test Account Credentials:</h3>
               
               <Alert className="mb-4">
+                <Info className="h-4 w-4" />
+                <AlertTitle>Important Setup Instructions</AlertTitle>
+                <AlertDescription>
+                  <div className="mt-2 space-y-2 text-sm">
+                    <p className="font-medium">For test accounts to work properly, you must:</p>
+                    <ol className="list-decimal pl-5 space-y-1">
+                      <li>Make sure Supabase has the correct URL configurations</li>
+                      <li>The site URL should be set to your development URL</li>
+                      <li>The redirect URL should include your development URL</li>
+                    </ol>
+                    <div className="p-2 bg-yellow-50 border border-yellow-100 rounded-md text-yellow-800 mt-2">
+                      <p>If you're still having issues after creating test accounts, please check the Supabase authentication settings.</p>
+                    </div>
+                  </div>
+                </AlertDescription>
+              </Alert>
+              
+              <Alert className="mb-4">
                 <CheckCircle className="h-4 w-4" />
                 <AlertTitle>Login Instructions</AlertTitle>
                 <AlertDescription>
@@ -142,7 +169,7 @@ const CreateTestAccounts = () => {
               
               <div className="space-y-4">
                 {accounts.map((account, index) => (
-                  <div key={index} className="p-4 border rounded-md bg-slate-50">
+                  <div key={index} className={`p-4 border rounded-md ${account.status === 'error' ? 'bg-red-50 border-red-100' : 'bg-slate-50'}`}>
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                       <div>
                         <div className="flex items-center gap-2">
@@ -171,16 +198,29 @@ const CreateTestAccounts = () => {
                           </div>
                         )}
                         
-                        <p><strong>Status:</strong> {account.status}</p>
+                        <p className="flex items-center gap-1">
+                          <strong>Status:</strong> 
+                          <span className={account.status === 'error' ? 'text-red-600' : 
+                                          account.status === 'warning' ? 'text-amber-600' : 
+                                          'text-green-600'}>
+                            {account.status}
+                          </span>
+                        </p>
                         {account.userId && <p><strong>User ID:</strong> {account.userId}</p>}
-                        {account.message && <p><strong>Message:</strong> {account.message}</p>}
+                        {account.message && <p className="text-red-600"><strong>Message:</strong> {account.message}</p>}
                       </div>
                       <Button 
                         variant="outline" 
                         onClick={() => testLogin(account.email, account.password)}
                         className="shrink-0"
+                        disabled={processingTestLogin}
                       >
-                        Test Login
+                        {processingTestLogin ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Testing...
+                          </>
+                        ) : "Test Login"}
                       </Button>
                     </div>
                   </div>
@@ -199,14 +239,26 @@ const CreateTestAccounts = () => {
               )}
               
               <div className="mt-4 p-4 border rounded-md bg-amber-50">
-                <p className="text-sm text-amber-800">
-                  <strong>Note:</strong> If you're having trouble logging in, try these troubleshooting steps:
+                <p className="text-sm text-amber-800 font-medium mb-2">
+                  Troubleshooting Login Issues:
                 </p>
-                <ol className="list-decimal pl-5 mt-2 text-sm text-amber-800 space-y-1">
-                  <li>Make sure you're using the correct email and password (copy and paste to avoid typos)</li>
-                  <li>Try recreating the test accounts</li>
-                  <li>Make sure your browser doesn't have cached authentication data (try in incognito mode)</li>
-                  <li>Check the browser console for any error messages</li>
+                <ol className="list-decimal pl-5 text-sm text-amber-800 space-y-2">
+                  <li>First, try recreating the test accounts using the button above</li>
+                  <li>If the "Test Login" button works but you still can't log in on the auth page:
+                    <ul className="list-disc pl-5 mt-1 space-y-1">
+                      <li>Clear your browser cache and cookies</li>
+                      <li>Try in an incognito/private browsing window</li>
+                      <li>Make sure you're using the exact same email and password (use copy buttons)</li>
+                    </ul>
+                  </li>
+                  <li>Check the Supabase dashboard to ensure:
+                    <ul className="list-disc pl-5 mt-1 space-y-1">
+                      <li>The user appears in the Authentication > Users section</li>
+                      <li>Email confirmation is disabled in Authentication > Settings</li>
+                      <li>The site URL and redirect URLs are configured correctly</li>
+                    </ul>
+                  </li>
+                  <li>If issues persist, check browser console logs for specific error messages</li>
                 </ol>
               </div>
               

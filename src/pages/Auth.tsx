@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon, Loader2 } from "lucide-react";
+import { InfoIcon, Loader2, AlertCircle } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -22,6 +22,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [debugMode, setDebugMode] = useState(false);
+  const [detailedDebug, setDetailedDebug] = useState<any>(null);
   
   // Get return path from state (if available)
   const returnTo = location.state?.returnTo || "/";
@@ -63,26 +64,32 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setDetailedDebug(null);
 
     try {
-      // Enable debug mode for multiple failed attempts
-      if (debugMode) {
-        console.log("DEBUG MODE ENABLED");
-        console.log("Testing Supabase connection...");
-        
-        try {
-          const { data: connTest, error: connError } = await supabase.from('profiles').select('count').limit(1);
-          console.log("Connection test:", { data: connTest, error: connError });
-        } catch (connErr) {
-          console.error("Connection test failed:", connErr);
-        }
-      }
-      
-      console.log("Attempting login with:", { email, password });
-      
       // Make sure email is lower case to avoid case sensitivity issues
       const lowerCaseEmail = email.toLowerCase().trim();
       
+      console.log("Attempting login with:", { email: lowerCaseEmail, password });
+      
+      // First verify the user exists
+      const { data: userData, error: userError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('email', lowerCaseEmail)
+        .single();
+        
+      if (userError && userError.code !== 'PGRST116') {
+        console.error("Error checking user existence:", userError);
+        // Continue with login attempt anyway
+      } else if (!userData) {
+        console.log("No user found with email:", lowerCaseEmail);
+        // We'll show a more specific error after the login attempt fails
+      } else {
+        console.log("User exists in profiles table:", userData);
+      }
+      
+      // Now attempt to sign in
       const { data, error } = await supabase.auth.signInWithPassword({
         email: lowerCaseEmail,
         password,
@@ -91,10 +98,14 @@ const Auth = () => {
       console.log("Login response:", { data, error });
       
       if (error) {
-        // If this is the second failed attempt, enable debug mode
-        if (error.message === "Invalid login credentials") {
-          setDebugMode(true);
-        }
+        // Collect more detailed debug info
+        setDebugMode(true);
+        setDetailedDebug({
+          error,
+          userCheck: userData,
+          userError
+        });
+        
         throw error;
       }
       
@@ -104,7 +115,7 @@ const Auth = () => {
       
       // More user-friendly error message
       if (error.message === "Invalid login credentials") {
-        setError("The email or password you entered is incorrect. Please check your credentials and try again.");
+        setError("The email or password you entered is incorrect. This might be because the test account wasn't created successfully. Please try creating the test accounts again and then login.");
       } else {
         setError(error.message || "Failed to sign in");
       }
@@ -204,8 +215,9 @@ const Auth = () => {
                   </div>
                   
                   {error && (
-                    <div className="p-3 text-sm bg-red-50 border border-red-100 text-red-600 rounded">
-                      {error}
+                    <div className="p-3 text-sm bg-red-50 border border-red-100 text-red-600 rounded flex gap-2">
+                      <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                      <span>{error}</span>
                     </div>
                   )}
                   
@@ -228,23 +240,57 @@ const Auth = () => {
                     <InfoIcon className="h-4 w-4 text-blue-500" />
                     <AlertDescription>
                       <p>To test the app, you can use:</p>
-                      <div className="mt-1 flex items-center justify-between">
-                        <div>
+                      <div className="mt-1">
+                        <div className="flex items-center justify-between">
                           <p><strong>Email:</strong> test.student@classcorner.demo</p>
-                          <p><strong>Password:</strong> classcorner2024</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => navigator.clipboard.writeText("test.student@classcorner.demo")}
+                            className="h-6 px-2 ml-2"
+                          >
+                            Copy
+                          </Button>
                         </div>
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={handleTestLogin}
-                          className="ml-2"
-                        >
-                          Auto-fill
-                        </Button>
+                        <div className="flex items-center justify-between mt-1">
+                          <p><strong>Password:</strong> classcorner2024</p>
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => navigator.clipboard.writeText("classcorner2024")}
+                            className="h-6 px-2 ml-2"
+                          >
+                            Copy
+                          </Button>
+                        </div>
+                        <div className="mt-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={handleTestLogin}
+                            className="w-full"
+                          >
+                            Auto-fill & Login
+                          </Button>
+                        </div>
                       </div>
                     </AlertDescription>
                   </Alert>
                 </div>
+
+                {debugMode && detailedDebug && (
+                  <div className="mt-4 p-3 text-xs bg-amber-50 border border-amber-100 text-amber-800 rounded">
+                    <details>
+                      <summary className="font-medium cursor-pointer">Debug Information</summary>
+                      <div className="mt-2 overflow-auto max-h-40">
+                        <p><strong>Error Code:</strong> {detailedDebug.error?.code}</p>
+                        <p><strong>Error Message:</strong> {detailedDebug.error?.message}</p>
+                        <p><strong>User Check:</strong> {detailedDebug.userCheck ? 'User exists in profiles' : 'User not found in profiles'}</p>
+                        <p className="mt-2">Please try creating the test accounts again from the <Link to="/create-test-accounts" className="text-accent-purple underline">Create Test Accounts</Link> page and then try logging in again.</p>
+                      </div>
+                    </details>
+                  </div>
+                )}
                 
                 <div className="mt-4 text-center">
                   <Button
@@ -254,6 +300,12 @@ const Auth = () => {
                   >
                     Forgot your password?
                   </Button>
+                </div>
+
+                <div className="mt-2 text-center">
+                  <Link to="/create-test-accounts" className="text-sm text-accent-purple hover:underline">
+                    Create Test Accounts
+                  </Link>
                 </div>
               </CardContent>
             </Card>
@@ -288,8 +340,9 @@ const Auth = () => {
                   </div>
                   
                   {error && (
-                    <div className="p-3 text-sm bg-red-50 border border-red-100 text-red-600 rounded">
-                      {error}
+                    <div className="p-3 text-sm bg-red-50 border border-red-100 text-red-600 rounded flex gap-2">
+                      <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+                      <span>{error}</span>
                     </div>
                   )}
                   
