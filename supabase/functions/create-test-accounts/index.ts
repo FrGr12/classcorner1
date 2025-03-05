@@ -83,12 +83,10 @@ serve(async (req) => {
         
         // Check if user already exists
         console.log(`Checking if user ${account.email} already exists...`);
-        const { data: existingUser, error: fetchError } = await supabaseAdmin.auth.admin.getUserByEmail(
-          account.email
-        );
+        const { data: existingUsers, error: fetchError } = await supabaseAdmin.auth.admin.listUsers();
 
         if (fetchError) {
-          console.error(`Error checking if user ${account.email} exists:`, fetchError);
+          console.error(`Error checking users:`, fetchError);
           results.push({
             email: account.email,
             status: "error",
@@ -97,13 +95,35 @@ serve(async (req) => {
           continue;
         }
 
+        const existingUser = existingUsers?.users?.find(u => 
+          u.email && u.email.toLowerCase() === account.email.toLowerCase()
+        );
+
         if (existingUser) {
-          console.log(`User ${account.email} already exists`);
-          results.push({
-            email: account.email,
-            status: "already exists",
-            password: account.password
-          });
+          console.log(`User ${account.email} already exists with ID: ${existingUser.id}`);
+          
+          // Force update the password for existing user
+          const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
+            existingUser.id,
+            { password: account.password }
+          );
+          
+          if (updateError) {
+            console.error(`Error updating password for ${account.email}:`, updateError);
+            results.push({
+              email: account.email,
+              status: "error updating password",
+              message: updateError.message,
+              password: account.password
+            });
+          } else {
+            console.log(`Password updated successfully for ${account.email}`);
+            results.push({
+              email: account.email,
+              status: "password updated",
+              password: account.password
+            });
+          }
           continue;
         }
 
@@ -124,7 +144,7 @@ serve(async (req) => {
             message: error.message
           });
         } else {
-          console.log(`Successfully created user ${account.email}`);
+          console.log(`Successfully created user ${account.email} with ID: ${data.user.id}`);
           results.push({
             email: account.email,
             status: "created",

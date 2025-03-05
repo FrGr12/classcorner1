@@ -3,13 +3,15 @@ import { useEffect, useState } from "react";
 import { Auth as SupabaseAuth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { InfoIcon } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -63,8 +65,12 @@ const Auth = () => {
 
     try {
       console.log("Attempting login with:", { email, password });
+      
+      // Make sure email is lower case to avoid case sensitivity issues
+      const lowerCaseEmail = email.toLowerCase();
+      
       const { data, error } = await supabase.auth.signInWithPassword({
-        email,
+        email: lowerCaseEmail,
         password,
       });
 
@@ -75,8 +81,47 @@ const Auth = () => {
       toast.success("Login successful");
     } catch (error: any) {
       console.error("Login error:", error);
-      setError(error.message);
+      
+      // More user-friendly error message
+      if (error.message === "Invalid login credentials") {
+        setError("The email or password you entered is incorrect. Please check your credentials and try again.");
+      } else {
+        setError(error.message || "Failed to sign in");
+      }
+      
       toast.error(error.message || "Failed to sign in");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Make sure email is lower case to avoid case sensitivity issues
+      const lowerCaseEmail = email.toLowerCase();
+      
+      const { data, error } = await supabase.auth.signUp({
+        email: lowerCaseEmail,
+        password,
+      });
+
+      console.log("Signup response:", { data, error });
+      
+      if (error) throw error;
+      
+      if (data.user && data.user.identities && data.user.identities.length === 0) {
+        throw new Error("This email is already registered. Please log in instead.");
+      }
+      
+      toast.success("Signup successful! Please check your email for verification.");
+    } catch (error: any) {
+      console.error("Signup error:", error);
+      setError(error.message || "Failed to sign up");
+      toast.error(error.message || "Failed to sign up");
     } finally {
       setLoading(false);
     }
@@ -90,13 +135,14 @@ const Auth = () => {
           <p className="text-neutral-600 mt-2">Sign in to continue to ClassCorner</p>
         </div>
 
-        <Tabs defaultValue="email" className="w-full">
-          <TabsList className="grid grid-cols-2 mb-6">
-            <TabsTrigger value="email">Email</TabsTrigger>
-            <TabsTrigger value="supabase">Social Login</TabsTrigger>
+        <Tabs defaultValue="signin" className="w-full">
+          <TabsList className="grid grid-cols-3 mb-6">
+            <TabsTrigger value="signin">Sign In</TabsTrigger>
+            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="social">Social Login</TabsTrigger>
           </TabsList>
           
-          <TabsContent value="email">
+          <TabsContent value="signin">
             <Card>
               <CardContent className="pt-6">
                 <form onSubmit={handleLogin} className="space-y-4">
@@ -138,6 +184,17 @@ const Auth = () => {
                     {loading ? "Signing in..." : "Sign in"}
                   </Button>
                 </form>
+
+                <div className="mt-4">
+                  <Alert className="bg-blue-50 text-blue-800 border-blue-100">
+                    <InfoIcon className="h-4 w-4 text-blue-500" />
+                    <AlertDescription>
+                      <p>To test the app, you can use:</p>
+                      <p className="mt-1"><strong>Email:</strong> test.student@classcorner.demo</p>
+                      <p><strong>Password:</strong> classcorner2024</p>
+                    </AlertDescription>
+                  </Alert>
+                </div>
                 
                 <div className="mt-4 text-center">
                   <Button
@@ -152,7 +209,66 @@ const Auth = () => {
             </Card>
           </TabsContent>
           
-          <TabsContent value="supabase">
+          <TabsContent value="signup">
+            <Card>
+              <CardContent className="pt-6">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <Input
+                      id="signup-email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="your.email@example.com"
+                      required
+                    />
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <Input
+                      id="signup-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Choose a password"
+                      required
+                    />
+                  </div>
+                  
+                  {error && (
+                    <div className="p-3 text-sm bg-red-50 border border-red-100 text-red-600 rounded">
+                      {error}
+                    </div>
+                  )}
+                  
+                  <Button
+                    type="submit"
+                    className="w-full"
+                    disabled={loading}
+                  >
+                    {loading ? "Signing up..." : "Sign up"}
+                  </Button>
+                </form>
+                
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-neutral-600">
+                    Already have an account?{" "}
+                    <Button
+                      variant="link"
+                      className="p-0 h-auto font-medium"
+                      onClick={() => document.querySelector('[value="signin"]')?.dispatchEvent(new Event('click'))}
+                    >
+                      Sign in
+                    </Button>
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="social">
             <SupabaseAuth
               supabaseClient={supabase}
               appearance={{
@@ -171,6 +287,12 @@ const Auth = () => {
             />
           </TabsContent>
         </Tabs>
+        
+        <div className="mt-6 text-center">
+          <Link to="/create-test-accounts" className="text-sm text-neutral-600 hover:underline">
+            Create Test Accounts
+          </Link>
+        </div>
       </div>
     </div>
   );
