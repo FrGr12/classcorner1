@@ -1,83 +1,97 @@
-import Navigation from "@/components/landing/Navigation";
-import Footer from "@/components/landing/Footer";
-import { Card } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Download, ExternalLink } from "lucide-react";
-
-const Resources = () => {
-  return (
-    <div className="min-h-screen bg-neutral-50">
+import { Users, BookOpen, Hash } from "lucide-react";
+import Navigation from "@/components/landing/Navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+export default function Resources() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState("resources");
+  useEffect(() => {
+    setActiveTab('resources');
+  }, [location.pathname]);
+  const handleTabClick = (tab: string) => {
+    switch (tab) {
+      case 'topics':
+        navigate('/community/category/all');
+        break;
+      case 'groups':
+        navigate('/community/groups');
+        break;
+      case 'resources':
+        navigate('/community/resources');
+        break;
+    }
+  };
+  return <>
       <Navigation />
-      <main className="container mx-auto px-4 py-24">
-        <div className="max-w-4xl mx-auto space-y-12">
-          <section>
-            <h1 className="text-4xl font-display font-semibold mb-6">Teaching Resources</h1>
-            <p className="text-lg text-neutral-600">
-              Access our comprehensive collection of resources designed to help you succeed as an instructor on ClassCorner.
-            </p>
-          </section>
-
-          <section className="grid gap-6">
-            <Card className="p-6">
-              <div className="flex items-start gap-4">
-                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold">Getting Started Guide</h3>
-                  <p className="text-neutral-600">
-                    Learn everything you need to know about setting up your classes, managing bookings, 
-                    and growing your student base.
-                  </p>
-                  <Button variant="outline" className="mt-4">
-                    <Download className="w-4 h-4 mr-2" />
-                    Download PDF
-                  </Button>
-                </div>
+      <div className="min-h-screen bg-background pt-24">
+        <div className="border-b bg-card">
+          <div className="container mx-auto px-4 py-[42px]">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="sm:text-3xl lg:text-4xl font-bold mb-2 text-left text-xl">Learning Resources</h1>
+                <p className="text-muted-foreground text-sm text-left">
+                  Discover guides, tutorials, and expert tips to enhance your crafting journey
+                </p>
               </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-start gap-4">
-                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold">Class Planning Templates</h3>
-                  <p className="text-neutral-600">
-                    Access our collection of templates to help you plan and structure your classes effectively.
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-4">
-                    <Button variant="outline">
-                      <Download className="w-4 h-4 mr-2" />
-                      Class Plan Template
-                    </Button>
-                    <Button variant="outline">
-                      <Download className="w-4 h-4 mr-2" />
-                      Materials List Template
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </Card>
-
-            <Card className="p-6">
-              <div className="flex items-start gap-4">
-                <BookOpen className="w-8 h-8 text-accent-purple shrink-0" />
-                <div className="space-y-2">
-                  <h3 className="text-xl font-semibold">Marketing Resources</h3>
-                  <p className="text-neutral-600">
-                    Get tips and tools to promote your classes and attract more students.
-                  </p>
-                  <Button variant="outline" className="mt-4">
-                    <ExternalLink className="w-4 h-4 mr-2" />
-                    Access Marketing Hub
-                  </Button>
-                </div>
-              </div>
-            </Card>
-          </section>
+            </div>
+          </div>
         </div>
-      </main>
-      <Footer />
-    </div>
-  );
-};
 
-export default Resources;
+        <div className="container mx-auto py-8 px-4">
+          {/* Mobile Navigation */}
+          <div className="lg:hidden bg-background border rounded-lg mb-6">
+            <div className="flex items-center justify-around p-2">
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'topics' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('topics')}>
+                <Hash className="h-5 w-5" />
+                <span className="text-sm font-medium">Topics</span>
+              </Button>
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'groups' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('groups')}>
+                <Users className="h-5 w-5" />
+                <span className="text-sm font-medium">Groups</span>
+              </Button>
+              <Button variant="ghost" className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+                  ${activeTab === 'resources' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} onClick={() => handleTabClick('resources')}>
+                <BookOpen className="h-5 w-5" />
+                <span className="text-sm font-medium">Resources</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Resources Content */}
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Beginner Guides</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Essential guides for getting started with various crafts</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Video Tutorials</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Step-by-step video guides for different techniques</p>
+              </CardContent>
+            </Card>
+
+            <Card className="hover:shadow-md transition-shadow">
+              <CardHeader>
+                <CardTitle>Expert Tips</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">Advanced techniques and professional insights</p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </>;
+}

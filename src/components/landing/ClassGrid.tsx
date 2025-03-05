@@ -10,14 +10,27 @@ import { startOfWeek, endOfWeek, isWithinInterval } from "date-fns";
 interface ClassGridProps {
   category: string | null;
   sortBy?: string;
-  priceRange: [number, number];  // Added this property
-  minRating: number;             // Added this property
-  isLoading: boolean;            // Added this property
+  priceRange: [number, number];
+  minRating: number;
+  isLoading: boolean;
 }
 
 const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, isLoading }: ClassGridProps) => {
   const [displayCount, setDisplayCount] = useState(12);
   const ITEMS_PER_PAGE = 12;
+
+  if (isLoading) {
+    return (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-5">
+        {Array.from({ length: 8 }).map((_, index) => (
+          <div 
+            key={index}
+            className="animate-pulse bg-gray-200 rounded-lg h-[300px]"
+          />
+        ))}
+      </div>
+    );
+  }
 
   // Filter classes based on category and other filters
   let filteredClasses = category 
@@ -82,17 +95,24 @@ const ClassGrid = ({ category, sortBy = "recommended", priceRange, minRating, is
   const displayedClasses = sortedClasses.slice(0, displayCount);
   const hasMoreClasses = sortedClasses.length > displayCount;
 
-  const handleLoadMore = () => {
-    setDisplayCount(prev => prev + ITEMS_PER_PAGE);
-  };
-
-  if (isLoading) {
+  if (sortedClasses.length === 0) {
     return (
-      <div className="flex items-center justify-center py-12">
-        <div className="text-center text-gray-500">Loading classes...</div>
+      <div className="flex flex-col items-center justify-center py-12 text-center">
+        <p className="text-gray-500 mb-4">No classes found matching your criteria</p>
+        <Button 
+          variant="outline" 
+          onClick={() => window.location.href = '/browse'}
+          className="mt-2"
+        >
+          Clear Filters
+        </Button>
       </div>
     );
   }
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + ITEMS_PER_PAGE);
+  };
 
   return (
     <div className="space-y-4 sm:space-y-8">

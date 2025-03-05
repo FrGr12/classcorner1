@@ -44,7 +44,7 @@ const TeacherClasses = () => {
 
   if (!allClasses.length) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-4 px-2 sm:px-0">
         <ClassesHeader />
         <Alert variant="warning">
           <AlertTriangle className="h-4 w-4" />
@@ -58,7 +58,7 @@ const TeacherClasses = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 px-2 sm:px-0">
       <ClassesHeader />
       <ClassesTabs classes={allClasses} onAction={handleAction} />
     </div>

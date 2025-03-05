@@ -2,19 +2,56 @@
 import { useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Switch } from "@/components/ui/switch";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { MessageSquare } from "lucide-react";
+import { format } from "date-fns";
 import type { WaitlistEntry } from "@/types/waitlist";
+import { useNavigate } from "react-router-dom";
 
 const TeacherWaitlist = () => {
   const [waitlistEntries, setWaitlistEntries] = useState<WaitlistEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchWaitlistEntries();
+    
+    // Subscribe to realtime updates
+    const channel = supabase
+      .channel('waitlist-updates')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'waitlist_entries'
+        },
+        () => {
+          fetchWaitlistEntries();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const fetchWaitlistEntries = async () => {
@@ -26,21 +63,17 @@ const TeacherWaitlist = () => {
         .from('waitlist_entries')
         .select(`
           *,
-          course:courses(
-            title, 
-            auto_promote_from_waitlist,
-            auto_send_waitlist_notification
-          ),
+          course:courses(title),
           profile:profiles(first_name, last_name)
         `)
-        .eq('status', 'waiting');
+        .eq('status', 'waiting')
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-
-      setWaitlistEntries(data as WaitlistEntry[]);
+      setWaitlistEntries(data || []);
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Error fetching waitlist",
         description: error.message,
         variant: "destructive",
       });
@@ -49,184 +82,91 @@ const TeacherWaitlist = () => {
     }
   };
 
-  const handleNotify = async (entry: WaitlistEntry) => {
-    try {
-      const { error } = await supabase
-        .from('waitlist_entries')
-        .update({
-          notification_sent_at: new Date().toISOString(),
-          notification_status: 'sent'
-        })
-        .eq('id', entry.id);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Student has been notified",
-      });
-
-      fetchWaitlistEntries();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const toggleAutoPromote = async (courseId: number, currentValue: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('courses')
-        .update({
-          auto_promote_from_waitlist: !currentValue
-        })
-        .eq('id', courseId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `Auto-promote ${!currentValue ? 'enabled' : 'disabled'} successfully`,
-      });
-
-      fetchWaitlistEntries();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
-  };
-
-  const toggleAutoNotify = async (courseId: number, currentValue: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('courses')
-        .update({
-          auto_send_waitlist_notification: !currentValue
-        })
-        .eq('id', courseId);
-
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: `Auto-notify ${!currentValue ? 'enabled' : 'disabled'} successfully`,
-      });
-
-      fetchWaitlistEntries();
-    } catch (error: any) {
-      toast({
-        title: "Error",
-        description: error.message,
-        variant: "destructive",
-      });
-    }
+  const handleMessageStudent = (userId: string) => {
+    navigate("/dashboard/inbox", { 
+      state: { 
+        selectedStudent: userId,
+        fromWaitlist: true
+      }
+    });
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        </CardContent>
+      </Card>
     );
   }
 
-  // Group entries by course
-  const entriesByCourse: { [key: string]: WaitlistEntry[] } = {};
-  waitlistEntries.forEach(entry => {
-    const courseId = entry.course_id;
-    if (!entriesByCourse[courseId]) {
-      entriesByCourse[courseId] = [];
-    }
-    entriesByCourse[courseId].push(entry);
-  });
-
   return (
-    <div className="space-y-6">
-      {Object.entries(entriesByCourse).map(([courseId, entries]) => (
-        <Card key={courseId}>
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div>
-                <CardTitle>{entries[0].course.title}</CardTitle>
-                <CardDescription>
-                  {entries.length} student{entries.length !== 1 ? 's' : ''} on waitlist
-                </CardDescription>
-              </div>
-              <div className="space-y-2">
-                <div className="flex items-center justify-end gap-2">
-                  <span className="text-sm text-muted-foreground">Auto-promote</span>
-                  <Switch
-                    checked={entries[0].course.auto_promote_from_waitlist}
-                    onCheckedChange={() => toggleAutoPromote(Number(courseId), entries[0].course.auto_promote_from_waitlist)}
-                  />
-                </div>
-                <div className="flex items-center justify-end gap-2">
-                  <span className="text-sm text-muted-foreground">Auto-notify</span>
-                  <Switch
-                    checked={entries[0].course.auto_send_waitlist_notification}
-                    onCheckedChange={() => toggleAutoNotify(Number(courseId), entries[0].course.auto_send_waitlist_notification)}
-                  />
-                </div>
-              </div>
-            </div>
-          </CardHeader>
-          <CardContent>
+    <Card>
+      <CardHeader>
+        <CardTitle>Waitlist Management</CardTitle>
+        <CardDescription>View and manage students on your class waitlists</CardDescription>
+      </CardHeader>
+      <CardContent>
+        {waitlistEntries.length === 0 ? (
+          <div className="text-center py-6 text-muted-foreground">
+            No students currently on any waitlists
+          </div>
+        ) : (
+          <div className="relative overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Position</TableHead>
                   <TableHead>Student</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Position</TableHead>
                   <TableHead>Joined On</TableHead>
                   <TableHead>Last Notified</TableHead>
-                  <TableHead>Action</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {entries.map((entry) => (
+                {waitlistEntries.map((entry) => (
                   <TableRow key={entry.id}>
+                    <TableCell className="font-medium">
+                      {entry.profile ? `${entry.profile.first_name} ${entry.profile.last_name}` : "Anonymous"}
+                    </TableCell>
+                    <TableCell>{entry.course.title}</TableCell>
                     <TableCell>#{entry.waitlist_position}</TableCell>
                     <TableCell>
-                      {entry.profile ? 
-                        `${entry.profile.first_name} ${entry.profile.last_name}` : 
-                        "Anonymous User"
-                      }
+                      {format(new Date(entry.created_at), "MMM d, yyyy")}
                     </TableCell>
                     <TableCell>
-                      {new Date(entry.created_at).toLocaleDateString()}
+                      {entry.notification_sent_at 
+                        ? format(new Date(entry.notification_sent_at), "MMM d, yyyy")
+                        : "Never"}
                     </TableCell>
                     <TableCell>
-                      {entry.notification_sent_at ? 
-                        new Date(entry.notification_sent_at).toLocaleDateString() : 
-                        'Never'
-                      }
+                      <Badge variant={entry.notification_status === 'sent' ? 'default' : 'secondary'}>
+                        {entry.notification_status === 'sent' ? 'Notified' : 'Waiting'}
+                      </Badge>
                     </TableCell>
                     <TableCell>
                       <Button
-                        size="sm"
                         variant="outline"
-                        onClick={() => handleNotify(entry)}
-                        disabled={entry.notification_sent_at ? 
-                          new Date().getTime() - new Date(entry.notification_sent_at).getTime() < 24 * 60 * 60 * 1000 : 
-                          false
-                        }
+                        size="sm"
+                        onClick={() => handleMessageStudent(entry.user_id)}
+                        className="bg-accent-purple/10 hover:bg-accent-purple/20 border-accent-purple/20"
                       >
-                        Notify
+                        <MessageSquare className="h-4 w-4 text-accent-purple" />
                       </Button>
                     </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
             </Table>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 

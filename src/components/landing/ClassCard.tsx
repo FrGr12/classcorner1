@@ -1,11 +1,13 @@
 
 import { Card } from "@/components/ui/card";
 import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 import ImageCarousel from "./class-card/ImageCarousel";
 import SaveButton from "./class-card/SaveButton";
 import DateButtons from "./class-card/DateButtons";
 import CategoryBadges from "./class-card/CategoryBadges";
 import ClassDetails from "./class-card/ClassDetails";
+import { useState } from "react";
 
 interface ClassCardProps {
   id?: number;
@@ -37,7 +39,7 @@ const ClassCard = ({
   instructor,
   price,
   rating,
-  images,
+  images: initialImages,
   level,
   date,
   city,
@@ -50,6 +52,7 @@ const ClassCard = ({
 }: ClassCardProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(date) ? date : [date];
+  const [images, setImages] = useState(initialImages?.length > 0 ? initialImages : ['/placeholder.svg']);
 
   const determineCategory = (title: string, providedCategory?: string): string => {
     if (providedCategory && validCategories.includes(providedCategory)) {
@@ -57,22 +60,37 @@ const ClassCard = ({
     }
     
     const titleLower = title.toLowerCase();
-    for (const category of validCategories) {
-      const categoryLower = category.toLowerCase();
+    for (const cat of validCategories) {
+      const categoryLower = cat.toLowerCase();
       if (titleLower.includes(categoryLower.split(' ')[0])) {
-        return category;
+        return cat;
       }
     }
     return 'Pottery';
   };
 
-  const handleCardClick = () => {
-    if (id) {
+  const handleCardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    
+    try {
+      if (!id) {
+        toast.error("Unable to view class details. Please try again later.");
+        console.warn('No ID provided for class card:', title);
+        return;
+      }
+
       const displayCategory = determineCategory(title, category);
-      navigate(`/class/${displayCategory}/${id}`);
-    } else {
-      console.warn('No ID provided for class card:', title);
+      const categoryKey = displayCategory.split(' ')[0];
+      navigate(`/class/${categoryKey.toLowerCase()}/${id}`);
+    } catch (error) {
+      toast.error("An error occurred while viewing class details");
+      console.error("Navigation error:", error);
     }
+  };
+
+  const handleImageError = () => {
+    console.warn('Image load error for class:', title);
+    setImages(['/placeholder.svg']);
   };
 
   const displayCategory = determineCategory(title, category);
@@ -83,7 +101,11 @@ const ClassCard = ({
       onClick={handleCardClick}
     >
       <div className="relative aspect-[4/3]">
-        <ImageCarousel images={images} title={title} />
+        <ImageCarousel 
+          images={images} 
+          title={title} 
+          onError={handleImageError}
+        />
         <SaveButton />
         <CategoryBadges displayCategory={displayCategory} />
       </div>

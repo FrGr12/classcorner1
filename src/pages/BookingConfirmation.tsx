@@ -1,19 +1,20 @@
-
+import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
 import { ArrowLeft, Clock, MapPin, Users, Star, Info, Loader2 } from "lucide-react";
-import { createBooking } from "@/services/bookingService";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import CancellationDialog from "@/components/class-details/CancellationDialog";
 import RescheduleDialog from "@/components/class-details/RescheduleDialog";
-import { useState } from "react";
 import type { Booking } from "@/types/booking";
 
 const BookingConfirmation = () => {
@@ -24,8 +25,11 @@ const BookingConfirmation = () => {
   const [isCancellationOpen, setIsCancellationOpen] = useState(false);
   const [booking, setBooking] = useState<Booking | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [guestEmail, setGuestEmail] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [isGuestBooking, setIsGuestBooking] = useState(false);
 
-  // Redirect if no class data
   if (!classItem) {
     navigate("/browse", { 
       replace: true,
@@ -34,16 +38,66 @@ const BookingConfirmation = () => {
     return null;
   }
 
+  const handleGuestBooking = async () => {
+    try {
+      setIsSubmitting(true);
+      
+      const { data, error } = await supabase
+        .from('guest_bookings')
+        .insert({
+          email: guestEmail,
+          first_name: firstName,
+          last_name: lastName,
+          course_id: classItem.id,
+          selected_date: classItem.date,
+          total_price: classItem.price,
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast.success("Booking initiated! Please check your email to complete the process.");
+      
+      navigate("/booking-success", { 
+        state: { 
+          isGuest: true,
+          email: guestEmail
+        }
+      });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to create guest booking");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   const handleProceedToPayment = async () => {
     try {
       setIsSubmitting(true);
       
-      if (!classItem.sessionId) {
-        throw new Error("Session ID is required");
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      if (!user) {
+        setIsGuestBooking(true);
+        return;
       }
 
-      const newBooking = await createBooking(classItem, classItem.sessionId);
-      setBooking(newBooking); // Store booking for cancellation/reschedule
+      const { data: newBooking, error } = await supabase
+        .from('bookings')
+        .insert({
+          course_id: classItem.id,
+          student_id: user.id,
+          selected_date: classItem.date,
+          total_price: classItem.price,
+          status: 'pending'
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setBooking(newBooking);
       
       navigate("/payment", { 
         state: { 
@@ -59,6 +113,11 @@ const BookingConfirmation = () => {
   };
 
   const handleGoBack = () => {
+    if (isGuestBooking) {
+      setIsGuestBooking(false);
+      return;
+    }
+
     if (classItem.id && classItem.category) {
       navigate(`/class/${classItem.category}/${classItem.id}`);
     } else {
@@ -97,18 +156,20 @@ const BookingConfirmation = () => {
           onClick={handleGoBack}
         >
           <ArrowLeft className="h-5 w-5" />
-          Back to class details
+          {isGuestBooking ? "Back to booking details" : "Back to class details"}
         </Button>
 
         <h1 className="text-3xl font-bold mb-8">Booking Confirmation</h1>
 
-        <Alert className="mb-6">
-          <Info className="h-4 w-4" />
-          <AlertDescription>
-            Our flexible refund policy: Get a full refund if you cancel more than 48 hours before the class. 
-            No refunds are available within 48 hours of the class start time.
-          </AlertDescription>
-        </Alert>
+        {!isGuestBooking && (
+          <Alert className="mb-6">
+            <Info className="h-4 w-4" />
+            <AlertDescription>
+              Our flexible refund policy: Get a full refund if you cancel more than 48 hours before the class. 
+              No refunds are available within 48 hours of the class start time.
+            </AlertDescription>
+          </Alert>
+        )}
         
         <div className="glass-panel rounded-xl p-8 mb-8">
           <div className="space-y-6">
@@ -140,31 +201,71 @@ const BookingConfirmation = () => {
         
         <Card>
           <CardHeader>
-            <CardTitle>Booking Details</CardTitle>
+            <CardTitle>{isGuestBooking ? "Guest Information" : "Booking Details"}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-medium">Class</h3>
-              <p className="text-neutral-600">{classItem.title}</p>
-            </div>
-            <div>
-              <h3 className="font-medium">Instructor</h3>
-              <p className="text-neutral-600">{classItem.instructor}</p>
-            </div>
-            <div>
-              <h3 className="font-medium">Date & Time</h3>
-              <p className="text-neutral-600">
-                {dateTime.date} at {dateTime.time}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium">Location</h3>
-              <div className="text-neutral-600">
-                <p>{classItem.city} Studio</p>
-                <p>123 Creative Street</p>
-                <p>{classItem.city}, Sweden</p>
+            {isGuestBooking ? (
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email address</Label>
+                  <Input 
+                    id="email"
+                    type="email"
+                    placeholder="Enter your email"
+                    value={guestEmail}
+                    onChange={(e) => setGuestEmail(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="firstName">First name</Label>
+                  <Input 
+                    id="firstName"
+                    placeholder="Enter your first name"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="lastName">Last name</Label>
+                  <Input 
+                    id="lastName"
+                    placeholder="Enter your last name"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                  />
+                </div>
+                <Alert>
+                  <AlertDescription className="text-sm">
+                    You'll receive an email with instructions to create your account and complete the booking process.
+                  </AlertDescription>
+                </Alert>
               </div>
-            </div>
+            ) : (
+              <>
+                <div>
+                  <h3 className="font-medium">Class</h3>
+                  <p className="text-neutral-600">{classItem.title}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Instructor</h3>
+                  <p className="text-neutral-600">{classItem.instructor}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Date & Time</h3>
+                  <p className="text-neutral-600">
+                    {dateTime.date} at {dateTime.time}
+                  </p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Location</h3>
+                  <div className="text-neutral-600">
+                    <p>{classItem.city} Studio</p>
+                    <p>123 Creative Street</p>
+                    <p>{classItem.city}, Sweden</p>
+                  </div>
+                </div>
+              </>
+            )}
             
             <Separator />
             
@@ -173,12 +274,14 @@ const BookingConfirmation = () => {
               <span className="text-xl font-semibold">${classItem.price}</span>
             </div>
 
-            <Alert>
-              <AlertDescription className="text-sm">
-                By proceeding with this booking, you acknowledge our cancellation policy. 
-                Cancellations made more than 48 hours before the class start time are eligible for a full refund.
-              </AlertDescription>
-            </Alert>
+            {!isGuestBooking && (
+              <Alert>
+                <AlertDescription className="text-sm">
+                  By proceeding with this booking, you acknowledge our cancellation policy. 
+                  Cancellations made more than 48 hours before the class start time are eligible for a full refund.
+                </AlertDescription>
+              </Alert>
+            )}
           </CardContent>
           <CardFooter className="flex flex-col sm:flex-row gap-4 pt-6">
             {booking ? (
@@ -202,10 +305,10 @@ const BookingConfirmation = () => {
               </>
             ) : (
               <Button 
-                onClick={handleProceedToPayment} 
+                onClick={isGuestBooking ? handleGuestBooking : handleProceedToPayment} 
                 size="lg"
                 className="w-full text-base"
-                disabled={isSubmitting}
+                disabled={isSubmitting || (isGuestBooking && (!guestEmail || !firstName || !lastName))}
               >
                 {isSubmitting ? (
                   <>
@@ -213,7 +316,7 @@ const BookingConfirmation = () => {
                     Processing...
                   </>
                 ) : (
-                  "Proceed to Payment"
+                  isGuestBooking ? "Continue as Guest" : "Proceed to Payment"
                 )}
               </Button>
             )}

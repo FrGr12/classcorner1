@@ -12,41 +12,41 @@ interface ClassActionsProps {
 
 const ClassActions = ({ classId, onEdit, onMessage, onPromote, onShare }: ClassActionsProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-1 sm:gap-2">
       <Button
         variant="outline"
         size="icon"
         onClick={onEdit}
-        className="bg-accent-purple hover:bg-accent-purple/90"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <Edit className="h-4 w-4 text-white" />
+        <Edit className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
         variant="outline"
         size="icon"
         onClick={onMessage}
-        className="bg-accent-purple hover:bg-accent-purple/90"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <MessageSquare className="h-4 w-4 text-white" />
+        <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
         variant="outline"
         size="icon"
         onClick={onPromote}
-        className="bg-accent-purple hover:bg-accent-purple/90"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <ArrowUp className="h-4 w-4 text-white" />
+        <ArrowUp className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
 
       <Button
         variant="outline"
         size="icon"
         onClick={onShare}
-        className="bg-accent-purple hover:bg-accent-purple/90"
+        className="h-6 w-6 sm:h-8 sm:w-8 bg-accent-purple hover:bg-accent-purple/90"
       >
-        <Share2 className="h-4 w-4 text-white" />
+        <Share2 className="h-3 w-3 sm:h-4 sm:w-4 text-white" />
       </Button>
     </div>
   );

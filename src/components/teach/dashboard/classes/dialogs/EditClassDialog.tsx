@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,6 +48,9 @@ const formSchema = z.object({
   price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Price must be a positive number",
   }),
+  minParticipants: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+    message: "Minimum participants must be a positive number",
+  }),
   maxParticipants: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
     message: "Maximum participants must be a positive number",
   }),
@@ -90,7 +92,8 @@ const EditClassDialog = ({ open, onOpenChange, classId, onSuccess }: EditClassDi
           title: course.title,
           description: course.description,
           price: course.price.toString(),
-          maxParticipants: course.max_participants?.toString() || "",
+          minParticipants: course.min_participants?.toString() || "1",
+          maxParticipants: course.max_participants?.toString() || "10",
           date: date.toISOString().split('T')[0],
           time: date.toTimeString().slice(0, 5),
         });
@@ -118,6 +121,7 @@ const EditClassDialog = ({ open, onOpenChange, classId, onSuccess }: EditClassDi
           title: values.title,
           description: values.description,
           price: Number(values.price),
+          min_participants: Number(values.minParticipants),
           max_participants: Number(values.maxParticipants),
         })
         .eq('id', classId);
@@ -227,6 +231,22 @@ const EditClassDialog = ({ open, onOpenChange, classId, onSuccess }: EditClassDi
                       <FormLabel>Price</FormLabel>
                       <FormControl>
                         <Input type="number" step="0.01" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="minParticipants"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Minimum Participants</FormLabel>
+                      <FormControl>
+                        <Input type="number" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

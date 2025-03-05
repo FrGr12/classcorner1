@@ -23,11 +23,14 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Title</FormLabel>
+              <FormLabel className="text-xs sm:text-sm">Title</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input 
+                  {...field} 
+                  className="h-9 sm:h-10 text-xs sm:text-sm"
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs sm:text-sm" />
             </FormItem>
           )}
         />
@@ -39,11 +42,14 @@ const BasicInfoSection = ({ form }: BasicInfoSectionProps) => {
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Description</FormLabel>
+              <FormLabel className="text-xs sm:text-sm">Description</FormLabel>
               <FormControl>
-                <Textarea {...field} />
+                <Textarea 
+                  {...field} 
+                  className="min-h-[100px] text-xs sm:text-sm resize-none"
+                />
               </FormControl>
-              <FormMessage />
+              <FormMessage className="text-xs sm:text-sm" />
             </FormItem>
           )}
         />

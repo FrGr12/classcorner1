@@ -17,12 +17,12 @@ interface ColumnFilterProps {
 
 const ColumnFilter = ({ column, value, onChange }: ColumnFilterProps) => {
   return (
-    <div className="flex items-center gap-2">
-      <span>{column}</span>
+    <div className="flex items-center gap-1 sm:gap-2">
+      <span className="text-xs sm:text-sm">{column}</span>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-            <ChevronDown className="h-4 w-4" />
+          <Button variant="ghost" size="sm" className="h-6 w-6 sm:h-8 sm:w-8 p-0">
+            <ChevronDown className="h-3 w-3 sm:h-4 sm:w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" className="w-[200px]">
@@ -31,7 +31,7 @@ const ColumnFilter = ({ column, value, onChange }: ColumnFilterProps) => {
               placeholder={`Filter ${column.toLowerCase()}...`}
               value={value}
               onChange={(e) => onChange(e.target.value)}
-              className="h-8"
+              className="h-8 text-xs sm:text-sm"
             />
           </div>
         </DropdownMenuContent>

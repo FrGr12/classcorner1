@@ -15,7 +15,12 @@ interface CommunityHomeProps {
   posts: Post[];
 }
 
-const CommunityHome = ({ topic, category, resource, posts }: CommunityHomeProps) => {
+const CommunityHome = ({
+  topic,
+  category,
+  resource,
+  posts
+}: CommunityHomeProps) => {
   const navigate = useNavigate();
 
   const handleTagClick = (tagName: string) => {
@@ -37,26 +42,18 @@ const CommunityHome = ({ topic, category, resource, posts }: CommunityHomeProps)
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => {
-            // Transform Post into Resource format
+          {posts.map(post => {
             const resource: Resource = {
               id: post.id,
               title: post.title,
               description: post.content,
               type: post.topic || "Article",
               category: post.category || "General",
-              readTime: "5 min read", // Default value since Post doesn't have this
+              readTime: "5 min read",
               author: post.author_id,
               publishedDate: post.created_at
             };
-
-            return (
-              <ResourceCard
-                key={post.id}
-                resource={resource}
-                onClick={handlePostClick}
-              />
-            );
+            return <ResourceCard key={post.id} resource={resource} onClick={handlePostClick} />;
           })}
         </div>
       </div>
@@ -65,16 +62,7 @@ const CommunityHome = ({ topic, category, resource, posts }: CommunityHomeProps)
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
-        <h2 className="text-xl font-semibold">
-          {topic ? `Posts about ${topic.replace(/-/g, ' ')}` :
-           category ? `Posts in ${category.replace(/-/g, ' ')}` :
-           'Latest Posts'}
-        </h2>
-        <CreatePostDialog />
-      </div>
-
-      {posts.map((post) => (
+      {posts.map(post => (
         <PostCard
           key={post.id}
           post={post}

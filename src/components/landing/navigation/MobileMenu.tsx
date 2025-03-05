@@ -36,13 +36,6 @@ export function MobileMenu({
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
           <Link 
-            to="/about" 
-            className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
-            onClick={() => setIsOpen(false)}
-          >
-            About
-          </Link>
-          <Link 
             to="/community" 
             className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
             onClick={() => setIsOpen(false)}
@@ -51,7 +44,8 @@ export function MobileMenu({
           </Link>
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
             <Link 
-              to="/teach" 
+              to="/auth"
+              state={{ returnTo: '/dashboard/create-class' }}
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
               onClick={() => setIsOpen(false)}
             >
@@ -59,7 +53,7 @@ export function MobileMenu({
               <span>Start Teaching</span>
             </Link>
             <Link 
-              to="/resources" 
+              to="/community/resource/beginner-guides"
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
               onClick={() => setIsOpen(false)}
             >

@@ -15,61 +15,23 @@ interface ClassDatesProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const BOOKING_STORAGE_KEY = "incomplete_booking";
-
 const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
 
-  const saveBookingToStorage = (date: Date) => {
-    const bookingData = {
-      classId: classItem.id,
-      className: classItem.title,
-      selectedDate: date.toISOString(),
-      lastUpdated: new Date().toISOString()
-    };
-    localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify(bookingData));
-  };
-
   const handleBooking = async (date: Date) => {
     try {
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        // Save booking data before redirecting to auth
-        saveBookingToStorage(date);
-        toast.info("Please log in to continue with your booking");
-        navigate("/auth", { state: { returnTo: window.location.pathname } });
-        return;
-      }
-
-      // Get the session ID for the selected date
-      const { data: session, error: sessionError } = await supabase
-        .from('course_sessions')
-        .select('id')
-        .eq('course_id', classItem.id)
-        .eq('start_time', date.toISOString())
-        .single();
-
-      if (sessionError || !session) {
-        toast.error("Session not found");
-        return;
-      }
-
-      // Clear any saved incomplete booking data
-      localStorage.removeItem(BOOKING_STORAGE_KEY);
-
       navigate("/booking-confirmation", { 
         state: { 
           classItem: {
             ...classItem,
-            date: date,
-            sessionId: session.id
+            date
           }
         }
       });
     } catch (error: any) {
-      toast.error(error.message || "Failed to process booking");
+      console.error('Booking error:', error);
+      toast.error("Failed to process booking. Please try again.");
     }
   };
   
