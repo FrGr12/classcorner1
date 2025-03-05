@@ -69,7 +69,8 @@ const Auth = () => {
               }
             }
           }}
-          providers={["google"]}
+          // Remove the providers array to use only email/password
+          // providers={["google"]}
           redirectTo={`${window.location.origin}/auth/callback`}
         />
 
