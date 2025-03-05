@@ -1,5 +1,5 @@
 
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { toast } from "sonner";
 
 interface DemoModeContextType {
@@ -39,12 +39,12 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
   };
 
   // Check for demo mode in localStorage on initial load
-  useState(() => {
+  useEffect(() => {
     const savedDemoMode = localStorage.getItem("demoMode");
     if (savedDemoMode === "true") {
       setIsDemoMode(true);
     }
-  });
+  }, []);
 
   return (
     <DemoModeContext.Provider value={{ isDemoMode, enableDemoMode, disableDemoMode, toggleDemoMode }}>

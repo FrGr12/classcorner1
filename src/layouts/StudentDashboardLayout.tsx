@@ -14,7 +14,10 @@ const StudentDashboardLayout = () => {
 
   useEffect(() => {
     // Skip authentication check if in demo mode
-    if (isDemoMode) return;
+    if (isDemoMode) {
+      console.log("Demo mode active in dashboard, skipping auth check");
+      return;
+    }
     
     const checkAuth = async () => {
       const { data, error } = await supabase.auth.getUser();
