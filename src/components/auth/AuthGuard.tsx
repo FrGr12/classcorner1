@@ -24,7 +24,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          // Save the current location to redirect back after login
+          // Store the current location to redirect back after login
           navigate('/auth', { state: { returnTo: location.pathname } });
           toast.error("Please sign in to access this page");
         }
