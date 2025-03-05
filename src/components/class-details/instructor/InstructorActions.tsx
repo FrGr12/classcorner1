@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ClassItem } from "@/types/class";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorActionsProps {
   classItem: ClassItem;
@@ -26,14 +27,15 @@ const InstructorActions = ({
 }: InstructorActionsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleFollowToggle = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
-          title: "Authentication required",
-          description: "Please sign in to follow instructors",
+          title: t("auth.required"),
+          description: t("instructor.signInToFollow"),
           variant: "destructive"
         });
         return;
@@ -41,8 +43,8 @@ const InstructorActions = ({
 
       if (!classItem.instructor_id) {
         toast({
-          title: "Error",
-          description: "Instructor ID not found",
+          title: t("message.error"),
+          description: t("instructor.idNotFound"),
           variant: "destructive"
         });
         return;
@@ -60,8 +62,8 @@ const InstructorActions = ({
         if (error) throw error;
 
         toast({
-          title: "Unfollowed",
-          description: `You have unfollowed ${classItem.instructor}`
+          title: t("instructor.unfollowed"),
+          description: t("instructor.unfollowedMessage", { instructor: classItem.instructor })
         });
       } else {
         const { error } = await supabase
@@ -75,8 +77,8 @@ const InstructorActions = ({
         if (error) throw error;
 
         toast({
-          title: "Following",
-          description: `You are now following ${classItem.instructor}`
+          title: t("instructor.following"),
+          description: t("instructor.followingMessage", { instructor: classItem.instructor })
         });
       }
 
@@ -84,8 +86,8 @@ const InstructorActions = ({
     } catch (error) {
       console.error('Error toggling follow status:', error);
       toast({
-        title: "Error",
-        description: "Failed to update follow status",
+        title: t("message.error"),
+        description: t("instructor.followError"),
         variant: "destructive"
       });
     } finally {
@@ -102,7 +104,7 @@ const InstructorActions = ({
         onClick={onContactClick}
       >
         <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-        Contact
+        {t("instructor.contact")}
       </Button>
       <Button 
         variant={isFollowing ? "default" : "outline"}
@@ -120,7 +122,7 @@ const InstructorActions = ({
         ) : (
           <UserPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         )}
-        {isLoading ? "Loading..." : isFollowing ? "Following" : "Follow"}
+        {isLoading ? t("message.loading") : isFollowing ? t("instructor.following") : t("instructor.follow")}
       </Button>
       <Button
         variant="outline"
@@ -129,7 +131,7 @@ const InstructorActions = ({
         onClick={onShowQuestion}
       >
         <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-        Ask a Question
+        {t("class.askQuestion")}
       </Button>
       <Link to={`/instructor/${instructorId}`}>
         <Button
@@ -137,7 +139,7 @@ const InstructorActions = ({
           size="sm"
           className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
         >
-          View Profile
+          {t("instructor.viewProfile")}
         </Button>
       </Link>
     </div>

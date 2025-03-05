@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowUp, MessageCircle, Bookmark, Calendar, User } from "lucide-react";
 import { Post } from "@/types/community";
 import { format } from "date-fns";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { sv } from "date-fns/locale";
 
 interface PostCardProps {
   post: Post;
@@ -13,6 +15,8 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, onPostClick, onTagClick }: PostCardProps) {
+  const { t, language } = useLanguage();
+  
   return (
     <Card 
       className="hover:bg-accent/5 transition-colors cursor-pointer" 
@@ -66,7 +70,7 @@ export function PostCard({ post, onPostClick, onTagClick }: PostCardProps) {
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="h-3 w-3" />
-                {format(new Date(post.created_at), 'MMM d')}
+                {format(new Date(post.created_at), 'MMM d', { locale: language === 'sv' ? sv : undefined })}
               </div>
               <div className="flex items-center gap-2 ml-auto">
                 <button 
@@ -76,7 +80,7 @@ export function PostCard({ post, onPostClick, onTagClick }: PostCardProps) {
                   }}
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
-                  <span>Comments</span>
+                  <span>{t("post.comments")}</span>
                 </button>
                 <button 
                   className="flex items-center gap-1 hover:text-accent-purple" 
@@ -85,7 +89,7 @@ export function PostCard({ post, onPostClick, onTagClick }: PostCardProps) {
                   }}
                 >
                   <Bookmark className="h-3.5 w-3.5" />
-                  <span>Save</span>
+                  <span>{t("post.save")}</span>
                 </button>
               </div>
             </div>

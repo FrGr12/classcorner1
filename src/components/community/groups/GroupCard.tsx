@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Users, Lock, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface GroupCardProps {
   id: number;
@@ -15,6 +16,8 @@ interface GroupCardProps {
 }
 
 export function GroupCard({ id, name, description, memberCount, type, topic, region, onJoin }: GroupCardProps) {
+  const { t } = useLanguage();
+  
   return (
     <Card className="h-full flex flex-col">
       <CardContent className="pt-6 flex-1">
@@ -30,7 +33,7 @@ export function GroupCard({ id, name, description, memberCount, type, topic, reg
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
-            <span>{memberCount} members</span>
+            <span>{t("group.members", { count: memberCount })}</span>
           </div>
           {topic && <span>• {topic}</span>}
           {region && <span>• {region}</span>}
@@ -42,7 +45,7 @@ export function GroupCard({ id, name, description, memberCount, type, topic, reg
           className="w-full"
           onClick={() => onJoin(id)}
         >
-          {type === 'private' ? 'Request to Join' : 'Join Group'}
+          {type === 'private' ? t("group.requestToJoin") : t("group.join")}
         </Button>
       </CardFooter>
     </Card>
