@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -27,13 +26,11 @@ const RescheduleDialog = ({
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     booking.session?.start_time ? new Date(booking.session.start_time) : undefined
   );
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleReschedule = async () => {
     if (!selectedDate) return;
 
     try {
-      setIsSubmitting(true);
       const { error } = await supabase
         .from('bookings')
         .update({
@@ -50,8 +47,6 @@ const RescheduleDialog = ({
       onOpenChange(false);
     } catch (error: any) {
       toast.error(error.message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -76,14 +71,7 @@ const RescheduleDialog = ({
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button 
-            onClick={handleReschedule}
-            isLoading={isSubmitting}
-            loadingText="Rescheduling..."
-            disabled={!selectedDate}
-          >
-            Confirm
-          </Button>
+          <Button onClick={handleReschedule}>Confirm</Button>
         </div>
       </DialogContent>
     </Dialog>

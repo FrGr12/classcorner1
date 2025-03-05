@@ -1,70 +1,108 @@
 
 import { useEffect, useState } from "react";
-import { UseFormReturn } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { defaultFormValues } from "../utils/formDefaults";
 import { CourseFormValues } from "../CourseFormContext";
-import { Session } from "@/types/session";
 
-export const useCourseFormData = (form: UseFormReturn<CourseFormValues>) => {
+export const useCourseFormData = (courseId?: string) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [sessions, setSessions] = useState<Session[]>([]);
+  const [error, setError] = useState<string | null>(null);
+
+  const form = useForm<CourseFormValues>({
+    defaultValues: defaultFormValues,
+  });
 
   useEffect(() => {
-    const loadInitialData = async () => {
+    const fetchCourseData = async () => {
+      if (!courseId) return;
+
+      setIsLoading(true);
+      setError(null);
+
       try {
-        setIsLoading(true);
-        setError("");
+        // Simulate API call to fetch course data
+        await new Promise(resolve => setTimeout(resolve, 1000));
 
-        // Simulate API call to load course data
-        await new Promise(resolve => setTimeout(resolve, 500));
-
-        // Simulate loaded data
-        const mockData = {
-          title: "Introduction to Pottery",
-          description: "Learn the basics of pottery making in this hands-on class.",
-          category: "arts-and-crafts",
-          location: "studio",
-          is_online: false,
-          address: "123 Studio Street",
-          city: "Portland",
-          capacity: 10, // Convert to number
-          price: 75, // Convert to number
-          duration: "180", // Ensure it's a string
-          sessions: [],
-          learning_outcomes: ["Create a small ceramic bowl", "Learn basic glazing techniques"],
-          requirements: ["No experience necessary"],
-          items_to_bring: ["Comfortable clothes", "Water bottle"],
-          images: [],
-          status: "draft" as const,
-          min_participants: 3,
-          max_participants: 10,
+        // Mock response data
+        const mockCourseData = {
+          id: parseInt(courseId),
+          title: "Ceramic Pottery Workshop",
+          description: "Learn the basics of pottery in this hands-on workshop",
+          category: "Crafts",
+          location: "Studio",
+          locationType: "inPerson",
+          address: "123 Main St",
+          city: "Stockholm",
+          state: "Stockholm",
+          zipCode: "10044",
+          onlineLink: "",
+          classDetails: "Bring your creativity and enthusiasm!",
+          difficultyLevel: "beginner",
+          price: "299",
+          capacity: "8",
+          minParticipants: 2,
+          maxParticipants: 8,
+          images: ["/placeholder.svg"],
+          scheduleType: "oneTime",
+          startDate: "2023-08-15",
+          endDate: "2023-08-15",
+          startTime: "14:00",
+          endTime: "17:00",
+          recurringDays: [],
+          whatToBring: ["Apron", "Notebook"],
+          learningOutcomes: ["Basic pottery techniques", "Glazing fundamentals"],
+          auto_promote_from_waitlist: true,
+          auto_send_waitlist_notification: true,
+          base_price_group: 200,
+          base_price_private: 350,
+          booking_deadline_hours: 24,
+          cancellation_policy: "24-hour notice required for refunds",
+          session_length_minutes: 180,
+          waitlist_enabled: true,
+          max_waitlist_size: 5,
         };
 
-        // Reset form with loaded data
-        form.reset(mockData);
-
-        // Simulate loading sessions
-        const mockSessions = [
-          {
-            id: 1,
-            date: new Date("2023-12-15"),
-            start_time: "10:00",
-            end_time: "13:00",
-          }
-        ];
-        setSessions(mockSessions);
-
+        form.reset({
+          title: mockCourseData.title,
+          description: mockCourseData.description,
+          category: mockCourseData.category,
+          location: mockCourseData.location,
+          locationType: mockCourseData.locationType,
+          address: mockCourseData.address,
+          city: mockCourseData.city,
+          state: mockCourseData.state,
+          zipCode: mockCourseData.zipCode,
+          onlineLink: mockCourseData.onlineLink,
+          classDetails: mockCourseData.classDetails,
+          difficultyLevel: mockCourseData.difficultyLevel,
+          price: mockCourseData.price,
+          capacity: mockCourseData.capacity,
+          minParticipants: mockCourseData.minParticipants,
+          maxParticipants: mockCourseData.maxParticipants,
+          images: mockCourseData.images,
+          scheduleType: mockCourseData.scheduleType,
+          startDate: mockCourseData.startDate,
+          endDate: mockCourseData.endDate,
+          startTime: mockCourseData.startTime,
+          endTime: mockCourseData.endTime,
+          recurringDays: mockCourseData.recurringDays,
+          whatToBring: mockCourseData.whatToBring,
+          learningOutcomes: mockCourseData.learningOutcomes,
+        });
       } catch (err) {
-        console.error("Error loading course data:", err);
-        setError("Failed to load course data. Please try again later.");
+        console.error("Error fetching course data:", err);
+        setError("Failed to load course data. Please try again.");
       } finally {
         setIsLoading(false);
       }
     };
 
-    // Uncomment to load data when component mounts
-    // loadInitialData();
-  }, [form]);
+    fetchCourseData();
+  }, [courseId, form]);
 
-  return { form, isLoading, error, sessions, setSessions };
+  return {
+    form,
+    isLoading,
+    error,
+  };
 };

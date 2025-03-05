@@ -1,5 +1,5 @@
 
-import { useState, useCallback, memo } from "react";
+import { useState } from "react";
 import { InstructorProfile } from "@/types/instructor";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -22,20 +22,12 @@ interface MessageDialogProps {
   instructor: InstructorProfile;
 }
 
-const MessageDialog = memo(({ isOpen, onOpenChange, instructor }: MessageDialogProps) => {
+const MessageDialog = ({ isOpen, onOpenChange, instructor }: MessageDialogProps) => {
   const [message, setMessage] = useState("");
   const [subject, setSubject] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubjectChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setSubject(e.target.value);
-  }, []);
-
-  const handleMessageChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setMessage(e.target.value);
-  }, []);
-
-  const handleSendMessage = useCallback(async () => {
+  const handleSendMessage = async () => {
     try {
       setIsLoading(true);
       
@@ -43,10 +35,7 @@ const MessageDialog = memo(({ isOpen, onOpenChange, instructor }: MessageDialogP
       const { data: { user } } = await supabase.auth.getUser();
       
       if (!user) {
-        toast.error("Please sign in to contact instructors", {
-          description: "You need to be logged in to send messages",
-          duration: 5000
-        });
+        toast.error("Please sign in to contact instructors");
         return;
       }
       
@@ -64,64 +53,47 @@ const MessageDialog = memo(({ isOpen, onOpenChange, instructor }: MessageDialogP
       
       if (error) throw error;
       
-      toast.success("Message sent successfully", {
-        description: `Your message has been sent to ${instructor.firstName}`,
-        duration: 3000
-      });
-      
+      toast.success("Message sent successfully");
       setMessage("");
       setSubject("");
       onOpenChange(false);
     } catch (error: any) {
       console.error("Error sending message:", error);
-      toast.error("Failed to send message", {
-        description: error.message || "Please try again later",
-        duration: 5000
-      });
+      toast.error(error.message || "Failed to send message");
     } finally {
       setIsLoading(false);
     }
-  }, [message, subject, instructor, onOpenChange]);
-
-  const isValid = subject.trim() !== "" && message.trim() !== "";
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <DialogContent 
-        className="sm:max-w-[425px]"
-        aria-labelledby="message-dialog-title"
-        aria-describedby="message-dialog-description"
-      >
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle id="message-dialog-title">Message {instructor.firstName}</DialogTitle>
-          <DialogDescription id="message-dialog-description">
+          <DialogTitle>Message {instructor.firstName}</DialogTitle>
+          <DialogDescription>
             Send a message to {instructor.firstName} about their classes or inquire about private lessons.
           </DialogDescription>
         </DialogHeader>
         
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="subject" id="subject-label">Subject</Label>
+            <Label htmlFor="subject">Subject</Label>
             <Input
               id="subject"
               value={subject}
-              onChange={handleSubjectChange}
+              onChange={(e) => setSubject(e.target.value)}
               placeholder="e.g., Question about your pottery class"
-              aria-labelledby="subject-label"
-              aria-required="true"
             />
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="message" id="message-label">Message</Label>
+            <Label htmlFor="message">Message</Label>
             <Textarea
               id="message"
               value={message}
-              onChange={handleMessageChange}
+              onChange={(e) => setMessage(e.target.value)}
               placeholder="Enter your message here..."
               className="h-32"
-              aria-labelledby="message-label"
-              aria-required="true"
             />
           </div>
         </div>
@@ -130,24 +102,22 @@ const MessageDialog = memo(({ isOpen, onOpenChange, instructor }: MessageDialogP
           <Button
             variant="outline"
             onClick={() => onOpenChange(false)}
-            type="button"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSendMessage}
-            disabled={isLoading || !isValid}
-            aria-busy={isLoading}
-            type="button"
+            isLoading={isLoading}
+            loadingText="Sending..."
+            disabled={!message.trim() || !subject.trim()}
+            size="default"
           >
-            {isLoading ? "Sending..." : "Send Message"}
+            Send Message
           </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
   );
-});
-
-MessageDialog.displayName = 'MessageDialog';
+};
 
 export default MessageDialog;

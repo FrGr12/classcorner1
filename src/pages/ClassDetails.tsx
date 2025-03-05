@@ -15,7 +15,6 @@ import InstructorInfo from "@/components/class-details/InstructorInfo";
 import TestimonialSection from "@/components/class-details/TestimonialSection";
 import PolicyInfo from "@/components/class-details/PolicyInfo";
 import CustomFAQSection from "@/components/class-details/CustomFAQSection";
-import ClassVideo from "@/components/class-details/ClassVideo";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
@@ -72,16 +71,14 @@ const ClassDetails = () => {
   return (
     <div className="min-h-screen bg-neutral-50">
       <Navigation />
-      <div className="w-full mt-[72px] bg-white py-4 sm:py-8">
-        <div className="w-full mx-auto">
-          <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
-        </div>
+      <div className="w-full mt-[72px] bg-white py-6 sm:py-8">
+        <ImageCarousel images={classItem.images} title={classItem.title} variant="large" />
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
         <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 mt-6 sm:mt-8">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
-          <div id="dates-section" className="mt-2 sm:mt-4">
+          <div id="dates-section">
             <ClassDates 
               classItem={classItem} 
               selectedDate={selectedDate}
@@ -91,11 +88,6 @@ const ClassDetails = () => {
 
         <div className="space-y-6 sm:space-y-8 md:space-y-12">
           <AboutClass classItem={classItem} />
-          {classItem.videoUrl && (
-            <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8">
-              <ClassVideo videoUrl={classItem.videoUrl} title={classItem.title} />
-            </div>
-          )}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             <LearningSection />
             <PreparationInfo />

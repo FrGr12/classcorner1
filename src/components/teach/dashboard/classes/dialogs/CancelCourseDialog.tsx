@@ -21,14 +21,6 @@ const CancelCourseDialog = ({
   onOpenChange,
   onConfirm,
 }: CancelCourseDialogProps) => {
-  const handleConfirm = async () => {
-    try {
-      await onConfirm();
-    } catch (error) {
-      console.error("Error during cancellation:", error);
-    }
-  };
-
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
       <AlertDialogContent>
@@ -41,7 +33,7 @@ const CancelCourseDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Go back</AlertDialogCancel>
           <AlertDialogAction
-            onClick={handleConfirm}
+            onClick={onConfirm}
             className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
           >
             Yes, cancel course

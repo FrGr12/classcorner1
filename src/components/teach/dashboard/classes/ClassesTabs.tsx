@@ -4,7 +4,6 @@ import BookingRequestsTable from "./BookingRequestsTable";
 import ParticipantsTable from "./ParticipantsTable";
 import WaitlistTable from "./WaitlistTable";
 import { AttendanceTracking } from "@/components/teach/dashboard/AttendanceTracking";
-import { memo, useCallback } from "react";
 
 interface Participant {
   id: number;
@@ -113,47 +112,45 @@ const mockWaitlistEntries: WaitlistEntry[] = [
 ];
 
 // Modify the component to avoid using props that might not exist
-const ClassesTabs = memo(() => {
+const ClassesTabs = () => {
   // Define handlers locally without passing them to components
-  const handleStatusUpdate = useCallback((participantId: number, status: string) => {
+  const handleStatusUpdate = (participantId: number, status: string) => {
     console.log(`Status updated for ${participantId} to ${status}`);
-  }, []);
+  };
 
-  const handleApprove = useCallback((id: number) => {
+  const handleApprove = (id: number) => {
     console.log(`Request ${id} approved`);
-  }, []);
+  };
 
-  const handleDeny = useCallback((id: number) => {
+  const handleDeny = (id: number) => {
     console.log(`Request ${id} denied`);
-  }, []);
+  };
 
-  const handlePromote = useCallback((userId: string) => {
+  const handlePromote = (userId: string) => {
     console.log(`Waitlist entry ${userId} promoted`);
-  }, []);
+  };
 
   return (
     <Tabs defaultValue="participants" className="mt-6">
-      <TabsList className="w-full max-w-md" aria-label="Class management tabs">
+      <TabsList className="w-full max-w-md">
         <TabsTrigger value="participants" className="flex-1">Participants</TabsTrigger>
         <TabsTrigger value="requests" className="flex-1">Requests</TabsTrigger>
         <TabsTrigger value="waitlist" className="flex-1">Waitlist</TabsTrigger>
         <TabsTrigger value="attendance" className="flex-1">Attendance</TabsTrigger>
       </TabsList>
-      <TabsContent value="participants" className="mt-6" role="tabpanel">
-        <h2 className="sr-only">Participants List</h2>
+      <TabsContent value="participants" className="mt-6">
         <ParticipantsTable participants={mockParticipants} onStatusUpdate={handleStatusUpdate} />
       </TabsContent>
-      <TabsContent value="requests" className="mt-6" role="tabpanel">
-        <h2 className="sr-only">Booking Requests</h2>
+      <TabsContent value="requests" className="mt-6">
         {/* Use a simplified BookingRequestsTable that doesn't need additional props */}
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse" aria-label="Booking requests">
+          <table className="w-full border-collapse">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-2" scope="col">Name</th>
-                <th className="text-left p-2" scope="col">Date</th>
-                <th className="text-left p-2" scope="col">Status</th>
-                <th className="text-left p-2" scope="col">Actions</th>
+                <th className="text-left p-2">Name</th>
+                <th className="text-left p-2">Date</th>
+                <th className="text-left p-2">Status</th>
+                <th className="text-left p-2">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -166,15 +163,13 @@ const ClassesTabs = memo(() => {
                     <div className="flex gap-2">
                       <button 
                         onClick={() => handleApprove(request.id)}
-                        className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs focus:outline-none focus:ring-2 focus:ring-green-500"
-                        aria-label={`Approve request from ${request.name}`}
+                        className="bg-green-100 text-green-800 px-2 py-1 rounded text-xs"
                       >
                         Approve
                       </button>
                       <button 
                         onClick={() => handleDeny(request.id)}
-                        className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs focus:outline-none focus:ring-2 focus:ring-red-500"
-                        aria-label={`Deny request from ${request.name}`}
+                        className="bg-red-100 text-red-800 px-2 py-1 rounded text-xs"
                       >
                         Deny
                       </button>
@@ -186,18 +181,14 @@ const ClassesTabs = memo(() => {
           </table>
         </div>
       </TabsContent>
-      <TabsContent value="waitlist" className="mt-6" role="tabpanel">
-        <h2 className="sr-only">Waitlist Entries</h2>
+      <TabsContent value="waitlist" className="mt-6">
         <WaitlistTable entries={mockWaitlistEntries} onPromote={handlePromote} />
       </TabsContent>
-      <TabsContent value="attendance" className="mt-6" role="tabpanel">
-        <h2 className="sr-only">Attendance Tracking</h2>
+      <TabsContent value="attendance" className="mt-6">
         <AttendanceTracking />
       </TabsContent>
     </Tabs>
   );
-});
-
-ClassesTabs.displayName = 'ClassesTabs';
+};
 
 export default ClassesTabs;

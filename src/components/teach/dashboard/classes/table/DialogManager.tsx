@@ -1,101 +1,74 @@
 
-import React, { memo } from 'react';
-import { EditClassDialog } from '../dialogs/EditClassDialog';
-import CancelCourseDialog from '../dialogs/CancelCourseDialog';
-import MessageDialog from '../dialogs/MessageDialog';
-import ShareDialog from '../dialogs/ShareDialog';
-import { ClassItem } from '@/types/class';
+import { useState } from "react";
+import PromoteDialog from "../promote/PromoteDialog";
+import ClassDetailsDialog from "../ClassDetailsDialog";
+import MessageDialog from "../dialogs/MessageDialog";
+import ShareDialog from "../dialogs/ShareDialog";
+import EditClassDialog from "../dialogs/EditClassDialog";
 
-export interface DialogManagerProps {
-  isEditOpen: boolean;
-  isDetailsOpen: boolean;
+interface DialogManagerProps {
+  selectedClassId: number | null;
   isPromoteOpen: boolean;
   isMessageOpen: boolean;
   isShareOpen: boolean;
-  isCancelOpen?: boolean;
-  selectedClassId: number;
-  selectedClass?: ClassItem;
-  setIsEditOpen: (open: boolean) => void;
-  setIsDetailsOpen: (open: boolean) => void;
+  isDetailsOpen: boolean;
+  isEditOpen: boolean;
   setIsPromoteOpen: (open: boolean) => void;
   setIsMessageOpen: (open: boolean) => void;
   setIsShareOpen: (open: boolean) => void;
-  setIsCancelOpen?: (open: boolean) => void;
+  setIsDetailsOpen: (open: boolean) => void;
+  setIsEditOpen: (open: boolean) => void;
   onEditSuccess: () => void;
 }
 
-const DialogManager = memo(({
-  isEditOpen,
-  isDetailsOpen,
+const DialogManager = ({
+  selectedClassId,
   isPromoteOpen,
   isMessageOpen,
   isShareOpen,
-  isCancelOpen = false,
-  selectedClassId,
-  selectedClass,
-  setIsEditOpen,
-  setIsDetailsOpen,
+  isDetailsOpen,
+  isEditOpen,
   setIsPromoteOpen,
   setIsMessageOpen,
   setIsShareOpen,
-  setIsCancelOpen = () => {},
+  setIsDetailsOpen,
+  setIsEditOpen,
   onEditSuccess
 }: DialogManagerProps) => {
-  if (!selectedClass && selectedClassId === 0) return null;
-
-  // Handle course cancellation
-  const handleCancelConfirm = async (): Promise<boolean> => {
-    try {
-      // In a real implementation, this would call an API to cancel the course
-      console.log(`Cancelling course ${selectedClassId}`);
-      
-      // Close the dialog after successful cancellation
-      setIsCancelOpen(false);
-      return true;
-    } catch (error) {
-      console.error('Error cancelling course:', error);
-      return false;
-    }
-  };
-
   return (
-    <div aria-live="polite">
-      {isEditOpen && (
-        <EditClassDialog
-          isOpen={isEditOpen}
-          onClose={() => setIsEditOpen(false)}
-          classData={selectedClass}
-          onSuccess={onEditSuccess}
-        />
-      )}
+    <>
+      <MessageDialog 
+        open={isMessageOpen}
+        onOpenChange={setIsMessageOpen}
+        classId={selectedClassId}
+      />
 
-      {isMessageOpen && (
-        <MessageDialog
-          open={isMessageOpen}
-          onOpenChange={setIsMessageOpen}
-          classId={selectedClassId}
-        />
-      )}
+      <PromoteDialog 
+        open={isPromoteOpen}
+        onOpenChange={setIsPromoteOpen}
+        classId={selectedClassId}
+      />
 
-      {isShareOpen && (
-        <ShareDialog
-          open={isShareOpen}
-          onOpenChange={setIsShareOpen}
-          classId={selectedClassId}
-        />
-      )}
+      <ShareDialog
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        classId={selectedClassId}
+      />
 
-      {isCancelOpen && (
-        <CancelCourseDialog
-          open={isCancelOpen}
-          onOpenChange={setIsCancelOpen}
-          onConfirm={handleCancelConfirm}
-        />
-      )}
-    </div>
+      <ClassDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        classId={selectedClassId}
+      />
+
+      <EditClassDialog 
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        classId={selectedClassId}
+        onSuccess={onEditSuccess}
+      />
+    </>
   );
-});
-
-DialogManager.displayName = 'DialogManager';
+};
 
 export default DialogManager;

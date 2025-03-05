@@ -7,7 +7,6 @@ import About from "@/pages/About";
 import InstructorProfile from "@/pages/InstructorProfile";
 import ErrorPage from "@/pages/ErrorPage";
 import ErrorBoundary from "@/components/error/ErrorBoundary";
-import BookingConfirmation from "@/pages/BookingConfirmation";
 
 export const publicRoutes: RouteObject[] = [
   {
@@ -40,14 +39,6 @@ export const publicRoutes: RouteObject[] = [
     element: (
       <ErrorBoundary>
         <InstructorProfile />
-      </ErrorBoundary>
-    ),
-  },
-  {
-    path: "/booking-confirmation",
-    element: (
-      <ErrorBoundary>
-        <BookingConfirmation />
       </ErrorBoundary>
     ),
   },

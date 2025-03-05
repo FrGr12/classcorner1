@@ -1,33 +1,34 @@
 
 import React, { createContext, useContext, ReactNode } from "react";
 import { UseFormReturn } from "react-hook-form";
-import { Session } from "@/types/session";
-import * as z from "zod";
 
-// Define the schema for form validation
-export const courseFormSchema = z.object({
-  title: z.string().min(1, "Title is required"),
-  description: z.string().min(1, "Description is required"),
-  category: z.string().min(1, "Category is required"),
-  location: z.string().min(1, "Location is required"),
-  address: z.string().optional(),
-  city: z.string().optional(),
-  is_online: z.boolean().default(false),
-  capacity: z.number().int().positive().default(1),
-  price: z.number().nonnegative().default(0),
-  duration: z.string().default("60"), // Changed to string only to match database expectation
-  sessions: z.array(z.any()).default([]),
-  learning_outcomes: z.array(z.string()).default(['']),
-  requirements: z.array(z.string()).default(['']),
-  items_to_bring: z.array(z.string()).default(['']),
-  images: z.array(z.any()).default([]),
-  status: z.enum(["draft", "published", "archived"]).default("draft"),
-  // Add these fields to match what's in the DB
-  min_participants: z.number().int().positive().default(1),
-  max_participants: z.number().int().positive().default(10),
-});
-
-export type CourseFormValues = z.infer<typeof courseFormSchema>;
+export interface CourseFormValues {
+  title: string;
+  description: string;
+  category: string;
+  location: string;
+  locationType: "inPerson" | "online" | "hybrid";
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  onlineLink: string;
+  classDetails: string;
+  difficultyLevel: "beginner" | "intermediate" | "advanced" | "allLevels";
+  price: string;
+  capacity: string;
+  minParticipants: number;
+  maxParticipants: number;
+  images: string[];
+  scheduleType: "oneTime" | "recurring" | "flexibleDates";
+  startDate: string;
+  endDate: string;
+  startTime: string;
+  endTime: string;
+  recurringDays: string[];
+  whatToBring: string[];
+  learningOutcomes: string[];
+}
 
 interface CourseFormContextType {
   form: UseFormReturn<CourseFormValues>;
@@ -37,11 +38,9 @@ interface CourseFormContextType {
   setCurrentStep: (step: string) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  sessions: Session[];
-  setSessions: (sessions: Session[]) => void;
 }
 
-export const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
+const CourseFormContext = createContext<CourseFormContextType | undefined>(undefined);
 
 export const useCourseForm = () => {
   const context = useContext(CourseFormContext);
@@ -60,8 +59,6 @@ interface CourseFormProviderProps {
   setCurrentStep: (step: string) => void;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
-  sessions: Session[];
-  setSessions: (sessions: Session[]) => void;
 }
 
 export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
@@ -73,8 +70,6 @@ export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
   setCurrentStep,
   goToNextStep,
   goToPreviousStep,
-  sessions,
-  setSessions,
 }) => {
   return (
     <CourseFormContext.Provider
@@ -86,8 +81,6 @@ export const CourseFormProvider: React.FC<CourseFormProviderProps> = ({
         setCurrentStep,
         goToNextStep,
         goToPreviousStep,
-        sessions,
-        setSessions,
       }}
     >
       {children}

@@ -1,3 +1,4 @@
+
 /**
  * Types related to instructor data transformations and API responses
  */
@@ -22,7 +23,6 @@ export interface ProfileData {
   portfolio_url?: string;
   social_media?: any;
   user_type: string;
-  classification?: string;
 }
 
 /**

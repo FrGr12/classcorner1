@@ -1,8 +1,9 @@
+
 /**
  * Helper functions to transform raw data from the database to application models
  */
 
-import { UserType, InstructorClassification } from "@/types/user";
+import { UserType } from "@/types/user";
 import { ClassItem } from "@/types/class";
 import { InstructorProfile, InstructorReview } from "@/types/instructor";
 import { ProfileData, ReviewData } from "./types";
@@ -88,12 +89,6 @@ export const createInstructorProfile = (
     instructorProfile.user_type === "teacher" ? "teacher" : 
     instructorProfile.user_type === "student" ? "student" : "admin";
 
-  // Determine instructor classification based on profile data
-  let classification: InstructorClassification = null;
-  if (instructorProfile.classification) {
-    classification = instructorProfile.classification as InstructorClassification;
-  }
-
   return {
     id: instructorProfile.user_type === "teacher" ? instructorId || "" : "",
     firstName: instructorProfile.first_name || "",
@@ -112,7 +107,6 @@ export const createInstructorProfile = (
     totalReviews: totalReviews,
     totalStudents: 0, // This would come from a different query
     totalClasses: formattedClasses.length,
-    classification: classification,
     socialMedia: socialMediaObj,
     classes: formattedClasses,
     userType: userTypeValue

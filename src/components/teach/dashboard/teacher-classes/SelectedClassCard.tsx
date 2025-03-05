@@ -1,5 +1,4 @@
 
-import { memo, useCallback } from "react";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,14 +11,8 @@ interface SelectedClassCardProps {
   selectedClass: ClassItemLocal;
 }
 
-// Memoize the component to prevent unnecessary re-renders
-const SelectedClassCard = memo(({ selectedClass }: SelectedClassCardProps) => {
+const SelectedClassCard = ({ selectedClass }: SelectedClassCardProps) => {
   const navigate = useNavigate();
-  
-  // Memoize the click handler
-  const handleViewPublicPage = useCallback(() => {
-    navigate(`/class/${selectedClass.id}`);
-  }, [navigate, selectedClass.id]);
   
   return (
     <Card>
@@ -35,13 +28,8 @@ const SelectedClassCard = memo(({ selectedClass }: SelectedClassCardProps) => {
             </span>
           </div>
         </div>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          onClick={handleViewPublicPage}
-          aria-label={`View public page for ${selectedClass.title}`}
-        >
-          <ArrowUpRight className="mr-2 h-4 w-4" aria-hidden="true" />
+        <Button variant="outline" size="sm" onClick={() => navigate(`/class/${selectedClass.id}`)}>
+          <ArrowUpRight className="mr-2 h-4 w-4" />
           View Public Page
         </Button>
       </CardHeader>
@@ -50,9 +38,6 @@ const SelectedClassCard = memo(({ selectedClass }: SelectedClassCardProps) => {
       </CardContent>
     </Card>
   );
-});
-
-// Add display name for debugging purposes
-SelectedClassCard.displayName = 'SelectedClassCard';
+};
 
 export default SelectedClassCard;

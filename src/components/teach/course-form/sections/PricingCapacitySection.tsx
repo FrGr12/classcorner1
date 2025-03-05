@@ -52,7 +52,7 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="min_participants"
+            name="minParticipants"
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-xs sm:text-sm font-medium text-primary">Minimum Participants</FormLabel>
@@ -67,9 +67,9 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
                       if (!isNaN(value)) {
                         field.onChange(value);
                         // Ensure max is not less than min
-                        const maxValue = form.getValues('max_participants');
+                        const maxValue = form.getValues('maxParticipants');
                         if (maxValue < value) {
-                          form.setValue('max_participants', value);
+                          form.setValue('maxParticipants', value);
                         }
                       }
                     }}
@@ -82,7 +82,7 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
 
           <FormField
             control={form.control}
-            name="max_participants"
+            name="maxParticipants"
             render={({ field }) => (
               <FormItem className="space-y-2">
                 <FormLabel className="text-xs sm:text-sm font-medium text-primary">Maximum Participants</FormLabel>
@@ -95,7 +95,7 @@ const PricingCapacitySection = ({ form }: PricingCapacitySectionProps) => {
                     onChange={(e) => {
                       const value = parseInt(e.target.value);
                       if (!isNaN(value)) {
-                        const minValue = form.getValues('min_participants');
+                        const minValue = form.getValues('minParticipants');
                         if (value >= minValue) {
                           field.onChange(value);
                         } else {

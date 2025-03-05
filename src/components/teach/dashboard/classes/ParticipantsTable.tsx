@@ -39,11 +39,11 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "confirmed":
-        return <Badge variant="default"><CheckCircle2 className="w-3 h-3 mr-1" aria-hidden="true" /> Confirmed</Badge>;
+        return <Badge variant="default"><CheckCircle2 className="w-3 h-3 mr-1" /> Confirmed</Badge>;
       case "pending":
-        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" aria-hidden="true" /> Pending</Badge>;
+        return <Badge variant="secondary"><Clock className="w-3 h-3 mr-1" /> Pending</Badge>;
       case "cancelled":
-        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" aria-hidden="true" /> Cancelled</Badge>;
+        return <Badge variant="destructive"><XCircle className="w-3 h-3 mr-1" /> Cancelled</Badge>;
       default:
         return <Badge variant="outline">{status}</Badge>;
     }
@@ -82,7 +82,7 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
 
   if (!participants || participants.length === 0) {
     return (
-      <div className="text-sm text-muted-foreground" aria-label="No participants">
+      <div className="text-sm text-muted-foreground">
         No participants yet
       </div>
     );
@@ -91,20 +91,19 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h4 className="font-medium" id="participants-heading">Participants ({participants.length})</h4>
+        <h4 className="font-medium">Participants ({participants.length})</h4>
         <div className="relative w-[200px]">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" aria-hidden="true" />
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search participants..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="pl-8"
-            aria-label="Search participants"
           />
         </div>
       </div>
 
-      <Table aria-labelledby="participants-heading">
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>
@@ -112,7 +111,7 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
             <TableHead>Status</TableHead>
             <TableHead>Payment</TableHead>
             <TableHead>Attendance</TableHead>
-            <TableHead><span className="sr-only">Actions</span></TableHead>
+            <TableHead></TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -130,19 +129,19 @@ const ParticipantsTable = ({ participants = [], onStatusUpdate }: ParticipantsTa
               <TableCell>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" aria-label={`Actions for ${participant.name}`}>
-                      <MoreVertical className="h-4 w-4" aria-hidden="true" />
+                    <Button variant="ghost" size="sm">
+                      <MoreVertical className="h-4 w-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onSelect={() => {}} aria-label={`Send message to ${participant.name}`}>
-                      <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
+                    <DropdownMenuItem>
+                      <Mail className="h-4 w-4 mr-2" />
                       Send Message
                     </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => onStatusUpdate(participant.id, 'confirmed')} aria-label={`Mark ${participant.name} as confirmed`}>
+                    <DropdownMenuItem onClick={() => onStatusUpdate(participant.id, 'confirmed')}>
                       Mark as Confirmed
                     </DropdownMenuItem>
-                    <DropdownMenuItem onSelect={() => onStatusUpdate(participant.id, 'cancelled')} aria-label={`Cancel booking for ${participant.name}`}>
+                    <DropdownMenuItem onClick={() => onStatusUpdate(participant.id, 'cancelled')}>
                       Cancel Booking
                     </DropdownMenuItem>
                   </DropdownMenuContent>

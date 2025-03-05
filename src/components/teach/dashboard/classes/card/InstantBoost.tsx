@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { Rocket, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -15,16 +15,15 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { memo } from "react";
 
 interface InstantBoostProps {
   courseId: number;
 }
 
-const InstantBoost = memo(({ courseId }: InstantBoostProps) => {
+const InstantBoost = ({ courseId }: InstantBoostProps) => {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleBoost = useCallback(async () => {
+  const handleBoost = async () => {
     try {
       setIsLoading(true);
 
@@ -37,9 +36,7 @@ const InstantBoost = memo(({ courseId }: InstantBoostProps) => {
       if (creditsError) throw creditsError;
 
       if (!premiumFeatures || premiumFeatures.boost_credits <= 0) {
-        toast.error("No boost credits remaining", {
-          description: "Purchase more credits to continue boosting your classes"
-        });
+        toast.error("No boost credits remaining");
         return;
       }
 
@@ -66,42 +63,30 @@ const InstantBoost = memo(({ courseId }: InstantBoostProps) => {
 
       if (updateError) throw updateError;
 
-      toast.success("Boost activated successfully!", {
-        description: "Your class will have increased visibility for the next 24 hours"
-      });
+      toast.success("Boost activated successfully!");
     } catch (error) {
       console.error('Error activating boost:', error);
-      toast.error("Failed to activate boost", {
-        description: "Please try again later"
-      });
+      toast.error("Failed to activate boost");
     } finally {
       setIsLoading(false);
     }
-  }, [courseId]);
+  };
 
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="w-full focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-accent-purple"
-          aria-label="Boost class visibility"
-        >
-          <Rocket className="h-4 w-4 mr-2" aria-hidden="true" />
+        <Button variant="outline" size="sm" className="w-full">
+          <Rocket className="h-4 w-4 mr-2" />
           Boost Class Visibility
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent 
-        aria-labelledby="boost-dialog-title" 
-        aria-describedby="boost-dialog-description"
-      >
+      <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle id="boost-dialog-title" className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-yellow-500" aria-hidden="true" />
+          <AlertDialogTitle className="flex items-center gap-2">
+            <AlertCircle className="h-5 w-5 text-yellow-500" />
             Activate Boost
           </AlertDialogTitle>
-          <AlertDialogDescription id="boost-dialog-description">
+          <AlertDialogDescription>
             This will use 1 boost credit to increase your visibility for the next 24 hours. 
             This action cannot be undone.
           </AlertDialogDescription>
@@ -112,7 +97,6 @@ const InstantBoost = memo(({ courseId }: InstantBoostProps) => {
             onClick={handleBoost}
             disabled={isLoading}
             className="bg-accent-purple hover:bg-accent-purple/90"
-            aria-busy={isLoading}
           >
             {isLoading ? "Activating..." : "Activate"}
           </AlertDialogAction>
@@ -120,8 +104,6 @@ const InstantBoost = memo(({ courseId }: InstantBoostProps) => {
       </AlertDialogContent>
     </AlertDialog>
   );
-});
-
-InstantBoost.displayName = 'InstantBoost';
+};
 
 export default InstantBoost;

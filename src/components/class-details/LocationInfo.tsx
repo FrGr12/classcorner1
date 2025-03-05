@@ -9,7 +9,7 @@ interface LocationInfoProps {
 const LocationInfo = ({ classItem }: LocationInfoProps) => {
   return (
     <section className="glass-panel rounded-xl p-8">
-      <h2 className="font-bold mb-6 text-left text-xl">Location</h2>
+      <h2 className="text-2xl font-bold mb-6 text-left">Location</h2>
       <div className="space-y-4">
         <div className="flex items-start gap-4 text-neutral-600">
           <MapPin className="h-5 w-5 mt-1 flex-shrink-0" />
@@ -21,7 +21,7 @@ const LocationInfo = ({ classItem }: LocationInfoProps) => {
             <p className="text-sm">5 min walk from Central Station</p>
           </div>
         </div>
-        <div className="w-full sm:w-3/4 md:w-2/3 lg:w-1/2 mx-auto">
+        <div className="w-1/2 mx-auto">
           <div className="aspect-video bg-neutral-100 rounded-lg mt-6" />
         </div>
       </div>

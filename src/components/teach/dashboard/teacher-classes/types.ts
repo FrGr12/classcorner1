@@ -21,11 +21,9 @@ export interface ClassItemLocal {
   images: string[];
   level: string;
   city: string;
-  description?: string; // Add description field to match ClassItem
   // Adding fields needed for ClassesTable component
   views?: number;
   saves?: number;
   adClicks?: number;
   maxParticipants?: number;
-  minParticipants?: number;
 }

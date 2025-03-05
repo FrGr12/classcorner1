@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, Phone, UserPlus, UserMinus, MessageCircle } from "lucide-react";
@@ -15,8 +16,6 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import InstructorBadge from "@/components/instructor-profile/InstructorBadge";
-import { InstructorClassification } from "@/types/user";
 
 interface InstructorInfoProps {
   classItem: ClassItem;
@@ -31,6 +30,7 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
   const [privateMessage, setPrivateMessage] = useState("");
   const { toast } = useToast();
 
+  // For demo purposes, map instructor names to IDs
   const getInstructorIdForDemo = (instructorName: string): string => {
     const nameToIdMap: Record<string, string> = {
       "Sarah Johnson": "1",
@@ -49,23 +49,6 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
            instructorName === "Michael Chen" ? "2" : 
            instructorName === "Marco Rossi" ? "3" : 
            (classItem.instructor_id || "1");
-  };
-
-  const getInstructorClassificationForDemo = (instructorName: string): InstructorClassification => {
-    const nameToBadgeMap: Record<string, InstructorClassification> = {
-      "Sarah Johnson": "certified",
-      "Michael Chen": "host",
-      "Marco Rossi": "certified",
-      "Lisa Wong": "host",
-      "Emily Parker": "certified",
-      "Daniel White": "host",
-      "Emma Thompson": "certified",
-      "David Wilson": "host",
-      "James Miller": "certified",
-      "Sophie Clark": "host"
-    };
-    
-    return nameToBadgeMap[instructorName] || null;
   };
 
   const checkFollowStatus = async () => {
@@ -200,6 +183,7 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
     checkFollowStatus();
   }, [classItem.instructor_id]);
 
+  // Get instructor ID for the demo (for real implementation, use classItem.instructor_id)
   const instructorId = import.meta.env.DEV 
     ? getInstructorIdForDemo(classItem.instructor)
     : classItem.instructor_id;
@@ -211,15 +195,9 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
         <div className="w-20 h-20 sm:w-24 sm:h-24 bg-neutral-100 rounded-full flex-shrink-0" />
         <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
           <div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <Link to={`/instructor/${instructorId}`} className="hover:underline">
-                <h3 className="text-lg sm:text-xl font-medium">{classItem.instructor}</h3>
-              </Link>
-              <InstructorBadge 
-                classification={getInstructorClassificationForDemo(classItem.instructor)}
-                size="sm"
-              />
-            </div>
+            <Link to={`/instructor/${instructorId}`} className="hover:underline">
+              <h3 className="text-lg sm:text-xl font-medium">{classItem.instructor}</h3>
+            </Link>
             <p className="text-sm sm:text-base text-neutral-600">Expert Craftsperson</p>
           </div>
           <p className="text-sm sm:text-base text-neutral-600 max-w-prose">

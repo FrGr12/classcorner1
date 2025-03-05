@@ -1,5 +1,5 @@
 
-import { useState, useCallback, useMemo } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
@@ -14,8 +14,7 @@ export const useMessages = () => {
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
   const { toast } = useToast();
 
-  // Optimize query with proper query keys for caching
-  const messagesQuery = useQuery({
+  const { data: messages, isLoading } = useQuery({
     queryKey: ["student-messages"],
     queryFn: async () => {
       try {
@@ -56,39 +55,10 @@ export const useMessages = () => {
         });
         return [];
       }
-    },
-    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
-    refetchOnWindowFocus: true,
+    }
   });
 
-  // Memoize filtered messages
-  const filteredMessages = useMemo(() => {
-    const messages = messagesQuery.data || [];
-    
-    if (!searchQuery && statusFilter === "all") {
-      return messages;
-    }
-    
-    return messages.filter(message => {
-      const matchesSearch = searchQuery 
-        ? (
-            message.message_content?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            message.profile?.first_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            message.profile?.last_name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-            message.course?.title?.toLowerCase().includes(searchQuery.toLowerCase())
-          )
-        : true;
-        
-      const matchesStatus = statusFilter === "all" 
-        ? true 
-        : message.status === statusFilter;
-        
-      return matchesSearch && matchesStatus;
-    });
-  }, [messagesQuery.data, searchQuery, statusFilter]);
-
-  // Memoize handler functions
-  const handleSendMessage = useCallback(async () => {
+  const handleSendMessage = async () => {
     if (!messageContent.trim()) return;
 
     try {
@@ -113,11 +83,11 @@ export const useMessages = () => {
         title: "Failed to send message"
       });
     }
-  }, [messageContent, toast]);
+  };
 
   return {
-    messages: filteredMessages,
-    isLoading: messagesQuery.isLoading,
+    messages,
+    isLoading,
     searchQuery,
     setSearchQuery,
     statusFilter,

@@ -1,62 +1,79 @@
 
-import React from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Form } from '@/components/ui/form';
-import { Button } from '@/components/ui/button';
-import { ClassItem } from '@/types/class';
-import ClassFormFields from './ClassFormFields';
-import { useClassForm } from './useClassForm';
+} from "@/components/ui/dialog";
+import EditClassFormFields from "./EditClassFormFields";
+import CancelCourseDialog from "./CancelCourseDialog";
+import { useEditClassForm } from "./hooks/useEditClassForm";
 
 interface EditClassDialogProps {
-  isOpen: boolean;
-  onClose: () => void;
-  classData: ClassItem;
-  onSuccess: () => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  classId: number | null;
+  onSuccess?: () => void;
 }
 
-export const EditClassDialog: React.FC<EditClassDialogProps> = ({
-  isOpen,
-  onClose,
-  classData,
-  onSuccess,
-}) => {
-  const { form, isSubmitting, onSubmit } = useClassForm({
-    classData,
-    onSuccess,
-    onClose
-  });
+const EditClassDialog = ({ 
+  open, 
+  onOpenChange, 
+  classId, 
+  onSuccess 
+}: EditClassDialogProps) => {
+  const {
+    form,
+    loading,
+    showCancelDialog,
+    setShowCancelDialog,
+    onSubmit,
+    handleCancelCourse
+  } = useEditClassForm(classId, onSuccess);
+
+  const handleSubmit = async (values) => {
+    const success = await onSubmit(values);
+    if (success) {
+      onOpenChange(false);
+    }
+  };
+
+  const confirmCancelCourse = async () => {
+    const success = await handleCancelCourse();
+    if (success) {
+      onOpenChange(false);
+    }
+  };
 
   return (
-    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[625px]">
-        <DialogHeader>
-          <DialogTitle>Edit Class</DialogTitle>
-          <DialogDescription>
-            Update your class details. Click save when you're finished.
-          </DialogDescription>
-        </DialogHeader>
+    <>
+      <Dialog open={open} onOpenChange={onOpenChange}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Edit Class</DialogTitle>
+            <DialogDescription>
+              Update class details or manage scheduling
+            </DialogDescription>
+          </DialogHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <ClassFormFields form={form} />
+          <EditClassFormFields
+            form={form}
+            loading={loading}
+            onSubmit={handleSubmit}
+            onCancel={() => onOpenChange(false)}
+            onCancelCourse={() => setShowCancelDialog(true)}
+          />
+        </DialogContent>
+      </Dialog>
 
-            <div className="mt-4 flex justify-end space-x-2">
-              <Button type="button" variant="outline" onClick={onClose}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Saving...' : 'Save Changes'}
-              </Button>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+      <CancelCourseDialog
+        open={showCancelDialog}
+        onOpenChange={setShowCancelDialog}
+        onConfirm={confirmCancelCourse}
+      />
+    </>
   );
 };
+
+export default EditClassDialog;
