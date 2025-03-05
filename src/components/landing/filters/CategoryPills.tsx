@@ -1,7 +1,6 @@
 
 import { cn } from "@/lib/utils";
 import { LucideIcon } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Category {
   name: string;
@@ -25,8 +24,6 @@ const CategoryPills = ({
   selectedCategories,
   onCategorySelect,
 }: CategoryPillsProps) => {
-  const { t } = useLanguage();
-  
   // Filter out cross-functional categories
   const regularCategories = categories.filter(category => 
     ["Pottery", "Cooking", "Baking", "Painting & Art", "Candle Making", 
@@ -41,7 +38,6 @@ const CategoryPills = ({
           const Icon = category.icon;
           const colors = getCategoryColor(category.name);
           const isSelected = selectedCategories.includes(category.name);
-          const translatedName = t(`categories.${category.name.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`);
           
           return (
             <button
@@ -61,7 +57,7 @@ const CategoryPills = ({
                 "w-5 h-5 sm:w-6 sm:h-6 transition-transform duration-300 ease-in-out transform group-hover:scale-110",
                 isSelected ? "text-white" : "group-hover:text-white"
               )} />
-              <span className="text-xs sm:text-sm font-sans tracking-wide font-semibold">{translatedName}</span>
+              <span className="text-xs sm:text-sm font-sans tracking-wide font-semibold">{category.name}</span>
             </button>
           );
         })}

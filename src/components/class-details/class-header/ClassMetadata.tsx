@@ -2,7 +2,6 @@
 import { Link } from "react-router-dom";
 import { Clock, MapPin, Users, Star } from "lucide-react";
 import { ClassItem } from "@/types/class";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassMetadataProps {
   classItem: ClassItem;
@@ -15,8 +14,6 @@ const ClassMetadata = ({
   onReviewsClick,
   participantRange
 }: ClassMetadataProps) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="space-y-4 text-left">
       <div>
@@ -25,29 +22,29 @@ const ClassMetadata = ({
       </div>
       
       <div className="flex flex-wrap items-center gap-4 text-sm text-neutral-600">
-        <div className="flex items-center gap-1" aria-label={`${t('class.duration')}: 2 ${t('class.hours')}`}>
+        <div className="flex items-center gap-1" aria-label="Duration: 2 hours">
           <Clock className="h-4 w-4" aria-hidden="true" />
-          <span>2 {t('class.hours')}</span>
+          <span>2 hours</span>
         </div>
-        <div className="flex items-center gap-1" aria-label={`${t('class.location')}: ${classItem.city}`}>
+        <div className="flex items-center gap-1" aria-label={`Location: ${classItem.city}`}>
           <MapPin className="h-4 w-4" aria-hidden="true" />
           <span>{classItem.city}</span>
         </div>
-        <div className="flex items-center gap-1" aria-label={`${t('class.size')}: ${participantRange}`}>
+        <div className="flex items-center gap-1" aria-label={`Class size: ${participantRange}`}>
           <Users className="h-4 w-4" aria-hidden="true" />
           <span>{participantRange}</span>
         </div>
         <Link 
           to={`/instructor/${classItem.instructor_id || '1'}`} 
           className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer" 
-          aria-label={`${t('class.instructor')}: ${classItem.instructor}`}
+          aria-label={`Instructor: ${classItem.instructor}`}
         >
           <span>{classItem.instructor}</span>
         </Link>
         <button 
           onClick={onReviewsClick} 
           className="flex items-center gap-1 hover:text-accent-purple transition-colors cursor-pointer" 
-          aria-label={`${t('class.rating')}: ${classItem.rating} ${t('class.stars')}`}
+          aria-label={`Rating: ${classItem.rating} stars. Click to view reviews`}
         >
           <Star className="h-4 w-4 fill-accent-purple text-accent-purple" aria-hidden="true" />
           <span>{classItem.rating}</span>

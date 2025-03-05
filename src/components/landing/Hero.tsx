@@ -1,13 +1,10 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const Hero = () => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
 
   return (
     <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-32 sm:mt-28 md:mt-24 lg:mt-20">
@@ -25,7 +22,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          {t('hero.title')}
+          Discover and Book Amazing Classes
         </motion.h1>
 
         <motion.p 
@@ -34,7 +31,8 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          {t('hero.subtitle')}
+          Find the perfect class to learn something new, meet amazing people, 
+          and unlock your creativity.
         </motion.p>
 
         <motion.div
@@ -48,7 +46,7 @@ const Hero = () => {
             className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8 w-[200px]"
             onClick={() => navigate('/browse')}
           >
-            {t('hero.browseClasses')}
+            Browse Classes
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button 
@@ -57,7 +55,7 @@ const Hero = () => {
             className="border-accent-purple text-accent-purple hover:bg-accent-purple/10 w-[200px]"
             onClick={() => navigate('/auth', { state: { returnTo: '/dashboard/create-class' } })}
           >
-            {t('hero.becomeInstructor')}
+            Become an Instructor
           </Button>
         </motion.div>
         
@@ -69,17 +67,17 @@ const Hero = () => {
         >
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">10,000+</span>
-            <span>{t('hero.students')}</span>
+            <span>Students</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">1,000+</span>
-            <span>{t('hero.instructors')}</span>
+            <span>Instructors</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">50+</span>
-            <span>{t('hero.categories')}</span>
+            <span>Categories</span>
           </div>
         </motion.div>
       </div>

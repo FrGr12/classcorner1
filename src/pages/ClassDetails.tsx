@@ -18,11 +18,15 @@ import CustomFAQSection from "@/components/class-details/CustomFAQSection";
 import ClassVideo from "@/components/class-details/ClassVideo";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
+  const breadcrumbs = useBreadcrumbs();
   const initialSelectedDate = location.state?.selectedDate;
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialSelectedDate);
 
@@ -99,6 +103,9 @@ const ClassDetails = () => {
       </div>
       
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16 sm:pb-24">
+        <div className="mt-4">
+          <Breadcrumbs items={breadcrumbs} />
+        </div>
         <div className="glass-panel rounded-xl p-4 sm:p-6 md:p-8 mb-6 sm:mb-8 mt-6 sm:mt-8">
           <ClassHeader classItem={classItem} onBooking={handleBooking} />
           <div id="dates-section" className="mt-2 sm:mt-4">

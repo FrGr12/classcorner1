@@ -1,40 +1,45 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
-type Language = 'en' | 'sv';
+// Define available languages
+export type Language = 'en' | 'sv';
 
-interface LanguageContextType {
+// Define language context type
+type LanguageContextType = {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string, params?: Record<string, string>) => string;
-}
-
-const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
-
-export const useLanguage = (): LanguageContextType => {
-  const context = useContext(LanguageContext);
-  if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
-  }
-  return context;
+  t: (key: string) => string;
 };
 
+// Create the context with default values
+const LanguageContext = createContext<LanguageContextType>({
+  language: 'en',
+  setLanguage: () => {},
+  t: () => '',
+});
+
+// Define props for the provider component
 interface LanguageProviderProps {
   children: ReactNode;
 }
 
-export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) => {
-  const [language, setLanguageState] = useState<Language>(() => {
-    const savedLanguage = localStorage.getItem('language');
-    return (savedLanguage as Language) || 'en';
-  });
-  const [translations, setTranslations] = useState<Record<string, string>>({});
-
-  const setLanguage = (newLanguage: Language) => {
-    setLanguageState(newLanguage);
-    localStorage.setItem('language', newLanguage);
+// Create language provider component
+export const LanguageProvider = ({ children }: LanguageProviderProps) => {
+  // Get initial language from localStorage if available, otherwise use browser language or default to English
+  const getInitialLanguage = (): Language => {
+    const savedLanguage = localStorage.getItem('language') as Language;
+    if (savedLanguage && ['en', 'sv'].includes(savedLanguage)) {
+      return savedLanguage;
+    }
+    
+    const browserLanguage = navigator.language.split('-')[0];
+    return browserLanguage === 'sv' ? 'sv' : 'en';
   };
 
+  const [language, setLanguage] = useState<Language>(getInitialLanguage);
+  const [translations, setTranslations] = useState<Record<string, string>>({});
+
+  // Load translations when language changes
   useEffect(() => {
     const loadTranslations = async () => {
       try {
@@ -42,24 +47,23 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         setTranslations(translationModule.default);
       } catch (error) {
         console.error('Failed to load translations:', error);
-        setTranslations({});
+        // Fallback to English if translations fail to load
+        if (language !== 'en') {
+          const englishModule = await import('../translations/en.ts');
+          setTranslations(englishModule.default);
+        }
       }
     };
 
     loadTranslations();
+    
+    // Save language preference to localStorage
+    localStorage.setItem('language', language);
   }, [language]);
 
-  const t = (key: string, params?: Record<string, string>): string => {
-    let translation = translations[key] || key;
-    
-    // Replace parameters in the translation if provided
-    if (params) {
-      Object.entries(params).forEach(([paramKey, paramValue]) => {
-        translation = translation.replace(`{${paramKey}}`, paramValue);
-      });
-    }
-    
-    return translation;
+  // Translation function
+  const t = (key: string): string => {
+    return translations[key] || key;
   };
 
   return (
@@ -67,4 +71,13 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
       {children}
     </LanguageContext.Provider>
   );
+};
+
+// Custom hook for using the language context
+export const useLanguage = () => {
+  const context = useContext(LanguageContext);
+  if (!context) {
+    throw new Error('useLanguage must be used within a LanguageProvider');
+  }
+  return context;
 };

@@ -8,7 +8,6 @@ import DateButtons from "./class-card/DateButtons";
 import CategoryBadges from "./class-card/CategoryBadges";
 import ClassDetails from "./class-card/ClassDetails";
 import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassCardProps {
   id?: number;
@@ -52,7 +51,6 @@ const ClassCard = ({
   maxParticipants,
 }: ClassCardProps) => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
   const dates = Array.isArray(date) ? date : [date];
   const [images, setImages] = useState(initialImages?.length > 0 ? initialImages : ['/placeholder.svg']);
 
@@ -76,7 +74,7 @@ const ClassCard = ({
     
     try {
       if (!id) {
-        toast.error(t('errors.unableToViewClass'));
+        toast.error("Unable to view class details. Please try again later.");
         console.warn('No ID provided for class card:', title);
         return;
       }
@@ -85,7 +83,7 @@ const ClassCard = ({
       const categoryKey = displayCategory.split(' ')[0];
       navigate(`/class/${categoryKey.toLowerCase()}/${id}`);
     } catch (error) {
-      toast.error(t('errors.viewingClassDetails'));
+      toast.error("An error occurred while viewing class details");
       console.error("Navigation error:", error);
     }
   };

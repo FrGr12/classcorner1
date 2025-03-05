@@ -1,6 +1,4 @@
 
-import { useLanguage } from "@/contexts/LanguageContext";
-
 interface PriceDisplayProps {
   price: number;
   groupBookingsEnabled?: boolean;
@@ -14,23 +12,17 @@ const PriceDisplay = ({
   groupBookingsEnabled,
   privateBookingsEnabled,
   basePriceGroup,
-  basePricePrivate,
 }: PriceDisplayProps) => {
-  const { t, language } = useLanguage();
-
-  // Format currency based on language
-  const formatCurrency = (amount: number) => {
-    if (language === 'sv') {
-      return `${amount} ${t('currency')}`;
-    }
-    return `${t('currency')}${amount}`;
-  };
+  const hasAlternativeBookings = groupBookingsEnabled || privateBookingsEnabled;
 
   return (
-    <div className="mt-2">
-      <p className="text-sm font-semibold">
-        {formatCurrency(price)} <span className="text-xs font-normal text-neutral-500">{t('price.perPerson')}</span>
-      </p>
+    <div className="text-[14px] font-medium mt-1 text-left">
+      {!hasAlternativeBookings && (
+        <>${price} <span className="text-neutral-600 font-normal">/ class</span></>
+      )}
+      {hasAlternativeBookings && basePriceGroup && (
+        <div>From ${basePriceGroup} <span className="text-neutral-600 font-normal">/ person (group)</span></div>
+      )}
     </div>
   );
 };

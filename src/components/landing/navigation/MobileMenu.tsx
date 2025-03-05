@@ -4,8 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Menu, School, BookOpen, Users, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
 import { UserType } from "@/types/user";
-import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSwitcher from "../LanguageSwitcher";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -29,7 +27,6 @@ export function MobileMenu({
   userType = 'teacher',
 }: MobileMenuProps) {
   const dashboardPath = userType === 'student' ? '/user-dashboard' : '/dashboard';
-  const { t } = useLanguage();
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -39,9 +36,8 @@ export function MobileMenu({
         </Button>
       </SheetTrigger>
       <SheetContent side="right" className="w-[85%] sm:w-[385px] bg-white/95 backdrop-blur-sm">
-        <SheetHeader className="flex flex-row items-center justify-between">
+        <SheetHeader>
           <SheetTitle className="text-left text-accent-purple">Menu</SheetTitle>
-          <LanguageSwitcher />
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
@@ -52,7 +48,7 @@ export function MobileMenu({
               onClick={() => setIsOpen(false)}
             >
               <School className="h-4 w-4" />
-              <span>{t('nav.startTeaching')}</span>
+              <span>Start Teaching</span>
             </Link>
             <Link 
               to="/community/resource/beginner-guides"
@@ -60,7 +56,7 @@ export function MobileMenu({
               onClick={() => setIsOpen(false)}
             >
               <BookOpen className="h-4 w-4" />
-              <span>{t('nav.resources')}</span>
+              <span>Resources</span>
             </Link>
             <Link 
               to="/community" 
@@ -68,7 +64,7 @@ export function MobileMenu({
               onClick={() => setIsOpen(false)}
             >
               <Users className="h-4 w-4" />
-              <span>{t('nav.community')}</span>
+              <span>Community</span>
             </Link>
             <Link 
               to={session ? "/dashboard" : "/auth"}
@@ -81,7 +77,7 @@ export function MobileMenu({
               }}
             >
               <LayoutDashboard className="h-4 w-4" />
-              <span>{t('nav.teacherDashboard')}</span>
+              <span>Teacher Dashboard</span>
             </Link>
             <Link 
               to={session ? "/user-dashboard" : "/auth"}
@@ -94,7 +90,7 @@ export function MobileMenu({
               }}
             >
               <LayoutDashboard className="h-4 w-4" />
-              <span>{t('nav.studentDashboard')}</span>
+              <span>Student Dashboard</span>
             </Link>
           </div>
           {session ? (
@@ -107,7 +103,7 @@ export function MobileMenu({
                   setIsOpen(false);
                 }}
               >
-                {t('nav.dashboard')}
+                Dashboard
               </Button>
               <Button
                 onClick={() => {
@@ -118,7 +114,7 @@ export function MobileMenu({
                 className="justify-start px-0 text-sm hover:text-accent-purple"
                 disabled={loading}
               >
-                {t('nav.signOut')}
+                Sign out
               </Button>
             </>
           ) : (
@@ -131,7 +127,7 @@ export function MobileMenu({
               className="justify-start px-0 text-sm hover:text-accent-purple"
               disabled={loading}
             >
-              {t('nav.signIn')}
+              Sign in
             </Button>
           )}
         </div>

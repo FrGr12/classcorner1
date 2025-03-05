@@ -1,15 +1,12 @@
 
 import { ClassItem } from "@/types/class";
 import { memo } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface AboutClassProps {
   classItem: ClassItem;
 }
 
 const AboutClass = memo(({ classItem }: AboutClassProps) => {
-  const { t } = useLanguage();
-  
   return (
     <section 
       className="glass-panel rounded-xl p-4 sm:p-8"
@@ -19,11 +16,13 @@ const AboutClass = memo(({ classItem }: AboutClassProps) => {
         id="about-class-heading"
         className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-left"
       >
-        {t('class.aboutTitle')}
+        About This Class
       </h2>
       <div className="prose prose-neutral max-w-none">
         <p className="text-sm sm:text-base text-neutral-600 leading-relaxed text-left">
-          {t('class.aboutIntro', { instructor: classItem.instructor, title: classItem.title.toLowerCase(), level: classItem.level.toLowerCase() })}
+          Join {classItem.instructor} for an immersive {classItem.title.toLowerCase()} experience. 
+          This hands-on class is perfect for {classItem.level.toLowerCase()} learners looking to develop their skills
+          in a supportive environment.
         </p>
         
         {classItem.description && (

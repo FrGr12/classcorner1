@@ -8,11 +8,11 @@ const PolicyInfo = () => {
   
   return (
     <section className="glass-panel rounded-xl p-8">
-      <h2 className="font-bold mb-6 text-left text-xl">{t('policy.title')}</h2>
+      <h2 className="font-bold mb-6 text-left text-xl">{t("class.policy")}</h2>
       <div className="space-y-6 text-neutral-600">
         <div>
           <h3 className="font-medium text-primary mb-2 text-left flex items-center gap-2">
-            {t('policy.cancellation')}
+            Cancellation & Refund Policy
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -25,10 +25,10 @@ const PolicyInfo = () => {
             </TooltipProvider>
           </h3>
           <div className="p-4 rounded-lg space-y-2 text-left bg-primary-foreground">
-            <p className="font-medium">{t('policy.refundText')}</p>
+            <p className="font-medium">Our flexible refund policy:</p>
             <ul className="list-disc pl-5 space-y-2">
               <li className="text-left">
-                {t('policy.fullRefund')}
+                Cancel more than 48 hours before class: Full refund
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -41,7 +41,7 @@ const PolicyInfo = () => {
                 </TooltipProvider>
               </li>
               <li className="text-left">
-                {t('policy.noRefund')}
+                Cancel within 48 hours of class: No refund
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
@@ -53,14 +53,14 @@ const PolicyInfo = () => {
                   </Tooltip>
                 </TooltipProvider>
               </li>
-              <li className="text-left">{t('policy.refundProcess')}</li>
-              <li className="text-left">{t('policy.refundTime')}</li>
+              <li className="text-left">All refunds are automatically processed to your original payment method</li>
+              <li className="text-left">Refunds typically take 5-7 business days to appear in your account</li>
             </ul>
           </div>
         </div>
         <div>
           <h3 className="font-medium text-primary mb-2 text-left flex items-center gap-2">
-            {t('policy.groupBookings')}
+            Group Bookings
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -72,11 +72,11 @@ const PolicyInfo = () => {
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <p className="text-left">{t('policy.groupText')}</p>
+          <p className="text-left">Available for 6 or more participants. Contact the instructor for special rates and arrangements.</p>
         </div>
         <div>
           <h3 className="font-medium text-primary mb-2 text-left flex items-center gap-2">
-            {t('policy.privateSessions')}
+            Private Sessions
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
@@ -88,7 +88,7 @@ const PolicyInfo = () => {
               </Tooltip>
             </TooltipProvider>
           </h3>
-          <p className="text-left">{t('policy.privateText')}</p>
+          <p className="text-left">One-on-one instruction available upon request. Contact for pricing and availability.</p>
         </div>
       </div>
     </section>
