@@ -1,8 +1,8 @@
 
 import React from 'react';
 import { useTeacherMessages } from './useTeacherMessages';
-import MessageList from './MessageList';
-import MessageReply from './MessageReply';
+import { MessageList } from './MessageList';
+import { MessageReply } from './MessageReply';
 
 const TeacherMessages = () => {
   const { 
@@ -58,10 +58,11 @@ const TeacherMessages = () => {
       <div className="md:col-span-2 border rounded-lg">
         {selectedMessage ? (
           <MessageReply
-            message={selectedMessage}
-            replyText={newMessage}
-            setReplyText={setNewMessage}
+            selectedMessage={selectedMessage}
+            newMessage={newMessage}
+            setNewMessage={setNewMessage}
             onSendReply={() => handleSendReply(selectedMessage.thread_id, newMessage)}
+            onClose={() => setSelectedMessage(null)}
           />
         ) : (
           <div className="flex items-center justify-center h-full p-6 text-center text-muted-foreground">
