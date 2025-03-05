@@ -8,7 +8,7 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-32 sm:mt-28 md:mt-24 lg:mt-20">
+    <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-40 sm:mt-36 md:mt-32 lg:mt-28">
       <motion.div 
         className="absolute inset-0 rounded-xl"
         initial={{ opacity: 0 }}
