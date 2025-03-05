@@ -3,6 +3,7 @@ import { ReactNode, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useDemoMode } from "@/contexts/DemoModeContext";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -12,8 +13,15 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isDemoMode } = useDemoMode();
 
   useEffect(() => {
+    // If demo mode is active, allow access to protected routes
+    if (isDemoMode) {
+      setIsAuthenticated(true);
+      return;
+    }
+
     const checkAuth = async () => {
       try {
         const { data, error } = await supabase.auth.getUser();
@@ -41,7 +49,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
         setIsAuthenticated(true);
-      } else if (event === 'SIGNED_OUT') {
+      } else if (event === 'SIGNED_OUT' && !isDemoMode) {
         setIsAuthenticated(false);
         navigate('/auth', { state: { returnTo: location.pathname } });
       }
@@ -50,10 +58,10 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [navigate, location.pathname]);
+  }, [navigate, location.pathname, isDemoMode]);
 
   // Show loading state while checking authentication
-  if (isAuthenticated === null) {
+  if (isAuthenticated === null && !isDemoMode) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-accent-purple border-t-transparent rounded-full"></div>
@@ -61,8 +69,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     );
   }
 
-  // If authenticated, render children
-  return isAuthenticated ? <>{children}</> : null;
+  // If authenticated or in demo mode, render children
+  return (isAuthenticated || isDemoMode) ? <>{children}</> : null;
 };
 
 export default AuthGuard;
