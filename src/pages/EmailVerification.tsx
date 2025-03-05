@@ -1,33 +1,20 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
 
 const EmailVerification = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [verificationStatus, setVerificationStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
-    // Check for error parameters in the URL
-    const errorParam = searchParams.get("error");
-    const errorDescription = searchParams.get("error_description");
-    
-    if (errorParam) {
-      console.error("Verification error from URL:", errorParam, errorDescription);
-      setVerificationStatus("error");
-      setErrorMessage(errorDescription || "Verification failed. The link may be invalid or expired.");
-      toast.error(errorDescription || "Verification failed");
-      return;
-    }
-    
     verifyEmail();
-  }, [searchParams]);
+  }, []);
 
   const verifyEmail = async () => {
     try {
@@ -35,7 +22,9 @@ const EmailVerification = () => {
       const email = searchParams.get("email");
       const type = searchParams.get("type");
 
-      console.log("Verification params:", { token, email, type });
+      if (type !== "signup" && type !== "recovery") {
+        throw new Error("Invalid verification type");
+      }
 
       if (!token) {
         throw new Error("No verification token found");
@@ -45,25 +34,19 @@ const EmailVerification = () => {
         throw new Error("No email found");
       }
 
-      if (type !== "signup" && type !== "recovery") {
-        throw new Error("Invalid verification type");
-      }
-
-      // For debugging purposes, log the OTP verification request
-      console.log(`Verifying OTP with: email=${email}, token=${token}, type=${type}`);
-      
-      const { data, error } = await supabase.auth.verifyOtp({
+      const { error } = await supabase.auth.verifyOtp({
         email,
         token,
-        type: type === "signup" ? "signup" : "recovery"
+        type: "signup"
       });
-
-      console.log("OTP verification response:", { data, error });
 
       if (error) throw error;
 
       setVerificationStatus("success");
-      toast.success("Email verified successfully");
+      toast({
+        title: "Email verified successfully",
+        description: "You can now sign in to your account",
+      });
 
       // Redirect to login after a short delay
       setTimeout(() => {
@@ -73,21 +56,21 @@ const EmailVerification = () => {
       console.error("Verification error:", error);
       setVerificationStatus("error");
       setErrorMessage(error.message || "Failed to verify email");
-      toast.error(error.message || "Failed to verify email");
+      toast({
+        variant: "destructive",
+        title: "Verification failed",
+        description: error.message || "Failed to verify email",
+      });
     }
   };
 
   const handleRetry = () => {
-    // Redirect to password reset page for users to request a new link
-    navigate("/password-reset");
+    setVerificationStatus("loading");
+    verifyEmail();
   };
 
   const handleContactSupport = () => {
     window.location.href = "mailto:support@classcorner.com";
-  };
-
-  const handleGoToLogin = () => {
-    navigate("/auth");
   };
 
   return (
@@ -108,7 +91,7 @@ const EmailVerification = () => {
             <p className="text-neutral-600 mb-4">
               Your email has been successfully verified. You will be redirected to the login page shortly.
             </p>
-            <Button onClick={handleGoToLogin} className="w-full">
+            <Button onClick={() => navigate("/auth")} className="w-full">
               Go to Login
             </Button>
           </div>
@@ -118,17 +101,10 @@ const EmailVerification = () => {
           <div className="text-center">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Verification Failed</h2>
-            <Alert variant="destructive" className="mb-4">
-              <AlertDescription className="text-center">
-                {errorMessage}
-              </AlertDescription>
-            </Alert>
+            <p className="text-neutral-600 mb-4">{errorMessage}</p>
             <div className="space-y-3">
               <Button onClick={handleRetry} variant="outline" className="w-full">
-                Request New Link
-              </Button>
-              <Button onClick={handleGoToLogin} variant="default" className="w-full">
-                Go to Login
+                Try Again
               </Button>
               <Button onClick={handleContactSupport} variant="secondary" className="w-full">
                 Contact Support

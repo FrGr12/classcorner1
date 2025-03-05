@@ -13,18 +13,6 @@ import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherWaitlist from "@/pages/TeacherWaitlist";
 import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 
-// Check if we're in a preview environment
-const isPreviewMode = window.location.hostname.includes('stackblitz') || 
-                     window.location.hostname.includes('codesandbox') ||
-                     window.location.hostname.includes('vercel.app') ||
-                     window.location.hostname.includes('netlify.app');
-
-// In preview mode, automatically enable admin mode if not already set
-if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
-  localStorage.setItem("admin_mode", "true");
-  console.log("Preview mode detected in Dashboard, admin mode enabled automatically");
-}
-
 const Dashboard = () => {
   const breadcrumbs = useBreadcrumbs();
   

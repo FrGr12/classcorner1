@@ -38,12 +38,9 @@ const DateButtons = memo(({
   const handleDateClick = useCallback((date: Date, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    
     if (onDateSelect) {
-      console.log("DateButtons: onDateSelect called with date:", date);
       onDateSelect(date);
     } else if (classId && category) {
-      // If we're not on the details page, navigate to it with the selected date
       navigate(`/class/${category}/${classId}`, { 
         state: { selectedDate: date }
       });
@@ -67,11 +64,7 @@ const DateButtons = memo(({
         {visibleDates.map((date, index) => (
           <div 
             key={index}
-            className={`p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
-              isSelected(date) 
-                ? 'border-accent-purple bg-accent-purple/5 shadow-sm' 
-                : 'border-neutral-200 bg-white hover:border-accent-purple/50 hover:bg-neutral-50'
-            }`}
+            className={`p-3 sm:p-4 bg-white rounded-lg border ${isSelected(date) ? 'border-accent-purple' : 'border-neutral-200'} hover:border-accent-purple transition-colors`}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -90,11 +83,11 @@ const DateButtons = memo(({
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                className={`ml-2 ${isSelected(date) ? 'bg-accent-purple hover:bg-accent-purple/90' : 'border-accent-purple text-accent-purple hover:bg-accent-purple/10'}`}
+                className={`ml-2 ${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
                 onClick={(e) => handleDateClick(date, e)}
                 aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
-                {isSelected(date) ? 'Selected' : 'Select'}
+                Book
               </Button>
             </div>
           </div>

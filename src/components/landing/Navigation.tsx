@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -19,46 +20,36 @@ const Navigation = () => {
   const [userType, setUserType] = useState<UserType>('teacher');
   const isHomePage = location.pathname === "/";
   const isBrowsePage = location.pathname === "/browse";
-  
-  const isAdminMode = localStorage.getItem("admin_mode") === "true";
-  const isPreviewMode = window.location.hostname.includes('stackblitz') || 
-                       window.location.hostname.includes('codesandbox') ||
-                       window.location.hostname.includes('vercel.app') ||
-                       window.location.hostname.includes('netlify.app');
 
   useEffect(() => {
-    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
-      localStorage.setItem("admin_mode", "true");
-      console.log("Preview mode detected, admin mode enabled automatically");
-    }
-    
-    if (!isAdminMode && !isPreviewMode) {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session);
-        
-        if (session?.user?.id) {
-          getUserType(session.user.id);
-        }
-      });
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      
+      // If we have a session, try to get the user type
+      if (session?.user?.id) {
+        getUserType(session.user.id);
+      }
+    });
 
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange(async (_event, session) => {
-        setSession(session);
-        
-        if (session?.user?.id) {
-          getUserType(session.user.id);
-        }
-      });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      
+      // Update user type when auth state changes
+      if (session?.user?.id) {
+        getUserType(session.user.id);
+      }
+    });
 
-      return () => subscription.unsubscribe();
-    } else {
-      setSession({ user: { id: 'admin-user' } });
-    }
-  }, [isAdminMode, isPreviewMode]);
+    return () => subscription.unsubscribe();
+  }, []);
 
   const getUserType = async (userId: string) => {
     try {
+      // This is a placeholder - in a real app, you would fetch the user type from your database
+      // For example: const { data } = await supabase.from('profiles').select('user_type').eq('id', userId).single();
+      // Here we're defaulting to 'teacher' since that's the main flow in your app
       setUserType('teacher');
     } catch (error) {
       console.error('Error fetching user type:', error);
@@ -74,19 +65,11 @@ const Navigation = () => {
   };
 
   const handleDashboardClick = () => {
-    navigate(userType === 'student' ? '/student-dashboard' : '/dashboard');
+    // Redirect to the appropriate dashboard based on user type
+    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
   };
 
   const handleLogout = async () => {
-    if (isAdminMode || isPreviewMode) {
-      localStorage.removeItem("admin_mode");
-      toast({
-        title: "Admin mode disabled",
-      });
-      window.location.reload();
-      return;
-    }
-    
     try {
       setLoading(true);
       const { error } = await supabase.auth.signOut();
@@ -131,7 +114,7 @@ const Navigation = () => {
           <MobileMenu
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            session={session || ((isAdminMode || isPreviewMode) ? { user: { id: 'admin-user' } } : null)}
+            session={session}
             handleDashboardClick={handleDashboardClick}
             handleLogout={handleLogout}
             handleAuthClick={handleAuthClick}
@@ -143,7 +126,7 @@ const Navigation = () => {
         {!isBrowsePage && <IntegratedSearch />}
 
         <DesktopMenu
-          session={session || ((isAdminMode || isPreviewMode) ? { user: { id: 'admin-user' } } : null)}
+          session={session}
           handleDashboardClick={handleDashboardClick}
           handleLogout={handleLogout}
           handleAuthClick={handleAuthClick}

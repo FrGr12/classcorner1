@@ -16,23 +16,12 @@ import TestimonialSection from "@/components/class-details/TestimonialSection";
 import PolicyInfo from "@/components/class-details/PolicyInfo";
 import CustomFAQSection from "@/components/class-details/CustomFAQSection";
 import ClassVideo from "@/components/class-details/ClassVideo";
-import { useState, useEffect } from "react";
-import { toast } from "sonner";
 
 const ClassDetails = () => {
   const { category, id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const initialSelectedDate = location.state?.selectedDate;
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(initialSelectedDate);
-
-  // Update selected date when location state changes
-  useEffect(() => {
-    if (location.state?.selectedDate) {
-      console.log("ClassDetails: location.state.selectedDate changed:", location.state.selectedDate);
-      setSelectedDate(location.state.selectedDate);
-    }
-  }, [location.state]);
+  const selectedDate = location.state?.selectedDate;
 
   const findClassItem = () => {
     if (!category || !id) return null;
@@ -56,7 +45,6 @@ const ClassDetails = () => {
 
   const handleBooking = () => {
     if (!selectedDate) {
-      toast.error("Please select a date before proceeding");
       const datesSection = document.querySelector('#dates-section');
       if (datesSection) {
         datesSection.scrollIntoView({ behavior: 'smooth' });
@@ -64,9 +52,6 @@ const ClassDetails = () => {
       return;
     }
 
-    console.log("ClassDetails: handleBooking - navigating to booking-confirmation with date:", selectedDate);
-    
-    // Directly navigate to booking confirmation with the selected date
     navigate("/booking-confirmation", { 
       state: { 
         classItem: {
@@ -75,11 +60,6 @@ const ClassDetails = () => {
         } 
       } 
     });
-  };
-
-  const handleDateSelect = (date: Date) => {
-    console.log("Date selected in ClassDetails:", date);
-    setSelectedDate(date);
   };
 
   const handleShowQuestion = () => {
@@ -105,7 +85,6 @@ const ClassDetails = () => {
             <ClassDates 
               classItem={classItem} 
               selectedDate={selectedDate}
-              onDateSelect={handleDateSelect}
             />
           </div>
         </div>

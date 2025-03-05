@@ -6,9 +6,8 @@ import DateButtons from "@/components/landing/class-card/DateButtons";
 import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
 import { useNavigate } from "react-router-dom";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Info } from "lucide-react";
-import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface ClassDatesProps {
   classItem: ClassItem;
@@ -16,41 +15,24 @@ interface ClassDatesProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }: ClassDatesProps) => {
+const ClassDates = ({ classItem, selectedDate, onDateSelect }: ClassDatesProps) => {
   const navigate = useNavigate();
   const dates = Array.isArray(classItem.date) ? classItem.date : [classItem.date];
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(propSelectedDate);
 
-  // Update selected date when prop changes
-  useEffect(() => {
-    if (propSelectedDate) {
-      console.log("ClassDates: propSelectedDate changed:", propSelectedDate);
-      setSelectedDate(propSelectedDate);
-    }
-  }, [propSelectedDate]);
-
-  const handleDateSelect = (date: Date) => {
-    console.log("ClassDates: handleDateSelect called with date:", date);
-    setSelectedDate(date);
-    if (onDateSelect) {
-      onDateSelect(date);
-    }
-  };
-
-  const handleBooking = () => {
-    if (!selectedDate) {
-      return;
-    }
-    
-    console.log("ClassDates: handleBooking - navigating to booking-confirmation with date:", selectedDate);
-    navigate("/booking-confirmation", { 
-      state: { 
-        classItem: {
-          ...classItem,
-          date: selectedDate
+  const handleBooking = async (date: Date) => {
+    try {
+      navigate("/booking-confirmation", { 
+        state: { 
+          classItem: {
+            ...classItem,
+            date
+          }
         }
-      }
-    });
+      });
+    } catch (error: any) {
+      console.error('Booking error:', error);
+      toast.error("Failed to process booking. Please try again.");
+    }
   };
   
   return (
@@ -61,17 +43,8 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
           <h3 className="font-medium">Available Dates</h3>
         </div>
         
-        {!selectedDate && (
-          <Alert variant="default" className="bg-accent-purple/5 border-accent-purple/20 text-accent-purple">
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-              Please select a date below to continue with your booking.
-            </AlertDescription>
-          </Alert>
-        )}
-        
         {selectedDate && (
-          <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg border border-accent-purple/20">
+          <div className="p-3 sm:p-4 bg-neutral-50 rounded-lg">
             <h4 className="font-medium mb-1 sm:mb-2">Selected Date:</h4>
             <p className="text-neutral-600">
               {format(new Date(selectedDate), 'EEEE, MMMM d, yyyy')}
@@ -79,14 +52,6 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
             <p className="text-sm text-neutral-500 mt-1">
               Class duration: {classItem.duration || '2 hours'}
             </p>
-            <div className="mt-4">
-              <Button 
-                onClick={handleBooking}
-                className="w-full sm:w-auto bg-accent-purple hover:bg-accent-purple/90"
-              >
-                Continue to Booking
-              </Button>
-            </div>
           </div>
         )}
         
@@ -97,7 +62,7 @@ const ClassDates = ({ classItem, selectedDate: propSelectedDate, onDateSelect }:
             selectedDate={selectedDate}
             classId={classItem.id}
             category={classItem.category}
-            onDateSelect={handleDateSelect}
+            onDateSelect={handleBooking}
           />
         </div>
       </div>

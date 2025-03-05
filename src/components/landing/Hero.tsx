@@ -1,4 +1,3 @@
-
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -8,9 +7,9 @@ const Hero = () => {
   const navigate = useNavigate();
 
   return (
-    <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-40 sm:mt-36 md:mt-32 lg:mt-28">
+    <header className="relative container-padding py-10 sm:py-12 md:py-6 lg:py-8 mt-32 sm:mt-28 md:mt-24 lg:mt-20">
       <motion.div 
-        className="absolute inset-0 rounded-xl"
+        className="absolute inset-0 bg-gradient-to-r from-accent-purple/10 to-transparent rounded-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.6 }}

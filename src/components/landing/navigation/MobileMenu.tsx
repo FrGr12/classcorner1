@@ -42,14 +42,6 @@ export function MobileMenu({
         <div className="mt-8 flex flex-col gap-4">
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
             <Link 
-              to="/community" 
-              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              <Users className="h-4 w-4" />
-              <span>Community</span>
-            </Link>
-            <Link 
               to="/auth"
               state={{ returnTo: '/dashboard/create-class' }}
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
@@ -65,6 +57,14 @@ export function MobileMenu({
             >
               <BookOpen className="h-4 w-4" />
               <span>Resources</span>
+            </Link>
+            <Link 
+              to="/community" 
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <Users className="h-4 w-4" />
+              <span>Community</span>
             </Link>
             <Link 
               to={session ? "/dashboard" : "/auth"}
