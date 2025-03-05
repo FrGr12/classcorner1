@@ -18,6 +18,17 @@ interface GroupCardProps {
 export function GroupCard({ id, name, description, memberCount, type, topic, region, onJoin }: GroupCardProps) {
   const { t } = useLanguage();
   
+  // Properly format the member count text based on count
+  const getMemberText = () => {
+    if (memberCount === 1) {
+      return t("group.members.one");
+    } else {
+      // Pre-replace the count in the string before passing to t()
+      const key = "group.members.other";
+      return t(key).replace('{count}', memberCount.toString());
+    }
+  };
+  
   return (
     <Card className="h-full flex flex-col">
       <CardContent className="pt-6 flex-1">
@@ -33,11 +44,7 @@ export function GroupCard({ id, name, description, memberCount, type, topic, reg
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
-            <span>
-              {memberCount === 1 
-                ? t("group.members.one") 
-                : t("group.members.other").replace('{count}', memberCount.toString())}
-            </span>
+            <span>{getMemberText()}</span>
           </div>
           {topic && <span>• {topic}</span>}
           {region && <span>• {region}</span>}

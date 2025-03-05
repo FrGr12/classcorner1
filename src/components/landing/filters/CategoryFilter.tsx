@@ -41,7 +41,7 @@ const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryF
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[200px] bg-white">
         {categories.map((category) => {
-          // Convert category name to translation key format
+          // Format category name correctly for translation key
           const translationKey = `categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`;
           
           return (

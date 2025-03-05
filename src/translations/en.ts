@@ -67,6 +67,15 @@ const translations = {
   "class.perClass": "per class",
   "class.from": "from",
   "class.personGroup": "person in group",
+  "class.date": "Date",
+  "search.sortBy": "Sort By",
+  "search.reset": "Reset",
+  "search.priceRange": "Price Range",
+  "search.sort.trending": "Trending",
+  "search.sort.top-rated": "Top Rated",
+  "search.sort.last-minute": "Last Minute Deals",
+  "search.sort.this-week": "This Week",
+  "search.sort.recommended": "Recommended",
   
   // Popular searches
   "popular.beginnerPottery": "Pottery for beginners",

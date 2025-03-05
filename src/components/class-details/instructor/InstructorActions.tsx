@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, UserPlus, UserMinus, MessageCircle } from "lucide-react";
@@ -63,7 +62,7 @@ const InstructorActions = ({
 
         toast({
           title: t("instructor.unfollowed"),
-          description: t("instructor.unfollowedMessage")
+          description: t("instructor.unfollowedMessage").replace('{instructor}', classItem.instructor_name)
         });
       } else {
         const { error } = await supabase
@@ -78,7 +77,7 @@ const InstructorActions = ({
 
         toast({
           title: t("instructor.following"),
-          description: t("instructor.followingMessage")
+          description: t("instructor.followingMessage").replace('{instructor}', classItem.instructor_name)
         });
       }
 

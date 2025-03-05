@@ -1,3 +1,4 @@
+
 import { Filter, Sparkles, Clock, MapPin, Trophy, Timer, Snowflake, GraduationCap, BookOpen, Users } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -19,7 +20,7 @@ interface FiltersSectionProps {
   onTimeRangeChange: (value: string) => void;
   onDateChange: (date: Date | undefined) => void;
   onSortChange: (value: string) => void;
-  onPriceRangeChange: (value: [number, number]) => void;  // Updated type
+  onPriceRangeChange: (value: [number, number]) => void;
   onReset: () => void;
 }
 
@@ -70,14 +71,14 @@ const FiltersSection = ({
       <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
         <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
           <Filter className="w-4 h-4" />
-          Category
+          {t("search.category")}
         </h3>
         <Select value={selectedCategory} onValueChange={onCategoryChange}>
           <SelectTrigger className="border-neutral-200">
-            <SelectValue placeholder="All Categories" />
+            <SelectValue placeholder={t("categories.title")} />
           </SelectTrigger>
           <SelectContent className="bg-white">
-            <SelectItem value="all">All Categories</SelectItem>
+            <SelectItem value="all">{t("search.all")}</SelectItem>
             {categories.map((category) => {
               const translationKey = `categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`;
               return (
@@ -93,16 +94,19 @@ const FiltersSection = ({
       <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100">
         <h3 className="text-sm font-medium mb-3 flex items-center gap-2">
           <Clock className="w-4 h-4" />
-          Date
+          {t("class.date") || "Date"}
         </h3>
         <Select value={timeRange} onValueChange={onTimeRangeChange}>
           <SelectTrigger className="border-neutral-200">
-            <SelectValue placeholder="Select date range" />
+            <SelectValue placeholder={t("search.anytime")} />
           </SelectTrigger>
           <SelectContent className="bg-white">
             {timeRanges.map((range) => (
               <SelectItem key={range.value} value={range.value}>
-                {range.label}
+                {range.value === "all" ? t("search.anytime") : 
+                 range.value === "this-week" ? t("search.thisWeek") :
+                 range.value === "this-month" ? t("search.thisMonth") :
+                 range.value === "custom" ? t("search.specificDates") : range.label}
               </SelectItem>
             ))}
           </SelectContent>
@@ -117,7 +121,7 @@ const FiltersSection = ({
                   !date && "text-neutral-500"
                 )}
               >
-                {date ? format(date, 'EEE, MMM d') : <span>Pick a date</span>}
+                {date ? format(date, 'EEE, MMM d') : <span>{t("search.specificDates")}</span>}
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0 bg-white" align="start">
@@ -136,21 +140,21 @@ const FiltersSection = ({
         <div className="flex items-center justify-between mb-3">
           <h3 className="text-sm font-medium flex items-center gap-2">
             <SortIcon className="w-4 h-4" />
-            Sort By
+            {t("search.sortBy") || "Sort By"}
           </h3>
           <Button 
             variant="ghost" 
             size="sm" 
             onClick={onReset}
             className="text-xs text-neutral-500 hover:text-accent-purple"
-            aria-label="Reset all filters"
+            aria-label={t("search.reset") || "Reset all filters"}
           >
-            Reset
+            {t("search.reset") || "Reset"}
           </Button>
         </div>
         <Select value={sortBy} onValueChange={onSortChange}>
           <SelectTrigger className="border-neutral-200">
-            <SelectValue placeholder="Sort by" />
+            <SelectValue placeholder={t("search.sortBy") || "Sort by"} />
           </SelectTrigger>
           <SelectContent className="bg-white">
             {sortOptions.map((option) => {
@@ -159,7 +163,7 @@ const FiltersSection = ({
                 <SelectItem key={option.value} value={option.value}>
                   <div className="flex items-center gap-2">
                     <Icon className="w-4 h-4" />
-                    <span>{option.label}</span>
+                    <span>{t(`search.sort.${option.value}`) || option.label}</span>
                   </div>
                 </SelectItem>
               );
@@ -169,7 +173,7 @@ const FiltersSection = ({
       </div>
 
       <div className="bg-white p-4 rounded-xl shadow-sm border border-neutral-100 w-[200px]">
-        <h3 className="text-sm font-medium mb-3">Price Range</h3>
+        <h3 className="text-sm font-medium mb-3">{t("search.priceRange") || "Price Range"}</h3>
         <div>
           <div className="flex justify-between text-sm text-neutral-600 mb-1">
             <span>${priceRange[0]}</span>
