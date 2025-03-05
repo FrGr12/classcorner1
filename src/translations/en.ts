@@ -1,98 +1,164 @@
 
-const translations = {
-  // Navbar
-  'nav.community': 'Community',
-  'nav.forTeachers': 'For Teachers',
-  'nav.startTeaching': 'Start Teaching',
-  'nav.resources': 'Resources',
-  'nav.dashboard': 'Dashboard',
-  'nav.signIn': 'Sign In',
-  'nav.signOut': 'Sign Out',
-  'nav.teacherDashboard': 'Teacher Dashboard',
-  'nav.studentDashboard': 'Student Dashboard',
-
-  // Hero Section
-  'hero.title': 'Discover & Book Local Classes',
-  'hero.subtitle': 'Join workshops, learn new skills, and connect with talented instructors in your area.',
-  'hero.browseClasses': 'Browse Classes',
-  'hero.becomeInstructor': 'Become an Instructor',
-  'hero.students': 'Students',
-  'hero.instructors': 'Instructors',
-  'hero.categories': 'Categories',
-
-  // Class Details
-  'class.availableDates': 'Available Dates',
-  'class.selectedDate': 'Selected Date',
-  'class.selectDatePrompt': 'Please select a date from the options below',
-  'class.classDuration': 'Class Duration',
-  'class.continueToBooking': 'Continue to Booking',
-  'class.whatToBring': 'What to Bring',
-  'class.clothing': 'Comfortable clothing suitable for creative work',
-  'class.materials': 'All materials are provided, but feel free to bring your own tools if you prefer',
-  'class.whatYouLearn': 'What You Will Learn',
-  'class.technique': 'Professional techniques from experienced instructors',
-  'class.handson': 'Hands-on creation of your own project to take home',
-  'class.tips': 'Tips and tricks to continue practicing at home',
-  'class.aboutTitle': 'About This Class',
-  'class.aboutIntro': 'Join {instructor} for an immersive {title} experience. This hands-on class is perfect for {level} learners looking to develop their skills in a supportive environment.',
-  'class.duration': 'Duration',
-  'class.hours': 'hours',
-  'class.location': 'Location',
-  'class.size': 'Class size',
-  'class.instructor': 'Instructor',
-  'class.rating': 'Rating',
-  'class.stars': 'stars',
-
-  // Policy Section
-  'policy.title': 'Booking Policies',
-  'policy.cancellation': 'Cancellation Policy',
-  'policy.refundText': 'Our refund policy ensures flexibility:',
-  'policy.fullRefund': 'Full refund if cancelled at least 48 hours before class start',
-  'policy.noRefund': 'No refund if cancelled less than 48 hours before class',
-  'policy.refundProcess': 'Refunds are processed automatically to your original payment method',
-  'policy.refundTime': 'Refunds typically take 5-10 business days to process',
-  'policy.groupBookings': 'Group Bookings',
-  'policy.groupText': 'Special rates are available for groups of 6 or more. Contact the instructor directly for details.',
-  'policy.privateSessions': 'Private Sessions',
-  'policy.privateText': 'Most instructors offer one-on-one sessions. Use the request form to inquire about availability and pricing.',
-
-  // Price Display
-  'price.perClass': 'per class',
-  'price.perPerson': 'per person',
-  'price.from': 'From',
-  'price.label': 'Price',
+export default {
+  // General
   'currency': '$',
-
-  // Dialogs
-  'dialog.askQuestion': 'Ask a Question',
-  'dialog.questionDescription': 'Send your question to the instructor. They\'ll be notified and will respond to you directly.',
-  'dialog.yourQuestion': 'Your Question',
-  'dialog.questionPlaceholder': 'What would you like to know about this class?',
-  'dialog.cancel': 'Cancel',
-  'dialog.sendQuestion': 'Send Question',
-  'dialog.requestPrivate': 'Request Private Class',
-  'dialog.privateDescription': 'Send a message to the instructor requesting a private class session.',
-  'dialog.message': 'Message',
-  'dialog.privatePlaceholder': 'Tell the instructor about your private class request...',
-  'dialog.sendRequest': 'Send Request',
-
-  // Instructor
-  'instructor.contactTitle': 'Contact Instructor',
-  'instructor.contactDescription': 'Get in touch with the instructor through your preferred method.',
-  'instructor.sendEmail': 'Send Email',
-  'instructor.call': 'Call',
+  'welcome': 'Welcome',
+  'loading': 'Loading',
+  
+  // Navigation and buttons
+  'nav.home': 'Home',
+  'nav.explore': 'Explore',
+  'nav.browse': 'Browse Classes',
+  'nav.about': 'About Us',
+  'nav.teach': 'Teach',
+  'nav.login': 'Login',
+  'nav.signup': 'Sign Up',
+  'nav.profile': 'Profile',
+  'nav.dashboard': 'Dashboard',
+  'nav.logout': 'Logout',
+  
+  // Auth
+  'auth.welcome': 'Welcome Back',
+  'auth.signup': 'Create an Account',
+  'auth.email': 'Email',
+  'auth.password': 'Password',
+  'auth.login': 'Login',
+  'auth.forgotPassword': 'Forgot Password?',
+  'auth.noAccount': 'Don\'t have an account?',
+  'auth.haveAccount': 'Already have an account?',
+  'auth.signupNow': 'Sign up now',
+  'auth.loginNow': 'Login now',
+  'auth.nameFirst': 'First Name',
+  'auth.nameLast': 'Last Name',
 
   // Error page
   'error.oops': 'Oops!',
   'error.somethingWrong': 'Something went wrong',
-  'error.unexpected': 'An unexpected error occurred.',
+  'error.unexpected': 'An unexpected error occurred',
   'error.goHome': 'Go Home',
   'error.tryAgain': 'Try Again',
-
-  // Auth
-  'auth.welcomeBack': 'Welcome Back',
-  'auth.signInContinue': 'Sign in to continue to ClassCorner',
-  'auth.forgotPassword': 'Forgot your password?'
+  
+  // Prices
+  'price.from': 'From',
+  'price.perPerson': 'per person',
+  'price.total': 'Total',
+  'price.label': 'Price',
+  
+  // Class details
+  'class.aboutTitle': 'About this class',
+  'class.aboutIntro': 'Join {instructor} for this {level} {title} class.',
+  'class.learningTitle': 'What you\'ll learn',
+  'class.prepareTitle': 'What to bring',
+  'class.policyTitle': 'Cancellation policy',
+  'class.policyBody': 'Full refund up to 7 days before the class. No refunds within 7 days of the class.',
+  'class.faqs': 'Frequently Asked Questions',
+  'class.byInstructor': 'by {instructor}',
+  'class.askQuestion': 'Ask a Question',
+  'class.bookNow': 'Book Now',
+  'class.bookPrivate': 'Book Private Class',
+  'class.sendQuestion': 'Send Question',
+  'class.questionPlaceholder': 'Type your question here...',
+  'class.privateRequest': 'Request Private Class',
+  'class.privateDatePlaceholder': 'Select preferred dates',
+  'class.privateGroupSize': 'Group Size',
+  'class.privateSubmit': 'Submit Request',
+  
+  // Class metadata
+  'metadata.level': 'Level',
+  'metadata.duration': 'Duration',
+  'metadata.group': 'Group',
+  'metadata.participants': 'Participants',
+  'metadata.beginner': 'Beginner',
+  'metadata.intermediate': 'Intermediate',
+  'metadata.advanced': 'Advanced',
+  'metadata.hours': '{hours} hours',
+  'metadata.minutes': '{minutes} minutes',
+  'metadata.hoursAndMinutes': '{hours}h {minutes}m',
+  
+  // Instructor
+  'instructor.about': 'About',
+  'instructor.classes': 'Classes ({count})',
+  'instructor.reviews': 'Reviews ({count})',
+  'instructor.contact': 'Contact',
+  'instructor.message': 'Message',
+  'instructor.book': 'Book a Class',
+  'instructor.follow': 'Follow',
+  'instructor.filterAll': 'All',
+  'instructor.filterActive': 'Active',
+  'instructor.noClassesFound': 'No classes found with the selected filter.',
+  'instructor.contactTitle': 'Contact Instructor',
+  'instructor.contactDescription': 'Choose how you would like to contact the instructor.',
+  'instructor.sendEmail': 'Send Email',
+  'instructor.call': 'Call',
+  
+  // Categories
+  'categories.all': 'All Categories',
+  'categories.pottery': 'Pottery',
+  'categories.cooking': 'Cooking',
+  'categories.baking': 'Baking',
+  'categories.painting_&_art': 'Painting & Art',
+  'categories.candle_making': 'Candle Making',
+  'categories.jewellery_&_metal': 'Jewellery & Metal',
+  'categories.cocktail_&_wine': 'Cocktail & Wine',
+  'categories.photography': 'Photography', 
+  'categories.music_&_dance': 'Music & Dance',
+  'categories.wood_craft': 'Wood Craft',
+  'categories.textile_craft': 'Textile Craft',
+  'categories.paper_craft': 'Paper Craft',
+  'categories.flower_&_plants': 'Flower & Plants',
+  
+  // Locations
+  'locations.all': 'All Locations',
+  'locations.everywhere': 'Everywhere',
+  'locations.stockholm': 'Stockholm',
+  'locations.göteborg': 'Göteborg',
+  'locations.malmö': 'Malmö',
+  'locations.uppsala': 'Uppsala',
+  'locations.västerås': 'Västerås',
+  'locations.örebro': 'Örebro',
+  'locations.linköping': 'Linköping',
+  'locations.helsingborg': 'Helsingborg',
+  'locations.jönköping': 'Jönköping',
+  'locations.norrköping': 'Norrköping',
+  
+  // Dates
+  'dates.anytime': 'Anytime',
+  'dates.thisWeek': 'This Week',
+  'dates.thisMonth': 'This Month',
+  'dates.nextMonth': 'Next Month',
+  'dates.customDate': 'Custom Date',
+  'dates.specificDates': 'Specific Dates',
+  'dates.pickDate': 'Pick a date',
+  'dates.allDates': 'All Dates',
+  'dates.any_week': 'Any Week',
+  
+  // Search & Filters
+  'search.title': 'Search Classes',
+  'search.placeholder': 'Search classes...',
+  'search.inputPlaceholder': 'Search for classes...',
+  'search.buttonText': 'Search',
+  'search.buttonAriaLabel': 'Search for classes',
+  'search.yourInterests': 'Your Interests',
+  'search.categoryLabel': 'Category',
+  'search.classLabel': 'Class',
+  
+  'filters.category': 'Category',
+  'filters.date': 'Date',
+  'filters.sortBy': 'Sort By',
+  'filters.priceRange': 'Price Range',
+  'filters.reset': 'Reset',
+  'filters.resetAll': 'Reset all filters',
+  'filters.allCategories': 'All Categories',
+  'filters.selectDateRange': 'Select date range',
+  
+  // Sort options
+  'sort.trending': 'Trending',
+  'sort.topRated': 'Top Rated',
+  'sort.lastMinute': 'Last Minute Deals',
+  'sort.thisWeek': 'This Week',
+  'sort.recommended': 'Recommended',
+  
+  // Errors
+  'errors.unableToViewClass': 'Unable to view class details. Please try again later.',
+  'errors.viewingClassDetails': 'An error occurred while viewing class details',
 };
-
-export default translations;

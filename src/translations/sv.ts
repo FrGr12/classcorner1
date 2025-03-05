@@ -1,98 +1,164 @@
 
-const translations = {
-  // Navbar
-  'nav.community': 'Gemenskap',
-  'nav.forTeachers': 'För lärare',
-  'nav.startTeaching': 'Börja undervisa',
-  'nav.resources': 'Resurser',
-  'nav.dashboard': 'Dashboard',
-  'nav.signIn': 'Logga in',
-  'nav.signOut': 'Logga ut',
-  'nav.teacherDashboard': 'Lärardashboard',
-  'nav.studentDashboard': 'Elevdashboard',
-
-  // Hero Section
-  'hero.title': 'Upptäck & boka lokala kurser',
-  'hero.subtitle': 'Delta i workshops, lär dig nya färdigheter och kom i kontakt med duktiga instruktörer i ditt område.',
-  'hero.browseClasses': 'Bläddra bland kurser',
-  'hero.becomeInstructor': 'Bli instruktör',
-  'hero.students': 'Elever',
-  'hero.instructors': 'Instruktörer',
-  'hero.categories': 'Kategorier',
-
-  // Class Details
-  'class.availableDates': 'Tillgängliga datum',
-  'class.selectedDate': 'Valt datum',
-  'class.selectDatePrompt': 'Välj ett datum från alternativen nedan',
-  'class.classDuration': 'Kursens längd',
-  'class.continueToBooking': 'Fortsätt till bokning',
-  'class.whatToBring': 'Vad du ska ta med',
-  'class.clothing': 'Bekväma kläder lämpliga för kreativt arbete',
-  'class.materials': 'Allt material tillhandahålls, men ta gärna med egna verktyg om du föredrar det',
-  'class.whatYouLearn': 'Vad du kommer att lära dig',
-  'class.technique': 'Professionella tekniker från erfarna instruktörer',
-  'class.handson': 'Praktiskt skapande av ditt eget projekt att ta med hem',
-  'class.tips': 'Tips och tricks för att fortsätta öva hemma',
-  'class.aboutTitle': 'Om denna kurs',
-  'class.aboutIntro': 'Följ med {instructor} för en fördjupande {title}-upplevelse. Denna hands-on-kurs är perfekt för {level} elever som vill utveckla sina färdigheter i en stödjande miljö.',
-  'class.duration': 'Längd',
-  'class.hours': 'timmar',
-  'class.location': 'Plats',
-  'class.size': 'Klasstorlek',
-  'class.instructor': 'Instruktör',
-  'class.rating': 'Betyg',
-  'class.stars': 'stjärnor',
-
-  // Policy Section
-  'policy.title': 'Bokningsregler',
-  'policy.cancellation': 'Avbokningsregler',
-  'policy.refundText': 'Vår återbetalningspolicy säkerställer flexibilitet:',
-  'policy.fullRefund': 'Full återbetalning om avbokning sker minst 48 timmar före kursstart',
-  'policy.noRefund': 'Ingen återbetalning om avbokning sker mindre än 48 timmar före kursstart',
-  'policy.refundProcess': 'Återbetalningar behandlas automatiskt till din ursprungliga betalningsmetod',
-  'policy.refundTime': 'Återbetalningar tar vanligtvis 5-10 arbetsdagar att behandla',
-  'policy.groupBookings': 'Gruppbokningar',
-  'policy.groupText': 'Särskilda priser finns för grupper på 6 eller fler. Kontakta instruktören direkt för mer information.',
-  'policy.privateSessions': 'Privatlektioner',
-  'policy.privateText': 'De flesta instruktörer erbjuder individuella sessioner. Använd förfrågningsformuläret för att höra om tillgänglighet och priser.',
-
-  // Price Display
-  'price.perClass': 'per kurs',
-  'price.perPerson': 'per person',
-  'price.from': 'Från',
-  'price.label': 'Pris',
+export default {
+  // General
   'currency': 'kr',
-
-  // Dialogs
-  'dialog.askQuestion': 'Ställ en fråga',
-  'dialog.questionDescription': 'Skicka din fråga till instruktören. De kommer att meddelas och svarar dig direkt.',
-  'dialog.yourQuestion': 'Din fråga',
-  'dialog.questionPlaceholder': 'Vad vill du veta om den här kursen?',
-  'dialog.cancel': 'Avbryt',
-  'dialog.sendQuestion': 'Skicka fråga',
-  'dialog.requestPrivate': 'Begär privatkurs',
-  'dialog.privateDescription': 'Skicka ett meddelande till instruktören för att begära en privat kursession.',
-  'dialog.message': 'Meddelande',
-  'dialog.privatePlaceholder': 'Berätta för instruktören om din förfrågan om privatkurs...',
-  'dialog.sendRequest': 'Skicka förfrågan',
-
-  // Instructor
-  'instructor.contactTitle': 'Kontakta instruktör',
-  'instructor.contactDescription': 'Kom i kontakt med instruktören genom din föredragna metod.',
-  'instructor.sendEmail': 'Skicka e-post',
-  'instructor.call': 'Ring',
+  'welcome': 'Välkommen',
+  'loading': 'Laddar',
+  
+  // Navigation and buttons
+  'nav.home': 'Hem',
+  'nav.explore': 'Utforska',
+  'nav.browse': 'Bläddra Klasser',
+  'nav.about': 'Om Oss',
+  'nav.teach': 'Undervisa',
+  'nav.login': 'Logga In',
+  'nav.signup': 'Registrera',
+  'nav.profile': 'Profil',
+  'nav.dashboard': 'Översikt',
+  'nav.logout': 'Logga Ut',
+  
+  // Auth
+  'auth.welcome': 'Välkommen Tillbaka',
+  'auth.signup': 'Skapa ett Konto',
+  'auth.email': 'E-post',
+  'auth.password': 'Lösenord',
+  'auth.login': 'Logga In',
+  'auth.forgotPassword': 'Glömt Lösenord?',
+  'auth.noAccount': 'Har du inget konto?',
+  'auth.haveAccount': 'Har du redan ett konto?',
+  'auth.signupNow': 'Registrera dig nu',
+  'auth.loginNow': 'Logga in nu',
+  'auth.nameFirst': 'Förnamn',
+  'auth.nameLast': 'Efternamn',
 
   // Error page
   'error.oops': 'Hoppsan!',
   'error.somethingWrong': 'Något gick fel',
-  'error.unexpected': 'Ett oväntat fel inträffade.',
-  'error.goHome': 'Gå till startsidan',
-  'error.tryAgain': 'Försök igen',
-
-  // Auth
-  'auth.welcomeBack': 'Välkommen tillbaka',
-  'auth.signInContinue': 'Logga in för att fortsätta till ClassCorner',
-  'auth.forgotPassword': 'Glömt ditt lösenord?'
+  'error.unexpected': 'Ett oväntat fel inträffade',
+  'error.goHome': 'Gå till Startsidan',
+  'error.tryAgain': 'Försök Igen',
+  
+  // Prices
+  'price.from': 'Från',
+  'price.perPerson': 'per person',
+  'price.total': 'Totalt',
+  'price.label': 'Pris',
+  
+  // Class details
+  'class.aboutTitle': 'Om denna klass',
+  'class.aboutIntro': 'Delta med {instructor} i denna {level} {title}-klass.',
+  'class.learningTitle': 'Vad du kommer att lära dig',
+  'class.prepareTitle': 'Vad du ska ta med',
+  'class.policyTitle': 'Avbokningspolicy',
+  'class.policyBody': 'Full återbetalning upp till 7 dagar före klassen. Ingen återbetalning inom 7 dagar från klassen.',
+  'class.faqs': 'Vanliga Frågor',
+  'class.byInstructor': 'av {instructor}',
+  'class.askQuestion': 'Ställ en Fråga',
+  'class.bookNow': 'Boka Nu',
+  'class.bookPrivate': 'Boka Privat Klass',
+  'class.sendQuestion': 'Skicka Fråga',
+  'class.questionPlaceholder': 'Skriv din fråga här...',
+  'class.privateRequest': 'Begär Privat Klass',
+  'class.privateDatePlaceholder': 'Välj önskat datum',
+  'class.privateGroupSize': 'Gruppstorlek',
+  'class.privateSubmit': 'Skicka Förfrågan',
+  
+  // Class metadata
+  'metadata.level': 'Nivå',
+  'metadata.duration': 'Längd',
+  'metadata.group': 'Grupp',
+  'metadata.participants': 'Deltagare',
+  'metadata.beginner': 'Nybörjare',
+  'metadata.intermediate': 'Mellannivå',
+  'metadata.advanced': 'Avancerad',
+  'metadata.hours': '{hours} timmar',
+  'metadata.minutes': '{minutes} minuter',
+  'metadata.hoursAndMinutes': '{hours}t {minutes}m',
+  
+  // Instructor
+  'instructor.about': 'Om',
+  'instructor.classes': 'Klasser ({count})',
+  'instructor.reviews': 'Recensioner ({count})',
+  'instructor.contact': 'Kontakt',
+  'instructor.message': 'Meddelande',
+  'instructor.book': 'Boka en Klass',
+  'instructor.follow': 'Följ',
+  'instructor.filterAll': 'Alla',
+  'instructor.filterActive': 'Aktiva',
+  'instructor.noClassesFound': 'Inga klasser hittades med valt filter.',
+  'instructor.contactTitle': 'Kontakta Läraren',
+  'instructor.contactDescription': 'Välj hur du vill kontakta läraren.',
+  'instructor.sendEmail': 'Skicka E-post',
+  'instructor.call': 'Ring',
+  
+  // Categories
+  'categories.all': 'Alla Kategorier',
+  'categories.pottery': 'Keramik',
+  'categories.cooking': 'Matlagning',
+  'categories.baking': 'Bakning',
+  'categories.painting_&_art': 'Målning & Konst',
+  'categories.candle_making': 'Ljustillverkning',
+  'categories.jewellery_&_metal': 'Smycken & Metall',
+  'categories.cocktail_&_wine': 'Cocktail & Vin',
+  'categories.photography': 'Fotografi', 
+  'categories.music_&_dance': 'Musik & Dans',
+  'categories.wood_craft': 'Trähantverk',
+  'categories.textile_craft': 'Textilhantverk',
+  'categories.paper_craft': 'Pappershantverk',
+  'categories.flower_&_plants': 'Blommor & Växter',
+  
+  // Locations
+  'locations.all': 'Alla Platser',
+  'locations.everywhere': 'Överallt',
+  'locations.stockholm': 'Stockholm',
+  'locations.göteborg': 'Göteborg',
+  'locations.malmö': 'Malmö',
+  'locations.uppsala': 'Uppsala',
+  'locations.västerås': 'Västerås',
+  'locations.örebro': 'Örebro',
+  'locations.linköping': 'Linköping',
+  'locations.helsingborg': 'Helsingborg',
+  'locations.jönköping': 'Jönköping',
+  'locations.norrköping': 'Norrköping',
+  
+  // Dates
+  'dates.anytime': 'När som helst',
+  'dates.thisWeek': 'Denna Vecka',
+  'dates.thisMonth': 'Denna Månad',
+  'dates.nextMonth': 'Nästa Månad',
+  'dates.customDate': 'Anpassat Datum',
+  'dates.specificDates': 'Specifika Datum',
+  'dates.pickDate': 'Välj ett datum',
+  'dates.allDates': 'Alla Datum',
+  'dates.any_week': 'Vilken Vecka Som Helst',
+  
+  // Search & Filters
+  'search.title': 'Sök Klasser',
+  'search.placeholder': 'Sök klasser...',
+  'search.inputPlaceholder': 'Sök efter klasser...',
+  'search.buttonText': 'Sök',
+  'search.buttonAriaLabel': 'Sök efter klasser',
+  'search.yourInterests': 'Dina Intressen',
+  'search.categoryLabel': 'Kategori',
+  'search.classLabel': 'Klass',
+  
+  'filters.category': 'Kategori',
+  'filters.date': 'Datum',
+  'filters.sortBy': 'Sortera Efter',
+  'filters.priceRange': 'Prisintervall',
+  'filters.reset': 'Återställ',
+  'filters.resetAll': 'Återställ alla filter',
+  'filters.allCategories': 'Alla Kategorier',
+  'filters.selectDateRange': 'Välj datumintervall',
+  
+  // Sort options
+  'sort.trending': 'Trendande',
+  'sort.topRated': 'Högst Betyg',
+  'sort.lastMinute': 'Sista Minuten',
+  'sort.thisWeek': 'Denna Vecka',
+  'sort.recommended': 'Rekommenderade',
+  
+  // Errors
+  'errors.unableToViewClass': 'Det går inte att visa klassdetaljer. Försök igen senare.',
+  'errors.viewingClassDetails': 'Ett fel inträffade vid visning av klassdetaljer',
 };
-
-export default translations;

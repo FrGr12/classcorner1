@@ -1,3 +1,4 @@
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,29 +7,32 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface CategoryFilterProps {
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
 }
 
-const categories = [
-  "Pottery",
-  "Cooking",
-  "Baking",
-  "Painting & Art",
-  "Cocktail & Wine",
-  "Photography",
-  "Music & Dance",
-  "Candle Making",
-  "Wood Craft",
-  "Jewellery & Metal",
-  "Textile Craft",
-  "Paper Craft",
-  "Flower & Plants",
-];
-
 const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryFilterProps) => {
+  const { t } = useLanguage();
+  
+  const categories = [
+    "Pottery",
+    "Cooking",
+    "Baking",
+    "Painting & Art",
+    "Cocktail & Wine",
+    "Photography",
+    "Music & Dance",
+    "Candle Making",
+    "Wood Craft",
+    "Jewellery & Metal",
+    "Textile Craft",
+    "Paper Craft",
+    "Flower & Plants",
+  ];
+
   const handleCategoryChange = (category: string) => {
     setSelectedCategories(
       selectedCategories.includes(category)
@@ -46,7 +50,7 @@ const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryF
         >
           <Filter className="w-4 h-4 mr-2" />
           {selectedCategories.length === 0
-            ? "All"
+            ? t('filters.allCategories')
             : `${selectedCategories.length}`}
         </Button>
       </DropdownMenuTrigger>
@@ -58,7 +62,7 @@ const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryF
             onCheckedChange={() => handleCategoryChange(category)}
             className="cursor-pointer"
           >
-            {category}
+            {t(`categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`)}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

@@ -14,10 +14,10 @@ const PriceDisplay = ({
   groupBookingsEnabled,
   privateBookingsEnabled,
   basePriceGroup,
+  basePricePrivate,
 }: PriceDisplayProps) => {
   const { t, language } = useLanguage();
-  const hasAlternativeBookings = groupBookingsEnabled || privateBookingsEnabled;
-  
+
   // Format currency based on language
   const formatCurrency = (amount: number) => {
     if (language === 'sv') {
@@ -27,15 +27,10 @@ const PriceDisplay = ({
   };
 
   return (
-    <div className="text-[14px] font-medium mt-1 text-left">
-      {!hasAlternativeBookings && (
-        <>{formatCurrency(price)} <span className="text-neutral-600 font-normal">{t('price.perClass')}</span></>
-      )}
-      {hasAlternativeBookings && basePriceGroup && (
-        <div>
-          {language === 'sv' ? 'Från' : 'From'} {formatCurrency(basePriceGroup)} <span className="text-neutral-600 font-normal">{t('price.perPerson')}</span>
-        </div>
-      )}
+    <div className="mt-2">
+      <p className="text-sm font-semibold">
+        {formatCurrency(price)} <span className="text-xs font-normal text-neutral-500">{t('price.perPerson')}</span>
+      </p>
     </div>
   );
 };

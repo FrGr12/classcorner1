@@ -1,3 +1,4 @@
+
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -6,27 +7,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MapPin } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface LocationFilterProps {
   selectedLocations: string[];
   setSelectedLocations: (locations: string[]) => void;
 }
 
-const cities = [
-  "Everywhere",
-  "Stockholm",
-  "Göteborg",
-  "Malmö",
-  "Uppsala",
-  "Västerås",
-  "Örebro",
-  "Linköping",
-  "Helsingborg",
-  "Jönköping",
-  "Norrköping",
-];
-
 const LocationFilter = ({ selectedLocations, setSelectedLocations }: LocationFilterProps) => {
+  const { t } = useLanguage();
+  
+  const cities = [
+    "Everywhere",
+    "Stockholm",
+    "Göteborg",
+    "Malmö",
+    "Uppsala",
+    "Västerås",
+    "Örebro",
+    "Linköping",
+    "Helsingborg",
+    "Jönköping",
+    "Norrköping",
+  ];
+
   const handleLocationChange = (location: string) => {
     if (location === "Everywhere") {
       setSelectedLocations(["Everywhere"]);
@@ -48,9 +52,9 @@ const LocationFilter = ({ selectedLocations, setSelectedLocations }: LocationFil
         >
           <MapPin className="w-4 h-4 mr-2" />
           {selectedLocations.includes("Everywhere")
-            ? "All"
+            ? t('locations.all')
             : selectedLocations.length === 1
-            ? selectedLocations[0]
+            ? t(`locations.${selectedLocations[0].toLowerCase()}`)
             : `${selectedLocations.length}`}
         </Button>
       </DropdownMenuTrigger>
@@ -62,7 +66,7 @@ const LocationFilter = ({ selectedLocations, setSelectedLocations }: LocationFil
             onCheckedChange={() => handleLocationChange(city)}
             className="cursor-pointer"
           >
-            {city}
+            {t(`locations.${city.toLowerCase()}`)}
           </DropdownMenuCheckboxItem>
         ))}
       </DropdownMenuContent>

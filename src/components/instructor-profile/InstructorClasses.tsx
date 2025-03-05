@@ -7,6 +7,7 @@ import {
   GlassCardTitle, 
   GlassCardContent 
 } from "@/components/ui/glass-card";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorClassesProps {
   classes: ClassItem[];
@@ -19,13 +20,15 @@ const InstructorClasses = ({
   activeFilter,
   onFilterChange
 }: InstructorClassesProps) => {
+  const { t } = useLanguage();
+  
   // Get unique categories from classes for filter buttons
   const categories = [...new Set(classes.map(cls => cls.category).filter(Boolean))];
   
   return (
     <GlassCard>
       <GlassCardHeader>
-        <GlassCardTitle className="text-left">Classes ({classes.length})</GlassCardTitle>
+        <GlassCardTitle className="text-left">{t('instructor.classes', { count: classes.length })}</GlassCardTitle>
       </GlassCardHeader>
       
       <GlassCardContent className="space-y-6">
@@ -39,7 +42,7 @@ const InstructorClasses = ({
                 : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
             }`}
           >
-            All
+            {t('instructor.filterAll')}
           </button>
           
           <button 
@@ -50,7 +53,7 @@ const InstructorClasses = ({
                 : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
             }`}
           >
-            Active
+            {t('instructor.filterActive')}
           </button>
           
           {categories.map(category => (
@@ -63,7 +66,7 @@ const InstructorClasses = ({
                   : "bg-neutral-100 text-neutral-700 hover:bg-neutral-200"
               }`}
             >
-              {category}
+              {t(`categories.${category!.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`)}
             </button>
           ))}
         </div>
@@ -89,7 +92,7 @@ const InstructorClasses = ({
           </div>
         ) : (
           <div className="text-center py-8">
-            <p className="text-neutral-500">No classes found with the selected filter.</p>
+            <p className="text-neutral-500">{t('instructor.noClassesFound')}</p>
           </div>
         )}
       </GlassCardContent>

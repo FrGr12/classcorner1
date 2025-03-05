@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -16,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addMonths } from "date-fns";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DateFilterProps {
   selectedTimeRange: string;
@@ -24,16 +26,30 @@ interface DateFilterProps {
   setDate: (date: DateRange | undefined) => void;
 }
 
-const timeRanges = [
-  { label: "This week", getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
-  { label: "This month", getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
-  { label: "Next month", getValue: () => {
-    const nextMonth = addMonths(new Date(), 1);
-    return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
-  }},
-];
-
 const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: DateFilterProps) => {
+  const { t } = useLanguage();
+  
+  const timeRanges = [
+    { 
+      label: t('dates.thisWeek'), 
+      value: "this-week",
+      getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) 
+    },
+    { 
+      label: t('dates.thisMonth'), 
+      value: "this-month",
+      getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) 
+    },
+    { 
+      label: t('dates.nextMonth'), 
+      value: "next-month",
+      getValue: () => {
+        const nextMonth = addMonths(new Date(), 1);
+        return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
+      }
+    },
+  ];
+
   const handleTimeRangeSelect = (label: string, range?: DateRange) => {
     setSelectedTimeRange(label);
     setDate(range);
@@ -47,19 +63,19 @@ const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: 
           className="h-11 px-5 text-sm rounded-r-lg rounded-l-none border-l-0"
         >
           <CalendarIcon className="w-4 h-4 mr-2" />
-          {selectedTimeRange}
+          {t(`dates.${selectedTimeRange.toLowerCase().replace(/\s+/g, '_')}`)}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[200px] bg-white">
         <DropdownMenuItem
           onClick={() => handleTimeRangeSelect("Anytime", undefined)}
         >
-          Anytime
+          {t('dates.anytime')}
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {timeRanges.map((range) => (
           <DropdownMenuItem
-            key={range.label}
+            key={range.value}
             onClick={() => handleTimeRangeSelect(range.label, range.getValue())}
           >
             {range.label}
@@ -72,7 +88,7 @@ const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: 
               variant="ghost"
               className="w-full justify-start font-normal"
             >
-              Specific dates
+              {t('dates.specificDates')}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">

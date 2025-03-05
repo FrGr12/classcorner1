@@ -3,6 +3,7 @@ import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import FilterButtons from "../../filters/FilterButtons";
 import { SearchSuggestions } from "./SearchSuggestions";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DesktopSearchProps {
   searchInput: string;
@@ -38,13 +39,15 @@ export const DesktopSearch = ({
   matchingCategories,
   matchingTitles,
 }: DesktopSearchProps) => {
+  const { t } = useLanguage();
+  
   return (
     <div className="hidden md:block w-full">
       <div className="glass-panel rounded-full flex items-center divide-x divide-neutral-200 p-2">
         <div className="flex-1 px-4 py-2 relative">
           <Input
             type="text"
-            placeholder="Search for classes..."
+            placeholder={t('search.inputPlaceholder')}
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
             onKeyDown={handleInputKeyDown}
@@ -79,6 +82,7 @@ export const DesktopSearch = ({
         <button 
           onClick={handleSearch}
           className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-lavender transition-colors"
+          aria-label={t('search.buttonAriaLabel')}
         >
           <Search className="w-4 h-4" />
         </button>
