@@ -11,6 +11,7 @@ import TeacherClasses from "@/components/teach/dashboard/TeacherClasses";
 import TeacherStats from "@/components/teach/dashboard/TeacherStats";
 import TeacherReviews from "@/components/teach/dashboard/TeacherReviews";
 import TeacherWaitlist from "@/pages/TeacherWaitlist";
+import TeacherMessages from "@/components/teach/dashboard/messages/TeacherMessages";
 import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 const Dashboard = () => {
@@ -29,6 +30,7 @@ const Dashboard = () => {
               <Route path="overview" element={<TeacherOverview />} />
               <Route path="create-class" element={<CreateClass />} />
               <Route path="inbox" element={<TeacherInbox />} />
+              <Route path="messages" element={<TeacherMessages />} />
               <Route path="contacts" element={<TeacherContacts />} />
               <Route path="contacts/tags" element={<ContactManagement />} />
               <Route path="contacts/add" element={<ContactManagement />} />

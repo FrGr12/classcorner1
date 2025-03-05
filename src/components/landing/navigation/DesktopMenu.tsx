@@ -44,7 +44,7 @@ export function DesktopMenu({
           
           {/* For Teachers section */}
           <DropdownMenuItem asChild className="p-2">
-            <Link to="/auth" state={{ returnTo: '/dashboard/create-class' }} className="flex items-center hover:text-accent-purple w-full">
+            <Link to="/dashboard/create-class" className="flex items-center hover:text-accent-purple w-full">
               <School className="mr-2 h-4 w-4" />
               <span>Start Teaching</span>
             </Link>
@@ -56,7 +56,7 @@ export function DesktopMenu({
             </Link>
           </DropdownMenuItem>
           
-          {/* Dashboard options */}
+          {/* Dashboard options - directly accessible */}
           <DropdownMenuItem asChild className="p-2">
             <Link to="/dashboard" className="flex items-center hover:text-accent-purple w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
@@ -64,7 +64,7 @@ export function DesktopMenu({
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="p-2">
-            <Link to="/user-dashboard" className="flex items-center hover:text-accent-purple w-full">
+            <Link to="/student-dashboard" className="flex items-center hover:text-accent-purple w-full">
               <LayoutDashboard className="mr-2 h-4 w-4" />
               <span>Student Dashboard</span>
             </Link>
