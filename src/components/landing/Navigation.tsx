@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -72,7 +71,7 @@ const Navigation = () => {
 
   const handleDashboardClick = () => {
     // Redirect to the appropriate dashboard based on user type
-    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
+    navigate(userType === 'student' ? '/student-dashboard' : '/dashboard');
   };
 
   const handleLogout = async () => {

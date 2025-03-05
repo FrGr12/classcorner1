@@ -15,15 +15,12 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
   const location = useLocation();
 
   // Check if we're in admin mode - allows direct dashboard access
-  const isDemoMode = localStorage.getItem("admin_mode") === "true";
+  const isAdminMode = localStorage.getItem("admin_mode") === "true";
 
   useEffect(() => {
-    console.log("Current URL:", window.location.href);
-    console.log("Redirect URL will be:", new URL('/auth/callback', window.location.href).toString());
-    
     // If bypass is allowed and we're in admin mode, skip auth check completely
-    if (allowBypass && isDemoMode) {
-      console.log("Admin mode enabled, bypassing auth check");
+    if (allowBypass && isAdminMode) {
+      console.log("Admin mode enabled, bypassing auth check completely");
       setIsAuthenticated(true);
       return;
     }
@@ -42,8 +39,8 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
         } else {
           setIsAuthenticated(false);
           
-          // Don't redirect if we're already on the auth page or if bypass is allowed
-          if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
+          // Don't redirect if we're already on the auth page
+          if (!location.pathname.includes('/auth')) {
             // Store the current location to redirect back after login
             navigate('/auth', { state: { returnTo: location.pathname } });
             toast.error("Please sign in to access this page");
@@ -53,16 +50,15 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
         console.error("Authentication error:", error);
         setIsAuthenticated(false);
         
-        // Don't redirect if we're already on the auth page or if bypass is allowed
-        if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
+        // Don't redirect if we're already on the auth page
+        if (!location.pathname.includes('/auth')) {
           navigate('/auth', { state: { returnTo: location.pathname } });
         }
       }
     };
 
     // Only run auth check if we're not bypassing
-    if (!(allowBypass && isDemoMode)) {
-      console.log("Auth: Initial session check:", isAuthenticated);
+    if (!(allowBypass && isAdminMode)) {
       checkAuth();
     }
     
@@ -81,7 +77,7 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
         setIsAuthenticated(false);
         
         // Don't redirect if we're already on the auth page or if bypass is allowed
-        if (!location.pathname.includes('/auth') && !(allowBypass && isDemoMode)) {
+        if (!location.pathname.includes('/auth') && !(allowBypass && isAdminMode)) {
           navigate('/auth', { state: { returnTo: location.pathname } });
         }
       }
@@ -90,10 +86,10 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [navigate, location, allowBypass, isDemoMode]);
+  }, [navigate, location, allowBypass, isAdminMode]);
 
   // Show loading state while checking authentication, but only if we're not in admin mode bypass
-  if (isAuthenticated === null && !(allowBypass && isDemoMode)) {
+  if (isAuthenticated === null && !(allowBypass && isAdminMode)) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-accent-purple border-t-transparent rounded-full"></div>
@@ -102,7 +98,7 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
   }
 
   // If authenticated or bypass is allowed with admin mode, render children
-  return (isAuthenticated || (allowBypass && isDemoMode)) ? <>{children}</> : null;
+  return (isAuthenticated || (allowBypass && isAdminMode)) ? <>{children}</> : null;
 };
 
 export default AuthGuard;
