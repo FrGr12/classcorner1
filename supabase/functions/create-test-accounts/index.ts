@@ -14,7 +14,7 @@ serve(async (req) => {
   }
 
   try {
-    // Log environment variables (without revealing full keys)
+    // Get environment variables
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     
@@ -37,8 +37,8 @@ serve(async (req) => {
       );
     }
 
-    console.log("Creating Supabase admin client...");
-    
+    // Create Supabase admin client
+    console.log("Creating Supabase admin client with URL:", supabaseUrl);
     const supabaseAdmin = createClient(
       supabaseUrl,
       supabaseServiceKey,
@@ -49,11 +49,8 @@ serve(async (req) => {
         },
       }
     );
-
-    console.log("Supabase admin client created successfully");
-    console.log("Preparing test accounts...");
-
-    // Test account credentials
+    
+    // Test accounts data
     const testAccounts = [
       {
         email: "test.student@classcorner.demo",
@@ -77,62 +74,47 @@ serve(async (req) => {
 
     const results = [];
 
+    // Process each test account
     for (const account of testAccounts) {
       try {
         console.log(`Processing account: ${account.email}`);
         
-        // Check if user already exists
-        console.log(`Checking if user ${account.email} already exists...`);
-        const { data: existingUsers, error: fetchError } = await supabaseAdmin.auth.admin.listUsers();
-
-        if (fetchError) {
-          console.error(`Error checking users:`, fetchError);
-          results.push({
-            email: account.email,
-            status: "error",
-            message: `Error checking user: ${fetchError.message}`
-          });
-          continue;
-        }
-
-        const existingUser = existingUsers?.users?.find(u => 
-          u.email && u.email.toLowerCase() === account.email.toLowerCase()
-        );
-
-        if (existingUser) {
-          console.log(`User ${account.email} already exists with ID: ${existingUser.id}`);
-          
-          // Force update the password for existing user
-          const { error: updateError } = await supabaseAdmin.auth.admin.updateUserById(
-            existingUser.id,
-            { password: account.password }
-          );
-          
-          if (updateError) {
-            console.error(`Error updating password for ${account.email}:`, updateError);
-            results.push({
-              email: account.email,
-              status: "error updating password",
-              message: updateError.message,
-              password: account.password
-            });
-          } else {
-            console.log(`Password updated successfully for ${account.email}`);
-            results.push({
-              email: account.email,
-              status: "password updated",
-              password: account.password
-            });
+        // Try to delete the user first if it exists
+        // This ensures we start with a clean slate
+        try {
+          console.log(`Looking for existing user with email: ${account.email}`);
+          const { data: existingUser, error: findError } = await supabaseAdmin
+            .from('profiles')
+            .select('id')
+            .eq('email', account.email.toLowerCase())
+            .single();
+            
+          if (findError) {
+            console.log(`Error finding user in profiles: ${findError.message}`);
+          } else if (existingUser) {
+            console.log(`Found existing user in profiles with ID: ${existingUser.id}`);
+            
+            // Delete from auth.users if exists
+            const { error: deleteError } = await supabaseAdmin.auth.admin.deleteUser(
+              existingUser.id
+            );
+            
+            if (deleteError) {
+              console.log(`Error deleting existing user: ${deleteError.message}`);
+            } else {
+              console.log(`Successfully deleted existing user: ${account.email}`);
+            }
           }
-          continue;
+        } catch (e) {
+          console.error(`Error during user cleanup: ${e.message || e}`);
         }
-
-        // Create user
-        console.log(`Creating user ${account.email}...`);
+        
+        // Create the user fresh
+        console.log(`Creating new user: ${account.email}`);
         const { data, error } = await supabaseAdmin.auth.admin.createUser({
-          email: account.email,
+          email: account.email.toLowerCase(),
           password: account.password,
-          email_confirm: true,  // Auto-confirm email
+          email_confirm: true,
           user_metadata: account.userData
         });
 
@@ -141,14 +123,26 @@ serve(async (req) => {
           results.push({
             email: account.email,
             status: "error",
-            message: error.message
+            message: `Error creating user: ${error.message}`,
+            password: account.password
           });
         } else {
           console.log(`Successfully created user ${account.email} with ID: ${data.user.id}`);
+          
+          // Double-check the user was created
+          const { data: checkData, error: checkError } = await supabaseAdmin.auth.admin.getUserById(data.user.id);
+          
+          if (checkError) {
+            console.error(`Error verifying user creation: ${checkError.message}`);
+          } else {
+            console.log(`Verified user exists with email: ${checkData.user.email}`);
+          }
+          
           results.push({
             email: account.email,
             status: "created",
-            password: account.password
+            password: account.password,
+            userId: data.user.id
           });
         }
       } catch (accountError) {

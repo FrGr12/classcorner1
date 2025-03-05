@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle, CheckCircle } from "lucide-react";
+import { AlertCircle, CheckCircle, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const CreateTestAccounts = () => {
@@ -77,6 +77,11 @@ const CreateTestAccounts = () => {
     }
   };
 
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard!");
+  };
+
   return (
     <div className="container py-10 max-w-3xl mx-auto">
       <Card>
@@ -93,7 +98,12 @@ const CreateTestAccounts = () => {
               disabled={loading}
               className="w-full max-w-xs"
             >
-              {loading ? "Creating..." : "Create Test Accounts"}
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating...
+                </>
+              ) : "Create Test Accounts"}
             </Button>
           </div>
           
@@ -123,8 +133,9 @@ const CreateTestAccounts = () => {
                     <li>These accounts use email/password authentication.</li>
                     <li>Go to the <Link to="/auth" className="text-accent-purple font-medium">login page</Link> to sign in.</li>
                     <li>Make sure to sign out of any existing account first.</li>
-                    <li>Select "Email" sign-in method (not Google).</li>
-                    <li>Enter the email and password exactly as shown below.</li>
+                    <li>Use the <strong>Sign In</strong> tab (not Google).</li>
+                    <li>Enter the email and password <strong>exactly</strong> as shown below.</li>
+                    <li>The auto-fill button on the login page can also help.</li>
                   </ol>
                 </AlertDescription>
               </Alert>
@@ -134,9 +145,34 @@ const CreateTestAccounts = () => {
                   <div key={index} className="p-4 border rounded-md bg-slate-50">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4">
                       <div>
-                        <p><strong>Email:</strong> {account.email}</p>
-                        {account.password && <p><strong>Password:</strong> {account.password}</p>}
+                        <div className="flex items-center gap-2">
+                          <p><strong>Email:</strong> {account.email}</p>
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            onClick={() => copyToClipboard(account.email)}
+                            className="h-6 px-2"
+                          >
+                            Copy
+                          </Button>
+                        </div>
+                        
+                        {account.password && (
+                          <div className="flex items-center gap-2">
+                            <p><strong>Password:</strong> {account.password}</p>
+                            <Button 
+                              variant="ghost" 
+                              size="sm" 
+                              onClick={() => copyToClipboard(account.password)}
+                              className="h-6 px-2"
+                            >
+                              Copy
+                            </Button>
+                          </div>
+                        )}
+                        
                         <p><strong>Status:</strong> {account.status}</p>
+                        {account.userId && <p><strong>User ID:</strong> {account.userId}</p>}
                         {account.message && <p><strong>Message:</strong> {account.message}</p>}
                       </div>
                       <Button 
@@ -164,10 +200,14 @@ const CreateTestAccounts = () => {
               
               <div className="mt-4 p-4 border rounded-md bg-amber-50">
                 <p className="text-sm text-amber-800">
-                  <strong>Note:</strong> These are test accounts for demo purposes. 
-                  Anyone with these credentials will be able to log in, so don't use them 
-                  for sensitive information.
+                  <strong>Note:</strong> If you're having trouble logging in, try these troubleshooting steps:
                 </p>
+                <ol className="list-decimal pl-5 mt-2 text-sm text-amber-800 space-y-1">
+                  <li>Make sure you're using the correct email and password (copy and paste to avoid typos)</li>
+                  <li>Try recreating the test accounts</li>
+                  <li>Make sure your browser doesn't have cached authentication data (try in incognito mode)</li>
+                  <li>Check the browser console for any error messages</li>
+                </ol>
               </div>
               
               <div className="mt-4 text-center">

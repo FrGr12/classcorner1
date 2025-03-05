@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
+import { InfoIcon, Loader2 } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
+  const [debugMode, setDebugMode] = useState(false);
   
   // Get return path from state (if available)
   const returnTo = location.state?.returnTo || "/";
@@ -64,10 +65,23 @@ const Auth = () => {
     setError(null);
 
     try {
+      // Enable debug mode for multiple failed attempts
+      if (debugMode) {
+        console.log("DEBUG MODE ENABLED");
+        console.log("Testing Supabase connection...");
+        
+        try {
+          const { data: connTest, error: connError } = await supabase.from('profiles').select('count').limit(1);
+          console.log("Connection test:", { data: connTest, error: connError });
+        } catch (connErr) {
+          console.error("Connection test failed:", connErr);
+        }
+      }
+      
       console.log("Attempting login with:", { email, password });
       
       // Make sure email is lower case to avoid case sensitivity issues
-      const lowerCaseEmail = email.toLowerCase();
+      const lowerCaseEmail = email.toLowerCase().trim();
       
       const { data, error } = await supabase.auth.signInWithPassword({
         email: lowerCaseEmail,
@@ -76,7 +90,13 @@ const Auth = () => {
 
       console.log("Login response:", { data, error });
       
-      if (error) throw error;
+      if (error) {
+        // If this is the second failed attempt, enable debug mode
+        if (error.message === "Invalid login credentials") {
+          setDebugMode(true);
+        }
+        throw error;
+      }
       
       toast.success("Login successful");
     } catch (error: any) {
@@ -102,7 +122,7 @@ const Auth = () => {
 
     try {
       // Make sure email is lower case to avoid case sensitivity issues
-      const lowerCaseEmail = email.toLowerCase();
+      const lowerCaseEmail = email.toLowerCase().trim();
       
       const { data, error } = await supabase.auth.signUp({
         email: lowerCaseEmail,
@@ -126,6 +146,19 @@ const Auth = () => {
       setLoading(false);
     }
   };
+  
+  const handleTestLogin = async () => {
+    setEmail("test.student@classcorner.demo");
+    setPassword("classcorner2024");
+    
+    // Set a small delay to allow state to update
+    setTimeout(() => {
+      const form = document.getElementById('login-form') as HTMLFormElement;
+      if (form) {
+        form.dispatchEvent(new Event('submit', { cancelable: true }));
+      }
+    }, 100);
+  };
 
   return (
     <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">
@@ -145,7 +178,7 @@ const Auth = () => {
           <TabsContent value="signin">
             <Card>
               <CardContent className="pt-6">
-                <form onSubmit={handleLogin} className="space-y-4">
+                <form id="login-form" onSubmit={handleLogin} className="space-y-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -181,7 +214,12 @@ const Auth = () => {
                     className="w-full"
                     disabled={loading}
                   >
-                    {loading ? "Signing in..." : "Sign in"}
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing in...
+                      </>
+                    ) : "Sign in"}
                   </Button>
                 </form>
 
@@ -190,8 +228,20 @@ const Auth = () => {
                     <InfoIcon className="h-4 w-4 text-blue-500" />
                     <AlertDescription>
                       <p>To test the app, you can use:</p>
-                      <p className="mt-1"><strong>Email:</strong> test.student@classcorner.demo</p>
-                      <p><strong>Password:</strong> classcorner2024</p>
+                      <div className="mt-1 flex items-center justify-between">
+                        <div>
+                          <p><strong>Email:</strong> test.student@classcorner.demo</p>
+                          <p><strong>Password:</strong> classcorner2024</p>
+                        </div>
+                        <Button 
+                          variant="outline" 
+                          size="sm"
+                          onClick={handleTestLogin}
+                          className="ml-2"
+                        >
+                          Auto-fill
+                        </Button>
+                      </div>
                     </AlertDescription>
                   </Alert>
                 </div>
@@ -248,7 +298,12 @@ const Auth = () => {
                     className="w-full"
                     disabled={loading}
                   >
-                    {loading ? "Signing up..." : "Sign up"}
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Signing up...
+                      </>
+                    ) : "Sign up"}
                   </Button>
                 </form>
                 
