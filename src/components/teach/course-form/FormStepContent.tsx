@@ -23,15 +23,17 @@ const FormStepContent: React.FC<FormStepContentProps> = ({
   setSessions
 }) => {
   const steps = [
-    <GeneralInformation form={form} />,
-    <ClassDetails form={form} />,
+    <GeneralInformation form={form} key="general-info" />,
+    <ClassDetails form={form} key="class-details" />,
     <SessionsWrapper 
       sessions={sessions} 
       setSessions={setSessions} 
+      key="sessions"
     />,
-    <PricingAndLogistics form={form} />,
+    <PricingAndLogistics form={form} key="pricing" />,
     <Media 
       form={form} 
+      key="media"
     />,
   ];
 

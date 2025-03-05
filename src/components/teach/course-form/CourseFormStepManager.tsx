@@ -1,9 +1,8 @@
 
-import React, { useState, useEffect } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { CourseFormValues } from './CourseFormContext';
+import React from 'react';
+import { Form } from '@/components/ui/form';
 import { useToast } from "@/hooks/use-toast";
-import { Session } from '@/types/session';
+import { useCourseForm } from './CourseFormContext';
 
 interface CourseFormStepManagerProps {
   children: React.ReactNode;
@@ -17,10 +16,14 @@ const CourseFormStepManager = ({
   setIsSubmitting
 }: CourseFormStepManagerProps) => {
   const { toast } = useToast();
-  const { watch } = useFormContext<CourseFormValues>();
-
+  const { form } = useCourseForm();
+  
   // Only pass children without additional props
-  return <>{children}</>;
+  return (
+    <Form {...form}>
+      {children}
+    </Form>
+  );
 };
 
 export default CourseFormStepManager;
