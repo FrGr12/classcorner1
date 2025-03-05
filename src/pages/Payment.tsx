@@ -65,7 +65,7 @@ const CheckoutForm = ({ amount, bookingId }: { amount: number; bookingId: number
         disabled={!stripe || isProcessing}
       >
         <CreditCard className="h-5 w-5" />
-        {isProcessing ? "Processing..." : `Pay $${amount}`}
+        {isProcessing ? "Bearbetar..." : `Betala ${amount} kr`}
       </Button>
     </form>
   );
@@ -97,7 +97,7 @@ const Payment = () => {
         setClientSecret(response.data.clientSecret);
       } catch (error: any) {
         console.error("Failed to initialize payment:", error);
-        toast.error("Failed to initialize payment");
+        toast.error("Misslyckades med att initiera betalning");
         navigate("/payment-failed", {
           state: { error: error.message, bookingId, classItem }
         });
@@ -120,15 +120,15 @@ const Payment = () => {
           onClick={() => navigate(-1)}
         >
           <ArrowLeft className="h-5 w-5" />
-          Back to booking details
+          Tillbaka till bokningen
         </Button>
 
-        <h1 className="text-3xl font-bold mb-8">Complete Payment</h1>
+        <h1 className="text-3xl font-bold mb-8">Slutför betalning</h1>
 
         <div className="max-w-2xl mx-auto">
           <Card>
             <CardHeader>
-              <CardTitle>Payment Details</CardTitle>
+              <CardTitle>Betalningsinformation</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="rounded-lg bg-neutral-50 p-4">
@@ -138,8 +138,8 @@ const Payment = () => {
               </div>
 
               <div className="flex justify-between items-center text-lg mb-6">
-                <span className="font-medium">Total Amount</span>
-                <span className="font-semibold">${classItem.price}</span>
+                <span className="font-medium">Totalt belopp</span>
+                <span className="font-semibold">{classItem.price} kr</span>
               </div>
 
               <Elements

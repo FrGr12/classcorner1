@@ -18,10 +18,10 @@ const PriceDisplay = ({
   return (
     <div className="text-[14px] font-medium mt-1 text-left">
       {!hasAlternativeBookings && (
-        <>${price} <span className="text-neutral-600 font-normal">/ class</span></>
+        <>{price} kr <span className="text-neutral-600 font-normal">/ klass</span></>
       )}
       {hasAlternativeBookings && basePriceGroup && (
-        <div>From ${basePriceGroup} <span className="text-neutral-600 font-normal">/ person (group)</span></div>
+        <div>Från {basePriceGroup} kr <span className="text-neutral-600 font-normal">/ person (grupp)</span></div>
       )}
     </div>
   );

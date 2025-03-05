@@ -20,14 +20,14 @@ const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
 
   const handleExpressCheckout = async () => {
     if (!selectedPaymentMethod) {
-      toast.error("Please select a payment method");
+      toast.error("Välj en betalningsmetod");
       return;
     }
 
     setIsProcessing(true);
     try {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error("You must be logged in to book a class");
+      if (!user) throw new Error("Du måste vara inloggad för att boka en klass");
 
       // 1. Create booking
       const { data: booking, error: bookingError } = await supabase
@@ -60,7 +60,7 @@ const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
 
       if (paymentError) throw paymentError;
       
-      toast.success("Booking successful! You will receive a confirmation email shortly.");
+      toast.success("Bokningen lyckades! Du kommer att få ett bekräftelsemail inom kort.");
       navigate("/payment-receipt", {
         state: { 
           bookingId: booking.id,
@@ -71,7 +71,7 @@ const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
       
     } catch (error: any) {
       console.error("Express checkout error:", error);
-      toast.error(error.message || "Failed to process payment");
+      toast.error(error.message || "Misslyckades med att genomföra betalningen");
     } finally {
       setIsProcessing(false);
       onClose?.();
@@ -82,7 +82,7 @@ const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
     <div className="space-y-4">
       <div className="flex items-center gap-2 p-3 bg-accent-purple/10 rounded-lg">
         <Zap className="w-5 h-5 text-accent-purple" />
-        <span className="text-sm font-medium">Express checkout with your saved payment method</span>
+        <span className="text-sm font-medium">Express-betalning med din sparade betalningsmetod</span>
       </div>
       
       <SavedPaymentMethods 
@@ -98,12 +98,12 @@ const ExpressCheckout = ({ classItem, onClose }: ExpressCheckoutProps) => {
         {isProcessing ? (
           <>
             <Loader2 className="h-4 w-4 animate-spin" />
-            Processing...
+            Bearbetar...
           </>
         ) : (
           <>
             <Zap className="h-4 w-4" />
-            Express Checkout (${classItem.price})
+            Express-betalning ({classItem.price} kr)
           </>
         )}
       </Button>

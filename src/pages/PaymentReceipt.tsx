@@ -86,11 +86,11 @@ const PaymentReceipt = () => {
   }, [payment_intent]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Laddar...</div>;
   }
 
   if (!paymentDetails) {
-    return <div>Payment details not found</div>;
+    return <div>Betalningsdetaljer hittades inte</div>;
   }
 
   return (
@@ -104,7 +104,7 @@ const PaymentReceipt = () => {
           onClick={() => navigate("/student-dashboard/payments")}
         >
           <ArrowLeft className="h-5 w-5" />
-          Back to payments
+          Tillbaka till betalningar
         </Button>
 
         <div className="max-w-2xl mx-auto">
@@ -113,7 +113,7 @@ const PaymentReceipt = () => {
               <div className="flex items-center gap-3 mb-4">
                 <CheckCircle2 className="h-8 w-8 text-green-500" />
                 <div>
-                  <CardTitle>Payment Successful</CardTitle>
+                  <CardTitle>Betalningen lyckades</CardTitle>
                   <p className="text-sm text-neutral-600">
                     {format(new Date(paymentDetails.created_at), "PPP")}
                   </p>
@@ -135,8 +135,8 @@ const PaymentReceipt = () => {
               </div>
 
               <div className="flex justify-between items-center text-lg">
-                <span className="font-medium">Total Paid</span>
-                <span className="font-semibold">${paymentDetails.amount}</span>
+                <span className="font-medium">Totalt betalat</span>
+                <span className="font-semibold">{paymentDetails.amount} kr</span>
               </div>
 
               {paymentDetails.receipt_url && (
@@ -146,7 +146,7 @@ const PaymentReceipt = () => {
                   onClick={() => window.open(paymentDetails.receipt_url, "_blank")}
                 >
                   <Download className="h-4 w-4" />
-                  Download Receipt
+                  Ladda ner kvitto
                 </Button>
               )}
             </CardContent>

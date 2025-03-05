@@ -23,7 +23,7 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          Discover and Book Amazing Classes
+          Upptäck och boka fantastiska kurser
         </motion.h1>
 
         <motion.p 
@@ -32,8 +32,8 @@ const Hero = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.1 }}
         >
-          Find the perfect class to learn something new, meet amazing people, 
-          and unlock your creativity.
+          Hitta den perfekta kursen för att lära dig något nytt, träffa fantastiska människor
+          och släpp loss din kreativitet.
         </motion.p>
 
         <motion.div
@@ -47,7 +47,7 @@ const Hero = () => {
             className="bg-accent-purple hover:bg-accent-purple/90 text-white px-8 w-[200px]"
             onClick={() => navigate('/browse')}
           >
-            Browse Classes
+            Utforska kurser
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
           <Button 
@@ -56,7 +56,7 @@ const Hero = () => {
             className="border-accent-purple text-accent-purple hover:bg-accent-purple/10 w-[200px]"
             onClick={() => navigate('/auth', { state: { returnTo: '/dashboard/create-class' } })}
           >
-            Become an Instructor
+            Bli instruktör
           </Button>
         </motion.div>
         
@@ -68,17 +68,17 @@ const Hero = () => {
         >
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">10,000+</span>
-            <span>Students</span>
+            <span>Elever</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">1,000+</span>
-            <span>Instructors</span>
+            <span>Instruktörer</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">50+</span>
-            <span>Categories</span>
+            <span>Kategorier</span>
           </div>
         </motion.div>
       </div>

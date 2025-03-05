@@ -37,8 +37,8 @@ serve(async (req) => {
 
     // Create Stripe payment intent
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(amount * 100), // Convert to cents
-      currency: "usd",
+      amount: Math.round(amount * 100), // Convert to öre
+      currency: "sek",
       automatic_payment_methods: {
         enabled: true,
       },
