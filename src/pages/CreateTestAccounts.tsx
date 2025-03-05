@@ -12,7 +12,12 @@ const CreateTestAccounts = () => {
   const handleCreateTestAccounts = async () => {
     setLoading(true);
     try {
+      // Add logging to debug the issue
+      console.log("Invoking create-test-accounts function");
+      
       const { data, error } = await supabase.functions.invoke('create-test-accounts');
+      
+      console.log("Function response:", { data, error });
       
       if (error) {
         throw new Error(error.message);

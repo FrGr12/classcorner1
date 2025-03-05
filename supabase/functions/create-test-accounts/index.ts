@@ -14,9 +14,18 @@ serve(async (req) => {
   }
 
   try {
+    // Connect to Supabase using service role key for admin operations
+    const supabaseUrl = Deno.env.get("SUPABASE_URL");
+    const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    
+    if (!supabaseUrl || !supabaseServiceKey) {
+      console.error("Missing environment variables");
+      throw new Error("Server configuration error");
+    }
+
     const supabaseAdmin = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      supabaseUrl,
+      supabaseServiceKey,
       {
         auth: {
           autoRefreshToken: false,
@@ -52,42 +61,56 @@ serve(async (req) => {
     const results = [];
 
     for (const account of testAccounts) {
-      // Check if user already exists
-      const { data: existingUser } = await supabaseAdmin.auth.admin.getUserByEmail(
-        account.email
-      );
+      try {
+        // Check if user already exists
+        const { data: existingUser, error: fetchError } = await supabaseAdmin.auth.admin.getUserByEmail(
+          account.email
+        );
 
-      if (existingUser) {
-        console.log(`User ${account.email} already exists`);
-        results.push({
+        if (fetchError) {
+          console.error(`Error checking if user ${account.email} exists:`, fetchError);
+          throw fetchError;
+        }
+
+        if (existingUser) {
+          console.log(`User ${account.email} already exists`);
+          results.push({
+            email: account.email,
+            status: "already exists",
+            password: account.password
+          });
+          continue;
+        }
+
+        // Create user
+        const { data, error } = await supabaseAdmin.auth.admin.createUser({
           email: account.email,
-          status: "already exists",
-          password: account.password
+          password: account.password,
+          email_confirm: true,  // Auto-confirm email
+          user_metadata: account.userData
         });
-        continue;
-      }
 
-      // Create user
-      const { data, error } = await supabaseAdmin.auth.admin.createUser({
-        email: account.email,
-        password: account.password,
-        email_confirm: true,  // Auto-confirm email
-        user_metadata: account.userData
-      });
-
-      if (error) {
-        console.error(`Error creating user ${account.email}:`, error);
+        if (error) {
+          console.error(`Error creating user ${account.email}:`, error);
+          results.push({
+            email: account.email,
+            status: "error",
+            message: error.message
+          });
+        } else {
+          console.log(`Successfully created user ${account.email}`);
+          results.push({
+            email: account.email,
+            status: "created",
+            password: account.password
+          });
+        }
+      } catch (accountError) {
+        console.error(`Error processing account ${account.email}:`, accountError);
         results.push({
           email: account.email,
           status: "error",
-          message: error.message
-        });
-      } else {
-        console.log(`Successfully created user ${account.email}`);
-        results.push({
-          email: account.email,
-          status: "created",
-          password: account.password
+          message: accountError.message || "Unknown error"
         });
       }
     }
