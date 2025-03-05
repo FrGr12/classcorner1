@@ -46,6 +46,12 @@ const translations = {
   "class.location": "Plats",
   "class.freeParking": "Gratis parkering finns",
   "class.nearStation": "5 minuters promenad från Centralstationen",
+  "class.requestPrivate": "Begär Privat Kurs",
+  "class.contact": "Kontakta",
+  "class.follow": "Följ",
+  "class.following": "Följer",
+  "class.viewProfile": "Visa Profil",
+  "class.editCourse": "Redigera Kurs",
   
   // Popular searches
   "popular.beginnerPottery": "Keramik för nybörjare",
@@ -63,6 +69,47 @@ const translations = {
   // Language
   "language.english": "Engelska",
   "language.swedish": "Svenska",
+
+  // Stats
+  "stats.students": "Elever",
+  "stats.instructors": "Instruktörer",
+  "stats.categories": "Kategorier",
+  "stats.classes": "Kurser",
+  
+  // FAQ
+  "faq.title": "Vanliga frågor",
+  "faq.addFAQ": "Lägg till FAQ",
+  "faq.askQuestion": "Ställ en fråga",
+  "faq.noFAQs": "Inga FAQs än.",
+  "faq.addSomeFAQs": "Lägg till några FAQs för att hjälpa dina elever!",
+  "faq.beFirstToAsk": "Var först med att ställa en fråga!",
+  "faq.cancelPolicy": "Vad händer om jag behöver avboka?",
+  "faq.cancelAnswer": "Du kan avboka upp till 48 timmar före kursstart för full återbetalning. Avbokningar inom 48 timmar återbetalas inte men kan ombokas.",
+  "faq.materials": "Behöver jag ta med något?",
+  "faq.materialsAnswer": "Allt material ingår i kurspriset. Ta bara med dig själv och din kreativitet!",
+  "faq.beginners": "Är denna kurs lämplig för nybörjare?",
+  "faq.beginnersAnswer": "Ja! Våra kurser är utformade för att passa alla kunskapsnivåer, från kompletta nybörjare till mer erfarna hantverkare.",
+  
+  // Instructor
+  "instructor.about": "Om",
+  "instructor.contact": "Kontakt",
+  "instructor.reviews": "Omdömen",
+  "instructor.expertise": "Expertisområden",
+  "instructor.experience": "Undervisningserfarenhet",
+  "instructor.readMore": "Läs mer",
+  "instructor.showLess": "Visa mindre",
+  "instructor.noBio": "Denna instruktör har inte lagt till en bio ännu. De är passionerade över att undervisa och dela sin expertis med elever.",
+  
+  // Dashboard
+  "dashboard.title": "Instruktörspanel",
+  "dashboard.overview": "Översikt",
+  "dashboard.classes": "Kurser",
+  "dashboard.createClass": "Skapa Kurs",
+  "dashboard.inbox": "Inkorg",
+  "dashboard.contacts": "Kontakter",
+  "dashboard.stats": "Statistik & Insikter",
+  "dashboard.profile": "Profil",
+  "dashboard.menu": "Meny",
 };
 
 export default translations;

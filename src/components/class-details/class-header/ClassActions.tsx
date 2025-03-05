@@ -3,6 +3,7 @@ import { Edit, MessageCircle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassActionsProps {
   classItem: ClassItem;
@@ -28,6 +29,7 @@ const ClassActions = ({
   onAskQuestion
 }: ClassActionsProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   if (isInstructor) {
     return (
@@ -39,7 +41,7 @@ const ClassActions = ({
         aria-label="Edit this course"
       >
         <Edit className="h-4 w-4 mr-2" aria-hidden="true" />
-        Edit Course
+        {t("class.editCourse")}
       </Button>
     );
   }
@@ -52,7 +54,7 @@ const ClassActions = ({
         onClick={onBooking} 
         aria-label="Book this class now"
       >
-        Book Now
+        {t("class.bookNow")}
       </Button>
       <Button 
         size="lg" 
@@ -61,7 +63,7 @@ const ClassActions = ({
         onClick={onRequestPrivate} 
         aria-label="Request a private class"
       >
-        Request Private Class
+        {t("class.requestPrivate")}
       </Button>
       <Button 
         variant="outline" 
@@ -70,7 +72,7 @@ const ClassActions = ({
         aria-label="Contact the instructor"
       >
         <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
-        Contact
+        {t("class.contact")}
       </Button>
       <Button 
         variant={isFollowing ? "default" : "outline"} 
@@ -80,7 +82,7 @@ const ClassActions = ({
         aria-label={isFollowing ? "Unfollow instructor" : "Follow instructor"} 
         aria-pressed={isFollowing}
       >
-        {isFollowing ? 'Following' : 'Follow'}
+        {isFollowing ? t("class.following") : t("class.follow")}
       </Button>
       <Button 
         variant="outline" 
@@ -90,7 +92,7 @@ const ClassActions = ({
         aria-label="Ask a question about this class"
       >
         <MessageCircle className="h-4 w-4 mr-2" aria-hidden="true" />
-        Ask a Question
+        {t("class.askQuestion")}
       </Button>
     </div>
   );

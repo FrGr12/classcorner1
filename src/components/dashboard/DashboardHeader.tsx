@@ -13,46 +13,48 @@ import {
   X
 } from "lucide-react";
 import { useState } from "react";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const DashboardHeader = () => {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useLanguage();
 
   const links = [
     {
-      title: "Overview",
+      title: t("dashboard.overview"),
       href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      title: "Classes",
+      title: t("dashboard.classes"),
       href: "/dashboard/classes",
       icon: BookOpen,
     },
     {
-      title: "Create Class",
+      title: t("dashboard.createClass"),
       href: "/dashboard/create-class",
       icon: PlusCircle,
     },
     {
-      title: "Inbox",
+      title: t("dashboard.inbox"),
       href: "/dashboard/inbox",
       icon: MessageSquare,
     },
     {
-      title: "Contacts",
+      title: t("dashboard.contacts"),
       href: "/dashboard/contacts",
       icon: Users,
     },
     {
-      title: "Stats",
+      title: t("dashboard.stats"),
       href: "/dashboard/stats",
       icon: BarChart,
     },
     {
-      title: "Profile",
+      title: t("dashboard.profile"),
       href: "/dashboard/profile",
       icon: User,
     },
@@ -89,7 +91,7 @@ const DashboardHeader = () => {
                 <LayoutDashboard className="h-5 w-5 text-[#6E44FF]" />
               </Button>
             </Link>
-            <h1 className="text-base sm:text-xl font-semibold">Teacher Dashboard</h1>
+            <h1 className="text-base sm:text-xl font-semibold">{t("dashboard.title")}</h1>
           </div>
           
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
@@ -101,7 +103,7 @@ const DashboardHeader = () => {
             <SheetContent side="right" className="w-64 p-0">
               <div className="p-4 border-b">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold">Menu</h2>
+                  <h2 className="text-lg font-semibold">{t("dashboard.menu")}</h2>
                   <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)}>
                     <X className="h-4 w-4" />
                   </Button>
