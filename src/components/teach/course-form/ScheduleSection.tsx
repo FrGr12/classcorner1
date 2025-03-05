@@ -6,15 +6,16 @@ import { Session } from "@/types/session";
 
 interface ScheduleSectionProps {
   form: UseFormReturn<any>;
-  sessions: Session[];
-  setSessions: (sessions: Session[]) => void;
 }
 
-const ScheduleSection = ({ form, sessions, setSessions }: ScheduleSectionProps) => {
+const ScheduleSection = ({ form }: ScheduleSectionProps) => {
   return (
-    <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-      <CardContent className="p-4">
-        <SessionsForm sessions={sessions} setSessions={setSessions} />
+    <Card>
+      <CardContent className="pt-6">
+        <SessionsForm
+          sessions={form.watch("sessions") || []}
+          setSessions={(sessions: Session[]) => form.setValue("sessions", sessions)}
+        />
       </CardContent>
     </Card>
   );
