@@ -1,6 +1,6 @@
 
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { AlertCircle, Database } from "lucide-react";
 
 interface ErrorDisplayProps {
   error: string;
@@ -9,7 +9,10 @@ interface ErrorDisplayProps {
 const ErrorDisplay = ({ error }: ErrorDisplayProps) => {
   if (!error) return null;
   
-  const isDatabaseError = error.includes("Database") || error.includes("profiles table");
+  const isDatabaseError = error.includes("Database") || 
+    error.includes("profiles table") || 
+    error.includes("relation") ||
+    error.includes("handle_new_user");
   
   return (
     <Alert variant="destructive">
@@ -20,12 +23,16 @@ const ErrorDisplay = ({ error }: ErrorDisplayProps) => {
         
         {isDatabaseError ? (
           <div className="mt-2 p-3 bg-red-50 border border-red-100 rounded-md">
-            <p className="text-xs font-medium">Database Setup Issue Detected:</p>
+            <p className="text-xs font-medium flex items-center">
+              <Database className="h-3 w-3 mr-1" />
+              Database Setup Issue Detected:
+            </p>
             <ol className="mt-1 text-xs list-decimal pl-4 space-y-1">
-              <li>Make sure your Supabase project is properly initialized</li>
-              <li>Check that the profiles table exists in your database</li>
-              <li>Verify the RLS policies are correctly set up</li>
-              <li>Ensure all required triggers and functions are created</li>
+              <li>Your Supabase project is missing the required database configuration</li>
+              <li>The <code className="bg-red-100 px-1 rounded">profiles</code> table must exist in your database</li>
+              <li>The <code className="bg-red-100 px-1 rounded">handle_new_user</code> function must be created</li>
+              <li>A trigger must be set up to call the function when users are created</li>
+              <li>Please see the detailed troubleshooting guide below</li>
             </ol>
           </div>
         ) : (

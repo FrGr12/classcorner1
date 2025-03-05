@@ -1,10 +1,12 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Loader2 } from "lucide-react";
+import { Loader2, Database, AlertCircle } from "lucide-react";
 import ErrorDisplay from "@/components/test-accounts/ErrorDisplay";
 import AccountsDisplay from "@/components/test-accounts/AccountsDisplay";
+import TroubleshootingGuide from "@/components/test-accounts/TroubleshootingGuide";
 import { useTestAccounts } from "@/hooks/useTestAccounts";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 const CreateTestAccounts = () => {
   const {
@@ -19,10 +21,12 @@ const CreateTestAccounts = () => {
   } = useTestAccounts();
 
   // Check if there are database setup issues
-  const hasDatabaseSetupIssues = accounts.some(account => 
-    account.message?.includes('Database') || 
-    account.message?.includes('profiles table')
-  );
+  const hasDatabaseSetupIssues = error?.includes('Database') || 
+    error?.includes('profiles table') || 
+    accounts.some(account => 
+      account.message?.includes('Database') || 
+      account.message?.includes('profiles table')
+    );
 
   return (
     <div className="container py-10 max-w-3xl mx-auto">
@@ -34,6 +38,22 @@ const CreateTestAccounts = () => {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          {hasDatabaseSetupIssues && (
+            <Alert variant="destructive" className="bg-red-50 border-red-200">
+              <AlertCircle className="h-4 w-4 text-red-600" />
+              <AlertDescription>
+                <div className="flex items-center gap-2 text-red-800 font-medium">
+                  <Database className="h-4 w-4" />
+                  <span>Database Setup Required</span>
+                </div>
+                <p className="mt-1 text-sm text-red-700">
+                  Your Supabase project is missing the required database configuration. 
+                  Please follow the troubleshooting guide below to set up your database.
+                </p>
+              </AlertDescription>
+            </Alert>
+          )}
+          
           <div className="flex justify-center">
             <Button 
               onClick={createTestAccounts} 
@@ -61,16 +81,7 @@ const CreateTestAccounts = () => {
             />
           )}
           
-          {hasDatabaseSetupIssues && (
-            <div className="p-4 mt-4 border rounded-md bg-blue-50 border-blue-100">
-              <h4 className="font-medium text-blue-800">Database Setup Required</h4>
-              <p className="mt-1 text-sm text-blue-700">
-                It appears your Supabase project might be missing the required database setup. 
-                This is common when starting a new project. You need to make sure your database 
-                has the proper tables and functions configured.
-              </p>
-            </div>
-          )}
+          {hasDatabaseSetupIssues && <TroubleshootingGuide />}
         </CardContent>
       </Card>
     </div>
