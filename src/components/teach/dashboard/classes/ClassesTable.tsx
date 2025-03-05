@@ -1,5 +1,4 @@
-
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { ClassItem } from "@/types/class";
 import { Table, TableBody } from "@/components/ui/table";
 import { useTableDialogs } from "./hooks/useTableDialogs";
@@ -8,6 +7,8 @@ import ClassesTableHeader from "./table/TableHeader";
 import ClassRowMobile from "./table/ClassRowMobile";
 import ClassRowDesktop from "./table/ClassRowDesktop";
 import DialogManager from "./table/DialogManager";
+import ClassDetailsDialog from "./ClassDetailsDialog";
+import { toast } from "sonner";
 
 interface ClassesTableProps {
   classes: ClassItem[];
@@ -40,8 +41,7 @@ const ClassesTable = memo(({ classes, onAction }: ClassesTableProps) => {
 
   const handleEdit = (e: React.MouseEvent, classId: number) => {
     e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsEditOpen(true);
+    onAction('edit', classId);
   };
 
   const handleMessage = (e: React.MouseEvent, classId: number) => {
@@ -54,6 +54,7 @@ const ClassesTable = memo(({ classes, onAction }: ClassesTableProps) => {
     e.stopPropagation();
     setSelectedClassId(classId);
     setIsPromoteOpen(true);
+    toast.success("Opening promotion options for your class");
   };
 
   const handleShare = (e: React.MouseEvent, classId: number) => {
@@ -61,6 +62,10 @@ const ClassesTable = memo(({ classes, onAction }: ClassesTableProps) => {
     setSelectedClassId(classId);
     setIsShareOpen(true);
   };
+
+  const selectedClass = selectedClassId 
+    ? classes.find(c => c.id === selectedClassId) 
+    : null;
 
   return (
     <>
@@ -105,8 +110,19 @@ const ClassesTable = memo(({ classes, onAction }: ClassesTableProps) => {
         )}
       </div>
 
+      {/* Class Details Dialog */}
+      {selectedClassId && (
+        <ClassDetailsDialog
+          open={isDetailsOpen}
+          onOpenChange={setIsDetailsOpen}
+          classId={selectedClassId}
+        />
+      )}
+
+      {/* Other Dialogs */}
       <DialogManager
         selectedClassId={selectedClassId}
+        selectedClass={selectedClass}
         isPromoteOpen={isPromoteOpen}
         isMessageOpen={isMessageOpen}
         isShareOpen={isShareOpen}

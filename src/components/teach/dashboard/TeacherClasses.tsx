@@ -23,6 +23,15 @@ export default function TeacherClasses() {
       setIsDetailsOpen(true);
     } else if (action === "duplicate") {
       navigate(`/dashboard/classes/duplicate/${classId}`);
+    } else if (action === "message") {
+      setSelectedClassId(classId);
+      // Message functionality would be handled by a dialog
+    } else if (action === "promote") {
+      setSelectedClassId(classId);
+      // Promotion functionality would be handled by a dialog
+    } else if (action === "share") {
+      setSelectedClassId(classId);
+      // Share functionality would be handled by a dialog
     }
   };
 
@@ -48,9 +57,9 @@ export default function TeacherClasses() {
 
       {selectedClass && (
         <ClassDetailsDialog
-          isOpen={isDetailsOpen}
-          onClose={handleCloseDetails}
-          classItem={selectedClass as any}
+          open={isDetailsOpen}
+          onOpenChange={setIsDetailsOpen}
+          classId={selectedClassId}
         />
       )}
     </div>

@@ -29,7 +29,7 @@ const ClassRowDesktop = ({
     return format(date, 'MMM dd, yyyy');
   };
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (status: string | undefined) => {
     if (!status) return null;
     
     const statusMap: Record<string, { color: string, label: string }> = {
@@ -54,7 +54,7 @@ const ClassRowDesktop = ({
     >
       <TableCell className="font-medium">{classItem.title}</TableCell>
       <TableCell>{formatClassDate(classItem.date)}</TableCell>
-      <TableCell>{getStatusBadge(classItem.status || 'draft')}</TableCell>
+      <TableCell>{getStatusBadge(classItem.category)}</TableCell>
       <TableCell className="text-center">{classItem.maxParticipants || '-'}</TableCell>
       <TableCell className="text-center">0</TableCell>
       <TableCell className="text-center">0</TableCell>
