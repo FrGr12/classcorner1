@@ -63,7 +63,7 @@ const InstructorActions = ({
 
         toast({
           title: t("instructor.unfollowed"),
-          description: t("instructor.unfollowedMessage", { instructor: classItem.instructor })
+          description: t("instructor.unfollowedMessage")
         });
       } else {
         const { error } = await supabase
@@ -78,7 +78,7 @@ const InstructorActions = ({
 
         toast({
           title: t("instructor.following"),
-          description: t("instructor.followingMessage", { instructor: classItem.instructor })
+          description: t("instructor.followingMessage")
         });
       }
 
