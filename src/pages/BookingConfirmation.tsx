@@ -56,6 +56,13 @@ const BookingConfirmation = () => {
       
       console.log("Creating guest booking with date:", classItem.date);
       
+      // Convert the date to an ISO string if it's a Date object
+      const selectedDate = classItem.date instanceof Date 
+        ? classItem.date.toISOString() 
+        : Array.isArray(classItem.date) && classItem.date.length > 0
+          ? classItem.date[0].toISOString()
+          : null;
+      
       const { data, error } = await supabase
         .from('guest_bookings')
         .insert({
@@ -63,7 +70,7 @@ const BookingConfirmation = () => {
           first_name: firstName,
           last_name: lastName,
           course_id: classItem.id,
-          selected_date: classItem.date, // Now this will work with our new column
+          selected_date: selectedDate, // Now passing a string format
           total_price: classItem.price,
           status: 'pending'
         })
