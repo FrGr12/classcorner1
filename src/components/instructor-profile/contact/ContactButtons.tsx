@@ -42,7 +42,7 @@ const ContactButtons = ({
         onClick={handleEmailClick}
       >
         <Mail className="h-4 w-4 mr-2" />
-        Email
+        {t("instructor.email")}
       </Button>
       
       {instructor.phone && (

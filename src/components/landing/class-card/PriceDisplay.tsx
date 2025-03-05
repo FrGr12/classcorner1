@@ -21,10 +21,10 @@ const PriceDisplay = ({
   return (
     <div className="text-[14px] font-medium mt-1 text-left">
       {!hasAlternativeBookings && (
-        <>{price} kr <span className="text-neutral-600 font-normal">/ klass</span></>
+        <>{price} kr <span className="text-neutral-600 font-normal">/ {t("class.perClass")}</span></>
       )}
       {hasAlternativeBookings && basePriceGroup && (
-        <div>Från {basePriceGroup} kr <span className="text-neutral-600 font-normal">/ person (grupp)</span></div>
+        <div>{t("class.from")} {basePriceGroup} kr <span className="text-neutral-600 font-normal">/ {t("class.personGroup")}</span></div>
       )}
     </div>
   );

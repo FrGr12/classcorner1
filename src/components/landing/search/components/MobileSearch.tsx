@@ -57,7 +57,7 @@ export const MobileSearch = ({
         </SheetTrigger>
         <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl">
           <SheetHeader className="pb-4">
-            <SheetTitle className="text-lg font-semibold">{t("search.placeholder")}</SheetTitle>
+            <SheetTitle className="text-lg font-semibold">{t("search.title")}</SheetTitle>
           </SheetHeader>
           <div className="space-y-6">
             <div className="relative">

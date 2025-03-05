@@ -1,6 +1,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Star } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SearchSuggestionsProps {
   isLoadingPreferences: boolean;
@@ -22,11 +23,13 @@ export const SearchSuggestions = ({
   onCategorySelect,
   onTitleSelect
 }: SearchSuggestionsProps) => {
+  const { t } = useLanguage();
+  
   return (
     <>
       {!isLoadingPreferences && userPreferences?.interests?.length > 0 && (
         <div className="mt-2">
-          <p className="text-sm text-neutral-600 mb-2">Your Interests:</p>
+          <p className="text-sm text-neutral-600 mb-2">{t("search.yourInterests")}:</p>
           <div className="flex flex-wrap gap-2">
             {userPreferences.interests.map(interest => (
               <Badge key={interest} variant="secondary" className="gap-1">
@@ -45,7 +48,7 @@ export const SearchSuggestions = ({
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => onCategorySelect(category)}
             >
-              <span className="text-accent-purple">Category:</span> {category}
+              <span className="text-accent-purple">{t("search.category")}:</span> {category}
             </div>
           ))}
           {matchingTitles.map((title) => (
@@ -54,7 +57,7 @@ export const SearchSuggestions = ({
               className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
               onClick={() => onTitleSelect(title)}
             >
-              <span className="text-accent-purple">Class:</span> {title}
+              <span className="text-accent-purple">{t("search.class")}:</span> {title}
             </div>
           ))}
         </div>
