@@ -28,7 +28,7 @@ const InstructorClasses = ({
   return (
     <GlassCard>
       <GlassCardHeader>
-        <GlassCardTitle className="text-left">{t('instructor.classes', { count: classes.length })}</GlassCardTitle>
+        <GlassCardTitle className="text-left">{t('instructor.classes', { count: classes.length.toString() })}</GlassCardTitle>
       </GlassCardHeader>
       
       <GlassCardContent className="space-y-6">
