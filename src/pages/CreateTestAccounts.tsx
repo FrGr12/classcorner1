@@ -253,8 +253,8 @@ const CreateTestAccounts = () => {
                   </li>
                   <li>Check the Supabase dashboard to ensure:
                     <ul className="list-disc pl-5 mt-1 space-y-1">
-                      <li>The user appears in the Authentication > Users section</li>
-                      <li>Email confirmation is disabled in Authentication > Settings</li>
+                      <li>The user appears in the Authentication {'>'} Users section</li>
+                      <li>Email confirmation is disabled in Authentication {'>'} Settings</li>
                       <li>The site URL and redirect URLs are configured correctly</li>
                     </ul>
                   </li>
