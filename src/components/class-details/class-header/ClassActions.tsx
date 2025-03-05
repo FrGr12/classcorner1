@@ -38,7 +38,7 @@ const ClassActions = ({
         variant="outline" 
         className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
         onClick={() => navigate(`/teach/edit/${classItem.id}`)} 
-        aria-label="Edit this course"
+        aria-label={t("class.editCourse")}
       >
         <Edit className="h-4 w-4 mr-2" aria-hidden="true" />
         {t("class.editCourse")}
@@ -52,7 +52,7 @@ const ClassActions = ({
         size="lg" 
         className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90" 
         onClick={onBooking} 
-        aria-label="Book this class now"
+        aria-label={t("class.bookNow")}
       >
         {t("class.bookNow")}
       </Button>
@@ -61,7 +61,7 @@ const ClassActions = ({
         variant="outline" 
         className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
         onClick={onRequestPrivate} 
-        aria-label="Request a private class"
+        aria-label={t("class.requestPrivate")}
       >
         {t("class.requestPrivate")}
       </Button>
@@ -69,7 +69,7 @@ const ClassActions = ({
         variant="outline" 
         className="w-full md:w-auto" 
         onClick={onContact} 
-        aria-label="Contact the instructor"
+        aria-label={t("class.contact")}
       >
         <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
         {t("class.contact")}
@@ -79,7 +79,7 @@ const ClassActions = ({
         className={`w-full md:w-auto ${isFollowing ? 'bg-accent-purple hover:bg-accent-purple/90' : ''}`} 
         onClick={onFollow} 
         disabled={isLoading} 
-        aria-label={isFollowing ? "Unfollow instructor" : "Follow instructor"} 
+        aria-label={isFollowing ? t("class.following") : t("class.follow")} 
         aria-pressed={isFollowing}
       >
         {isFollowing ? t("class.following") : t("class.follow")}
@@ -89,7 +89,7 @@ const ClassActions = ({
         className="w-full md:w-auto" 
         onClick={onAskQuestion} 
         data-question-trigger 
-        aria-label="Ask a question about this class"
+        aria-label={t("class.askQuestion")}
       >
         <MessageCircle className="h-4 w-4 mr-2" aria-hidden="true" />
         {t("class.askQuestion")}

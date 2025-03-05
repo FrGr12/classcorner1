@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import type { Booking } from "@/types/booking";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export interface RescheduleDialogProps {
   booking: Booking;
@@ -24,6 +25,7 @@ const RescheduleDialog = ({
   isOpen,
   onOpenChange,
 }: RescheduleDialogProps) => {
+  const { t } = useLanguage();
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
     booking.session?.start_time ? new Date(booking.session.start_time) : undefined
   );
@@ -46,7 +48,7 @@ const RescheduleDialog = ({
 
       if (error) throw error;
 
-      toast.success("Booking has been rescheduled");
+      toast.success(t("booking.rescheduled"));
       onOpenChange(false);
     } catch (error: any) {
       toast.error(error.message);
@@ -59,9 +61,9 @@ const RescheduleDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Reschedule Booking</DialogTitle>
+          <DialogTitle>{t("booking.reschedule")}</DialogTitle>
           <DialogDescription>
-            Select a new date and time for this booking
+            {t("booking.rescheduleDescription")}
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">
@@ -74,15 +76,13 @@ const RescheduleDialog = ({
         </div>
         <div className="flex justify-end gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("message.cancel")}
           </Button>
           <Button 
             onClick={handleReschedule}
-            isLoading={isSubmitting}
-            loadingText="Rescheduling..."
-            disabled={!selectedDate}
+            disabled={!selectedDate || isSubmitting}
           >
-            Confirm
+            {isSubmitting ? t("booking.rescheduling") : t("booking.confirm")}
           </Button>
         </div>
       </DialogContent>

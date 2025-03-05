@@ -44,7 +44,7 @@ const CustomFAQSection = ({
   const handleAddFAQ = async () => {
     try {
       if (!newQuestion.trim() || !newAnswer.trim()) {
-        toast.error("Please fill in both question and answer fields");
+        toast.error(t("faq.fillAllFields"));
         return;
       }
 
@@ -56,9 +56,9 @@ const CustomFAQSection = ({
       setNewQuestion("");
       setNewAnswer("");
       setIsAddingFAQ(false);
-      toast.success("FAQ added successfully");
+      toast.success(t("faq.addSuccess"));
     } catch (error) {
-      toast.error("Failed to add FAQ");
+      toast.error(t("faq.addFailed"));
     }
   };
 
@@ -66,9 +66,9 @@ const CustomFAQSection = ({
     try {
       const updatedFaqs = faqs.filter((_, i) => i !== index);
       setFaqs(updatedFaqs);
-      toast.success("FAQ deleted successfully");
+      toast.success(t("faq.deleteSuccess"));
     } catch (error) {
-      toast.error("Failed to delete FAQ");
+      toast.error(t("faq.deleteFailed"));
     }
   };
 
@@ -92,7 +92,7 @@ const CustomFAQSection = ({
       
       {faqs.length === 0 ? (
         <div className="text-center py-8 text-gray-500">
-          {t("faq.noFAQs")} {isInstructor ? t("faq.addSomeFAQs") : t("faq.beFirstToAsk")}
+          {isInstructor ? t("faq.noFAQs") + " " + t("faq.addSomeFAQs") : t("faq.noFAQs") + " " + t("faq.beFirstToAsk")}
         </div>
       ) : (
         <Accordion type="single" collapsible className="w-full">
@@ -112,7 +112,7 @@ const CustomFAQSection = ({
                       handleDeleteFAQ(index);
                     }}
                   >
-                    Delete
+                    {t("faq.delete")}
                   </Button>
                 )}
               </div>
@@ -127,38 +127,38 @@ const CustomFAQSection = ({
       <Dialog open={isAddingFAQ} onOpenChange={setIsAddingFAQ}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Add New FAQ</DialogTitle>
+            <DialogTitle>{t("faq.addNewFAQ")}</DialogTitle>
             <DialogDescription>
-              Add a frequently asked question and its answer to help your students.
+              {t("faq.addDescription")}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
-              <label htmlFor="question" className="text-sm font-medium">Question</label>
+              <label htmlFor="question" className="text-sm font-medium">{t("faq.question")}</label>
               <Input 
                 id="question" 
                 value={newQuestion} 
                 onChange={e => setNewQuestion(e.target.value)} 
-                placeholder="What do students often ask?" 
+                placeholder={t("faq.questionPlaceholder")} 
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="answer" className="text-sm font-medium">Answer</label>
+              <label htmlFor="answer" className="text-sm font-medium">{t("faq.answer")}</label>
               <Textarea 
                 id="answer" 
                 value={newAnswer} 
                 onChange={e => setNewAnswer(e.target.value)} 
-                placeholder="Provide a clear and helpful answer" 
+                placeholder={t("faq.answerPlaceholder")} 
                 rows={4} 
               />
             </div>
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setIsAddingFAQ(false)}>
-              Cancel
+              {t("message.cancel")}
             </Button>
             <Button onClick={handleAddFAQ}>
-              Add FAQ
+              {t("faq.add")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -27,12 +27,12 @@ interface DateFilterProps {
 }
 
 const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: DateFilterProps) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   const timeRanges = [
-    { label: "This week", getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
-    { label: "This month", getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
-    { label: "Next month", getValue: () => {
+    { label: t("search.thisWeek"), getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
+    { label: t("search.thisMonth"), getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
+    { label: t("search.nextMonth"), getValue: () => {
       const nextMonth = addMonths(new Date(), 1);
       return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
     }},
@@ -76,7 +76,7 @@ const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: 
               variant="ghost"
               className="w-full justify-start font-normal"
             >
-              Specific dates
+              {t("search.specificDates")}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">

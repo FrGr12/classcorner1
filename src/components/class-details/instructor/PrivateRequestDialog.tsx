@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PrivateRequestDialogProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const PrivateRequestDialog = ({
   const [privateMessage, setPrivateMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handlePrivateRequest = async () => {
     try {
@@ -36,8 +38,8 @@ const PrivateRequestDialog = ({
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
-          title: "Authentication required",
-          description: "Please sign in to request a private class",
+          title: t("auth.required"),
+          description: t("class.signInToRequest"),
           variant: "destructive"
         });
         return;
@@ -57,16 +59,16 @@ const PrivateRequestDialog = ({
       if (messageError) throw messageError;
 
       toast({
-        title: "Success",
-        description: "Private class request sent successfully"
+        title: t("message.success"),
+        description: t("class.privateRequestSent")
       });
       onClose();
       setPrivateMessage("");
     } catch (error) {
       console.error('Error sending private request:', error);
       toast({
-        title: "Error",
-        description: "Failed to send private class request"
+        title: t("message.error"),
+        description: t("class.privateRequestFailed")
       });
     } finally {
       setIsLoading(false);
@@ -77,17 +79,17 @@ const PrivateRequestDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl">Request Private Class</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">{t("class.requestPrivate")}</DialogTitle>
           <DialogDescription className="text-sm">
-            Send a message to the instructor requesting a private class session.
+            {t("class.privateDescription")}
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-3 sm:gap-4 py-3 sm:py-4">
           <div className="grid gap-2">
-            <Label htmlFor="message" className="text-sm">Message</Label>
+            <Label htmlFor="message" className="text-sm">{t("message.message")}</Label>
             <Textarea
               id="message"
-              placeholder="Tell the instructor about your private class request..."
+              placeholder={t("class.privateMessagePlaceholder")}
               value={privateMessage}
               onChange={(e) => setPrivateMessage(e.target.value)}
               className="min-h-[100px] text-sm"
@@ -100,14 +102,14 @@ const PrivateRequestDialog = ({
             onClick={onClose}
             className="text-sm"
           >
-            Cancel
+            {t("message.cancel")}
           </Button>
           <Button
             onClick={handlePrivateRequest}
             disabled={isLoading || !privateMessage.trim()}
             className="text-sm"
           >
-            Send Request
+            {t("message.send")}
           </Button>
         </DialogFooter>
       </DialogContent>

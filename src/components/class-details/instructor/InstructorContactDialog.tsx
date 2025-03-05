@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Mail, Phone } from "lucide-react";
 import { ClassItem } from "@/types/class";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorContactDialogProps {
   isOpen: boolean;
@@ -21,6 +22,8 @@ const InstructorContactDialog = ({
   onClose,
   classItem,
 }: InstructorContactDialogProps) => {
+  const { t } = useLanguage();
+  
   const handleSendEmail = () => {
     window.location.href = `mailto:${classItem.instructorEmail || 'instructor@example.com'}`;
     onClose();
@@ -35,9 +38,9 @@ const InstructorContactDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px] p-4 sm:p-6">
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl">Contact Instructor</DialogTitle>
+          <DialogTitle className="text-lg sm:text-xl">{t("instructor.contact")}</DialogTitle>
           <DialogDescription className="text-sm">
-            Get in touch with the instructor through your preferred method.
+            {t("instructor.contactDescription")}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-3 sm:space-y-4 py-3 sm:py-4">
@@ -47,7 +50,7 @@ const InstructorContactDialog = ({
             onClick={handleSendEmail}
           >
             <Mail className="h-4 w-4 mr-2" />
-            Send Email
+            {t("instructor.email")}
           </Button>
           <Button
             variant="outline"
@@ -55,7 +58,7 @@ const InstructorContactDialog = ({
             onClick={handleCall}
           >
             <Phone className="h-4 w-4 mr-2" />
-            Call
+            {t("instructor.call")}
           </Button>
         </div>
       </DialogContent>

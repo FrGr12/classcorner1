@@ -82,6 +82,7 @@ export const DesktopSearch = ({
         <button 
           onClick={handleSearch}
           className="ml-2 p-3 bg-accent-purple text-white rounded-full hover:bg-accent-lavender transition-colors"
+          aria-label={t("search.button")}
         >
           <Search className="w-4 h-4" />
         </button>
