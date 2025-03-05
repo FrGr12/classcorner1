@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import {
@@ -17,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { DateRange } from "react-day-picker";
 import { format, startOfWeek, endOfWeek, startOfMonth, endOfMonth, addMonths } from "date-fns";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface DateFilterProps {
   selectedTimeRange: string;
@@ -26,18 +24,16 @@ interface DateFilterProps {
   setDate: (date: DateRange | undefined) => void;
 }
 
-const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: DateFilterProps) => {
-  const { t, language } = useLanguage();
-  
-  const timeRanges = [
-    { label: t("search.thisWeek"), getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
-    { label: t("search.thisMonth"), getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
-    { label: t("search.nextMonth"), getValue: () => {
-      const nextMonth = addMonths(new Date(), 1);
-      return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
-    }},
-  ];
+const timeRanges = [
+  { label: "This week", getValue: () => ({ from: startOfWeek(new Date()), to: endOfWeek(new Date()) }) },
+  { label: "This month", getValue: () => ({ from: startOfMonth(new Date()), to: endOfMonth(new Date()) }) },
+  { label: "Next month", getValue: () => {
+    const nextMonth = addMonths(new Date(), 1);
+    return { from: startOfMonth(nextMonth), to: endOfMonth(nextMonth) };
+  }},
+];
 
+const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: DateFilterProps) => {
   const handleTimeRangeSelect = (label: string, range?: DateRange) => {
     setSelectedTimeRange(label);
     setDate(range);
@@ -51,14 +47,14 @@ const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: 
           className="h-11 px-5 text-sm rounded-r-lg rounded-l-none border-l-0"
         >
           <CalendarIcon className="w-4 h-4 mr-2" />
-          {selectedTimeRange === "Anytime" ? t("search.anytime") : selectedTimeRange}
+          {selectedTimeRange}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[200px] bg-white">
         <DropdownMenuItem
           onClick={() => handleTimeRangeSelect("Anytime", undefined)}
         >
-          {t("search.anytime")}
+          Anytime
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         {timeRanges.map((range) => (
@@ -76,7 +72,7 @@ const DateFilter = ({ selectedTimeRange, setSelectedTimeRange, date, setDate }: 
               variant="ghost"
               className="w-full justify-start font-normal"
             >
-              {t("search.specificDates")}
+              Specific dates
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">

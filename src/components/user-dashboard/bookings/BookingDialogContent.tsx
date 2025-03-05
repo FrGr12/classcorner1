@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { DialogHeader, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface BookingDialogContentProps {
   type: string | null;
@@ -26,26 +25,25 @@ const BookingDialogContent: React.FC<BookingDialogContentProps> = ({
   onClose,
 }) => {
   const { toast } = useToast();
-  const { t } = useLanguage();
 
   const handleAction = () => {
     switch (type) {
       case "cancel":
         toast({
-          title: t("booking.cancelSuccess"),
-          description: t("booking.cancelDescription")
+          title: "Booking cancelled",
+          description: "Your booking has been cancelled successfully."
         });
         break;
       case "message":
         toast({
-          title: t("message.success"),
-          description: t("message.instructorSent")
+          title: "Message sent",
+          description: "Your message has been sent to the instructor."
         });
         break;
       case "promote":
         toast({
-          title: t("booking.invitationSent"),
-          description: t("booking.invitationDescription")
+          title: "Invitation sent",
+          description: "Invitations have been sent to your friends."
         });
         break;
       default:
@@ -64,14 +62,14 @@ const BookingDialogContent: React.FC<BookingDialogContentProps> = ({
           </DialogHeader>
           <div className="space-y-4">
             <p className="text-muted-foreground">
-              {t("booking.cancelPolicy")}
+              Please note that cancellation policies may apply. Check the class details for more information.
             </p>
             <div className="flex gap-3 justify-end">
               <Button variant="outline" onClick={onClose}>
-                {t("booking.keepBooking")}
+                Keep Booking
               </Button>
               <Button variant="destructive" onClick={handleAction}>
-                {t("booking.confirmCancel")}
+                Confirm Cancellation
               </Button>
             </div>
           </div>
@@ -85,9 +83,9 @@ const BookingDialogContent: React.FC<BookingDialogContentProps> = ({
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Input placeholder={t("message.placeholder")} className="h-24" />
+            <Input placeholder="Type your message here..." className="h-24" />
             <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={handleAction}>
-              {t("message.send")}
+              Send Message
             </Button>
           </div>
         </>
@@ -104,7 +102,7 @@ const BookingDialogContent: React.FC<BookingDialogContentProps> = ({
               <Button variant="outline" className="w-full">Twitter</Button>
               <Button variant="outline" className="w-full">Facebook</Button>
               <Button variant="outline" className="w-full">LinkedIn</Button>
-              <Button variant="outline" className="w-full">{t("booking.copyLink")}</Button>
+              <Button variant="outline" className="w-full">Copy Link</Button>
             </div>
           </div>
         </>
@@ -117,9 +115,9 @@ const BookingDialogContent: React.FC<BookingDialogContentProps> = ({
             <DialogDescription>{description}</DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Input placeholder={t("booking.emailPlaceholder")} />
+            <Input placeholder="Enter email addresses..." />
             <Button className="w-full bg-purple-600 hover:bg-purple-700" onClick={handleAction}>
-              {t("booking.sendInvitations")}
+              Send Invitations
             </Button>
           </div>
         </>

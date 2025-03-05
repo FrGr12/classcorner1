@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface QuestionDialogProps {
   isOpen: boolean;
@@ -20,7 +19,6 @@ const QuestionDialog = ({
   onSubmit
 }: QuestionDialogProps) => {
   const [question, setQuestion] = useState("");
-  const { t } = useLanguage();
 
   const handleSubmit = () => {
     onSubmit(question);
@@ -31,17 +29,17 @@ const QuestionDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]" aria-labelledby="question-dialog-title" aria-describedby="question-dialog-description">
         <DialogHeader>
-          <DialogTitle id="question-dialog-title">{t("class.askQuestion")}</DialogTitle>
+          <DialogTitle id="question-dialog-title">Ask a Question</DialogTitle>
           <DialogDescription id="question-dialog-description">
-            {t("faq.beFirstToAsk")}
+            Send your question to the instructor. They'll be notified and will respond to you directly.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="question">{t("faq.yourQuestion")}</Label>
+            <Label htmlFor="question">Your Question</Label>
             <Textarea 
               id="question" 
-              placeholder={t("faq.questionPlaceholder")} 
+              placeholder="What would you like to know about this class?" 
               value={question} 
               onChange={e => setQuestion(e.target.value)} 
               className="min-h-[100px]" 
@@ -51,14 +49,14 @@ const QuestionDialog = ({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            {t("message.cancel")}
+            Cancel
           </Button>
           <Button 
             onClick={handleSubmit} 
             disabled={isLoading || !question.trim()} 
             aria-busy={isLoading}
           >
-            {t("message.send")}
+            Send Question
           </Button>
         </DialogFooter>
       </DialogContent>

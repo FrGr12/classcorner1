@@ -1,15 +1,15 @@
 
 export const cities = [
-  "Stockholm", "Göteborg", "Malmö", "Uppsala", 
-  "Västerås", "Örebro", "Linköping"
+  "New York", "Los Angeles", "Chicago", "San Francisco", 
+  "Austin", "Seattle"
 ];
 
 export const popularSearches = [
-  "Keramik för nybörjare",
-  "Matlagningskurser nära mig",
-  "Helgkonstworkshops",
-  "Fotografering grundkurs",
-  "Ljusstöpning"
+  "Pottery for beginners",
+  "Cooking classes near me",
+  "Weekend art workshops",
+  "Photography basics",
+  "Candle making"
 ];
 
 export const RECENT_SEARCHES_KEY = "recentSearches";

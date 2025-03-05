@@ -3,7 +3,6 @@ import { InstructorProfile } from "@/types/instructor";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorBioProps {
   instructor: InstructorProfile;
@@ -17,7 +16,6 @@ const InstructorBio = ({
   compact = false
 }: InstructorBioProps) => {
   const [expanded, setExpanded] = useState(!compact);
-  const { t } = useLanguage();
   
   // Determine if we should show the expand/collapse button
   const bioLength = instructor.bio ? instructor.bio.length : 0;
@@ -26,11 +24,11 @@ const InstructorBio = ({
   // Get truncated or full bio based on expanded state
   const displayBio = shouldShowToggle && !expanded 
     ? `${instructor.bio?.substring(0, 150)}...` 
-    : instructor.bio || t("instructor.noBio");
+    : instructor.bio || "This instructor hasn't added a bio yet. They are passionate about teaching and sharing their expertise with students.";
 
   return (
     <div className={`glass-panel rounded-xl p-6 ${className}`}>
-      <h2 className="text-xl font-bold mb-4 text-left">{t("instructor.about")}</h2>
+      <h2 className="text-xl font-bold mb-4 text-left">About</h2>
       <div className="space-y-4">
         <div className="space-y-2">
           <p className="text-neutral-700 leading-relaxed text-left">
@@ -47,12 +45,12 @@ const InstructorBio = ({
               {expanded ? (
                 <>
                   <ChevronUp className="h-4 w-4" />
-                  <span>{t("instructor.showLess")}</span>
+                  <span>Show less</span>
                 </>
               ) : (
                 <>
                   <ChevronDown className="h-4 w-4" />
-                  <span>{t("instructor.readMore")}</span>
+                  <span>Read more</span>
                 </>
               )}
             </Button>
@@ -63,14 +61,14 @@ const InstructorBio = ({
           <>
             {instructor.teachingExperience && (
               <div>
-                <h3 className="font-semibold text-lg text-left">{t("instructor.experience")}</h3>
+                <h3 className="font-semibold text-lg text-left">Teaching Experience</h3>
                 <p className="text-neutral-700 text-left">{instructor.teachingExperience}</p>
               </div>
             )}
             
             {instructor.expertise && instructor.expertise.length > 0 && (
               <div>
-                <h3 className="font-semibold text-lg text-left">{t("instructor.expertise")}</h3>
+                <h3 className="font-semibold text-lg text-left">Areas of Expertise</h3>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {instructor.expertise.map((skill, index) => (
                     <span 

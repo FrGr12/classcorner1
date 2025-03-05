@@ -3,7 +3,6 @@ import { Edit, MessageCircle, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface ClassActionsProps {
   classItem: ClassItem;
@@ -29,7 +28,6 @@ const ClassActions = ({
   onAskQuestion
 }: ClassActionsProps) => {
   const navigate = useNavigate();
-  const { t } = useLanguage();
   
   if (isInstructor) {
     return (
@@ -38,10 +36,10 @@ const ClassActions = ({
         variant="outline" 
         className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
         onClick={() => navigate(`/teach/edit/${classItem.id}`)} 
-        aria-label={t("class.editCourse")}
+        aria-label="Edit this course"
       >
         <Edit className="h-4 w-4 mr-2" aria-hidden="true" />
-        {t("class.editCourse")}
+        Edit Course
       </Button>
     );
   }
@@ -52,47 +50,47 @@ const ClassActions = ({
         size="lg" 
         className="w-full md:w-auto bg-accent-purple hover:bg-accent-purple/90" 
         onClick={onBooking} 
-        aria-label={t("class.bookNow")}
+        aria-label="Book this class now"
       >
-        {t("class.bookNow")}
+        Book Now
       </Button>
       <Button 
         size="lg" 
         variant="outline" 
         className="w-full md:w-auto border-accent-purple text-accent-purple hover:bg-accent-purple/10" 
         onClick={onRequestPrivate} 
-        aria-label={t("class.requestPrivate")}
+        aria-label="Request a private class"
       >
-        {t("class.requestPrivate")}
+        Request Private Class
       </Button>
       <Button 
         variant="outline" 
         className="w-full md:w-auto" 
         onClick={onContact} 
-        aria-label={t("class.contact")}
+        aria-label="Contact the instructor"
       >
         <Mail className="h-4 w-4 mr-2" aria-hidden="true" />
-        {t("class.contact")}
+        Contact
       </Button>
       <Button 
         variant={isFollowing ? "default" : "outline"} 
         className={`w-full md:w-auto ${isFollowing ? 'bg-accent-purple hover:bg-accent-purple/90' : ''}`} 
         onClick={onFollow} 
         disabled={isLoading} 
-        aria-label={isFollowing ? t("class.following") : t("class.follow")} 
+        aria-label={isFollowing ? "Unfollow instructor" : "Follow instructor"} 
         aria-pressed={isFollowing}
       >
-        {isFollowing ? t("class.following") : t("class.follow")}
+        {isFollowing ? 'Following' : 'Follow'}
       </Button>
       <Button 
         variant="outline" 
         className="w-full md:w-auto" 
         onClick={onAskQuestion} 
         data-question-trigger 
-        aria-label={t("class.askQuestion")}
+        aria-label="Ask a question about this class"
       >
         <MessageCircle className="h-4 w-4 mr-2" aria-hidden="true" />
-        {t("class.askQuestion")}
+        Ask a Question
       </Button>
     </div>
   );

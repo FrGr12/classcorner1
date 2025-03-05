@@ -2,7 +2,6 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Book, FileText, ExternalLink } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export interface Resource {
   id: number;
@@ -21,8 +20,6 @@ interface ResourceCardProps {
 }
 
 export function ResourceCard({ resource, onClick }: ResourceCardProps) {
-  const { t, language } = useLanguage();
-  
   return (
     <Card 
       key={resource.id} 
@@ -38,10 +35,10 @@ export function ResourceCard({ resource, onClick }: ResourceCardProps) {
               ) : (
                 <FileText className="h-5 w-5 text-accent-purple" />
               )}
-              <Badge variant="outline">{t(`resource.type.${resource.type.toLowerCase()}`)}</Badge>
+              <Badge variant="outline">{resource.type}</Badge>
             </div>
             <Badge className="bg-accent-lavender text-primary">
-              {t(`categories.${resource.category.toLowerCase()}`)}
+              {resource.category}
             </Badge>
           </div>
           
@@ -60,7 +57,7 @@ export function ResourceCard({ resource, onClick }: ResourceCardProps) {
             <div className="flex items-center gap-2">
               <span>{resource.readTime}</span>
               <span>•</span>
-              <span>{new Date(resource.publishedDate).toLocaleDateString(language === 'sv' ? 'sv-SE' : 'en-US', {
+              <span>{new Date(resource.publishedDate).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'short',
                 day: 'numeric'

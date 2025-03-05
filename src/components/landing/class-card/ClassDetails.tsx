@@ -30,7 +30,7 @@ const ClassDetails = ({
       <div className="flex items-start justify-between gap-1">
         <div className="flex-1 text-left">
           <h3 className="font-bold text-[15px] leading-5 line-clamp-1">{title}</h3>
-          <p className="text-[14px] text-neutral-600 mt-0.5">med {instructor} · {city}</p>
+          <p className="text-[14px] text-neutral-600 mt-0.5">by {instructor} · {city}</p>
         </div>
         <div className="flex items-center gap-1 shrink-0">
           <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
@@ -49,3 +49,4 @@ const ClassDetails = ({
 };
 
 export default ClassDetails;
+

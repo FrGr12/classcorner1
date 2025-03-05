@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Mail, UserPlus, UserMinus, MessageCircle } from "lucide-react";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { ClassItem } from "@/types/class";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorActionsProps {
   classItem: ClassItem;
@@ -26,15 +26,14 @@ const InstructorActions = ({
 }: InstructorActionsProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { t } = useLanguage();
 
   const handleFollowToggle = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         toast({
-          title: t("auth.required"),
-          description: t("instructor.signInToFollow"),
+          title: "Authentication required",
+          description: "Please sign in to follow instructors",
           variant: "destructive"
         });
         return;
@@ -42,8 +41,8 @@ const InstructorActions = ({
 
       if (!classItem.instructor_id) {
         toast({
-          title: t("message.error"),
-          description: t("instructor.idNotFound"),
+          title: "Error",
+          description: "Instructor ID not found",
           variant: "destructive"
         });
         return;
@@ -61,8 +60,8 @@ const InstructorActions = ({
         if (error) throw error;
 
         toast({
-          title: t("instructor.unfollowed"),
-          description: t("instructor.unfollowedMessage").replace('{instructor}', classItem.instructor_name)
+          title: "Unfollowed",
+          description: `You have unfollowed ${classItem.instructor}`
         });
       } else {
         const { error } = await supabase
@@ -76,8 +75,8 @@ const InstructorActions = ({
         if (error) throw error;
 
         toast({
-          title: t("instructor.following"),
-          description: t("instructor.followingMessage").replace('{instructor}', classItem.instructor_name)
+          title: "Following",
+          description: `You are now following ${classItem.instructor}`
         });
       }
 
@@ -85,8 +84,8 @@ const InstructorActions = ({
     } catch (error) {
       console.error('Error toggling follow status:', error);
       toast({
-        title: t("message.error"),
-        description: t("instructor.followError"),
+        title: "Error",
+        description: "Failed to update follow status",
         variant: "destructive"
       });
     } finally {
@@ -103,7 +102,7 @@ const InstructorActions = ({
         onClick={onContactClick}
       >
         <Mail className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-        {t("instructor.contact")}
+        Contact
       </Button>
       <Button 
         variant={isFollowing ? "default" : "outline"}
@@ -121,7 +120,7 @@ const InstructorActions = ({
         ) : (
           <UserPlus className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
         )}
-        {isLoading ? t("message.loading") : isFollowing ? t("instructor.following") : t("instructor.follow")}
+        {isLoading ? "Loading..." : isFollowing ? "Following" : "Follow"}
       </Button>
       <Button
         variant="outline"
@@ -130,7 +129,7 @@ const InstructorActions = ({
         onClick={onShowQuestion}
       >
         <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
-        {t("class.askQuestion")}
+        Ask a Question
       </Button>
       <Link to={`/instructor/${instructorId}`}>
         <Button
@@ -138,7 +137,7 @@ const InstructorActions = ({
           size="sm"
           className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
         >
-          {t("instructor.viewProfile")}
+          View Profile
         </Button>
       </Link>
     </div>

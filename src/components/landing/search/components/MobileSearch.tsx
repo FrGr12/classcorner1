@@ -4,7 +4,6 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import FilterButtons from "../../filters/FilterButtons";
 import { SearchSuggestions } from "./SearchSuggestions";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface MobileSearchProps {
   isOpen: boolean;
@@ -44,26 +43,24 @@ export const MobileSearch = ({
   matchingCategories,
   matchingTitles,
 }: MobileSearchProps) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="md:hidden w-full">
       <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger className="w-full">
           <div className="flex items-center gap-2 px-4 py-2.5 bg-white rounded-full border border-neutral-200 shadow-sm hover:shadow-md transition-shadow">
             <Search className="w-4 h-4 text-neutral-500" />
-            <span className="text-sm text-neutral-600">{t("search.placeholder")}</span>
+            <span className="text-sm text-neutral-600">Search classes...</span>
           </div>
         </SheetTrigger>
         <SheetContent side="bottom" className="h-[90vh] rounded-t-3xl">
           <SheetHeader className="pb-4">
-            <SheetTitle className="text-lg font-semibold">{t("search.title")}</SheetTitle>
+            <SheetTitle className="text-lg font-semibold">Search Classes</SheetTitle>
           </SheetHeader>
           <div className="space-y-6">
             <div className="relative">
               <Input
                 type="text"
-                placeholder={t("search.placeholder")}
+                placeholder="Search for classes..."
                 value={searchInput}
                 onChange={(e) => setSearchInput(e.target.value)}
                 onKeyDown={handleInputKeyDown}
@@ -100,7 +97,7 @@ export const MobileSearch = ({
               onClick={handleSearch}
               className="w-full py-3 bg-accent-rose text-accent-purple rounded-xl font-medium hover:bg-accent-rose/90 transition-colors"
             >
-              {t("search.button")}
+              Search
             </button>
           </div>
         </SheetContent>

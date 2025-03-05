@@ -14,7 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { PlusCircle, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/components/ui/use-toast";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export function CreateResourceDialog() {
   const [isOpen, setIsOpen] = useState(false);
@@ -26,13 +25,12 @@ export function CreateResourceDialog() {
   const [readTime, setReadTime] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  const { t } = useLanguage();
 
   const handleSubmit = async () => {
     if (!title.trim() || !description.trim() || !content.trim() || !type || !category) {
       toast({
-        title: t("message.error"),
-        description: t("resource.fillAllFields"),
+        title: "Error",
+        description: "Please fill in all required fields",
         variant: "destructive",
       });
       return;
@@ -41,8 +39,8 @@ export function CreateResourceDialog() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) {
       toast({
-        title: t("message.error"),
-        description: t("resource.loginRequired"),
+        title: "Error",
+        description: "You must be logged in to create resources",
         variant: "destructive",
       });
       return;
@@ -66,16 +64,16 @@ export function CreateResourceDialog() {
 
     if (error) {
       toast({
-        title: t("message.error"),
-        description: error.message || t("resource.createFailed"),
+        title: "Error",
+        description: error.message || "Failed to create resource. Please try again.",
         variant: "destructive",
       });
       return;
     }
 
     toast({
-      title: t("message.success"),
-      description: t("resource.createSuccess"),
+      title: "Success",
+      description: "Resource created successfully!",
     });
     setIsOpen(false);
     setTitle("");
@@ -91,31 +89,31 @@ export function CreateResourceDialog() {
       <DialogTrigger asChild>
         <Button variant="outline">
           <PlusCircle className="w-4 h-4 mr-2" />
-          {t("resource.new")}
+          New Resource
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[625px]">
         <DialogHeader>
-          <DialogTitle>{t("resource.createTitle")}</DialogTitle>
+          <DialogTitle>Create Learning Resource</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Input
-              placeholder={t("resource.titlePlaceholder")}
+              placeholder="Resource title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Textarea
-              placeholder={t("resource.descriptionPlaceholder")}
+              placeholder="Description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           <div className="space-y-2">
             <Textarea
-              placeholder={t("resource.contentPlaceholder")}
+              placeholder="Content"
               className="min-h-[200px]"
               value={content}
               onChange={(e) => setContent(e.target.value)}
@@ -124,29 +122,29 @@ export function CreateResourceDialog() {
           <div className="grid grid-cols-2 gap-4">
             <Select value={type} onValueChange={setType}>
               <SelectTrigger>
-                <SelectValue placeholder={t("resource.selectType")} />
+                <SelectValue placeholder="Select type" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="guide">{t("resource.type.guide")}</SelectItem>
-                <SelectItem value="tutorial">{t("resource.type.tutorial")}</SelectItem>
-                <SelectItem value="article">{t("resource.type.article")}</SelectItem>
+                <SelectItem value="guide">Guide</SelectItem>
+                <SelectItem value="tutorial">Tutorial</SelectItem>
+                <SelectItem value="article">Article</SelectItem>
               </SelectContent>
             </Select>
             <Select value={category} onValueChange={setCategory}>
               <SelectTrigger>
-                <SelectValue placeholder={t("resource.selectCategory")} />
+                <SelectValue placeholder="Select category" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="pottery">{t("categories.pottery")}</SelectItem>
-                <SelectItem value="photography">{t("categories.photography")}</SelectItem>
-                <SelectItem value="painting">{t("categories.painting")}</SelectItem>
-                <SelectItem value="music">{t("categories.music")}</SelectItem>
+                <SelectItem value="pottery">Pottery</SelectItem>
+                <SelectItem value="photography">Photography</SelectItem>
+                <SelectItem value="painting">Painting</SelectItem>
+                <SelectItem value="music">Music</SelectItem>
               </SelectContent>
             </Select>
           </div>
           <div className="space-y-2">
             <Input
-              placeholder={t("resource.readTimePlaceholder")}
+              placeholder="Read time (e.g., '5 min')"
               value={readTime}
               onChange={(e) => setReadTime(e.target.value)}
             />
@@ -154,7 +152,7 @@ export function CreateResourceDialog() {
           <div className="flex justify-end">
             <Button onClick={handleSubmit} disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {t("resource.create")}
+              Create Resource
             </Button>
           </div>
         </div>

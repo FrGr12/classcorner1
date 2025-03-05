@@ -3,15 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star } from "lucide-react";
 import { InstructorProfile } from "@/types/instructor";
 import InstructorBadge from "./InstructorBadge";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorHeaderProps {
   instructor: InstructorProfile;
 }
 
 const InstructorHeader = ({ instructor }: InstructorHeaderProps) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="glass-panel rounded-xl p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8">
       <Avatar className="w-24 h-24 sm:w-32 sm:h-32 ring-2 ring-offset-2 ring-offset-white ring-accent-purple/20">
@@ -41,12 +38,12 @@ const InstructorHeader = ({ instructor }: InstructorHeaderProps) => {
           
           <div>
             <span className="font-medium">{instructor.totalClasses}</span>
-            <span className="text-neutral-500 ml-1">{t("stats.classes")}</span>
+            <span className="text-neutral-500 ml-1">classes</span>
           </div>
           
           <div>
             <span className="font-medium">{instructor.totalStudents}</span>
-            <span className="text-neutral-500 ml-1">{t("stats.students")}</span>
+            <span className="text-neutral-500 ml-1">students</span>
           </div>
         </div>
       </div>

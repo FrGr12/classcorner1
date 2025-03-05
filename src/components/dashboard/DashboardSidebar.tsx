@@ -13,46 +13,44 @@ import {
   BarChart,
 } from "lucide-react";
 import { useSidebarContext } from "@/contexts/SidebarContext";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 const DashboardSidebar = () => {
   const location = useLocation();
   const { isOpen, toggle } = useSidebarContext();
-  const { t } = useLanguage();
 
   const links = [
     {
-      title: t("dashboard.overview"),
+      title: "Overview",
       href: "/dashboard",
       icon: LayoutDashboard,
     },
     {
-      title: t("dashboard.classes"),
+      title: "Classes",
       href: "/dashboard/classes",
       icon: BookOpen,
     },
     {
-      title: t("dashboard.createClass"),
+      title: "Create Class",
       href: "/dashboard/create-class",
       icon: PlusCircle,
     },
     {
-      title: t("dashboard.inbox"),
+      title: "Inbox",
       href: "/dashboard/inbox",
       icon: MessageSquare,
     },
     {
-      title: t("dashboard.contacts"),
+      title: "Contacts",
       href: "/dashboard/contacts",
       icon: Users,
     },
     {
-      title: t("dashboard.stats"),
+      title: "Stats & Insights",
       href: "/dashboard/stats",
       icon: BarChart,
     },
     {
-      title: t("dashboard.profile"),
+      title: "Profile",
       href: "/dashboard/profile",
       icon: User,
     },
@@ -74,7 +72,7 @@ const DashboardSidebar = () => {
         )}
       >
         <div className="flex h-16 items-center justify-between px-4 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">{t("dashboard.title")}</h2>
+          <h2 className="text-xl font-semibold text-gray-900">Dashboard</h2>
           <Button
             variant="ghost"
             size="icon"

@@ -2,7 +2,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { InstructorProfile, InstructorReview } from "@/types/instructor";
 import { Star } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface InstructorReviewsProps {
   reviews: InstructorReview[];
@@ -10,11 +9,9 @@ interface InstructorReviewsProps {
 }
 
 const InstructorReviews = ({ reviews, instructor }: InstructorReviewsProps) => {
-  const { t } = useLanguage();
-  
   return (
     <div className="glass-panel rounded-xl p-6">
-      <h2 className="text-xl font-bold mb-4">{t("instructor.reviews")} ({reviews.length})</h2>
+      <h2 className="text-xl font-bold mb-4">Reviews ({reviews.length})</h2>
       
       {reviews.length > 0 ? (
         <div className="space-y-6">

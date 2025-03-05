@@ -4,7 +4,6 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 interface PrivateClassDialogProps {
   isOpen: boolean;
@@ -20,7 +19,6 @@ const PrivateClassDialog = ({
   onSubmit
 }: PrivateClassDialogProps) => {
   const [privateMessage, setPrivateMessage] = useState("");
-  const { t } = useLanguage();
 
   const handleSubmit = () => {
     onSubmit(privateMessage);
@@ -31,17 +29,17 @@ const PrivateClassDialog = ({
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]" aria-labelledby="private-class-dialog-title" aria-describedby="private-class-dialog-description">
         <DialogHeader>
-          <DialogTitle id="private-class-dialog-title">{t("class.requestPrivate")}</DialogTitle>
+          <DialogTitle id="private-class-dialog-title">Request Private Class</DialogTitle>
           <DialogDescription id="private-class-dialog-description">
-            {t("class.privateDescription")}
+            Send a message to the instructor requesting a private class session.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="message">{t("message.message")}</Label>
+            <Label htmlFor="message">Message</Label>
             <Textarea 
               id="message" 
-              placeholder={t("class.privateMessagePlaceholder")} 
+              placeholder="Tell the instructor about your private class request..." 
               value={privateMessage} 
               onChange={e => setPrivateMessage(e.target.value)} 
               className="min-h-[100px]" 
@@ -51,14 +49,14 @@ const PrivateClassDialog = ({
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose}>
-            {t("message.cancel")}
+            Cancel
           </Button>
           <Button 
             onClick={handleSubmit} 
             disabled={isLoading || !privateMessage.trim()} 
             aria-busy={isLoading}
           >
-            {t("message.send")}
+            Send Request
           </Button>
         </DialogFooter>
       </DialogContent>

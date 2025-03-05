@@ -1,58 +1,73 @@
 
-import { Mail, MessageCircle, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { InstructorProfile } from "@/types/instructor";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { Mail, Phone, MessageSquare } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ContactButtonsProps {
   instructor: InstructorProfile;
   onOpenMessageDialog: () => void;
 }
 
-const ContactButtons = ({ 
-  instructor,
-  onOpenMessageDialog
-}: ContactButtonsProps) => {
-  const { t } = useLanguage();
-  
+const ContactButtons = ({ instructor, onOpenMessageDialog }: ContactButtonsProps) => {
+  const { toast } = useToast();
+
   const handleEmailClick = () => {
-    window.location.href = `mailto:${instructor.email}`;
+    if (instructor.email) {
+      window.location.href = `mailto:${instructor.email}`;
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Email address not available"
+      });
+    }
   };
 
   const handlePhoneClick = () => {
     if (instructor.phone) {
       window.location.href = `tel:${instructor.phone}`;
+    } else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Phone number not available"
+      });
     }
   };
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
       <Button 
-        variant="outline" 
-        className="w-full justify-start"
+        className="w-full flex items-center gap-2 justify-start bg-accent-purple hover:bg-accent-purple/90"
         onClick={onOpenMessageDialog}
+        aria-label={`Send a message to ${instructor.firstName}`}
       >
-        <MessageCircle className="h-4 w-4 mr-2" />
-        {t("instructor.contact")}
+        <MessageSquare className="h-4 w-4" />
+        <span>Message {instructor.firstName}</span>
       </Button>
       
-      <Button 
-        variant="outline" 
-        className="w-full justify-start"
-        onClick={handleEmailClick}
-      >
-        <Mail className="h-4 w-4 mr-2" />
-        {t("instructor.email")}
-      </Button>
+      {instructor.email && (
+        <Button 
+          variant="outline"
+          className="w-full flex items-center gap-2 justify-start"
+          onClick={handleEmailClick}
+          aria-label={`Email ${instructor.firstName} at ${instructor.email}`}
+        >
+          <Mail className="h-4 w-4" />
+          <span>Email</span>
+        </Button>
+      )}
       
       {instructor.phone && (
         <Button 
-          variant="outline" 
-          className="w-full justify-start"
+          variant="outline"
+          className="w-full flex items-center gap-2 justify-start"
           onClick={handlePhoneClick}
+          aria-label={`Call ${instructor.firstName} at ${instructor.phone}`}
         >
-          <Phone className="h-4 w-4 mr-2" />
-          {instructor.phone}
+          <Phone className="h-4 w-4" />
+          <span>Call</span>
         </Button>
       )}
     </div>

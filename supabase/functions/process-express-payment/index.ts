@@ -56,7 +56,7 @@ serve(async (req) => {
     // Create payment intent using the saved payment method
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(amount * 100),
-      currency: "sek",
+      currency: "usd",
       payment_method: paymentMethodId,
       customer: booking.student.stripe_customer_id,
       confirm: true,
