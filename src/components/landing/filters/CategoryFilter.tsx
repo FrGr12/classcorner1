@@ -8,27 +8,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { Filter } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { categories } from "../search/constants";
 
 interface CategoryFilterProps {
   selectedCategories: string[];
   setSelectedCategories: (categories: string[]) => void;
 }
-
-const categories = [
-  "Pottery",
-  "Cooking",
-  "Baking",
-  "Painting & Art",
-  "Cocktail & Wine",
-  "Photography",
-  "Music & Dance",
-  "Candle Making",
-  "Wood Craft",
-  "Jewellery & Metal",
-  "Textile Craft",
-  "Paper Craft",
-  "Flower & Plants",
-];
 
 const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryFilterProps) => {
   const { t } = useLanguage();
@@ -55,16 +40,21 @@ const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryF
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-[200px] bg-white">
-        {categories.map((category) => (
-          <DropdownMenuCheckboxItem
-            key={category}
-            checked={selectedCategories.includes(category)}
-            onCheckedChange={() => handleCategoryChange(category)}
-            className="cursor-pointer"
-          >
-            {t(`categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`)}
-          </DropdownMenuCheckboxItem>
-        ))}
+        {categories.map((category) => {
+          // Convert category name to translation key format
+          const translationKey = `categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`;
+          
+          return (
+            <DropdownMenuCheckboxItem
+              key={category}
+              checked={selectedCategories.includes(category)}
+              onCheckedChange={() => handleCategoryChange(category)}
+              className="cursor-pointer"
+            >
+              {t(translationKey)}
+            </DropdownMenuCheckboxItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

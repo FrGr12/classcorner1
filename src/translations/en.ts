@@ -1,4 +1,3 @@
-
 const translations = {
   // Navigation
   "nav.community": "Community",
@@ -36,16 +35,16 @@ const translations = {
   "categories.pottery": "Pottery",
   "categories.cooking": "Cooking",
   "categories.baking": "Baking",
-  "categories.painting": "Painting & Art",
-  "categories.cocktail": "Cocktail & Wine",
+  "categories.painting_art": "Painting & Art",
+  "categories.cocktail_wine": "Cocktail & Wine",
   "categories.photography": "Photography",
-  "categories.music": "Music & Dance",
-  "categories.candle": "Candle Making",
-  "categories.wood": "Wood Craft",
-  "categories.jewellery": "Jewellery & Metal",
-  "categories.textile": "Textile Craft",
-  "categories.paper": "Paper Craft",
-  "categories.flower": "Flower & Plants",
+  "categories.music_dance": "Music & Dance",
+  "categories.candle_making": "Candle Making",
+  "categories.wood_craft": "Wood Craft",
+  "categories.jewellery_metal": "Jewellery & Metal",
+  "categories.textile_craft": "Textile Craft",
+  "categories.paper_craft": "Paper Craft",
+  "categories.flower_plants": "Flower & Plants",
   
   // Class details
   "class.perPerson": "per person",
@@ -187,7 +186,8 @@ const translations = {
   "comment.post": "Post Comment",
   
   // Group
-  "group.members": "{count} members",
+  "group.members.one": "1 member",
+  "group.members.other": "{count} members",
   "group.requestToJoin": "Request to Join",
   "group.join": "Join Group",
   

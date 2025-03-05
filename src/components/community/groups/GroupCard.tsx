@@ -33,7 +33,11 @@ export function GroupCard({ id, name, description, memberCount, type, topic, reg
         <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
           <div className="flex items-center gap-1">
             <Users className="h-4 w-4" />
-            <span>{t(`group.members.${memberCount === 1 ? 'one' : 'other'}`)}</span>
+            <span>
+              {memberCount === 1 
+                ? t("group.members.one") 
+                : t("group.members.other").replace('{count}', memberCount.toString())}
+            </span>
           </div>
           {topic && <span>• {topic}</span>}
           {region && <span>• {region}</span>}

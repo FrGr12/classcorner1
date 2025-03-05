@@ -1,4 +1,3 @@
-
 import { Filter, Sparkles, Clock, MapPin, Trophy, Timer, Snowflake, GraduationCap, BookOpen, Users } from "lucide-react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -7,6 +6,7 @@ import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface FiltersSectionProps {
   selectedCategory: string;
@@ -59,6 +59,7 @@ const FiltersSection = ({
   onReset
 }: FiltersSectionProps) => {
   const SortIcon = sortOptions.find(option => option.value === sortBy)?.icon || Sparkles;
+  const { t } = useLanguage();
 
   const handlePriceRangeChange = (value: number[]) => {
     onPriceRangeChange([value[0], value[1]] as [number, number]);
@@ -77,11 +78,14 @@ const FiltersSection = ({
           </SelectTrigger>
           <SelectContent className="bg-white">
             <SelectItem value="all">All Categories</SelectItem>
-            {categories.map((category) => (
-              <SelectItem key={category} value={category}>
-                {category}
-              </SelectItem>
-            ))}
+            {categories.map((category) => {
+              const translationKey = `categories.${category.toLowerCase().replace(/\s+&\s+/g, '_').replace(/\s+/g, '_')}`;
+              return (
+                <SelectItem key={category} value={category}>
+                  {t(translationKey)}
+                </SelectItem>
+              );
+            })}
           </SelectContent>
         </Select>
       </div>
