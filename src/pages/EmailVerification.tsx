@@ -5,6 +5,7 @@ import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const EmailVerification = () => {
   const [searchParams] = useSearchParams();
@@ -21,6 +22,7 @@ const EmailVerification = () => {
       console.error("Verification error from URL:", errorParam, errorDescription);
       setVerificationStatus("error");
       setErrorMessage(errorDescription || "Verification failed. The link may be invalid or expired.");
+      toast.error(errorDescription || "Verification failed");
       return;
     }
     
@@ -116,7 +118,11 @@ const EmailVerification = () => {
           <div className="text-center">
             <AlertCircle className="h-12 w-12 text-red-500 mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Verification Failed</h2>
-            <p className="text-neutral-600 mb-4">{errorMessage}</p>
+            <Alert variant="destructive" className="mb-4">
+              <AlertDescription className="text-center">
+                {errorMessage}
+              </AlertDescription>
+            </Alert>
             <div className="space-y-3">
               <Button onClick={handleRetry} variant="outline" className="w-full">
                 Request New Link

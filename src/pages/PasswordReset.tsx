@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { AlertCircle } from "lucide-react";
 
@@ -17,6 +18,7 @@ const PasswordReset = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [invalidLink, setInvalidLink] = useState(false);
 
   // Check if we're in reset mode (have a token) or request mode
   const accessToken = searchParams.get("access_token");
@@ -31,8 +33,11 @@ const PasswordReset = () => {
     
     // Handle error from URL parameters
     if (errorParam) {
+      setInvalidLink(true);
       setErrorMessage(errorDescription || "Error processing reset link. Please request a new one.");
       console.error("Password reset error:", errorParam, errorDescription, errorCode);
+      toast.error(errorDescription || "Error processing reset link");
+      return;
     }
     
     // If we have a token, set the session
@@ -41,8 +46,9 @@ const PasswordReset = () => {
       supabase.auth.getSession().then(({ data, error }) => {
         if (error) {
           console.error("Session error:", error);
+          setInvalidLink(true);
           setErrorMessage("Error processing reset token. Please request a new link.");
-          toast.error("Error processing reset token. Please request a new link.");
+          toast.error("Error processing reset token");
         } else {
           console.log("Session data:", data);
         }
@@ -82,7 +88,13 @@ const PasswordReset = () => {
     
     if (password !== confirmPassword) {
       setErrorMessage("Passwords don't match. Please make sure both passwords are the same");
-      toast.error("Passwords don't match. Please make sure both passwords are the same");
+      toast.error("Passwords don't match");
+      return;
+    }
+
+    if (password.length < 6) {
+      setErrorMessage("Password must be at least 6 characters long");
+      toast.error("Password too short");
       return;
     }
 
@@ -113,14 +125,14 @@ const PasswordReset = () => {
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>
-            {errorParam 
+            {invalidLink 
               ? "Link Error" 
               : accessToken 
                 ? "Reset Password" 
                 : "Forgot Password"}
           </CardTitle>
           <CardDescription>
-            {errorParam 
+            {invalidLink 
               ? "There was a problem with your reset link" 
               : accessToken
                 ? "Enter your new password below"
@@ -128,24 +140,27 @@ const PasswordReset = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {errorParam ? (
+          {invalidLink ? (
             <div className="space-y-4">
-              <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded flex items-start">
-                <AlertCircle className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" />
-                <div>
-                  <p className="font-medium">Reset link is invalid or has expired</p>
-                  <p className="text-sm mt-1">{errorDescription || "Please request a new password reset link."}</p>
-                </div>
-              </div>
+              <Alert variant="destructive" className="bg-red-50 border-red-200">
+                <AlertCircle className="h-5 w-5" />
+                <AlertTitle>Reset link is invalid or has expired</AlertTitle>
+                <AlertDescription>
+                  {errorDescription || "Please request a new password reset link."}
+                </AlertDescription>
+              </Alert>
               <Button 
-                onClick={() => navigate("/password-reset")} 
+                onClick={() => {
+                  navigate("/password-reset");
+                  setInvalidLink(false);
+                }} 
                 className="w-full"
               >
                 Request New Reset Link
               </Button>
               <Button
                 variant="outline"
-                className="w-full mt-2"
+                className="w-full"
                 onClick={() => navigate("/auth")}
               >
                 Back to Login
@@ -161,17 +176,18 @@ const PasswordReset = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
+                  placeholder="Your email address"
                 />
               </div>
               
               {errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded">
-                  {errorMessage}
-                </div>
+                <Alert variant="destructive" className="bg-red-50 border-red-200">
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
               )}
               
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Sending..." : "Send Reset Link"}
+              <Button type="submit" className="w-full" disabled={loading} isLoading={loading} loadingText="Sending...">
+                Send Reset Link
               </Button>
               
               <Button
@@ -192,7 +208,10 @@ const PasswordReset = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
+                  placeholder="Enter new password"
+                  minLength={6}
                 />
+                <p className="text-xs text-neutral-500">Password must be at least 6 characters long</p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
@@ -202,17 +221,18 @@ const PasswordReset = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
+                  placeholder="Confirm new password"
                 />
               </div>
               
               {errorMessage && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-600 text-sm rounded">
-                  {errorMessage}
-                </div>
+                <Alert variant="destructive" className="bg-red-50 border-red-200">
+                  <AlertDescription>{errorMessage}</AlertDescription>
+                </Alert>
               )}
               
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Updating..." : "Update Password"}
+              <Button type="submit" className="w-full" disabled={loading} isLoading={loading} loadingText="Updating...">
+                Update Password
               </Button>
               
               <Button
