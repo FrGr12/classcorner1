@@ -43,7 +43,10 @@ const ResetPasswordForm = () => {
 
       toast.success("Password updated successfully");
       
-      navigate("/auth");
+      // Short delay before redirecting to give the user time to see the success message
+      setTimeout(() => {
+        navigate("/auth");
+      }, 1500);
     } catch (error: any) {
       console.error("Password update error:", error);
       setErrorMessage(error.message);

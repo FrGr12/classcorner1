@@ -17,6 +17,8 @@ const PasswordResetContainer = () => {
 
   // Check if we're in reset mode (have a token) or request mode
   const accessToken = searchParams.get("access_token");
+  const refreshToken = searchParams.get("refresh_token");
+  const type = searchParams.get("type");
   
   // Check for error parameters in the URL
   const errorParam = searchParams.get("error");
@@ -24,7 +26,7 @@ const PasswordResetContainer = () => {
   const errorCode = searchParams.get("error_code");
   
   useEffect(() => {
-    console.log("Password reset params:", { accessToken, errorParam, errorDescription, errorCode });
+    console.log("Password reset params:", { accessToken, refreshToken, type, errorParam, errorDescription, errorCode });
     
     // Handle error from URL parameters
     if (errorParam) {
@@ -37,22 +39,35 @@ const PasswordResetContainer = () => {
     
     // If we have a token, set the session
     if (accessToken) {
-      // Set the session using the token
-      supabase.auth.getSession().then(({ data, error }) => {
-        if (error) {
-          console.error("Session error:", error);
+      const setSession = async () => {
+        try {
+          const { error } = await supabase.auth.setSession({
+            access_token: accessToken,
+            refresh_token: refreshToken || "",
+          });
+          
+          if (error) {
+            console.error("Session error:", error);
+            setInvalidLink(true);
+            setErrorMessage("Error processing reset token. Please request a new link.");
+            toast.error("Error processing reset token");
+          } else {
+            console.log("Session set successfully");
+          }
+        } catch (err) {
+          console.error("Error setting session:", err);
           setInvalidLink(true);
-          setErrorMessage("Error processing reset token. Please request a new link.");
-          toast.error("Error processing reset token");
-        } else {
-          console.log("Session data:", data);
+          setErrorMessage("Unexpected error. Please request a new password reset link.");
+          toast.error("Unexpected error occurred");
         }
-      });
+      };
+      
+      setSession();
     }
 
     // Log the current URL for debugging
     console.log("Current URL:", window.location.href);
-  }, [accessToken, errorParam, errorDescription, errorCode]);
+  }, [accessToken, refreshToken, type, errorParam, errorDescription, errorCode]);
 
   return (
     <Card className="w-full max-w-md">

@@ -25,8 +25,12 @@ const RequestResetForm = ({ email, setEmail }: RequestResetFormProps) => {
 
     try {
       console.log("Requesting password reset for:", email);
+      // Get the current origin (hostname)
+      const origin = window.location.origin;
+      console.log("Using origin for redirect:", origin);
+      
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/password-reset`,
+        redirectTo: `${origin}/password-reset`,
       });
 
       if (error) throw error;
