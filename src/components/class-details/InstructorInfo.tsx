@@ -1,11 +1,11 @@
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Mail, Phone, UserPlus, UserMinus, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ClassItem } from "@/types/class";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -29,27 +29,6 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
   const [isContactDialogOpen, setIsContactDialogOpen] = useState(false);
   const [privateMessage, setPrivateMessage] = useState("");
   const { toast } = useToast();
-
-  // For demo purposes, map instructor names to IDs
-  const getInstructorIdForDemo = (instructorName: string): string => {
-    const nameToIdMap: Record<string, string> = {
-      "Sarah Johnson": "1",
-      "Michael Chen": "2",
-      "Marco Rossi": "3",
-      "Lisa Wong": "3",
-      "Emily Parker": "2",
-      "Daniel White": "1",
-      "Emma Thompson": "3",
-      "David Wilson": "2",
-      "James Miller": "1",
-      "Sophie Clark": "3"
-    };
-    
-    return nameToIdMap[instructorName] || instructorName === "Sarah Johnson" ? "1" : 
-           instructorName === "Michael Chen" ? "2" : 
-           instructorName === "Marco Rossi" ? "3" : 
-           (classItem.instructor_id || "1");
-  };
 
   const checkFollowStatus = async () => {
     try {
@@ -183,11 +162,6 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
     checkFollowStatus();
   }, [classItem.instructor_id]);
 
-  // Get instructor ID for the demo (for real implementation, use classItem.instructor_id)
-  const instructorId = import.meta.env.DEV 
-    ? getInstructorIdForDemo(classItem.instructor)
-    : classItem.instructor_id;
-
   return (
     <section className="glass-panel rounded-xl p-4 sm:p-8">
       <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-left">About the Instructor</h2>
@@ -195,7 +169,7 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
         <div className="w-20 h-20 sm:w-24 sm:h-24 bg-neutral-100 rounded-full flex-shrink-0" />
         <div className="space-y-3 sm:space-y-4 text-center sm:text-left">
           <div>
-            <Link to={`/instructor/${instructorId}`} className="hover:underline">
+            <Link to={`/instructor/${classItem.instructor_id}`} className="hover:underline">
               <h3 className="text-lg sm:text-xl font-medium">{classItem.instructor}</h3>
             </Link>
             <p className="text-sm sm:text-base text-neutral-600">Expert Craftsperson</p>
@@ -241,15 +215,15 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
               <MessageCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               Ask a Question
             </Button>
-            <Link to={`/instructor/${instructorId}`}>
-              <Button
-                variant="outline" 
-                size="sm"
-                className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
-              >
-                View Profile
-              </Button>
-            </Link>
+            <Button
+              variant="outline" 
+              size="sm"
+              className="text-xs sm:text-sm gap-1.5 sm:gap-2 h-8 sm:h-9"
+              as={Link}
+              to={`/instructor/${classItem.instructor_id}`}
+            >
+              View Profile
+            </Button>
           </div>
         </div>
       </div>
@@ -267,7 +241,7 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
               variant="outline"
               className="w-full justify-start text-sm"
               onClick={() => {
-                window.location.href = `mailto:${classItem.instructorEmail || 'instructor@example.com'}`;
+                window.location.href = `mailto:${classItem.instructorEmail}`;
                 setIsContactDialogOpen(false);
               }}
             >
@@ -278,7 +252,7 @@ const InstructorInfo = ({ classItem, onShowQuestion }: InstructorInfoProps) => {
               variant="outline"
               className="w-full justify-start text-sm"
               onClick={() => {
-                window.location.href = `tel:${classItem.instructorPhone || '+1234567890'}`;
+                window.location.href = `tel:${classItem.instructorPhone}`;
                 setIsContactDialogOpen(false);
               }}
             >

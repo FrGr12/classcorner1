@@ -1,12 +1,12 @@
 
-import { ClassItem } from "./class";
-import { UserType } from "./user";
+import { ClassItem } from './class';
+import { UserType } from './user';
 
 export interface InstructorProfile {
   id: string;
   firstName: string;
   lastName: string;
-  displayName: string;
+  displayName?: string;
   email?: string;
   phone?: string;
   bio?: string;
@@ -16,16 +16,16 @@ export interface InstructorProfile {
   expertise?: string[];
   preferredTeachingMethod?: string;
   portfolioUrl?: string;
-  averageRating: number;
-  totalReviews: number;
-  totalStudents: number;
-  totalClasses: number;
+  averageRating?: number;
+  totalReviews?: number;
+  totalStudents?: number;
+  totalClasses?: number;
   socialMedia?: {
     instagram?: string;
     linkedin?: string;
     website?: string;
   };
-  classes: ClassItem[];
+  classes?: ClassItem[];
   userType: UserType;
 }
 
@@ -36,8 +36,8 @@ export interface InstructorReview {
   reviewerName: string;
   reviewerAvatar?: string;
   rating: number;
-  comment?: string;
-  classId: number;
+  comment: string;
+  classId?: number;
   className?: string;
   date: string;
   instructorResponse?: string;
