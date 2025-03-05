@@ -30,17 +30,23 @@ const Auth = () => {
                         window.location.hostname.includes('netlify.app');
 
   useEffect(() => {
-    // In preview mode, automatically enable admin mode if not already set
-    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
-      localStorage.setItem("admin_mode", "true");
-      console.log("Preview mode detected in Auth page, admin mode enabled automatically");
-      // Redirect to home page since we're in preview/admin mode
-      navigate(returnTo);
+    // In preview mode, immediately redirect and enable admin mode
+    if (isPreviewMode) {
+      console.log("Preview mode detected in Auth page - redirecting to:", returnTo);
+      
+      // Always ensure admin mode is enabled in preview
+      if (localStorage.getItem("admin_mode") !== "true") {
+        localStorage.setItem("admin_mode", "true");
+        console.log("Preview mode - admin mode enabled automatically");
+      }
+      
+      // Immediately redirect to the requested page or dashboard
+      navigate(returnTo || "/dashboard");
       return;
     }
     
     // If admin mode is enabled, redirect to the return path immediately
-    if (isAdminMode || isPreviewMode) {
+    if (isAdminMode) {
       navigate(returnTo);
       return;
     }
@@ -70,6 +76,9 @@ const Auth = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate, returnTo, isAdminMode, isPreviewMode]);
+
+  // If in preview mode, return null as we'll redirect immediately
+  if (isPreviewMode) return null;
 
   const handleManualLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,12 +136,6 @@ const Auth = () => {
       setLoading(false);
     }
   };
-
-  // Console log current window URL for debugging
-  useEffect(() => {
-    console.log("Current URL:", window.location.href);
-    console.log("Redirect URL will be:", `${window.location.origin}/auth/callback`);
-  }, []);
 
   return (
     <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">

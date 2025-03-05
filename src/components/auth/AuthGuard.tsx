@@ -22,14 +22,23 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
                          window.location.hostname.includes('codesandbox') ||
                          window.location.hostname.includes('vercel.app') ||
                          window.location.hostname.includes('netlify.app');
-
-  // If in preview mode and admin mode is not set, enable it automatically
-  useEffect(() => {
-    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+  
+  // IMMEDIATE RETURN FOR PREVIEW MODE
+  // If we're in a preview environment, immediately render children without any auth checks
+  if (isPreviewMode) {
+    console.log("Preview mode detected - bypassing auth completely");
+    // Make sure admin mode is enabled in preview environments
+    if (localStorage.getItem("admin_mode") !== "true") {
       localStorage.setItem("admin_mode", "true");
-      console.log("Preview mode detected, admin mode enabled automatically");
     }
-  }, [isPreviewMode]);
+    return <>{children}</>;
+  }
+
+  // If in admin mode with allowBypass, skip auth entirely
+  if (allowBypass && isAdminMode) {
+    console.log("Admin mode enabled with allowBypass - skipping auth check");
+    return <>{children}</>;
+  }
 
   useEffect(() => {
     // If we're in preview mode or admin mode with allowBypass, skip auth check completely

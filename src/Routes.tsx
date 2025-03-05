@@ -26,10 +26,14 @@ const isPreviewMode = window.location.hostname.includes('stackblitz') ||
                      window.location.hostname.includes('vercel.app') ||
                      window.location.hostname.includes('netlify.app');
 
-// In preview mode, automatically enable admin mode if not already set
-if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+// In preview mode, automatically enable admin mode
+if (isPreviewMode) {
   localStorage.setItem("admin_mode", "true");
   console.log("Preview mode detected in router, admin mode enabled automatically");
+  
+  // Log additional debug info
+  console.log("Current hostname:", window.location.hostname);
+  console.log("Admin mode status:", localStorage.getItem("admin_mode"));
 }
 
 // Central router configuration that organizes all routes
@@ -38,7 +42,11 @@ const router = createBrowserRouter([
   ...publicRoutes,
   
   // Authentication routes - login, registration, password reset, etc.
-  ...authRoutes,
+  // In preview mode, redirect auth routes to dashboard
+  ...(isPreviewMode ? [{
+    path: "/auth",
+    element: <Dashboard />,
+  }] : authRoutes),
   
   // Dashboard routes - protected routes for authenticated users
   ...dashboardRoutes,
