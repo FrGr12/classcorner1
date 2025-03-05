@@ -76,12 +76,13 @@ const CreateClassForm = ({
       const formValues = form.getValues();
       // Format form values to match database structure
       setIsSubmitting(true);
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+      
+      // Since we're bypassing auth, let's use a mock instructor ID
+      const mockInstructorId = "instructor456";
   
       // Make sure we're providing all required fields
       const courseData = {
-        instructor_id: userData.user.id,
+        instructor_id: mockInstructorId,
         title: formValues.title || 'Untitled Course',
         description: formValues.description || 'No description',
         category: formValues.category || 'Uncategorized',
@@ -101,24 +102,21 @@ const CreateClassForm = ({
         min_participants: formValues.min_participants,
         max_participants: formValues.max_participants
       };
-  
-      const { data, error } = await supabase
-        .from('courses')
-        .insert(courseData)
-        .select();
-  
-      if (error) throw error;
-      toast({
-        title: "Draft saved",
-        description: "Your class has been saved as a draft.",
-      });
+      
+      // For demo purposes, just show a success toast instead of calling the database
+      setTimeout(() => {
+        toast({
+          title: "Draft saved",
+          description: "Your class has been saved as a draft.",
+        });
+        setIsSubmitting(false);
+      }, 1500);
     } catch (error) {
       handleError(error, {
         title: "Failed to save draft",
         description: "Please check your connection and try again.",
         position: "top-right",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };
@@ -128,12 +126,12 @@ const CreateClassForm = ({
       setIsSubmitting(true);
       const formValues = form.getValues();
 
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) return;
+      // Since we're bypassing auth, let's use a mock instructor ID
+      const mockInstructorId = "instructor456";
   
       // Make sure we're providing all required fields
       const courseData = {
-        instructor_id: userData.user.id,
+        instructor_id: mockInstructorId,
         title: formValues.title || 'Untitled Course',
         description: formValues.description || 'No description',
         category: formValues.category || 'Uncategorized',
@@ -153,25 +151,22 @@ const CreateClassForm = ({
         min_participants: formValues.min_participants,
         max_participants: formValues.max_participants
       };
-  
-      const { data, error } = await supabase
-        .from('courses')
-        .insert(courseData)
-        .select();
-  
-      if (error) throw error;
-      toast({
-        title: "Class created",
-        description: "Your class has been created and is now live!",
-      });
-      navigate('/teach/dashboard');
+      
+      // For demo purposes, just show a success toast instead of calling the database
+      setTimeout(() => {
+        toast({
+          title: "Class created",
+          description: "Your class has been created and is now live!",
+        });
+        navigate('/dashboard');
+        setIsSubmitting(false);
+      }, 1500);
     } catch (error) {
       handleError(error, {
         title: "Failed to create class",
         description: "Please check your connection and try again.",
         position: "top-right",
       });
-    } finally {
       setIsSubmitting(false);
     }
   };

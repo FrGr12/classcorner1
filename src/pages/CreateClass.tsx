@@ -5,30 +5,25 @@ import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader
 import CreateClassForm from "@/components/teach/course-form/CreateClassForm";
 import { handleError } from "@/utils/errorHandler";
 import { Skeleton } from "@/components/ui/skeleton/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 const CreateClass = () => {
   const [draftCount, setDraftCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
 
   useEffect(() => {
     const fetchDraftCount = async () => {
       try {
         setIsLoading(true);
-        const { data: userData } = await supabase.auth.getUser();
-        if (!userData.user) return;
+        // Since we're bypassing auth, let's set a mock instructor ID
+        const mockInstructorId = "instructor456";
 
-        const { count, error } = await supabase
-          .from('courses')
-          .select('*', { count: 'exact', head: true })
-          .eq('instructor_id', userData.user.id)
-          .eq('status', 'draft');
-
-        if (error) throw error;
-
-        if (count !== null) {
-          setDraftCount(count);
-        }
+        // In a real app, we would get the user ID from auth
+        // For now, let's set a mock draft count to simulate data
+        setDraftCount(3);
+        setIsLoading(false);
       } catch (error) {
         handleError(error, {
           title: "Failed to load drafts",
@@ -39,7 +34,6 @@ const CreateClass = () => {
             onClick: () => fetchDraftCount()
           }
         });
-      } finally {
         setIsLoading(false);
       }
     };
