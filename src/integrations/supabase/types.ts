@@ -1848,6 +1848,7 @@ export type Database = {
           first_name: string | null
           id: string
           last_name: string | null
+          selected_date: string | null
           session_id: number | null
           special_requests: string | null
           status: string | null
@@ -1862,6 +1863,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          selected_date?: string | null
           session_id?: number | null
           special_requests?: string | null
           status?: string | null
@@ -1876,6 +1878,7 @@ export type Database = {
           first_name?: string | null
           id?: string
           last_name?: string | null
+          selected_date?: string | null
           session_id?: number | null
           special_requests?: string | null
           status?: string | null

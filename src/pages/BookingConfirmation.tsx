@@ -54,6 +54,8 @@ const BookingConfirmation = () => {
         return;
       }
       
+      console.log("Creating guest booking with date:", classItem.date);
+      
       const { data, error } = await supabase
         .from('guest_bookings')
         .insert({
@@ -61,7 +63,7 @@ const BookingConfirmation = () => {
           first_name: firstName,
           last_name: lastName,
           course_id: classItem.id,
-          selected_date: classItem.date,
+          selected_date: classItem.date, // Now this will work with our new column
           total_price: classItem.price,
           status: 'pending'
         })
