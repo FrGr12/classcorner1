@@ -6,7 +6,6 @@ import { authRoutes } from "@/routes/auth-routes";
 import { dashboardRoutes } from "@/routes/dashboard-routes";
 import { paymentRoutes } from "@/routes/payment-routes";
 import { communityRoutes } from "@/routes/community-routes";
-import CreateTestAccounts from "@/pages/CreateTestAccounts";
 
 // Central router configuration that organizes all routes
 const router = createBrowserRouter([
@@ -24,12 +23,6 @@ const router = createBrowserRouter([
   
   // Community routes - routes related to community features
   ...communityRoutes,
-  
-  // Test account creation route
-  {
-    path: "/create-test-accounts",
-    element: <CreateTestAccounts />,
-  },
   
   // Catch-all route for 404 pages
   {
