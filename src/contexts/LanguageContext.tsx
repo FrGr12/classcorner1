@@ -6,7 +6,7 @@ type Language = 'en' | 'sv';
 interface LanguageContextType {
   language: Language;
   setLanguage: (language: Language) => void;
-  t: (key: string) => string;
+  t: (key: string, params?: Record<string, string>) => string;
 }
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
@@ -49,8 +49,17 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
     loadTranslations();
   }, [language]);
 
-  const t = (key: string): string => {
-    return translations[key] || key;
+  const t = (key: string, params?: Record<string, string>): string => {
+    let translation = translations[key] || key;
+    
+    // Replace parameters in the translation if provided
+    if (params) {
+      Object.entries(params).forEach(([paramKey, paramValue]) => {
+        translation = translation.replace(`{${paramKey}}`, paramValue);
+      });
+    }
+    
+    return translation;
   };
 
   return (
