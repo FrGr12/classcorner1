@@ -9,15 +9,14 @@ import { communityRoutes } from "@/routes/community-routes";
 import Dashboard from "@/pages/Dashboard";
 import UserDashboard from "@/pages/UserDashboard";
 import AdminModeToggle from "@/components/admin/AdminModeToggle";
-import { Fragment } from "react";
 
 // Wrapper component to include AdminModeToggle with any route
-const withAdminToggle = (element: React.ReactNode) => {
+const withAdminToggle = (element) => {
   return (
-    <Fragment>
+    <>
       {element}
       <AdminModeToggle />
-    </Fragment>
+    </>
   );
 };
 
