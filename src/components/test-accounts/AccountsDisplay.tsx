@@ -7,7 +7,6 @@ import { TestAccount } from "@/hooks/useTestAccounts";
 import AccountItem from "./AccountItem";
 import SetupInstructions from "./SetupInstructions";
 import LoginInstructions from "./LoginInstructions";
-import TroubleshootingGuide from "./TroubleshootingGuide";
 
 interface AccountsDisplayProps {
   accounts: TestAccount[];
@@ -64,22 +63,6 @@ const AccountsDisplay = ({
             <Link to="/auth" className="text-accent-purple font-medium ml-1">login page</Link>.
           </AlertDescription>
         </Alert>
-      )}
-      
-      {hasDatabaseError ? (
-        <div className="mt-4 p-4 border rounded-md bg-red-50 border-red-100">
-          <h4 className="font-medium text-red-800">Database Setup Issue Detected</h4>
-          <p className="mt-1 text-sm text-red-700">
-            The error messages indicate a database setup issue. You need to make sure:
-          </p>
-          <ol className="list-decimal pl-5 mt-2 text-sm text-red-700 space-y-1">
-            <li>Your Supabase project has a <code className="bg-red-100 px-1 rounded">profiles</code> table</li>
-            <li>There is a function and trigger that creates a profile when a user signs up</li>
-            <li>All required database triggers and RLS policies are in place</li>
-          </ol>
-        </div>
-      ) : (
-        <TroubleshootingGuide />
       )}
       
       <div className="mt-4 text-center">

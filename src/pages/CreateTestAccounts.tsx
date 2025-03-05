@@ -20,6 +20,9 @@ const CreateTestAccounts = () => {
     copyToClipboard
   } = useTestAccounts();
 
+  // Always show troubleshooting guide until accounts are successfully created
+  const showTroubleshootingGuide = !accounts.some(acc => acc.status === 'created');
+  
   // Check if there are database setup issues
   const hasDatabaseSetupIssues = error?.includes('Database') || 
     error?.includes('profiles table') || 
@@ -54,6 +57,9 @@ const CreateTestAccounts = () => {
             </Alert>
           )}
           
+          {/* Always show the troubleshooting guide first when there are issues */}
+          {showTroubleshootingGuide && <TroubleshootingGuide />}
+          
           <div className="flex justify-center">
             <Button 
               onClick={createTestAccounts} 
@@ -80,8 +86,6 @@ const CreateTestAccounts = () => {
               onCopy={copyToClipboard}
             />
           )}
-          
-          {hasDatabaseSetupIssues && <TroubleshootingGuide />}
         </CardContent>
       </Card>
     </div>
