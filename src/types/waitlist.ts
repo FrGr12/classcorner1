@@ -5,6 +5,19 @@ export interface AttendanceRecord {
   user_id: string;
   status: string;
   created_at: string;
+  // Additional fields for AttendanceTracking component
+  booking_id?: number;
+  attendance_status?: string;
+  notes?: string | null;
+  marked_at?: string | null;
+  marked_by?: string | null;
+  updated_at?: string;
+  booking?: {
+    student: {
+      first_name: string;
+      last_name: string;
+    }
+  };
 }
 
 export interface Session {
@@ -12,6 +25,8 @@ export interface Session {
   date: string;
   start_time: string;
   end_time: string;
+  // Additional fields
+  start?: Date;
 }
 
 export interface WaitlistEntry {

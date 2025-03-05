@@ -63,14 +63,29 @@ const TeacherWaitlist = () => {
         .from('waitlist_entries')
         .select(`
           *,
-          course:courses(title),
+          course:courses(
+            title, 
+            auto_promote_from_waitlist,
+            auto_send_waitlist_notification
+          ),
           profile:profiles(first_name, last_name)
         `)
         .eq('status', 'waiting')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setWaitlistEntries(data || []);
+      
+      // Process data to ensure it matches the WaitlistEntry type
+      const processedEntries: WaitlistEntry[] = (data || []).map(entry => ({
+        ...entry,
+        course: {
+          title: entry.course.title,
+          auto_promote_from_waitlist: entry.course.auto_promote_from_waitlist || false,
+          auto_send_waitlist_notification: entry.course.auto_send_waitlist_notification || false
+        }
+      }));
+      
+      setWaitlistEntries(processedEntries);
     } catch (error: any) {
       toast({
         title: "Error fetching waitlist",

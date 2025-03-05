@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,13 @@ const BookingConfirmation = () => {
     try {
       setIsSubmitting(true);
       
+      // Convert Date to string for Supabase
+      const selectedDate = classItem.date instanceof Date 
+        ? classItem.date.toISOString() 
+        : Array.isArray(classItem.date) 
+          ? classItem.date[0].toISOString() 
+          : null;
+      
       const { data, error } = await supabase
         .from('guest_bookings')
         .insert({
@@ -49,7 +57,7 @@ const BookingConfirmation = () => {
           first_name: firstName,
           last_name: lastName,
           course_id: classItem.id,
-          selected_date: classItem.date,
+          selected_date: selectedDate,
           total_price: classItem.price,
           status: 'pending'
         })
