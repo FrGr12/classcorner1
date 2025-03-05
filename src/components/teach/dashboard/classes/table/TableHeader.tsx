@@ -32,6 +32,7 @@ const ClassesTableHeader = ({ filters, onFilterChange }: TableHeaderProps) => {
             onChange={(value) => onFilterChange('date', value)}
           />
         </TableHead>
+        <TableHead className="hidden sm:table-cell">Status</TableHead>
         <TableHead className="hidden sm:table-cell">
           <ColumnFilter
             column="Capacity"

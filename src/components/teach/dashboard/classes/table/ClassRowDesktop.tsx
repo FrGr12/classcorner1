@@ -3,7 +3,7 @@ import { ClassItem } from "@/types/class";
 import { format } from "date-fns";
 import { TableCell, TableRow } from "@/components/ui/table";
 import ClassActions from "./ClassActions";
-import StatsDisplay from "./StatsDisplay";
+import { Badge } from "@/components/ui/badge";
 
 interface ClassRowDesktopProps {
   classItem: ClassItem;
@@ -24,9 +24,27 @@ const ClassRowDesktop = ({
 }: ClassRowDesktopProps) => {
   const formatClassDate = (date: Date | Date[]): string => {
     if (Array.isArray(date)) {
-      return date.length > 0 ? format(date[0], 'MM/dd/yy') : '-';
+      return date.length > 0 ? format(date[0], 'MMM dd, yyyy') : '-';
     }
-    return format(date, 'MM/dd/yy');
+    return format(date, 'MMM dd, yyyy');
+  };
+
+  const getStatusBadge = (status: string) => {
+    if (!status) return null;
+    
+    const statusMap: Record<string, { color: string, label: string }> = {
+      active: { color: "bg-green-100 text-green-800", label: "Active" },
+      draft: { color: "bg-gray-100 text-gray-800", label: "Draft" },
+      completed: { color: "bg-blue-100 text-blue-800", label: "Completed" },
+    };
+    
+    const statusInfo = statusMap[status.toLowerCase()] || { color: "bg-gray-100 text-gray-800", label: status };
+    
+    return (
+      <Badge variant="outline" className={`${statusInfo.color} border-none`}>
+        {statusInfo.label}
+      </Badge>
+    );
   };
 
   return (
@@ -36,29 +54,14 @@ const ClassRowDesktop = ({
     >
       <TableCell className="font-medium">{classItem.title}</TableCell>
       <TableCell>{formatClassDate(classItem.date)}</TableCell>
+      <TableCell>{getStatusBadge(classItem.status || 'draft')}</TableCell>
       <TableCell className="text-center">{classItem.maxParticipants || '-'}</TableCell>
       <TableCell className="text-center">0</TableCell>
       <TableCell className="text-center">0</TableCell>
       <TableCell className="text-center">0</TableCell>
-      <TableCell className="p-0" colSpan={3}>
-        <div className="grid grid-cols-3">
-          <div className="text-center px-1 sm:px-4">
-            <div className="flex items-center justify-center gap-1">
-              <span className="text-xs sm:text-sm">{classItem.views || 0}</span>
-            </div>
-          </div>
-          <div className="text-center px-1 sm:px-4">
-            <div className="flex items-center justify-center gap-1">
-              <span className="text-xs sm:text-sm">{classItem.saves || 0}</span>
-            </div>
-          </div>
-          <div className="text-center px-1 sm:px-4">
-            <div className="flex items-center justify-center gap-1">
-              <span className="text-xs sm:text-sm">{classItem.adClicks || 0}</span>
-            </div>
-          </div>
-        </div>
-      </TableCell>
+      <TableCell className="text-center">{classItem.views || 0}</TableCell>
+      <TableCell className="text-center">{classItem.saves || 0}</TableCell>
+      <TableCell className="text-center">{classItem.adClicks || 0}</TableCell>
       <TableCell onClick={(e) => e.stopPropagation()}>
         <ClassActions
           classId={classItem.id}

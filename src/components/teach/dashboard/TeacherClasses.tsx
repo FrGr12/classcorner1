@@ -3,31 +3,37 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ClassesHeader from "./teacher-classes/ClassesHeader";
 import ClassesCard from "./teacher-classes/ClassesCard";
-import SelectedClassCard from "./teacher-classes/SelectedClassCard";
 import { mockClasses } from "./teacher-classes/MockClassData";
+import ClassDetailsDialog from "./classes/ClassDetailsDialog";
 import { ClassItemLocal } from "./teacher-classes/types";
 
 export default function TeacherClasses() {
   const navigate = useNavigate();
-  const [selectedClass, setSelectedClass] = useState<ClassItemLocal | null>(null);
   const [selectedTab, setSelectedTab] = useState("all");
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   const handleAction = (action: string, classId: number) => {
-    // Handle actions like edit, delete, etc.
     console.log(`Action: ${action}, Class ID: ${classId}`);
     
     if (action === "edit") {
       navigate(`/dashboard/classes/edit/${classId}`);
     } else if (action === "view") {
-      // Set the selected class for the detailed view
-      const classItem = mockClasses.find(c => c.id === classId);
-      if (classItem) {
-        setSelectedClass(classItem);
-      }
+      setSelectedClassId(classId);
+      setIsDetailsOpen(true);
     } else if (action === "duplicate") {
       navigate(`/dashboard/classes/duplicate/${classId}`);
     }
   };
+
+  const handleCloseDetails = () => {
+    setIsDetailsOpen(false);
+    setSelectedClassId(null);
+  };
+
+  const selectedClass = selectedClassId 
+    ? mockClasses.find(c => c.id === selectedClassId) 
+    : null;
 
   return (
     <div className="space-y-8">
@@ -41,7 +47,11 @@ export default function TeacherClasses() {
       />
 
       {selectedClass && (
-        <SelectedClassCard selectedClass={selectedClass} />
+        <ClassDetailsDialog
+          isOpen={isDetailsOpen}
+          onClose={handleCloseDetails}
+          classItem={selectedClass as any}
+        />
       )}
     </div>
   );

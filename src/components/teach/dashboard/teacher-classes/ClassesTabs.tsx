@@ -1,7 +1,7 @@
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users } from "lucide-react";
+import { Grid, List } from "lucide-react";
 import ClassesGrid from "./ClassesGrid";
 import ClassesTable from "../classes/ClassesTable";
 import { ClassItemLocal } from "./types";
@@ -15,7 +15,7 @@ interface ClassesTabsProps {
 }
 
 const ClassesTabs = ({ classes, selectedTab, setSelectedTab, onAction }: ClassesTabsProps) => {
-  const [viewType, setViewType] = useState<"cards" | "list">("cards");
+  const [viewType, setViewType] = useState<"cards" | "list">("list");
   
   const filteredClasses = classes.filter(classItem => {
     if (selectedTab === "all") return true;
@@ -46,7 +46,7 @@ const ClassesTabs = ({ classes, selectedTab, setSelectedTab, onAction }: Classes
             onClick={() => setViewType("cards")}
             className="h-8 w-8 p-0"
           >
-            <Calendar className="h-4 w-4" />
+            <Grid className="h-4 w-4" />
           </Button>
           <Button
             variant={viewType === "list" ? "secondary" : "outline"}
@@ -54,7 +54,7 @@ const ClassesTabs = ({ classes, selectedTab, setSelectedTab, onAction }: Classes
             onClick={() => setViewType("list")}
             className="h-8 w-8 p-0"
           >
-            <Users className="h-4 w-4" />
+            <List className="h-4 w-4" />
           </Button>
         </div>
       </div>
