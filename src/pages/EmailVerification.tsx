@@ -1,14 +1,14 @@
+
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const EmailVerification = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [verificationStatus, setVerificationStatus] = useState<"loading" | "success" | "error">("loading");
   const [errorMessage, setErrorMessage] = useState<string>("");
 
@@ -21,6 +21,8 @@ const EmailVerification = () => {
       const token = searchParams.get("token");
       const email = searchParams.get("email");
       const type = searchParams.get("type");
+
+      console.log("Verification params:", { token, email, type });
 
       if (type !== "signup" && type !== "recovery") {
         throw new Error("Invalid verification type");
@@ -37,16 +39,13 @@ const EmailVerification = () => {
       const { error } = await supabase.auth.verifyOtp({
         email,
         token,
-        type: "signup"
+        type: type === "signup" ? "signup" : "recovery"
       });
 
       if (error) throw error;
 
       setVerificationStatus("success");
-      toast({
-        title: "Email verified successfully",
-        description: "You can now sign in to your account",
-      });
+      toast.success("Email verified successfully");
 
       // Redirect to login after a short delay
       setTimeout(() => {
@@ -56,11 +55,7 @@ const EmailVerification = () => {
       console.error("Verification error:", error);
       setVerificationStatus("error");
       setErrorMessage(error.message || "Failed to verify email");
-      toast({
-        variant: "destructive",
-        title: "Verification failed",
-        description: error.message || "Failed to verify email",
-      });
+      toast.error(error.message || "Failed to verify email");
     }
   };
 

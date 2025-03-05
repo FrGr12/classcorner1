@@ -5,6 +5,7 @@ import { ThemeSupa } from "@supabase/auth-ui-shared";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Auth = () => {
   const navigate = useNavigate();
@@ -27,10 +28,12 @@ const Auth = () => {
 
     // Set up auth listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log("Auth state changed:", _event, session);
       setSession(session);
       
       // If user logs in, redirect them to the return path
       if (session) {
+        toast.success("Login successful");
         navigate(returnTo);
       }
     });

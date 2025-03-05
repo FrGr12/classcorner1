@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const AuthCallback = () => {
   const navigate = useNavigate();
@@ -14,6 +15,8 @@ const AuthCallback = () => {
         const returnTo = sessionStorage.getItem('returnTo') || '/';
         sessionStorage.removeItem('returnTo'); // Clean up
         
+        console.log("Processing auth callback, will redirect to:", returnTo);
+        
         // Process the auth callback
         const { data, error } = await supabase.auth.getSession();
         
@@ -21,14 +24,17 @@ const AuthCallback = () => {
         
         if (data.session) {
           // Successfully authenticated
+          toast.success("Authentication successful");
           navigate(returnTo);
         } else {
           // No session found
+          console.log("No session found, redirecting to auth");
           navigate('/auth');
         }
       } catch (err: any) {
         console.error('Auth error:', err);
         setError(err.message);
+        toast.error(err.message || "Authentication failed");
         navigate('/auth');
       }
     };
