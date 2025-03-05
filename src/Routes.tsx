@@ -26,13 +26,13 @@ const router = createBrowserRouter([
   // Community routes - routes related to community features
   ...communityRoutes,
   
-  // Teacher Dashboard route
+  // Teacher Dashboard route - don't wrap in AuthGuard here since it's handled inside the component
   {
     path: "/dashboard/*",
     element: <Dashboard />,
   },
   
-  // Student Dashboard route
+  // Student Dashboard route - don't wrap in AuthGuard here since it's handled inside the component
   {
     path: "/user-dashboard/*",
     element: <UserDashboard />,

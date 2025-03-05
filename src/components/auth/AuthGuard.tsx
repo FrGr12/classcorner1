@@ -16,6 +16,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
+        console.log("Authentication error:");
         const { data, error } = await supabase.auth.getUser();
         
         if (error) throw error;
@@ -24,14 +25,24 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
           setIsAuthenticated(true);
         } else {
           setIsAuthenticated(false);
-          // Store the current location to redirect back after login
-          navigate('/auth', { state: { returnTo: location.pathname } });
-          toast.error("Please sign in to access this page");
+          
+          // Don't redirect if we're already on the auth page
+          if (!location.pathname.includes('/auth')) {
+            // Store the current location to redirect back after login
+            console.log("Current URL:", window.location.href);
+            console.log("Redirect URL will be:", `${window.location.origin}/auth/callback`);
+            navigate('/auth', { state: { returnTo: location.pathname } });
+            toast.error("Please sign in to access this page");
+          }
         }
       } catch (error: any) {
         console.error("Authentication error:", error);
         setIsAuthenticated(false);
-        navigate('/auth', { state: { returnTo: location.pathname } });
+        
+        // Don't redirect if we're already on the auth page
+        if (!location.pathname.includes('/auth')) {
+          navigate('/auth', { state: { returnTo: location.pathname } });
+        }
       }
     };
 
@@ -39,18 +50,29 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     
     // Listen for auth state changes
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state changed:", event, session);
       if (event === 'SIGNED_IN' && session) {
         setIsAuthenticated(true);
+        
+        // Check if we have a returnTo path
+        const state = location.state as { returnTo?: string };
+        if (state?.returnTo) {
+          navigate(state.returnTo);
+        }
       } else if (event === 'SIGNED_OUT') {
         setIsAuthenticated(false);
-        navigate('/auth', { state: { returnTo: location.pathname } });
+        
+        // Don't redirect if we're already on the auth page
+        if (!location.pathname.includes('/auth')) {
+          navigate('/auth', { state: { returnTo: location.pathname } });
+        }
       }
     });
 
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [navigate, location.pathname]);
+  }, [navigate, location]);
 
   // Show loading state while checking authentication
   if (isAuthenticated === null) {
