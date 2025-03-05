@@ -37,7 +37,7 @@ const CategoryFilter = ({ selectedCategories, setSelectedCategories }: CategoryF
     setSelectedCategories(
       selectedCategories.includes(category)
         ? selectedCategories.filter((c) => c !== category)
-        : [...selectedCategories, category]
+        : [...selectedCategories.filter((l) => l !== "Everywhere"), category]
     );
   };
 
