@@ -25,6 +25,10 @@ export const courseFormSchema = z.object({
   // Add these fields to match what's in the DB
   min_participants: z.number().int().positive().default(1),
   max_participants: z.number().int().positive().default(10),
+  waitlist_enabled: z.boolean().default(false),
+  max_waitlist_size: z.number().int().nonnegative().optional(),
+  private_bookings_enabled: z.boolean().default(false),
+  group_bookings_enabled: z.boolean().default(false)
 });
 
 export type CourseFormValues = z.infer<typeof courseFormSchema>;

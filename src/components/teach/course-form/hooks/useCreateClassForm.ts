@@ -39,6 +39,10 @@ export const useCreateClassForm = (
       status: 'draft',
       min_participants: 1,
       max_participants: 10,
+      waitlist_enabled: false,
+      max_waitlist_size: 5,
+      private_bookings_enabled: false,
+      group_bookings_enabled: false
     },
     mode: "onChange",
   });
@@ -86,7 +90,11 @@ export const useCreateClassForm = (
         images: formValues.images,
         sessions: formValues.sessions,
         min_participants: formValues.min_participants,
-        max_participants: formValues.max_participants
+        max_participants: formValues.max_participants,
+        waitlist_enabled: formValues.waitlist_enabled,
+        max_waitlist_size: formValues.max_waitlist_size,
+        private_bookings_enabled: formValues.private_bookings_enabled,
+        group_bookings_enabled: formValues.group_bookings_enabled
       };
       
       // For demo purposes, just show a success toast instead of calling the database
@@ -135,7 +143,11 @@ export const useCreateClassForm = (
         images: formValues.images,
         sessions: formValues.sessions,
         min_participants: formValues.min_participants,
-        max_participants: formValues.max_participants
+        max_participants: formValues.max_participants,
+        waitlist_enabled: formValues.waitlist_enabled,
+        max_waitlist_size: formValues.max_waitlist_size,
+        private_bookings_enabled: formValues.private_bookings_enabled,
+        group_bookings_enabled: formValues.group_bookings_enabled
       };
       
       // For demo purposes, just show a success toast instead of calling the database

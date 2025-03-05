@@ -42,7 +42,48 @@ const PricingAndLogistics = ({ form }: PricingAndLogisticsProps) => {
 
           <FormField
             control={form.control}
-            name="capacity"
+            name="duration"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Duration (minutes)</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="text" 
+                    placeholder="60"
+                    {...field}
+                    onChange={(e) => field.onChange(e.target.value)} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="min_participants"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Minimum Participants</FormLabel>
+                <FormControl>
+                  <Input 
+                    type="number" 
+                    min={1} 
+                    placeholder="1"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))} 
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="max_participants"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Maximum Capacity</FormLabel>
@@ -61,24 +102,50 @@ const PricingAndLogistics = ({ form }: PricingAndLogisticsProps) => {
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="duration"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Duration (minutes)</FormLabel>
-              <FormControl>
-                <Input 
-                  type="text" 
-                  placeholder="60"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)} 
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <FormField
+            control={form.control}
+            name="waitlist_enabled"
+            render={({ field }) => (
+              <FormItem className="flex items-start space-x-2">
+                <FormControl>
+                  <input
+                    type="checkbox"
+                    checked={field.value}
+                    onChange={(e) => field.onChange(e.target.checked)}
+                    className="h-4 w-4 mt-1"
+                  />
+                </FormControl>
+                <div>
+                  <FormLabel>Enable Waitlist</FormLabel>
+                  <p className="text-sm text-muted-foreground">Allow students to join a waitlist when class is full</p>
+                </div>
+              </FormItem>
+            )}
+          />
+
+          {form.watch('waitlist_enabled') && (
+            <FormField
+              control={form.control}
+              name="max_waitlist_size"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Max Waitlist Size</FormLabel>
+                  <FormControl>
+                    <Input 
+                      type="number" 
+                      min={1} 
+                      placeholder="5"
+                      {...field}
+                      onChange={(e) => field.onChange(Number(e.target.value))} 
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           )}
-        />
+        </div>
       </div>
     </Card>
   );
