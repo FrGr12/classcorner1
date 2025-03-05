@@ -13,8 +13,19 @@ const EmailVerification = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
+    // Check for error parameters in the URL
+    const errorParam = searchParams.get("error");
+    const errorDescription = searchParams.get("error_description");
+    
+    if (errorParam) {
+      console.error("Verification error from URL:", errorParam, errorDescription);
+      setVerificationStatus("error");
+      setErrorMessage(errorDescription || "Verification failed. The link may be invalid or expired.");
+      return;
+    }
+    
     verifyEmail();
-  }, []);
+  }, [searchParams]);
 
   const verifyEmail = async () => {
     try {
@@ -24,16 +35,16 @@ const EmailVerification = () => {
 
       console.log("Verification params:", { token, email, type });
 
-      if (type !== "signup" && type !== "recovery") {
-        throw new Error("Invalid verification type");
-      }
-
       if (!token) {
         throw new Error("No verification token found");
       }
 
       if (!email) {
         throw new Error("No email found");
+      }
+
+      if (type !== "signup" && type !== "recovery") {
+        throw new Error("Invalid verification type");
       }
 
       // For debugging purposes, log the OTP verification request
@@ -65,8 +76,8 @@ const EmailVerification = () => {
   };
 
   const handleRetry = () => {
-    setVerificationStatus("loading");
-    verifyEmail();
+    // Redirect to password reset page for users to request a new link
+    navigate("/password-reset");
   };
 
   const handleContactSupport = () => {
@@ -108,7 +119,7 @@ const EmailVerification = () => {
             <p className="text-neutral-600 mb-4">{errorMessage}</p>
             <div className="space-y-3">
               <Button onClick={handleRetry} variant="outline" className="w-full">
-                Try Again
+                Request New Link
               </Button>
               <Button onClick={handleGoToLogin} variant="default" className="w-full">
                 Go to Login
