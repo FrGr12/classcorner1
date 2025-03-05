@@ -1,69 +1,139 @@
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import DesktopMenu from "./navigation/DesktopMenu";
-import MobileMenu from "./navigation/MobileMenu";
-import IntegratedSearch from "./search/IntegratedSearch";
-import { useLanguage } from "@/contexts/LanguageContext";
-import LanguageSwitcher from "../language/LanguageSwitcher";
 
-interface NavigationProps {
-  isInstructor?: boolean;
-}
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import IntegratedSearch from "./search/IntegratedSearch";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { MobileMenu } from "./navigation/MobileMenu";
+import { DesktopMenu } from "./navigation/DesktopMenu";
+import { UserType } from "@/types/user";
 
 const Navigation = () => {
-  const { t } = useLanguage();
-  const [isScrolled, setIsScrolled] = useState(false);
+  const navigate = useNavigate();
   const location = useLocation();
+  const { toast } = useToast();
+  const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState<any>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [userType, setUserType] = useState<UserType>('teacher');
+  const isHomePage = location.pathname === "/";
+  const isBrowsePage = location.pathname === "/browse";
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      
+      // If we have a session, try to get the user type
+      if (session?.user?.id) {
+        getUserType(session.user.id);
+      }
+    });
 
-    window.addEventListener("scroll", handleScroll);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (_event, session) => {
+      setSession(session);
+      
+      // Update user type when auth state changes
+      if (session?.user?.id) {
+        getUserType(session.user.id);
+      }
+    });
 
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
+    return () => subscription.unsubscribe();
   }, []);
 
-  useEffect(() => {
-    setIsScrolled(false);
-    window.scrollTo(0, 0);
-  }, [location.pathname]);
+  const getUserType = async (userId: string) => {
+    try {
+      // This is a placeholder - in a real app, you would fetch the user type from your database
+      // For example: const { data } = await supabase.from('profiles').select('user_type').eq('id', userId).single();
+      // Here we're defaulting to 'teacher' since that's the main flow in your app
+      setUserType('teacher');
+    } catch (error) {
+      console.error('Error fetching user type:', error);
+    }
+  };
+
+  const handleAuthClick = () => {
+    navigate("/auth");
+  };
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const handleDashboardClick = () => {
+    // Redirect to the appropriate dashboard based on user type
+    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
+  };
+
+  const handleLogout = async () => {
+    try {
+      setLoading(true);
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+      toast({
+        title: "Logged out successfully",
+      });
+      navigate("/");
+    } catch (error: any) {
+      toast({
+        variant: "destructive",
+        title: "Error logging out",
+        description: error.message,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 ${isScrolled ? "bg-white shadow-sm" : "bg-transparent"}`}>
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          <div className="flex items-center">
+    <nav className="fixed top-4 left-1/2 -translate-x-1/2 w-[95%] max-w-6xl z-50">
+      <div className="bg-white/80 backdrop-blur-sm border border-neutral-200 rounded-lg px-4 py-2.5 flex flex-col md:flex-row items-center gap-4">
+        <div className="flex items-center justify-between w-full md:w-auto">
+          <div className="flex items-center gap-4 min-w-fit">
+            {!isHomePage && (
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                className="hover:text-accent-purple"
+                onClick={handleBack}
+                aria-label="Go back"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+            )}
             <Link to="/" className="flex items-center">
-              <span className="font-bold text-xl">CraftClass</span>
+              <span className="text-base sm:text-xl font-display text-accent-purple">
+                classcorner
+              </span>
             </Link>
           </div>
-
-          <div className="hidden md:flex flex-1 items-center justify-center px-2">
-            <IntegratedSearch />
-          </div>
-
-          <div className="hidden md:flex items-center space-x-4">
-            <Link to="/browse" className="text-sm font-medium text-neutral-700 hover:text-accent-purple transition-colors">
-              {t("nav.browse")}
-            </Link>
-            <Link to="/teach" className="text-sm font-medium text-neutral-700 hover:text-accent-purple transition-colors">
-              {t("nav.teach")}
-            </Link>
-            <LanguageSwitcher variant="minimal" />
-            <DesktopMenu />
-          </div>
-
-          <div className="flex md:hidden items-center space-x-3">
-            <LanguageSwitcher variant="minimal" />
-            <MobileMenu />
-          </div>
+          <MobileMenu
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            session={session}
+            handleDashboardClick={handleDashboardClick}
+            handleLogout={handleLogout}
+            handleAuthClick={handleAuthClick}
+            loading={loading}
+            userType={userType}
+          />
         </div>
+        
+        {!isBrowsePage && <IntegratedSearch />}
+
+        <DesktopMenu
+          session={session}
+          handleDashboardClick={handleDashboardClick}
+          handleLogout={handleLogout}
+          handleAuthClick={handleAuthClick}
+          loading={loading}
+        />
       </div>
-    </header>
+    </nav>
   );
 };
 
