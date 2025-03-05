@@ -2827,9 +2827,12 @@ export type Database = {
       }
       user_preferences: {
         Row: {
+          class_reminders: boolean | null
           created_at: string
+          email_notifications: boolean | null
           id: string
           interests: string[] | null
+          marketing_emails: boolean | null
           max_distance: number | null
           notification_preference:
             | Database["public"]["Enums"]["notification_preference"]
@@ -2838,9 +2841,12 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          class_reminders?: boolean | null
           created_at?: string
+          email_notifications?: boolean | null
           id: string
           interests?: string[] | null
+          marketing_emails?: boolean | null
           max_distance?: number | null
           notification_preference?:
             | Database["public"]["Enums"]["notification_preference"]
@@ -2849,9 +2855,12 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          class_reminders?: boolean | null
           created_at?: string
+          email_notifications?: boolean | null
           id?: string
           interests?: string[] | null
+          marketing_emails?: boolean | null
           max_distance?: number | null
           notification_preference?:
             | Database["public"]["Enums"]["notification_preference"]

@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { LoadingState } from "./LoadingState";
+import { LoadingState } from "@/components/user-dashboard/LoadingState";
 import BookingsTable from "./bookings/BookingsTable";
 import FiltersSection from "./bookings/FiltersSection";
 import BookingDialogContent from "./bookings/BookingDialogContent";
