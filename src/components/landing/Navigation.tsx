@@ -5,17 +5,10 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, TestTube2 } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { DesktopMenu } from "./navigation/DesktopMenu";
 import { UserType } from "@/types/user";
-import { useDemoMode } from "@/contexts/DemoModeContext";
-import { 
-  Tooltip, 
-  TooltipTrigger, 
-  TooltipContent, 
-  TooltipProvider 
-} from "@/components/ui/tooltip";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -27,12 +20,12 @@ const Navigation = () => {
   const [userType, setUserType] = useState<UserType>('teacher');
   const isHomePage = location.pathname === "/";
   const isBrowsePage = location.pathname === "/browse";
-  const { isDemoMode, toggleDemoMode } = useDemoMode();
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       
+      // If we have a session, try to get the user type
       if (session?.user?.id) {
         getUserType(session.user.id);
       }
@@ -43,6 +36,7 @@ const Navigation = () => {
     } = supabase.auth.onAuthStateChange(async (_event, session) => {
       setSession(session);
       
+      // Update user type when auth state changes
       if (session?.user?.id) {
         getUserType(session.user.id);
       }
@@ -53,6 +47,9 @@ const Navigation = () => {
 
   const getUserType = async (userId: string) => {
     try {
+      // This is a placeholder - in a real app, you would fetch the user type from your database
+      // For example: const { data } = await supabase.from('profiles').select('user_type').eq('id', userId).single();
+      // Here we're defaulting to 'teacher' since that's the main flow in your app
       setUserType('teacher');
     } catch (error) {
       console.error('Error fetching user type:', error);
@@ -68,7 +65,8 @@ const Navigation = () => {
   };
 
   const handleDashboardClick = () => {
-    navigate(userType === 'student' ? '/student-dashboard' : '/dashboard');
+    // Redirect to the appropriate dashboard based on user type
+    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
   };
 
   const handleLogout = async () => {
@@ -126,29 +124,6 @@ const Navigation = () => {
         </div>
         
         {!isBrowsePage && <IntegratedSearch />}
-
-        <TooltipProvider>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                variant={isDemoMode ? "default" : "outline"}
-                size="sm"
-                className={`mr-2 ${isDemoMode ? "bg-amber-500 hover:bg-amber-600" : ""}`}
-                onClick={toggleDemoMode}
-              >
-                <TestTube2 className="h-4 w-4 mr-2" />
-                {isDemoMode ? "Demo On" : "Demo Off"}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">
-              <p className="w-48 text-xs">
-                {isDemoMode 
-                  ? "Demo Mode is ON. All pages are accessible without login. Click to disable."
-                  : "Click to enable Demo Mode to access all pages without login."}
-              </p>
-            </TooltipContent>
-          </Tooltip>
-        </TooltipProvider>
 
         <DesktopMenu
           session={session}

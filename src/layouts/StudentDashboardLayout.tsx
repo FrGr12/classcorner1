@@ -5,22 +5,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardHeader from "@/components/dashboard/DashboardHeader";
-import { useDemoMode } from "@/contexts/DemoModeContext";
 
 const StudentDashboardLayout = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { isDemoMode } = useDemoMode();
 
   useEffect(() => {
-    console.log("StudentDashboardLayout - Demo mode status:", isDemoMode);
-    
-    // Skip authentication check if in demo mode
-    if (isDemoMode) {
-      console.log("Demo mode active in dashboard, skipping auth check");
-      return;
-    }
-    
     const checkAuth = async () => {
       const { data, error } = await supabase.auth.getUser();
       if (error || !data.user) {
@@ -34,7 +24,7 @@ const StudentDashboardLayout = () => {
     };
 
     checkAuth();
-  }, [navigate, toast, isDemoMode]);
+  }, [navigate, toast]);
 
   return (
     <div className="flex h-screen overflow-hidden">
