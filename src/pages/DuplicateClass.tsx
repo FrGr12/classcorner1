@@ -1,261 +1,251 @@
 
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '@/integrations/supabase/client';
-import { format, addDays } from 'date-fns';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Calendar } from '@/components/ui/calendar';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { CalendarIcon, Copy } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useToast } from '@/hooks/use-toast';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "sonner";
+import { Form } from "@/components/ui/form";
+import { Card } from "@/components/ui/card";
+import { Session } from "@/types/session";
+import { supabase } from "@/integrations/supabase/client";
+import BasicInfoSection from "@/components/teach/course-form/BasicInfoSection";
+import LocationCategorySection from "@/components/teach/course-form/LocationCategorySection";
+import PricingCapacitySection from "@/components/teach/course-form/PricingCapacitySection";
+import BringItemsSection from "@/components/teach/course-form/BringItemsSection";
+import LearningOutcomesSection from "@/components/teach/course-form/LearningOutcomesSection";
+import ImagesSection from "@/components/teach/course-form/ImagesSection";
+import LocationCategoryDetailsSection from "@/components/teach/course-form/LocationCategoryDetailsSection";
+import CreateClassHeader from "@/components/teach/create-class/CreateClassHeader";
+import CreateClassActions from "@/components/teach/create-class/CreateClassActions";
+
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().min(1, "Description is required"),
+  price: z.coerce.number().min(0, "Price must be a positive number"),
+  minParticipants: z.coerce.number().min(0, "Minimum participants must be 0 or greater"),
+  maxParticipants: z.coerce.number().min(0, "Maximum participants must be 0 or greater"),
+  location: z.string().min(1, "Location is required"),
+  category: z.string().min(1, "Category is required"),
+  date: z.string().optional(),
+  time: z.string().optional(),
+  whatToBring: z.array(z.string()).default([]),
+  learningOutcomes: z.array(z.string()).default([]),
+});
+
+type FormData = z.infer<typeof formSchema>;
 
 const DuplicateClass = () => {
-  const { courseId } = useParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
-  
-  const [isLoading, setIsLoading] = useState(true);
-  const [courseData, setCourseData] = useState<any>(null);
-  const [newTitle, setNewTitle] = useState('');
-  const [newDate, setNewDate] = useState<Date | undefined>(undefined);
-  const [keepWaitlist, setKeepWaitlist] = useState(false);
-  const [keepStudents, setKeepStudents] = useState(false);
-  
+  const [images, setImages] = useState<File[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [draftCount, setDraftCount] = useState(0);
+
+  const form = useForm<FormData>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      price: 0,
+      minParticipants: 0,
+      maxParticipants: 0,
+      location: "",
+      category: "",
+      whatToBring: [],
+      learningOutcomes: [],
+    },
+  });
+
   useEffect(() => {
-    const fetchCourseData = async () => {
-      setIsLoading(true);
-      
-      if (!courseId) {
-        toast({
-          title: 'Error',
-          description: 'No course ID provided',
-          variant: 'destructive',
-        });
-        navigate('/dashboard/classes');
-        return;
-      }
-      
-      try {
-        // This would be a real API call in production
-        // For now, we'll use a mock response
-        const mockCourse = {
-          id: courseId,
-          title: 'Introduction to Pottery',
-          date: new Date().toISOString(),
-          sessions: [
-            {
-              id: 1,
-              date: new Date().toISOString(),
-              start_time: '10:00',
-              end_time: '12:00',
-            },
-            {
-              id: 2,
-              date: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
-              start_time: '10:00',
-              end_time: '12:00',
-            }
-          ],
-          waitlist: [
-            { id: 1, user_id: 'user1', name: 'John Doe' },
-            { id: 2, user_id: 'user2', name: 'Jane Smith' },
-          ],
-          enrollments: [
-            { id: 1, user_id: 'user3', name: 'Alice Johnson' },
-            { id: 2, user_id: 'user4', name: 'Bob Brown' },
-          ]
-        };
-        
-        setCourseData(mockCourse);
-        setNewTitle(`Copy of ${mockCourse.title}`);
-        
-        // Set default date to one week after the original first session
-        const firstSessionDate = new Date(mockCourse.sessions[0].date);
-        setNewDate(addDays(firstSessionDate, 7));
-        
-      } catch (error) {
-        console.error('Error fetching course data:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to fetch course data',
-          variant: 'destructive',
-        });
-      } finally {
-        setIsLoading(false);
+    const fetchDraftCount = async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
+      const { count } = await supabase
+        .from('courses')
+        .select('*', { count: 'exact', head: true })
+        .eq('instructor_id', userData.user.id)
+        .eq('status', 'draft');
+
+      if (count !== null) {
+        setDraftCount(count);
       }
     };
-    
-    fetchCourseData();
-  }, [courseId, navigate, toast]);
-  
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!newTitle || !newDate) {
-      toast({
-        title: 'Missing information',
-        description: 'Please provide a title and date for the new class',
-        variant: 'destructive',
-      });
-      return;
-    }
-    
-    setIsLoading(true);
-    
+
+    fetchDraftCount();
+  }, []);
+
+  const onSubmit = async (data: FormData) => {
     try {
-      // Calculate date difference to shift all session dates
-      const originalFirstDate = new Date(courseData.sessions[0].date);
-      const daysDifference = Math.round((newDate.getTime() - originalFirstDate.getTime()) / (1000 * 60 * 60 * 24));
+      setIsSubmitting(true);
       
-      // This would be a real API call in production
-      // For now, just show a success message
-      setTimeout(() => {
-        toast({
-          title: 'Success',
-          description: 'Class duplicated successfully!',
-        });
-        navigate('/dashboard/classes');
-      }, 1500);
-      
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!userData.user) {
+        toast.error("You must be logged in to create a class");
+        return;
+      }
+
+      // Insert course data
+      const { data: course, error: courseError } = await supabase
+        .from('courses')
+        .insert({
+          title: data.title,
+          description: data.description,
+          price: data.price,
+          max_participants: data.maxParticipants,
+          location: data.location,
+          category: data.category,
+          instructor_id: userData.user.id,
+          what_to_bring: data.whatToBring,
+          learning_outcomes: data.learningOutcomes,
+          status: 'published'
+        })
+        .select()
+        .single();
+
+      if (courseError) throw courseError;
+
+      // Insert sessions
+      if (sessions.length > 0) {
+        const formattedSessions = sessions.map(session => ({
+          course_id: course.id,
+          start_time: session.start.toISOString(),
+          is_recurring: session.isRecurring,
+          recurrence_pattern: session.recurrencePattern,
+          recurrence_end_date: session.recurrenceEndDate?.toISOString(),
+          recurrence_count: session.recurrenceCount
+        }));
+
+        const { error: sessionsError } = await supabase
+          .from('course_sessions')
+          .insert(formattedSessions);
+
+        if (sessionsError) throw sessionsError;
+      }
+
+      // Upload images if any
+      if (images.length > 0) {
+        for (let i = 0; i < images.length; i++) {
+          const image = images[i];
+          const fileExt = image.name.split('.').pop();
+          const filePath = `${course.id}/${Math.random()}.${fileExt}`;
+          
+          const { error: uploadError } = await supabase.storage
+            .from('course-images')
+            .upload(filePath, image);
+
+          if (uploadError) throw uploadError;
+
+          // Insert image reference
+          const { error: imageError } = await supabase
+            .from('course_images')
+            .insert({
+              course_id: course.id,
+              image_path: filePath,
+              display_order: i
+            });
+
+          if (imageError) throw imageError;
+        }
+      }
+
+      toast.success("Class published successfully!");
+      navigate("/dashboard/classes");
     } catch (error) {
-      console.error('Error duplicating class:', error);
-      toast({
-        title: 'Error',
-        description: 'Failed to duplicate class',
-        variant: 'destructive',
-      });
-      setIsLoading(false);
+      console.error("Error creating class:", error);
+      toast.error("Failed to create class. Please try again.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
-  
-  if (isLoading && !courseData) {
-    return (
-      <div className="container mx-auto py-10">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex justify-center items-center h-40">
-              <p>Loading course data...</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-  
+
+  const saveDraft = async () => {
+    try {
+      setIsSubmitting(true);
+      const formData = form.getValues();
+      
+      const { data: userData, error: userError } = await supabase.auth.getUser();
+      if (userError) throw userError;
+
+      if (!userData.user) {
+        toast.error("You must be logged in to save a draft");
+        return;
+      }
+
+      const { error: courseError } = await supabase
+        .from('courses')
+        .insert({
+          title: formData.title,
+          description: formData.description,
+          price: formData.price,
+          max_participants: formData.maxParticipants,
+          location: formData.location,
+          category: formData.category,
+          instructor_id: userData.user.id,
+          what_to_bring: formData.whatToBring,
+          learning_outcomes: formData.learningOutcomes,
+          status: 'draft'
+        });
+
+      if (courseError) throw courseError;
+
+      toast.success("Class saved as draft");
+      setDraftCount(prev => prev + 1);
+      navigate("/dashboard/classes");
+    } catch (error) {
+      console.error("Error saving draft:", error);
+      toast.error("Failed to save draft. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
-    <div className="container mx-auto py-4 sm:py-10 px-4 sm:px-0">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-xl sm:text-2xl">Duplicate Class</CardTitle>
-          <CardDescription>
-            Create a copy of "{courseData?.title}" with new dates and settings
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="title">New Class Title</Label>
-                <Input
-                  id="title"
-                  value={newTitle}
-                  onChange={(e) => setNewTitle(e.target.value)}
-                  placeholder="Enter a title for the new class"
-                  className="mt-1"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="startDate">Start Date</Label>
-                <div className="mt-1">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        id="startDate"
-                        variant="outline"
-                        className={cn(
-                          "w-full justify-start text-left font-normal",
-                          !newDate && "text-muted-foreground"
-                        )}
-                      >
-                        <CalendarIcon className="mr-2 h-4 w-4" />
-                        {newDate ? format(newDate, "PPP") : "Select date"}
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0">
-                      <Calendar
-                        mode="single"
-                        selected={newDate}
-                        onSelect={setNewDate}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  All sessions will be shifted to start from this date
-                </p>
-              </div>
-              
-              <div className="space-y-2">
-                <Label>Additional Options</Label>
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="keepWaitlist"
-                    checked={keepWaitlist}
-                    onCheckedChange={(checked) => setKeepWaitlist(checked === true)}
-                  />
-                  <label
-                    htmlFor="keepWaitlist"
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Copy waitlist ({courseData?.waitlist?.length || 0} students)
-                  </label>
-                </div>
-                
-                <div className="flex items-center space-x-2">
-                  <Checkbox
-                    id="keepStudents"
-                    checked={keepStudents}
-                    onCheckedChange={(checked) => setKeepStudents(checked === true)}
-                  />
-                  <label
-                    htmlFor="keepStudents"
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    Copy enrolled students ({courseData?.enrollments?.length || 0} students)
-                  </label>
-                </div>
-              </div>
+    <div className="space-y-8">
+      <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
+
+      <Form {...form}>
+        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Basic Information</h2>
+            <BasicInfoSection form={form} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">What to Bring and Learning Outcomes</h2>
+            <div className="space-y-6">
+              <BringItemsSection form={form} />
+              <LearningOutcomesSection form={form} />
             </div>
-            
-            <div className="flex gap-4 pt-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => navigate('/dashboard/classes')}
-                disabled={isLoading}
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                className="flex-1"
-                disabled={isLoading || !newTitle || !newDate}
-              >
-                <Copy className="mr-2 h-4 w-4" />
-                {isLoading ? 'Creating...' : 'Duplicate Class'}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
+            <LocationCategorySection form={form} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
+            <PricingCapacitySection form={form} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Images</h2>
+            <ImagesSection images={images} setImages={setImages} />
+          </Card>
+
+          <Card className="p-6">
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Sessions</h2>
+            <p className="text-muted-foreground mb-6 text-left">Schedule individual sessions or set up recurring classes (weekly, bi-weekly, or monthly)</p>
+            <LocationCategoryDetailsSection form={form} />
+          </Card>
+
+          <CreateClassActions isSubmitting={isSubmitting} onSaveDraft={saveDraft} />
+        </form>
+      </Form>
     </div>
   );
 };

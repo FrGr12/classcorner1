@@ -280,41 +280,41 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="space-y-4 sm:space-y-8 max-w-5xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
+    <div className="space-y-8 max-w-5xl mx-auto px-4 py-8">
       <CreateClassHeader draftCount={draftCount} isSubmitting={isSubmitting} />
 
       <Form {...form}>
-        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-8">
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">Basic Information</h2>
+        <form id="create-class-form" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">Basic Information</h2>
             <BasicInfoSection form={form} />
           </Card>
 
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">What to Bring and Learning Outcomes</h2>
-            <div className="space-y-4 sm:space-y-6">
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">What to Bring and Learning Outcomes</h2>
+            <div className="space-y-6">
               <BringItemsSection form={form} />
               <LearningOutcomesSection form={form} />
             </div>
           </Card>
 
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">Location & Category</h2>
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">Location & Category</h2>
             <LocationCategorySection form={form} />
           </Card>
 
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">Pricing & Capacity</h2>
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">Pricing & Capacity</h2>
             <PricingCapacitySection form={form} />
           </Card>
 
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">Add Images</h2>
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">Add Images</h2>
             <ImagesSection images={images} setImages={setImages} />
           </Card>
 
-          <Card className="p-3 sm:p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
-            <h2 className="text-lg sm:text-xl font-semibold mb-4 sm:mb-6 text-left">Schedule & Sessions</h2>
+          <Card className="p-6 bg-white/80 backdrop-blur-sm border border-neutral-200">
+            <h2 className="text-xl font-semibold mb-6 text-left">Schedule & Sessions</h2>
             <LocationCategoryDetailsSection form={form} />
           </Card>
 
@@ -327,9 +327,9 @@ const CreateClass = () => {
 
       {isSubmitting && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-          <div className="bg-white p-4 sm:p-6 rounded-lg flex items-center gap-3">
-            <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
-            <p className="text-base sm:text-lg">Processing your request...</p>
+          <div className="bg-white p-6 rounded-lg flex items-center gap-3">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <p className="text-lg">Processing your request...</p>
           </div>
         </div>
       )}

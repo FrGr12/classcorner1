@@ -2,7 +2,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ClassItem } from "@/types/class";
 import ClassesTabContent from "./ClassesTabContent";
-import { AttendanceTracking } from "../AttendanceTracking";
+import AttendanceTracking from "../AttendanceTracking";
 import TeacherWaitlist from "@/pages/TeacherWaitlist";
 import PromotionalStats from "./promotional/PromotionalStats";
 

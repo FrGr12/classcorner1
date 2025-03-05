@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { ResizablePanelGroup, ResizablePanel, ResizableHandle } from "@/components/ui/resizable";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -21,20 +21,9 @@ const TeacherInbox = () => {
   const [messageContent, setMessageContent] = useState("");
   const [recipient, setRecipient] = useState("");
   const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
-  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const { toast } = useToast();
   const location = useLocation();
   const navigate = useNavigate();
-
-  // Detect window size changes
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
 
   const { messages, studentBookings } = useInboxData(selectedMessage?.student_id || null);
 
@@ -88,7 +77,7 @@ const TeacherInbox = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <InboxHeader onComposeClick={() => setIsComposeOpen(true)} />
       
       <InboxFilters
@@ -98,18 +87,8 @@ const TeacherInbox = () => {
         onStatusFilterChange={setStatusFilter}
       />
 
-      <ResizablePanelGroup 
-        direction="horizontal" 
-        className="min-h-[600px] rounded-lg border"
-      >
-        <ResizablePanel 
-          defaultSize={25} 
-          minSize={20}
-          className="md:block"
-          style={{ 
-            display: selectedMessage && isMobile ? 'none' : 'block' 
-          }}
-        >
+      <ResizablePanelGroup direction="horizontal" className="min-h-[600px] rounded-lg border">
+        <ResizablePanel defaultSize={25} minSize={20}>
           <MessageList
             messages={messages || []}
             selectedMessage={selectedMessage}
@@ -118,31 +97,15 @@ const TeacherInbox = () => {
           />
         </ResizablePanel>
 
-        <ResizableHandle className="hidden md:flex" />
+        <ResizableHandle />
 
-        <ResizablePanel 
-          defaultSize={45}
-          className="md:block"
-          style={{ 
-            display: !selectedMessage && isMobile ? 'none' : 'block' 
-          }}
-        >
-          <MessageDetail 
-            selectedMessage={selectedMessage} 
-            onBack={() => {
-              if (isMobile) {
-                setSelectedMessage(null);
-              }
-            }} 
-          />
+        <ResizablePanel defaultSize={45}>
+          <MessageDetail selectedMessage={selectedMessage} />
         </ResizablePanel>
 
-        <ResizableHandle className="hidden md:flex" />
+        <ResizableHandle />
 
-        <ResizablePanel 
-          defaultSize={30}
-          className="hidden md:block" // Hide on mobile always
-        >
+        <ResizablePanel defaultSize={30}>
           <ContactDetail
             selectedMessage={selectedMessage}
             studentBookings={studentBookings || []}

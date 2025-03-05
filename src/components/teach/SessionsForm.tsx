@@ -1,135 +1,106 @@
 
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { CalendarIcon, Plus, Trash2 } from "lucide-react";
-import { format } from "date-fns";
 import { Session } from "@/types/session";
+import SessionFormFields from "./session-form/SessionFormFields";
+import SessionList from "./session-form/SessionList";
 
 interface SessionsFormProps {
   sessions: Session[];
   setSessions: (sessions: Session[]) => void;
 }
 
-export function SessionsForm({ sessions, setSessions }: SessionsFormProps) {
-  const [newDate, setNewDate] = useState<Date | undefined>();
-  const [newStartTime, setNewStartTime] = useState("");
-  const [newEndTime, setNewEndTime] = useState("");
+const SessionsForm = ({ sessions, setSessions }: SessionsFormProps) => {
+  const [startDate, setStartDate] = useState<Date>();
+  const [startTime, setStartTime] = useState<string>("12:00");
   const [isRecurring, setIsRecurring] = useState(false);
-  const [recurringWeeks, setRecurringWeeks] = useState(1);
+  const [recurrencePattern, setRecurrencePattern] = useState<string>();
+  const [recurrenceEndDate, setRecurrenceEndDate] = useState<Date>();
+  const [recurrenceCount, setRecurrenceCount] = useState<string>();
 
-  const handleAddSession = () => {
-    if (newDate && newStartTime) {
+  const addSession = () => {
+    if (startDate) {
+      // Combine date and time
+      const [hours, minutes] = startTime.split(":").map(Number);
+      const combinedDateTime = new Date(startDate);
+      combinedDateTime.setHours(hours, minutes);
+
       const newSession: Session = {
-        id: Date.now(),
-        date: newDate,
-        start_time: newStartTime,
-        end_time: newEndTime,
-        is_recurring: isRecurring,
-        recurring_weeks: isRecurring ? recurringWeeks : 0,
-        max_participants: 10,
-        status: "scheduled"
+        start: combinedDateTime,
+        isRecurring,
       };
-      
+
+      if (isRecurring) {
+        newSession.recurrencePattern = recurrencePattern;
+        if (recurrenceEndDate) {
+          newSession.recurrenceEndDate = recurrenceEndDate;
+        }
+        if (recurrenceCount) {
+          newSession.recurrenceCount = parseInt(recurrenceCount);
+        }
+      }
+
       setSessions([...sessions, newSession]);
-      
-      setNewDate(undefined);
-      setNewStartTime("");
-      setNewEndTime("");
+      resetForm();
     }
   };
 
-  const handleRemoveSession = (id: number) => {
-    setSessions(sessions.filter(session => session.id !== id));
+  const resetForm = () => {
+    setStartDate(undefined);
+    setStartTime("12:00");
+    setIsRecurring(false);
+    setRecurrencePattern(undefined);
+    setRecurrenceEndDate(undefined);
+    setRecurrenceCount(undefined);
+  };
+
+  const removeSession = (index: number) => {
+    setSessions(sessions.filter((_, i) => i !== index));
   };
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full justify-start text-left font-normal"
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {newDate ? format(newDate, "PPP") : <span>Pick a date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0">
-              <Calendar
-                mode="single"
-                selected={newDate}
-                onSelect={setNewDate}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-        </div>
-        <div>
-          <Input
-            type="time"
-            placeholder="Start Time"
-            value={newStartTime}
-            onChange={(e) => setNewStartTime(e.target.value)}
+    <div className="space-y-6">
+      <div className="grid grid-cols-[1fr_auto] items-start gap-4">
+        <div className="space-y-4">
+          <SessionFormFields
+            startDate={startDate}
+            setStartDate={setStartDate}
+            startTime={startTime}
+            setStartTime={setStartTime}
+            isRecurring={isRecurring}
+            setIsRecurring={setIsRecurring}
+            recurrencePattern={recurrencePattern}
+            setRecurrencePattern={setRecurrencePattern}
+            recurrenceEndDate={recurrenceEndDate}
+            setRecurrenceEndDate={setRecurrenceEndDate}
+            recurrenceCount={recurrenceCount}
+            setRecurrenceCount={setRecurrenceCount}
           />
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setIsRecurring(!isRecurring)}
+            className={`w-full ${isRecurring ? 'bg-accent-purple/10 border-accent-purple text-accent-purple' : 'bg-white'}`}
+          >
+            {isRecurring ? 'Recurring On' : 'Make Recurring'}
+          </Button>
         </div>
-        <div>
-          <Input
-            type="time"
-            placeholder="End Time"
-            value={newEndTime}
-            onChange={(e) => setNewEndTime(e.target.value)}
-          />
-        </div>
+
+        <Button
+          type="button"
+          onClick={addSession}
+          disabled={!startDate}
+          className="bg-accent-purple hover:bg-accent-purple/90 text-white h-10"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Add
+        </Button>
       </div>
 
-      <Button 
-        size="sm" 
-        variant="outline" 
-        onClick={handleAddSession}
-        disabled={!newDate || !newStartTime}
-        className="flex items-center"
-      >
-        <Plus className="h-4 w-4 mr-2" />
-        Add Session
-      </Button>
-
-      {sessions.length > 0 && (
-        <div className="mt-6 space-y-2">
-          <h3 className="text-sm font-medium">Scheduled Sessions</h3>
-          <div className="space-y-2">
-            {sessions.map((session) => (
-              <div
-                key={session.id}
-                className="flex items-center justify-between p-3 bg-muted rounded-md"
-              >
-                <div className="flex-1 space-y-1">
-                  <p className="text-sm font-medium">
-                    {format(new Date(session.date), "PPP")}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {session.start_time} - {session.end_time}
-                  </p>
-                </div>
-                <Button
-                  size="icon"
-                  variant="ghost"
-                  onClick={() => handleRemoveSession(session.id)}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </Button>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+      <SessionList sessions={sessions} removeSession={removeSession} />
     </div>
   );
-}
+};
 
-// Provide both named export and default export for backward compatibility
 export default SessionsForm;

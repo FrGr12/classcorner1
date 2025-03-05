@@ -1,158 +1,208 @@
-
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { useState, useEffect } from "react";
+import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Search, Download, UserCheck, UserX } from "lucide-react";
-
-export function AttendanceTracking() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedClass, setSelectedClass] = useState("all");
-
-  // Mock data for demonstration
-  const attendanceData = [
-    {
-      id: 1,
-      student: "Emma Johnson",
-      email: "emma.j@example.com",
-      class: "Introduction to Pottery",
-      date: "2023-08-15",
-      status: "attended",
-      notes: "Completed all exercises"
-    },
-    {
-      id: 2,
-      student: "Michael Smith",
-      email: "m.smith@example.com",
-      class: "Advanced Ceramics",
-      date: "2023-08-16",
-      status: "absent",
-      notes: "Notified in advance"
-    },
-    {
-      id: 3,
-      student: "Sarah Williams",
-      email: "sarah.w@example.com",
-      class: "Introduction to Pottery",
-      date: "2023-08-15",
-      status: "attended",
-      notes: ""
-    },
-    {
-      id: 4,
-      student: "James Brown",
-      email: "j.brown@example.com",
-      class: "Introduction to Pottery",
-      date: "2023-08-15",
-      status: "late",
-      notes: "Arrived 15 minutes late"
-    },
-    {
-      id: 5,
-      student: "Emily Davis",
-      email: "emily.d@example.com",
-      class: "Advanced Ceramics",
-      date: "2023-08-16",
-      status: "attended",
-      notes: ""
+import type { AttendanceRecord, Session } from "@/types/waitlist";
+const AttendanceTracking = () => {
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [selectedSession, setSelectedSession] = useState<number | null>(null);
+  const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
+  const [loading, setLoading] = useState(true);
+  const {
+    toast
+  } = useToast();
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+  useEffect(() => {
+    if (selectedSession) {
+      fetchAttendanceRecords(selectedSession);
     }
-  ];
+  }, [selectedSession]);
+  const fetchSessions = async () => {
+    try {
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      const {
+        data,
+        error
+      } = await supabase.from('course_sessions').select(`
+          id,
+          start_time
+        `).order('start_time', {
+        ascending: false
+      });
+      if (error) throw error;
+      setSessions(data || []);
+      if (data && data.length > 0) {
+        setSelectedSession(data[0].id);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+  const fetchAttendanceRecords = async (sessionId: number) => {
+    try {
+      // First get all bookings for this session with student info
+      const {
+        data: bookings,
+        error: bookingsError
+      } = await supabase.from('bookings').select(`
+          id,
+          student_id,
+          student:profiles!inner(first_name, last_name)
+        `).eq('session_id', sessionId);
+      if (bookingsError) throw bookingsError;
+      if (!bookings) {
+        setAttendanceRecords([]);
+        return;
+      }
 
-  const filteredData = attendanceData.filter(
-    item =>
-      (selectedClass === "all" || item.class === selectedClass) &&
-      (item.student.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.email.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
-
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row justify-between gap-4">
-        <div className="relative w-full sm:w-1/2 md:w-1/3">
-          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input
-            placeholder="Search students..."
-            className="pl-8"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
+      // Map bookings to attendance records
+      const records: AttendanceRecord[] = bookings.map(booking => {
+        // Ensure we get just the first student if it's an array
+        const studentData = Array.isArray(booking.student) ? booking.student[0] : booking.student;
+        return {
+          id: 0,
+          // New record
+          booking_id: booking.id,
+          session_id: sessionId,
+          attendance_status: 'pending',
+          notes: null,
+          marked_at: null,
+          marked_by: null,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+          booking: {
+            student: {
+              first_name: studentData?.first_name || '',
+              last_name: studentData?.last_name || ''
+            }
+          }
+        };
+      });
+      setAttendanceRecords(records);
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+  const updateAttendance = async (recordId: number, bookingId: number, status: 'present' | 'absent' | 'pending') => {
+    try {
+      const {
+        data: {
+          user
+        }
+      } = await supabase.auth.getUser();
+      if (!user) return;
+      if (recordId === 0) {
+        // Create a new booking record in the bookings table
+        const {
+          data,
+          error: bookingError
+        } = await supabase.from('bookings').insert([{
+          session_id: selectedSession,
+          attendance_status: status
+        }]).single();
+        if (bookingError) throw bookingError;
+      } else {
+        // Update existing booking
+        const {
+          error: updateError
+        } = await supabase.from('bookings').update({
+          attendance_status: status
+        }).eq('id', bookingId);
+        if (updateError) throw updateError;
+      }
+      toast({
+        title: "Success",
+        description: "Attendance updated successfully"
+      });
+      if (selectedSession) {
+        fetchAttendanceRecords(selectedSession);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive"
+      });
+    }
+  };
+  if (loading) {
+    return <div className="flex items-center justify-center p-8">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>;
+  }
+  return <Card>
+      <CardHeader>
+        <CardTitle className="text-left">Attendance Tracking</CardTitle>
+        <CardDescription className="text-left">
+          Track student attendance for your sessions
+        </CardDescription>
+        <div className="mt-4">
+          <Select value={selectedSession?.toString()} onValueChange={value => setSelectedSession(Number(value))}>
+            <SelectTrigger className="w-[300px]">
+              <SelectValue placeholder="Select a session" />
+            </SelectTrigger>
+            <SelectContent>
+              {sessions.map(session => <SelectItem key={session.id} value={session.id.toString()}>
+                  {new Date(session.start_time).toLocaleString()}
+                </SelectItem>)}
+            </SelectContent>
+          </Select>
         </div>
-        <Button variant="outline" className="gap-2">
-          <Download className="h-4 w-4" />
-          Export Data
-        </Button>
-      </div>
-
-      <Tabs defaultValue="all" onValueChange={setSelectedClass}>
-        <TabsList>
-          <TabsTrigger value="all">All Classes</TabsTrigger>
-          <TabsTrigger value="Introduction to Pottery">Pottery</TabsTrigger>
-          <TabsTrigger value="Advanced Ceramics">Ceramics</TabsTrigger>
-        </TabsList>
-
-        <TabsContent value={selectedClass} className="mt-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Attendance Records</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Student</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Class</TableHead>
-                    <TableHead>Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Notes</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredData.map((record) => (
-                    <TableRow key={record.id}>
-                      <TableCell className="font-medium">{record.student}</TableCell>
-                      <TableCell>{record.email}</TableCell>
-                      <TableCell>{record.class}</TableCell>
-                      <TableCell>{record.date}</TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={
-                            record.status === "attended"
-                              ? "outline"
-                              : record.status === "absent"
-                              ? "destructive"
-                              : "secondary"
-                          }
-                        >
-                          {record.status}
-                        </Badge>
-                      </TableCell>
-                      <TableCell>{record.notes}</TableCell>
-                      <TableCell className="text-right">
-                        <div className="flex justify-end gap-2">
-                          <Button variant="ghost" size="icon">
-                            <UserCheck className="h-4 w-4" />
-                          </Button>
-                          <Button variant="ghost" size="icon">
-                            <UserX className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
-    </div>
-  );
-}
-
-// Provide both named export and default export for backward compatibility
+      </CardHeader>
+      <CardContent>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Student</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {attendanceRecords.map(record => <TableRow key={record.booking_id}>
+                <TableCell>
+                  {record.booking.student.first_name} {record.booking.student.last_name}
+                </TableCell>
+                <TableCell>
+                  <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+                    ${record.attendance_status === 'present' ? 'bg-green-100 text-green-800' : record.attendance_status === 'absent' ? 'bg-red-100 text-red-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                    {record.attendance_status.charAt(0).toUpperCase() + record.attendance_status.slice(1)}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex gap-2">
+                    <Button size="sm" variant={record.attendance_status === 'present' ? 'default' : 'outline'} onClick={() => updateAttendance(record.id, record.booking_id, 'present')}>
+                      Present
+                    </Button>
+                    <Button size="sm" variant={record.attendance_status === 'absent' ? 'default' : 'outline'} onClick={() => updateAttendance(record.id, record.booking_id, 'absent')}>
+                      Absent
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>)}
+          </TableBody>
+        </Table>
+      </CardContent>
+    </Card>;
+};
 export default AttendanceTracking;

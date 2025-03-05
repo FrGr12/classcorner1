@@ -16,9 +16,9 @@ interface WaitlistSectionProps {
 
 const WaitlistSection = ({ form }: WaitlistSectionProps) => {
   return (
-    <div className="space-y-3 sm:space-y-4">
+    <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <FormLabel htmlFor="waitlistEnabled" className="text-xs sm:text-sm">Enable Waitlist</FormLabel>
+        <FormLabel htmlFor="waitlistEnabled">Enable Waitlist</FormLabel>
         <Switch 
           id="waitlistEnabled"
           checked={form.watch("waitlistEnabled")}
@@ -32,15 +32,11 @@ const WaitlistSection = ({ form }: WaitlistSectionProps) => {
           name="maxWaitlistSize"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-xs sm:text-sm">Maximum Waitlist Size</FormLabel>
+              <FormLabel>Maximum Waitlist Size</FormLabel>
               <FormControl>
-                <Input 
-                  type="number" 
-                  {...field} 
-                  className="h-9 sm:h-10 text-xs sm:text-sm"
-                />
+                <Input type="number" {...field} />
               </FormControl>
-              <FormMessage className="text-xs sm:text-sm" />
+              <FormMessage />
             </FormItem>
           )}
         />
