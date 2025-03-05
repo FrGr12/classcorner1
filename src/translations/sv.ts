@@ -6,7 +6,7 @@ const translations = {
   "nav.startTeaching": "Börja Undervisa",
   "nav.resources": "Resurser",
   "nav.dashboard": "Kontrollpanel",
-  "nav.teacherDashboard": "Instruktörspanel",
+  "nav.teacherDashboard": "Instruktörpanel",
   "nav.studentDashboard": "Elevpanel",
   "nav.signOut": "Logga ut",
   "nav.signIn": "Logga in",
@@ -24,7 +24,7 @@ const translations = {
   "hero.cta": "Utforska Kurser",
   
   // Categories
-  "categories.title": "Bläddra i Kategorier",
+  "categories.title": "Bläddra bland kategorier",
   "categories.pottery": "Keramik",
   "categories.cooking": "Matlagning",
   "categories.baking": "Bakning",
@@ -41,24 +41,24 @@ const translations = {
   
   // Class details
   "class.perPerson": "per person",
-  "class.askQuestion": "Ställ en Fråga",
-  "class.bookNow": "Boka Nu",
+  "class.askQuestion": "Ställ en fråga",
+  "class.bookNow": "Boka nu",
   "class.location": "Plats",
-  "class.freeParking": "Gratis parkering finns",
+  "class.freeParking": "Gratis parkering tillgänglig",
   "class.nearStation": "5 minuters promenad från Centralstationen",
-  "class.requestPrivate": "Begär Privat Kurs",
+  "class.requestPrivate": "Begär privatklass",
   "class.contact": "Kontakta",
   "class.follow": "Följ",
   "class.following": "Följer",
-  "class.viewProfile": "Visa Profil",
-  "class.editCourse": "Redigera Kurs",
+  "class.viewProfile": "Visa profil",
+  "class.editCourse": "Redigera kurs",
   
   // Popular searches
   "popular.beginnerPottery": "Keramik för nybörjare",
   "popular.cookingClasses": "Matlagningskurser nära mig",
   "popular.weekendArt": "Konstworkshops på helgen",
   "popular.photographyBasics": "Grundkurs i fotografi",
-  "popular.candleMaking": "Ljustillverkning",
+  "popular.candleMaking": "Ljusstöpning",
   
   // Footer
   "footer.about": "Om oss",
@@ -80,36 +80,47 @@ const translations = {
   "faq.title": "Vanliga frågor",
   "faq.addFAQ": "Lägg till FAQ",
   "faq.askQuestion": "Ställ en fråga",
-  "faq.noFAQs": "Inga FAQs än.",
-  "faq.addSomeFAQs": "Lägg till några FAQs för att hjälpa dina elever!",
+  "faq.noFAQs": "Inga vanliga frågor än.",
+  "faq.addSomeFAQs": "Lägg till några vanliga frågor för att hjälpa dina elever!",
   "faq.beFirstToAsk": "Var först med att ställa en fråga!",
   "faq.cancelPolicy": "Vad händer om jag behöver avboka?",
-  "faq.cancelAnswer": "Du kan avboka upp till 48 timmar före kursstart för full återbetalning. Avbokningar inom 48 timmar återbetalas inte men kan ombokas.",
+  "faq.cancelAnswer": "Du kan avboka upp till 48 timmar före kursens start för full återbetalning. Avbokningar inom 48 timmar är inte återbetalningsbara men kan ombokas.",
   "faq.materials": "Behöver jag ta med något?",
-  "faq.materialsAnswer": "Allt material ingår i kurspriset. Ta bara med dig själv och din kreativitet!",
-  "faq.beginners": "Är denna kurs lämplig för nybörjare?",
-  "faq.beginnersAnswer": "Ja! Våra kurser är utformade för att passa alla kunskapsnivåer, från kompletta nybörjare till mer erfarna hantverkare.",
+  "faq.materialsAnswer": "Alla material ingår i kurspriset. Ta bara med dig själv och din kreativitet!",
+  "faq.beginners": "Är kursen lämplig för nybörjare?",
+  "faq.beginnersAnswer": "Ja! Våra kurser är utformade för att passa alla kunskapsnivåer, från absoluta nybörjare till mer erfarna kreatörer.",
   
   // Instructor
   "instructor.about": "Om",
-  "instructor.contact": "Kontakt",
-  "instructor.reviews": "Omdömen",
+  "instructor.contact": "Kontakta",
+  "instructor.reviews": "Recensioner",
   "instructor.expertise": "Expertisområden",
   "instructor.experience": "Undervisningserfarenhet",
   "instructor.readMore": "Läs mer",
   "instructor.showLess": "Visa mindre",
-  "instructor.noBio": "Denna instruktör har inte lagt till en bio ännu. De är passionerade över att undervisa och dela sin expertis med elever.",
+  "instructor.noBio": "Den här instruktören har inte lagt till en biografi än. De är passionerade över att undervisa och dela sin expertis med elever.",
   
   // Dashboard
-  "dashboard.title": "Instruktörspanel",
+  "dashboard.title": "Instruktörpanel",
   "dashboard.overview": "Översikt",
   "dashboard.classes": "Kurser",
-  "dashboard.createClass": "Skapa Kurs",
+  "dashboard.createClass": "Skapa kurs",
   "dashboard.inbox": "Inkorg",
   "dashboard.contacts": "Kontakter",
   "dashboard.stats": "Statistik & Insikter",
   "dashboard.profile": "Profil",
   "dashboard.menu": "Meny",
+
+  // Messaging and contact
+  "message.title": "Meddelande",
+  "message.send": "Skicka",
+  "message.cancel": "Avbryt",
+  "message.sending": "Skickar...",
+  "message.placeholder": "Skriv ditt meddelande här...",
+  "message.success": "Meddelande skickat till",
+  "message.description": "Skicka ett meddelande till instruktören. De svarar vanligtvis inom 24 timmar.",
+  "message.instructor": "Meddelande",
+  "message.specific": "Skicka ett meddelande till denna instruktör. De svarar vanligtvis inom 24 timmar."
 };
 
 export default translations;

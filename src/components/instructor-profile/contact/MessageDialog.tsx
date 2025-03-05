@@ -35,7 +35,7 @@ const MessageDialog = ({
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
     
-    toast.success(`Message sent to ${instructor.displayName}`);
+    toast.success(`${t("message.success")} ${instructor.displayName}`);
     setMessage("");
     setIsSending(false);
     onOpenChange(false);
@@ -45,9 +45,9 @@ const MessageDialog = ({
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Message {instructor.displayName}</DialogTitle>
+          <DialogTitle>{t("message.instructor")} {instructor.displayName}</DialogTitle>
           <DialogDescription>
-            Send a message to this instructor. They'll typically respond within 24 hours.
+            {t("message.description")}
           </DialogDescription>
         </DialogHeader>
         
@@ -55,20 +55,20 @@ const MessageDialog = ({
           <Textarea
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type your message here..."
+            placeholder={t("message.placeholder")}
             className="min-h-[120px]"
           />
         </div>
         
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {t("message.cancel")}
           </Button>
           <Button 
             onClick={handleSend} 
             disabled={!message.trim() || isSending}
           >
-            {isSending ? "Sending..." : "Send Message"}
+            {isSending ? t("message.sending") : t("message.send")}
           </Button>
         </DialogFooter>
       </DialogContent>

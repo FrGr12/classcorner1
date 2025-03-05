@@ -69,17 +69,17 @@ const Hero = () => {
         >
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">10,000+</span>
-            <span>Elever</span>
+            <span>{t("stats.students")}</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">1,000+</span>
-            <span>Instruktörer</span>
+            <span>{t("stats.instructors")}</span>
           </div>
           <div className="w-1 h-1 rounded-full bg-neutral-300" />
           <div className="flex items-center gap-1 sm:gap-2">
             <span className="font-medium text-neutral-900">50+</span>
-            <span>Kategorier</span>
+            <span>{t("stats.categories")}</span>
           </div>
         </motion.div>
       </div>
