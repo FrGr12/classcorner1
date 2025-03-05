@@ -1,16 +1,13 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2 } from "lucide-react";
-import { MessageList } from "./MessageList";
-import { MessageReply } from "./MessageReply";
-import { useTeacherMessages } from "./useTeacherMessages";
-import { MessageTab } from "./types";
+import React from 'react';
+import { useTeacherMessages } from './useTeacherMessages';
+import MessageList from './MessageList';
+import MessageReply from './MessageReply';
 
 const TeacherMessages = () => {
-  const {
+  const { 
+    messages, 
     loading,
-    messages,
     newMessage,
     setNewMessage,
     selectedMessage,
@@ -23,70 +20,55 @@ const TeacherMessages = () => {
   } = useTeacherMessages();
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin" />
-      </div>
-    );
+    return <div className="p-4">Loading messages...</div>;
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold">Messages</h1>
-        <p className="text-muted-foreground">
-          Manage your communications with students
-        </p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="md:col-span-1 border rounded-lg overflow-hidden">
+        <div className="bg-muted p-3 border-b">
+          <div className="flex space-x-2">
+            <button
+              className={`px-3 py-1 rounded-md ${activeTab === 'inbox' ? 'bg-primary text-primary-foreground' : 'hover:bg-background'}`}
+              onClick={() => setActiveTab('inbox')}
+            >
+              Inbox
+              {getUnreadMessages().length > 0 && (
+                <span className="ml-2 bg-destructive text-destructive-foreground text-xs rounded-full px-2 py-0.5">
+                  {getUnreadMessages().length}
+                </span>
+              )}
+            </button>
+            <button
+              className={`px-3 py-1 rounded-md ${activeTab === 'sent' ? 'bg-primary text-primary-foreground' : 'hover:bg-background'}`}
+              onClick={() => setActiveTab('sent')}
+            >
+              Sent
+            </button>
+          </div>
+        </div>
+        
+        <MessageList
+          messages={activeTab === 'inbox' ? messages : getSentMessages()}
+          selectedMessage={selectedMessage}
+          onSelectMessage={setSelectedMessage}
+        />
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Inbox</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as MessageTab)}>
-            <TabsList>
-              <TabsTrigger value="all">All Messages</TabsTrigger>
-              <TabsTrigger value="unread">Unread ({getUnreadMessages().length})</TabsTrigger>
-              <TabsTrigger value="sent">Sent ({getSentMessages().length})</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="all" className="space-y-4">
-              <MessageList 
-                messages={messages} 
-                selectedMessage={selectedMessage}
-                onSelectMessage={setSelectedMessage}
-              />
-            </TabsContent>
-            
-            <TabsContent value="unread">
-              <MessageList 
-                messages={getUnreadMessages()} 
-                selectedMessage={selectedMessage}
-                onSelectMessage={setSelectedMessage}
-              />
-            </TabsContent>
-            
-            <TabsContent value="sent">
-              <MessageList 
-                messages={getSentMessages()} 
-                selectedMessage={selectedMessage}
-                onSelectMessage={setSelectedMessage}
-              />
-            </TabsContent>
-          </Tabs>
-
-          {selectedMessage && (
-            <MessageReply
-              selectedMessage={selectedMessage}
-              newMessage={newMessage}
-              setNewMessage={setNewMessage}
-              onSendReply={handleSendReply}
-              onClose={() => setSelectedMessage(null)}
-            />
-          )}
-        </CardContent>
-      </Card>
+      
+      <div className="md:col-span-2 border rounded-lg">
+        {selectedMessage ? (
+          <MessageReply
+            message={selectedMessage}
+            replyText={newMessage}
+            setReplyText={setNewMessage}
+            onSendReply={() => handleSendReply(selectedMessage.thread_id, newMessage)}
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full p-6 text-center text-muted-foreground">
+            Select a message to view and reply
+          </div>
+        )}
+      </div>
     </div>
   );
 };

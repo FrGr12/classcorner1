@@ -5,6 +5,9 @@ import { Message } from './types';
 export const useTeacherMessages = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [newMessage, setNewMessage] = useState<string>('');
+  const [selectedMessage, setSelectedMessage] = useState<Message | null>(null);
+  const [activeTab, setActiveTab] = useState<string>('inbox');
   
   useEffect(() => {
     // Mock data for teacher messages without authentication
@@ -108,5 +111,52 @@ export const useTeacherMessages = () => {
     }, 1000);
   }, []);
 
-  return { messages, loading };
+  const handleSendReply = (threadId: string, replyContent: string) => {
+    // In a real app, this would send the reply to the API
+    console.log(`Sending reply to thread ${threadId}: ${replyContent}`);
+    
+    // For demo purposes, we'll update the local message state
+    setMessages(prevMessages => {
+      return prevMessages.map(msg => {
+        if (msg.thread_id === threadId) {
+          return {
+            ...msg,
+            is_unread: false,
+            status: 'read',
+            read_at: new Date().toISOString(),
+            last_activity_at: new Date().toISOString()
+          };
+        }
+        return msg;
+      });
+    });
+    
+    // Reset the new message
+    setNewMessage('');
+    
+    // Show success toast in a real app
+  };
+
+  const getUnreadMessages = () => {
+    return messages.filter(msg => msg.is_unread);
+  };
+
+  const getSentMessages = () => {
+    // In a real app, this would filter messages sent by the current user
+    return messages.filter(msg => msg.status === 'read');
+  };
+
+  return { 
+    messages, 
+    loading,
+    newMessage,
+    setNewMessage,
+    selectedMessage,
+    setSelectedMessage,
+    activeTab,
+    setActiveTab,
+    handleSendReply,
+    getUnreadMessages,
+    getSentMessages
+  };
 };
