@@ -5,16 +5,10 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import IntegratedSearch from "./search/IntegratedSearch";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ChevronDown, School, BookOpen, Users, LayoutDashboard } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { MobileMenu } from "./navigation/MobileMenu";
 import { DesktopMenu } from "./navigation/DesktopMenu";
 import { UserType } from "@/types/user";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -116,54 +110,6 @@ const Navigation = () => {
                 classcorner
               </span>
             </Link>
-
-            {/* Main dropdown menu for desktop */}
-            <div className="hidden md:flex items-center ml-2">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="text-xs hover:text-accent-purple">
-                    Explore
-                    <ChevronDown className="ml-1 h-3 w-3" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56 bg-white/95 backdrop-blur-sm">
-                  <DropdownMenuItem asChild className="p-2">
-                    <Link to="/community" className="flex items-center hover:text-accent-purple w-full">
-                      <Users className="mr-2 h-4 w-4" />
-                      <span>Community</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  
-                  {/* For Teachers section */}
-                  <DropdownMenuItem asChild className="p-2">
-                    <Link to="/auth" state={{ returnTo: '/dashboard/create-class' }} className="flex items-center hover:text-accent-purple w-full">
-                      <School className="mr-2 h-4 w-4" />
-                      <span>Start Teaching</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="p-2">
-                    <Link to="/community/resource/beginner-guides" className="flex items-center hover:text-accent-purple w-full">
-                      <BookOpen className="mr-2 h-4 w-4" />
-                      <span>Resources</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  
-                  {/* Dashboard options */}
-                  <DropdownMenuItem asChild className="p-2">
-                    <Link to={session ? "/dashboard" : "/auth"} className="flex items-center hover:text-accent-purple w-full">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>Teacher Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild className="p-2">
-                    <Link to={session ? "/user-dashboard" : "/auth"} className="flex items-center hover:text-accent-purple w-full">
-                      <LayoutDashboard className="mr-2 h-4 w-4" />
-                      <span>Student Dashboard</span>
-                    </Link>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </div>
           </div>
           <MobileMenu
             isOpen={isOpen}
