@@ -16,11 +16,25 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
 
   // Check if we're in admin mode - allows direct dashboard access
   const isAdminMode = localStorage.getItem("admin_mode") === "true";
+  
+  // In preview mode, we always want to bypass auth
+  const isPreviewMode = window.location.hostname.includes('stackblitz') || 
+                         window.location.hostname.includes('codesandbox') ||
+                         window.location.hostname.includes('vercel.app') ||
+                         window.location.hostname.includes('netlify.app');
+
+  // If in preview mode and admin mode is not set, enable it automatically
+  useEffect(() => {
+    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+      localStorage.setItem("admin_mode", "true");
+      console.log("Preview mode detected, admin mode enabled automatically");
+    }
+  }, [isPreviewMode]);
 
   useEffect(() => {
-    // If bypass is allowed and we're in admin mode, skip auth check completely
-    if (allowBypass && isAdminMode) {
-      console.log("Admin mode enabled, bypassing auth check completely");
+    // If we're in preview mode or admin mode with allowBypass, skip auth check completely
+    if ((isPreviewMode || (allowBypass && isAdminMode))) {
+      console.log("Preview/Admin mode enabled, bypassing auth check completely");
       setIsAuthenticated(true);
       return;
     }
@@ -58,11 +72,11 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     };
 
     // Only run auth check if we're not bypassing
-    if (!(allowBypass && isAdminMode)) {
+    if (!(isPreviewMode || (allowBypass && isAdminMode))) {
       checkAuth();
     }
     
-    // Listen for auth state changes - only if not in admin mode
+    // Listen for auth state changes - only if not in admin/preview mode
     const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state changed:", event, session);
       if (event === 'SIGNED_IN' && session) {
@@ -77,7 +91,7 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
         setIsAuthenticated(false);
         
         // Don't redirect if we're already on the auth page or if bypass is allowed
-        if (!location.pathname.includes('/auth') && !(allowBypass && isAdminMode)) {
+        if (!location.pathname.includes('/auth') && !(isPreviewMode || (allowBypass && isAdminMode))) {
           navigate('/auth', { state: { returnTo: location.pathname } });
         }
       }
@@ -86,10 +100,10 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [navigate, location, allowBypass, isAdminMode]);
+  }, [navigate, location, allowBypass, isAdminMode, isPreviewMode]);
 
-  // Show loading state while checking authentication, but only if we're not in admin mode bypass
-  if (isAuthenticated === null && !(allowBypass && isAdminMode)) {
+  // Show loading state while checking authentication, but only if we're not in bypass mode
+  if (isAuthenticated === null && !(isPreviewMode || (allowBypass && isAdminMode))) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin h-8 w-8 border-4 border-accent-purple border-t-transparent rounded-full"></div>
@@ -97,8 +111,8 @@ const AuthGuard = ({ children, allowBypass = false }: AuthGuardProps) => {
     );
   }
 
-  // If authenticated or bypass is allowed with admin mode, render children
-  return (isAuthenticated || (allowBypass && isAdminMode)) ? <>{children}</> : null;
+  // If authenticated or bypass is allowed, render children
+  return (isAuthenticated || isPreviewMode || (allowBypass && isAdminMode)) ? <>{children}</> : null;
 };
 
 export default AuthGuard;

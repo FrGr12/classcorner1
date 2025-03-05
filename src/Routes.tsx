@@ -20,6 +20,18 @@ const withAdminToggle = (element) => {
   );
 };
 
+// Check if we're in a preview environment
+const isPreviewMode = window.location.hostname.includes('stackblitz') || 
+                     window.location.hostname.includes('codesandbox') ||
+                     window.location.hostname.includes('vercel.app') ||
+                     window.location.hostname.includes('netlify.app');
+
+// In preview mode, automatically enable admin mode if not already set
+if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+  localStorage.setItem("admin_mode", "true");
+  console.log("Preview mode detected in router, admin mode enabled automatically");
+}
+
 // Central router configuration that organizes all routes
 const router = createBrowserRouter([
   // Public routes - accessible to all users

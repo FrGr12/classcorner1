@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -20,14 +19,23 @@ const Navigation = () => {
   const [userType, setUserType] = useState<UserType>('teacher');
   const isHomePage = location.pathname === "/";
   const isBrowsePage = location.pathname === "/browse";
+  
   const isAdminMode = localStorage.getItem("admin_mode") === "true";
+  const isPreviewMode = window.location.hostname.includes('stackblitz') || 
+                       window.location.hostname.includes('codesandbox') ||
+                       window.location.hostname.includes('vercel.app') ||
+                       window.location.hostname.includes('netlify.app');
 
   useEffect(() => {
-    if (!isAdminMode) {
+    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+      localStorage.setItem("admin_mode", "true");
+      console.log("Preview mode detected, admin mode enabled automatically");
+    }
+    
+    if (!isAdminMode && !isPreviewMode) {
       supabase.auth.getSession().then(({ data: { session } }) => {
         setSession(session);
         
-        // If we have a session, try to get the user type
         if (session?.user?.id) {
           getUserType(session.user.id);
         }
@@ -38,7 +46,6 @@ const Navigation = () => {
       } = supabase.auth.onAuthStateChange(async (_event, session) => {
         setSession(session);
         
-        // Update user type when auth state changes
         if (session?.user?.id) {
           getUserType(session.user.id);
         }
@@ -46,16 +53,12 @@ const Navigation = () => {
 
       return () => subscription.unsubscribe();
     } else {
-      // In admin mode, set a mock session
       setSession({ user: { id: 'admin-user' } });
     }
-  }, [isAdminMode]);
+  }, [isAdminMode, isPreviewMode]);
 
   const getUserType = async (userId: string) => {
     try {
-      // This is a placeholder - in a real app, you would fetch the user type from your database
-      // For example: const { data } = await supabase.from('profiles').select('user_type').eq('id', userId).single();
-      // Here we're defaulting to 'teacher' since that's the main flow in your app
       setUserType('teacher');
     } catch (error) {
       console.error('Error fetching user type:', error);
@@ -71,13 +74,11 @@ const Navigation = () => {
   };
 
   const handleDashboardClick = () => {
-    // Redirect to the appropriate dashboard based on user type
     navigate(userType === 'student' ? '/student-dashboard' : '/dashboard');
   };
 
   const handleLogout = async () => {
-    if (isAdminMode) {
-      // In admin mode, just disable admin mode
+    if (isAdminMode || isPreviewMode) {
       localStorage.removeItem("admin_mode");
       toast({
         title: "Admin mode disabled",
@@ -130,7 +131,7 @@ const Navigation = () => {
           <MobileMenu
             isOpen={isOpen}
             setIsOpen={setIsOpen}
-            session={session || (isAdminMode ? { user: { id: 'admin-user' } } : null)}
+            session={session || ((isAdminMode || isPreviewMode) ? { user: { id: 'admin-user' } } : null)}
             handleDashboardClick={handleDashboardClick}
             handleLogout={handleLogout}
             handleAuthClick={handleAuthClick}
@@ -142,7 +143,7 @@ const Navigation = () => {
         {!isBrowsePage && <IntegratedSearch />}
 
         <DesktopMenu
-          session={session || (isAdminMode ? { user: { id: 'admin-user' } } : null)}
+          session={session || ((isAdminMode || isPreviewMode) ? { user: { id: 'admin-user' } } : null)}
           handleDashboardClick={handleDashboardClick}
           handleLogout={handleLogout}
           handleAuthClick={handleAuthClick}

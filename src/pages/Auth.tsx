@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Auth as SupabaseAuth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
@@ -20,8 +19,32 @@ const Auth = () => {
   
   // Get return path from state (if available)
   const returnTo = location.state?.returnTo || "/";
+  
+  // Check if we're in admin mode - allows direct dashboard access
+  const isAdminMode = localStorage.getItem("admin_mode") === "true";
+  
+  // Check if we're in a preview environment
+  const isPreviewMode = window.location.hostname.includes('stackblitz') || 
+                        window.location.hostname.includes('codesandbox') ||
+                        window.location.hostname.includes('vercel.app') ||
+                        window.location.hostname.includes('netlify.app');
 
   useEffect(() => {
+    // In preview mode, automatically enable admin mode if not already set
+    if (isPreviewMode && localStorage.getItem("admin_mode") !== "true") {
+      localStorage.setItem("admin_mode", "true");
+      console.log("Preview mode detected in Auth page, admin mode enabled automatically");
+      // Redirect to home page since we're in preview/admin mode
+      navigate(returnTo);
+      return;
+    }
+    
+    // If admin mode is enabled, redirect to the return path immediately
+    if (isAdminMode || isPreviewMode) {
+      navigate(returnTo);
+      return;
+    }
+
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
       console.log("Auth: Initial session check:", session);
@@ -46,7 +69,7 @@ const Auth = () => {
     });
 
     return () => subscription.unsubscribe();
-  }, [navigate, returnTo]);
+  }, [navigate, returnTo, isAdminMode, isPreviewMode]);
 
   const handleManualLogin = async (e: React.FormEvent) => {
     e.preventDefault();
