@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { Calendar } from "lucide-react";
+import { memo, useCallback } from "react";
 
 export interface DateButtonsProps {
   dates: Date[];
@@ -15,7 +16,8 @@ export interface DateButtonsProps {
   onDateSelect?: (date: Date) => void;
 }
 
-const DateButtons = ({ 
+// Memoize the component to prevent unnecessary re-renders
+const DateButtons = memo(({ 
   dates, 
   price, 
   classId, 
@@ -27,33 +29,49 @@ const DateButtons = ({
   const navigate = useNavigate();
   const location = useLocation();
   const isDetailsPage = location.pathname.includes('/class/');
-  const visibleDates = dates.slice(0, 2);
-  const hasMoreDates = dates.length > 2;
+  
+  // Memoized values that don't need to be recalculated on every render
+  const visibleDates = dates.slice(0, isDetailsPage ? 3 : 2);
+  const hasMoreDates = dates.length > (isDetailsPage ? 3 : 2);
 
-  const handleDateClick = (date: Date, e: React.MouseEvent) => {
+  // Memoize handlers to prevent recreation on each render
+  const handleDateClick = useCallback((date: Date, e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    
     if (onDateSelect) {
+      console.log("DateButtons: onDateSelect called with date:", date);
       onDateSelect(date);
     } else if (classId && category) {
+      // If we're not on the details page, navigate to it with the selected date
       navigate(`/class/${category}/${classId}`, { 
         state: { selectedDate: date }
       });
     }
-  };
+  }, [onDateSelect, classId, category, navigate]);
 
-  const isSelected = (date: Date) => {
+  const handleViewMoreDates = useCallback((e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    classId && category && navigate(`/class/${category}/${classId}`);
+  }, [classId, category, navigate]);
+
+  const isSelected = useCallback((date: Date) => {
     if (!selectedDate) return false;
     return format(new Date(date), 'yyyy-MM-dd') === format(new Date(selectedDate), 'yyyy-MM-dd');
-  };
+  }, [selectedDate]);
 
   if (isDetailsPage) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
         {visibleDates.map((date, index) => (
           <div 
             key={index}
-            className={`p-4 bg-white rounded-lg border ${isSelected(date) ? 'border-accent-purple' : 'border-neutral-200'} hover:border-accent-purple transition-colors`}
+            className={`p-3 sm:p-4 rounded-lg border transition-all duration-200 ${
+              isSelected(date) 
+                ? 'border-accent-purple bg-accent-purple/5 shadow-sm' 
+                : 'border-neutral-200 bg-white hover:border-accent-purple/50 hover:bg-neutral-50'
+            }`}
           >
             <div className="flex items-center justify-between">
               <div className="space-y-1">
@@ -72,10 +90,11 @@ const DateButtons = ({
               </div>
               <Button
                 variant={isSelected(date) ? "default" : "outline"}
-                className={`${isSelected(date) ? '' : 'bg-accent-purple text-white border-accent-purple hover:bg-accent-purple/90'}`}
+                className={`ml-2 ${isSelected(date) ? 'bg-accent-purple hover:bg-accent-purple/90' : 'border-accent-purple text-accent-purple hover:bg-accent-purple/10'}`}
                 onClick={(e) => handleDateClick(date, e)}
+                aria-label={`Book class for ${format(new Date(date), 'EEEE, MMMM d')}`}
               >
-                Book Now
+                {isSelected(date) ? 'Selected' : 'Select'}
               </Button>
             </div>
           </div>
@@ -85,11 +104,8 @@ const DateButtons = ({
             <Button
               variant="ghost"
               className="w-full flex items-center justify-center gap-2 text-base"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                classId && category && navigate(`/class/${category}/${classId}`);
-              }}
+              onClick={handleViewMoreDates}
+              aria-label="View all available class dates"
             >
               <Calendar className="w-5 h-5" />
               View more dates
@@ -110,6 +126,7 @@ const DateButtons = ({
             size="sm"
             className="text-xs w-full bg-white hover:bg-neutral-50 border-neutral-200"
             onClick={(e) => handleDateClick(date, e)}
+            aria-label={`Select ${format(new Date(date), 'MMM d')}`}
           >
             {format(new Date(date), 'EEE, d MMM')}
           </Button>
@@ -119,11 +136,8 @@ const DateButtons = ({
             variant="ghost"
             size="sm"
             className="text-xs w-full flex items-center justify-center gap-1"
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              classId && category && navigate(`/class/${category}/${classId}`);
-            }}
+            onClick={handleViewMoreDates}
+            aria-label="View more class dates"
           >
             <Calendar className="w-3 h-3" />
             View more dates
@@ -132,6 +146,9 @@ const DateButtons = ({
       </div>
     </div>
   );
-};
+});
+
+// Add display name for debugging purposes
+DateButtons.displayName = "DateButtons";
 
 export default DateButtons;

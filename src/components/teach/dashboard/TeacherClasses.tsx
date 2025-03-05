@@ -1,68 +1,48 @@
 
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { toast } from "sonner";
-import { mockClasses } from "@/data/mockClasses";
-import ClassesHeader from "./classes/ClassesHeader";
-import ClassesTabs from "./classes/ClassesTabs";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { AlertTriangle } from "lucide-react";
+import ClassesHeader from "./teacher-classes/ClassesHeader";
+import ClassesCard from "./teacher-classes/ClassesCard";
+import SelectedClassCard from "./teacher-classes/SelectedClassCard";
+import { mockClasses } from "./teacher-classes/MockClassData";
+import { ClassItemLocal } from "./teacher-classes/types";
 
-const TeacherClasses = () => {
+export default function TeacherClasses() {
   const navigate = useNavigate();
-  const allClasses = Object.values(mockClasses).flat();
+  const [selectedClass, setSelectedClass] = useState<ClassItemLocal | null>(null);
+  const [selectedTab, setSelectedTab] = useState("all");
 
   const handleAction = (action: string, classId: number) => {
-    try {
-      switch (action) {
-        case "edit":
-          navigate(`/dashboard/classes/${classId}/edit`);
-          break;
-        case "message":
-          toast("Opening message composer...");
-          break;
-        case "boost":
-          if (!classId) {
-            throw new Error("Class ID is required to boost a class");
-          }
-          toast("Boost feature coming soon!");
-          break;
-        case "cancel":
-          if (!classId) {
-            throw new Error("Class ID is required to cancel a class");
-          }
-          toast("Class cancelled successfully", {
-            description: "All registered students will be notified automatically."
-          });
-          break;
-        default:
-          throw new Error(`Unknown action: ${action}`);
+    // Handle actions like edit, delete, etc.
+    console.log(`Action: ${action}, Class ID: ${classId}`);
+    
+    if (action === "edit") {
+      navigate(`/dashboard/classes/edit/${classId}`);
+    } else if (action === "view") {
+      // Set the selected class for the detailed view
+      const classItem = mockClasses.find(c => c.id === classId);
+      if (classItem) {
+        setSelectedClass(classItem);
       }
-    } catch (error: any) {
-      toast.error(error.message || "An error occurred while performing this action");
+    } else if (action === "duplicate") {
+      navigate(`/dashboard/classes/duplicate/${classId}`);
     }
   };
 
-  if (!allClasses.length) {
-    return (
-      <div className="space-y-4 px-2 sm:px-0">
-        <ClassesHeader />
-        <Alert variant="warning">
-          <AlertTriangle className="h-4 w-4" />
-          <AlertTitle>No Classes Found</AlertTitle>
-          <AlertDescription>
-            You haven't created any classes yet. Click the "Create Class" button above to get started.
-          </AlertDescription>
-        </Alert>
-      </div>
-    );
-  }
-
   return (
-    <div className="space-y-4 px-2 sm:px-0">
+    <div className="space-y-8">
       <ClassesHeader />
-      <ClassesTabs classes={allClasses} onAction={handleAction} />
+
+      <ClassesCard 
+        classes={mockClasses}
+        selectedTab={selectedTab}
+        setSelectedTab={setSelectedTab}
+        onAction={handleAction}
+      />
+
+      {selectedClass && (
+        <SelectedClassCard selectedClass={selectedClass} />
+      )}
     </div>
   );
-};
-
-export default TeacherClasses;
+}

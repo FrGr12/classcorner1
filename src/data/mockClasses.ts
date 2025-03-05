@@ -13,6 +13,7 @@ const mockClasses: Record<string, ClassItem[]> = {
         "/og-image.svg",
         "/placeholder.svg"
       ],
+      videoUrl: "https://www.youtube.com/embed/dQw4w9WgXcQ",
       level: "Beginner",
       date: [
         new Date("2024-02-15"),
@@ -20,7 +21,8 @@ const mockClasses: Record<string, ClassItem[]> = {
         new Date("2024-02-29")
       ],
       city: "London",
-      category: "Pottery"
+      category: "Pottery",
+      description: "Learn the basics of pottery in this hands-on introductory class for beginners."
     },
     {
       id: 2,
@@ -40,7 +42,8 @@ const mockClasses: Record<string, ClassItem[]> = {
         new Date("2024-03-05")
       ],
       city: "Manchester",
-      category: "Pottery"
+      category: "Pottery",
+      description: "Master the art of wheel throwing in this intermediate workshop."
     },
     {
       id: 9,

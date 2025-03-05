@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,12 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const PasswordReset = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -18,28 +18,43 @@ const PasswordReset = () => {
 
   // Check if we're in reset mode (have a token) or request mode
   const accessToken = searchParams.get("access_token");
+  
+  useEffect(() => {
+    console.log("Password reset params:", { accessToken });
+    
+    // If we have a token, set the session
+    if (accessToken) {
+      // Set the session using the token
+      supabase.auth.getSession().then(({ data, error }) => {
+        if (error) {
+          console.error("Session error:", error);
+          toast.error("Error processing reset token. Please request a new link.");
+        } else {
+          console.log("Session data:", data);
+        }
+      });
+    }
+
+    // Log the current URL for debugging
+    console.log("Current URL:", window.location.href);
+  }, [accessToken]);
 
   const handleRequestReset = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
+      console.log("Requesting password reset for:", email);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/password-reset`,
       });
 
       if (error) throw error;
 
-      toast({
-        title: "Reset link sent",
-        description: "Check your email for the password reset link",
-      });
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+      toast.success("Reset link sent. Check your email for the password reset link");
+    } catch (error: any) {
+      console.error("Reset request error:", error);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
@@ -49,46 +64,30 @@ const PasswordReset = () => {
     e.preventDefault();
     
     if (password !== confirmPassword) {
-      toast({
-        variant: "destructive",
-        title: "Passwords don't match",
-        description: "Please make sure both passwords are the same",
-      });
+      toast.error("Passwords don't match. Please make sure both passwords are the same");
       return;
     }
 
     setLoading(true);
 
     try {
+      console.log("Updating password");
       const { error } = await supabase.auth.updateUser({
         password: password,
       });
 
       if (error) throw error;
 
-      toast({
-        title: "Password updated",
-        description: "Your password has been successfully reset",
-      });
+      toast.success("Password updated successfully");
       
       navigate("/auth");
-    } catch (error) {
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: error.message,
-      });
+    } catch (error: any) {
+      console.error("Password update error:", error);
+      toast.error(error.message);
     } finally {
       setLoading(false);
     }
   };
-
-  // If we have a token, set the session
-  useEffect(() => {
-    if (accessToken) {
-      supabase.auth.getSession();
-    }
-  }, [accessToken]);
 
   return (
     <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">

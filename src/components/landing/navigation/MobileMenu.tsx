@@ -1,8 +1,9 @@
 
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
-import { Menu, School, BookOpen, Users } from "lucide-react";
+import { Menu, School, BookOpen, Users, LayoutDashboard } from "lucide-react";
 import { Link } from "react-router-dom";
+import { UserType } from "@/types/user";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -12,6 +13,7 @@ interface MobileMenuProps {
   handleLogout: () => void;
   handleAuthClick: () => void;
   loading: boolean;
+  userType?: UserType;
 }
 
 export function MobileMenu({
@@ -22,7 +24,10 @@ export function MobileMenu({
   handleLogout,
   handleAuthClick,
   loading,
+  userType = 'teacher',
 }: MobileMenuProps) {
+  const dashboardPath = userType === 'student' ? '/user-dashboard' : '/dashboard';
+
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
       <SheetTrigger asChild>
@@ -35,14 +40,15 @@ export function MobileMenu({
           <SheetTitle className="text-left text-accent-purple">Menu</SheetTitle>
         </SheetHeader>
         <div className="mt-8 flex flex-col gap-4">
-          <Link 
-            to="/community" 
-            className="text-sm text-primary hover:text-accent-purple transition-colors text-left"
-            onClick={() => setIsOpen(false)}
-          >
-            Community
-          </Link>
           <div className="flex flex-col gap-3 border-y border-neutral-200 py-4">
+            <Link 
+              to="/community" 
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => setIsOpen(false)}
+            >
+              <Users className="h-4 w-4" />
+              <span>Community</span>
+            </Link>
             <Link 
               to="/auth"
               state={{ returnTo: '/dashboard/create-class' }}
@@ -61,12 +67,30 @@ export function MobileMenu({
               <span>Resources</span>
             </Link>
             <Link 
-              to="/community" 
+              to={session ? "/dashboard" : "/auth"}
               className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
-              onClick={() => setIsOpen(false)}
+              onClick={() => {
+                setIsOpen(false);
+                if (!session) {
+                  handleAuthClick();
+                }
+              }}
             >
-              <Users className="h-4 w-4" />
-              <span>Community</span>
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Teacher Dashboard</span>
+            </Link>
+            <Link 
+              to={session ? "/user-dashboard" : "/auth"}
+              className="flex items-center gap-2 text-sm hover:text-accent-purple transition-colors"
+              onClick={() => {
+                setIsOpen(false);
+                if (!session) {
+                  handleAuthClick();
+                }
+              }}
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Student Dashboard</span>
             </Link>
           </div>
           {session ? (

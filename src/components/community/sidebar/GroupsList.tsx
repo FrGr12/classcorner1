@@ -18,11 +18,11 @@ export const GroupsList = ({ groups, onGroupClick, onViewAllClick }: GroupsListP
   return (
     <div className="space-y-1">
       <div className="px-3 py-2 flex items-center justify-between">
-        <h3 className="font-semibold">Groups</h3>
         <Button 
           variant="outline" 
           size="sm" 
           onClick={onViewAllClick}
+          className="ml-auto"
         >
           View All
         </Button>
@@ -32,7 +32,7 @@ export const GroupsList = ({ groups, onGroupClick, onViewAllClick }: GroupsListP
           <button
             key={group.id}
             onClick={() => onGroupClick(group.id)}
-            className="w-full flex items-center justify-between px-3 py-2 text-sm hover:bg-accent rounded-lg"
+            className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium hover:bg-accent rounded-lg transition-colors text-neutral-700"
           >
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4 text-muted-foreground" />

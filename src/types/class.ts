@@ -1,3 +1,4 @@
+
 export interface ClassItem {
   id: number;
   title: string;
@@ -6,10 +7,12 @@ export interface ClassItem {
   price: number;
   rating: number;
   images: string[];
+  videoUrl?: string; // New field for video URL
   level: string;
   category?: string;
   date: Date | Date[];
   city: string;
+  description?: string; // Making description optional to fix existing data
   maxParticipants?: number;
   minParticipants?: number;
   waitlist_enabled?: boolean;
@@ -18,7 +21,7 @@ export interface ClassItem {
   privateBookingsEnabled?: boolean;
   basePriceGroup?: number;
   basePricePrivate?: number;
-  duration?: string;
+  duration?: number | string;
   shareCount?: number;
   lastShared?: string;
   views?: number;

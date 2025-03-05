@@ -17,8 +17,8 @@ import {
 } from "@stripe/react-stripe-js";
 import type { ClassItem } from "@/types/class";
 
-// Initialize Stripe
-const stripePromise = loadStripe("pk_test_your_publishable_key");
+// Use the environment variable from Supabase
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY || "");
 
 const CheckoutForm = ({ amount, bookingId }: { amount: number; bookingId: number }) => {
   const stripe = useStripe();

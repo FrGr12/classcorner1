@@ -59,25 +59,25 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
 
   return (
     <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm">
-      <CardContent className="p-4 space-y-4">
+      <CardContent className="p-3 sm:p-4 space-y-4">
         {sessions.map((session) => (
-          <div key={session.id} className="flex items-start gap-4">
-            <div className="flex-1 flex items-center justify-center gap-4">
+          <div key={session.id} className="flex flex-col sm:flex-row gap-4">
+            <div className="flex-1 grid grid-cols-1 gap-4">
               <FormField
                 control={form.control}
                 name={`date-${session.id}`}
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-2">
-                    <FormLabel className="text-sm font-medium text-primary min-w-[80px]">Select date</FormLabel>
+                  <FormItem>
+                    <FormLabel className="text-xs sm:text-sm font-medium text-primary">Select date</FormLabel>
                     <FormControl>
                       <Input 
                         type="date"
                         placeholder="Select date" 
-                        className="bg-white border-neutral-200 w-[180px]"
+                        className="bg-white border-neutral-200 w-full text-xs sm:text-sm h-9 sm:h-10"
                         {...field} 
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
@@ -86,30 +86,30 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
                 control={form.control}
                 name={`time-${session.id}`}
                 render={({ field }) => (
-                  <FormItem className="flex items-center gap-2">
-                    <FormLabel className="text-sm font-medium text-primary min-w-[80px]">Select time</FormLabel>
+                  <FormItem>
+                    <FormLabel className="text-xs sm:text-sm font-medium text-primary">Select time</FormLabel>
                     <FormControl>
                       <Input 
                         type="time"
                         placeholder="Select time" 
-                        className="bg-white border-neutral-200 w-[180px]"
+                        className="bg-white border-neutral-200 w-full text-xs sm:text-sm h-9 sm:h-10"
                         {...field} 
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-xs sm:text-sm" />
                   </FormItem>
                 )}
               />
             </div>
 
-            <div className="flex flex-col items-end gap-2">
+            <div className="flex justify-end sm:items-start">
               {sessions.length > 1 && (
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
                   onClick={() => removeSession(session.id)}
-                  className="h-10 w-10 text-muted-foreground hover:text-destructive"
+                  className="h-9 w-9 text-muted-foreground hover:text-destructive self-start sm:self-auto"
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -118,11 +118,11 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
           </div>
         ))}
 
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex flex-col sm:flex-row sm:justify-end gap-2 mt-4">
           <Button 
             type="button" 
             onClick={addSession}
-            className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+            className="bg-accent-purple hover:bg-accent-purple/90 text-white text-xs sm:text-sm h-9 sm:h-10"
           >
             Add session
           </Button>
@@ -132,23 +132,23 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
               <Button 
                 type="button" 
                 variant="outline"
-                className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10"
+                className="bg-white border-accent-purple text-accent-purple hover:bg-accent-purple/10 text-xs sm:text-sm h-9 sm:h-10"
               >
                 Make Recurring
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[425px] p-4 sm:p-6 bg-white">
               <DialogHeader>
-                <DialogTitle>Set Recurring Schedule</DialogTitle>
+                <DialogTitle className="text-base sm:text-lg">Set Recurring Schedule</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="space-y-2">
-                  <FormLabel>Recurrence Pattern</FormLabel>
+                  <FormLabel className="text-xs sm:text-sm">Recurrence Pattern</FormLabel>
                   <Select
                     value={recurrencePattern}
                     onValueChange={setRecurrencePattern}
                   >
-                    <SelectTrigger className="w-full">
+                    <SelectTrigger className="w-full h-9 sm:h-10 text-xs sm:text-sm">
                       <SelectValue placeholder="Select frequency" />
                     </SelectTrigger>
                     <SelectContent>
@@ -160,19 +160,19 @@ const LocationCategoryDetailsSection = ({ form }: LocationCategoryDetailsSection
                 </div>
 
                 <div className="space-y-2">
-                  <FormLabel>End After (Optional)</FormLabel>
+                  <FormLabel className="text-xs sm:text-sm">End After (Optional)</FormLabel>
                   <Input
                     type="number"
                     placeholder="Number of occurrences"
-                    className="bg-white border-neutral-200"
+                    className="bg-white border-neutral-200 h-9 sm:h-10 text-xs sm:text-sm"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <FormLabel>End Date (Optional)</FormLabel>
+                  <FormLabel className="text-xs sm:text-sm">End Date (Optional)</FormLabel>
                   <Input
                     type="date"
-                    className="bg-white border-neutral-200"
+                    className="bg-white border-neutral-200 h-9 sm:h-10 text-xs sm:text-sm"
                   />
                 </div>
               </div>
