@@ -7,6 +7,14 @@ import { useSearchLogic } from "@/components/landing/search/hooks/useSearchLogic
 import MatchPreferencesForm from "./matches/MatchPreferencesForm";
 import { LoadingState } from "./LoadingState";
 
+interface UserPreferencesType {
+  interests: string[];
+  preferred_location: string | null;
+  marketing_emails?: boolean;
+  class_reminders?: boolean;
+  email_notifications?: boolean;
+}
+
 export default function UserPreferencesPage() {
   const { toast } = useToast();
   const {
@@ -50,6 +58,15 @@ export default function UserPreferencesPage() {
     return <LoadingState />;
   }
 
+  // Default values for email preferences when they don't exist in the data
+  const emailPreferences = userPreferences as UserPreferencesType || {
+    interests: [],
+    preferred_location: null,
+    marketing_emails: false,
+    class_reminders: false,
+    email_notifications: false
+  };
+
   return (
     <div className="space-y-8">
       <div>
@@ -86,19 +103,19 @@ export default function UserPreferencesPage() {
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">Marketing emails</span>
                 <Button variant="outline" size="sm">
-                  {userPreferences?.marketing_emails ? "Unsubscribe" : "Subscribe"}
+                  {emailPreferences.marketing_emails ? "Unsubscribe" : "Subscribe"}
                 </Button>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">Class recommendations</span>
                 <Button variant="outline" size="sm">
-                  {userPreferences?.class_reminders ? "Unsubscribe" : "Subscribe"}
+                  {emailPreferences.class_reminders ? "Unsubscribe" : "Subscribe"}
                 </Button>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm font-medium">Instructor updates</span>
                 <Button variant="outline" size="sm">
-                  {userPreferences?.email_notifications ? "Unsubscribe" : "Subscribe"}
+                  {emailPreferences.email_notifications ? "Unsubscribe" : "Subscribe"}
                 </Button>
               </div>
             </div>

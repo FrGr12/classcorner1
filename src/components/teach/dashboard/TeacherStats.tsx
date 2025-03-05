@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LineChart } from "lucide-react";
-import LoadingState from "@/components/user-dashboard/LoadingState";
+import { LoadingState } from "@/components/user-dashboard/LoadingState";
 import StatsHeader from "./stats/StatsHeader";
 import OverviewCards from "./stats/OverviewCards";
 import KPISection from "./stats/KPISection";

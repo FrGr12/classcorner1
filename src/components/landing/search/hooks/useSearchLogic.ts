@@ -5,6 +5,14 @@ import { useToast } from "@/hooks/use-toast";
 import { categories } from "../constants";
 import { getAllClassTitles } from "../utils";
 
+export interface UserPreferencesType {
+  interests: string[];
+  preferred_location: string | null;
+  marketing_emails?: boolean;
+  class_reminders?: boolean;
+  email_notifications?: boolean;
+}
+
 export const useSearchLogic = () => {
   const { toast } = useToast();
   const [searchInput, setSearchInput] = useState("");
@@ -13,7 +21,7 @@ export const useSearchLogic = () => {
   const [selectedTime, setSelectedTime] = useState<string>("Any week");
   const [matchingCategories, setMatchingCategories] = useState<string[]>([]);
   const [matchingTitles, setMatchingTitles] = useState<string[]>([]);
-  const [userPreferences, setUserPreferences] = useState<{interests: string[], preferred_location: string | null}>();
+  const [userPreferences, setUserPreferences] = useState<UserPreferencesType>();
   const [isLoadingPreferences, setIsLoadingPreferences] = useState(true);
 
   useEffect(() => {
@@ -27,7 +35,7 @@ export const useSearchLogic = () => {
 
       const { data, error } = await supabase
         .from('user_preferences')
-        .select('interests, preferred_location')
+        .select('interests, preferred_location, marketing_emails, class_reminders, email_notifications')
         .eq('id', user.id)
         .single();
 
@@ -77,7 +85,10 @@ export const useSearchLogic = () => {
           .upsert({
             id: user.id,
             interests: selectedCategories,
-            preferred_location: selectedLocations[0] === "Everywhere" ? null : selectedLocations[0]
+            preferred_location: selectedLocations[0] === "Everywhere" ? null : selectedLocations[0],
+            marketing_emails: userPreferences?.marketing_emails,
+            class_reminders: userPreferences?.class_reminders,
+            email_notifications: userPreferences?.email_notifications
           });
 
         if (error) throw error;

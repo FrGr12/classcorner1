@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,7 +12,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import MatchInsights from "@/components/teach/crm/MatchInsights";
-import LoadingState from "@/components/user-dashboard/LoadingState";
+import { LoadingState } from "@/components/user-dashboard/LoadingState";
 
 const TeacherOverview = () => {
   const navigate = useNavigate();
