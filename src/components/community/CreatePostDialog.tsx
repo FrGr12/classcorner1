@@ -4,10 +4,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { PlusCircle, Image } from "lucide-react";
+import { PlusCircle, Loader2, Image } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 export function CreatePostDialog() {
   const [isOpen, setIsOpen] = useState(false);
@@ -128,7 +128,9 @@ export function CreatePostDialog() {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button size="default">
+        <Button 
+          className="bg-accent-purple hover:bg-accent-purple/90 text-white"
+        >
           <PlusCircle className="h-4 w-4 mr-2" />
           New Post
         </Button>
@@ -214,12 +216,8 @@ export function CreatePostDialog() {
             )}
           </div>
           <div className="flex justify-end">
-            <Button 
-              onClick={handleSubmit} 
-              isLoading={isLoading}
-              loadingText="Creating..."
-              size="default"
-            >
+            <Button onClick={handleSubmit} disabled={isLoading}>
+              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Create Post
             </Button>
           </div>
@@ -227,4 +225,4 @@ export function CreatePostDialog() {
       </DialogContent>
     </Dialog>
   );
-};
+}

@@ -97,8 +97,8 @@ const Navigation = () => {
             {!isHomePage && (
               <Button
                 variant="ghost"
-                size="icon-sm"
-                className="hover:text-accent-purple"
+                size="icon"
+                className="h-8 w-8 hover:text-accent-purple"
                 onClick={handleBack}
               >
                 <ArrowLeft className="h-4 w-4" />

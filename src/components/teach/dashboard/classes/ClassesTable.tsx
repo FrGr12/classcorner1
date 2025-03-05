@@ -1,12 +1,16 @@
-import React from "react";
+
 import { ClassItem } from "@/types/class";
-import { Table, TableBody } from "@/components/ui/table";
-import { useTableDialogs } from "./hooks/useTableDialogs";
-import { useTableFilters } from "./hooks/useTableFilters";
-import ClassesTableHeader from "./table/TableHeader";
-import ClassRowMobile from "./table/ClassRowMobile";
-import ClassRowDesktop from "./table/ClassRowDesktop";
-import DialogManager from "./table/DialogManager";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { format } from "date-fns";
+import { useState } from "react";
+import ColumnFilter from "./table/ColumnFilter";
+import ClassActions from "./table/ClassActions";
+import StatsDisplay from "./table/StatsDisplay";
+import PromoteDialog from "./promote/PromoteDialog";
+import ClassDetailsDialog from "./ClassDetailsDialog";
+import MessageDialog from "./dialogs/MessageDialog";
+import ShareDialog from "./dialogs/ShareDialog";
+import EditClassDialog from "./dialogs/EditClassDialog";
 
 interface ClassesTableProps {
   classes: ClassItem[];
@@ -14,97 +18,249 @@ interface ClassesTableProps {
 }
 
 const ClassesTable = ({ classes, onAction }: ClassesTableProps) => {
-  const {
-    selectedClassId,
-    setSelectedClassId,
-    isPromoteOpen,
-    setIsPromoteOpen,
-    isMessageOpen,
-    setIsMessageOpen,
-    isShareOpen,
-    setIsShareOpen,
-    isDetailsOpen,
-    setIsDetailsOpen,
-    isEditOpen,
-    setIsEditOpen,
-    handleEditSuccess
-  } = useTableDialogs(onAction);
+  const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+  const [isPromoteOpen, setIsPromoteOpen] = useState(false);
+  const [isMessageOpen, setIsMessageOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [filters, setFilters] = useState({
+    title: "",
+    date: "",
+    capacity: "",
+    attendees: "",
+    waitlist: "",
+    paid: "",
+  });
 
-  const { filters, handleFilter } = useTableFilters();
-
-  const handleClassSelect = (classId: number) => {
-    setSelectedClassId(classId);
-    setIsDetailsOpen(true);
+  const handleFilter = (column: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [column]: value
+    }));
   };
 
-  const handleEdit = (e: React.MouseEvent, classId: number) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsEditOpen(true);
+  const formatClassDate = (date: Date | Date[]): string => {
+    if (Array.isArray(date)) {
+      return date.length > 0 ? format(date[0], 'MM/dd/yy') : '-';
+    }
+    return format(date, 'MM/dd/yy');
   };
 
-  const handleMessage = (e: React.MouseEvent, classId: number) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsMessageOpen(true);
-  };
-
-  const handlePromote = (e: React.MouseEvent, classId: number) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsPromoteOpen(true);
-  };
-
-  const handleShare = (e: React.MouseEvent, classId: number) => {
-    e.stopPropagation();
-    setSelectedClassId(classId);
-    setIsShareOpen(true);
+  const handleEditSuccess = () => {
+    onAction('edit', selectedClassId!);
   };
 
   return (
     <>
       <Table className="text-xs sm:text-sm">
-        <ClassesTableHeader 
-          filters={filters} 
-          onFilterChange={handleFilter} 
-        />
+        <TableHeader>
+          <TableRow>
+            <TableHead>
+              <ColumnFilter
+                column="Title"
+                value={filters.title}
+                onChange={(value) => handleFilter('title', value)}
+              />
+            </TableHead>
+            <TableHead>
+              <ColumnFilter
+                column="Date"
+                value={filters.date}
+                onChange={(value) => handleFilter('date', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Capacity"
+                value={filters.capacity}
+                onChange={(value) => handleFilter('capacity', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Attendees"
+                value={filters.attendees}
+                onChange={(value) => handleFilter('attendees', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Waitlist"
+                value={filters.waitlist}
+                onChange={(value) => handleFilter('waitlist', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell">
+              <ColumnFilter
+                column="Paid"
+                value={filters.paid}
+                onChange={(value) => handleFilter('paid', value)}
+              />
+            </TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Views</TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Saves</TableHead>
+            <TableHead className="hidden sm:table-cell text-center">Clicks</TableHead>
+            <TableHead className="hidden sm:table-cell">Actions</TableHead>
+          </TableRow>
+        </TableHeader>
         <TableBody>
           {classes.map((classItem) => (
-            <React.Fragment key={classItem.id}>
-              <ClassRowMobile
-                classItem={classItem}
-                onDetails={handleClassSelect}
-                onEdit={handleEdit}
-                onMessage={handleMessage}
-                onPromote={handlePromote}
-                onShare={handleShare}
-              />
-              <ClassRowDesktop
-                classItem={classItem}
-                onDetails={handleClassSelect}
-                onEdit={handleEdit}
-                onMessage={handleMessage}
-                onPromote={handlePromote}
-                onShare={handleShare}
-              />
-            </React.Fragment>
+            <TableRow 
+              key={classItem.id}
+              className="cursor-pointer hover:bg-accent/50"
+              onClick={() => {
+                setSelectedClassId(classItem.id);
+                setIsDetailsOpen(true);
+              }}
+            >
+              <TableCell className="font-medium">{classItem.title}</TableCell>
+              <TableCell>
+                <div className="flex flex-col sm:block">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="whitespace-nowrap">{formatClassDate(classItem.date)}</span>
+                    <div className="sm:hidden">
+                      <ClassActions
+                        classId={classItem.id}
+                        onEdit={(e) => {
+                          e.stopPropagation();
+                          setSelectedClassId(classItem.id);
+                          setIsEditOpen(true);
+                        }}
+                        onMessage={(e) => {
+                          e.stopPropagation();
+                          setSelectedClassId(classItem.id);
+                          setIsMessageOpen(true);
+                        }}
+                        onPromote={(e) => {
+                          e.stopPropagation();
+                          setSelectedClassId(classItem.id);
+                          setIsPromoteOpen(true);
+                        }}
+                        onShare={(e) => {
+                          e.stopPropagation();
+                          setSelectedClassId(classItem.id);
+                          setIsShareOpen(true);
+                        }}
+                      />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 gap-1 mt-2 sm:hidden">
+                    <div className="text-center">
+                      <span className="block text-[10px] text-muted-foreground">Cap</span>
+                      <span>{classItem.maxParticipants || '-'}</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="block text-[10px] text-muted-foreground">Att</span>
+                      <span>0</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="block text-[10px] text-muted-foreground">Wait</span>
+                      <span>0</span>
+                    </div>
+                    <div className="text-center">
+                      <span className="block text-[10px] text-muted-foreground">Paid</span>
+                      <span>0</span>
+                    </div>
+                  </div>
+                  <div className="flex justify-between mt-2 border-t pt-1 sm:hidden">
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-muted-foreground">Views:</span>
+                      <span>{classItem.views || 0}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-muted-foreground">Saves:</span>
+                      <span>{classItem.saves || 0}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-muted-foreground">Clicks:</span>
+                      <span>{classItem.adClicks || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell className="hidden sm:table-cell text-center">{classItem.maxParticipants || '-'}</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell text-center">0</TableCell>
+              <TableCell className="hidden sm:table-cell p-0" colSpan={3}>
+                <div className="grid grid-cols-3">
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.views || 0}</span>
+                    </div>
+                  </div>
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.saves || 0}</span>
+                    </div>
+                  </div>
+                  <div className="text-center px-1 sm:px-4">
+                    <div className="flex items-center justify-center gap-1">
+                      <span className="text-xs sm:text-sm">{classItem.adClicks || 0}</span>
+                    </div>
+                  </div>
+                </div>
+              </TableCell>
+              <TableCell onClick={(e) => e.stopPropagation()} className="hidden sm:table-cell">
+                <ClassActions
+                  classId={classItem.id}
+                  onEdit={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsEditOpen(true);
+                  }}
+                  onMessage={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsMessageOpen(true);
+                  }}
+                  onPromote={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsPromoteOpen(true);
+                  }}
+                  onShare={(e) => {
+                    e.stopPropagation();
+                    setSelectedClassId(classItem.id);
+                    setIsShareOpen(true);
+                  }}
+                />
+              </TableCell>
+            </TableRow>
           ))}
         </TableBody>
       </Table>
 
-      <DialogManager
-        selectedClassId={selectedClassId}
-        isPromoteOpen={isPromoteOpen}
-        isMessageOpen={isMessageOpen}
-        isShareOpen={isShareOpen}
-        isDetailsOpen={isDetailsOpen}
-        isEditOpen={isEditOpen}
-        setIsPromoteOpen={setIsPromoteOpen}
-        setIsMessageOpen={setIsMessageOpen}
-        setIsShareOpen={setIsShareOpen}
-        setIsDetailsOpen={setIsDetailsOpen}
-        setIsEditOpen={setIsEditOpen}
-        onEditSuccess={handleEditSuccess}
+      <MessageDialog 
+        open={isMessageOpen}
+        onOpenChange={setIsMessageOpen}
+        classId={selectedClassId}
+      />
+
+      <PromoteDialog 
+        open={isPromoteOpen}
+        onOpenChange={setIsPromoteOpen}
+        classId={selectedClassId}
+      />
+
+      <ShareDialog
+        open={isShareOpen}
+        onOpenChange={setIsShareOpen}
+        classId={selectedClassId}
+      />
+
+      <ClassDetailsDialog
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
+        classId={selectedClassId}
+      />
+
+      <EditClassDialog 
+        open={isEditOpen}
+        onOpenChange={setIsEditOpen}
+        classId={selectedClassId}
+        onSuccess={handleEditSuccess}
       />
     </>
   );

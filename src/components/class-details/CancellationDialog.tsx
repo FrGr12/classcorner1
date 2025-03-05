@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,11 +24,9 @@ const CancellationDialog = ({
   onOpenChange,
 }: CancellationDialogProps) => {
   const [reason, setReason] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCancellation = async () => {
     try {
-      setIsSubmitting(true);
       const { error } = await supabase
         .from('bookings')
         .update({
@@ -45,8 +42,6 @@ const CancellationDialog = ({
       onOpenChange(false);
     } catch (error: any) {
       toast.error(error.message);
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -75,8 +70,6 @@ const CancellationDialog = ({
             variant="destructive" 
             onClick={handleCancellation}
             disabled={!reason.trim()}
-            isLoading={isSubmitting}
-            loadingText="Cancelling..."
           >
             Confirm Cancellation
           </Button>

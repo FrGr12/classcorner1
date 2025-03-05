@@ -4,12 +4,10 @@ import { useParams } from "react-router-dom";
 import Navigation from "@/components/landing/Navigation";
 import { useCommunityData } from "@/hooks/useCommunityData";
 import { CommunityLayout } from "@/components/community/layout/CommunityLayout";
-import { Breadcrumbs, useBreadcrumbs } from "@/components/navigation/Breadcrumbs";
 
 const Community = () => {
   const { topic, category, resource } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
-  const breadcrumbs = useBreadcrumbs();
   
   const [activeTab, setActiveTab] = useState(() => {
     if (window.location.pathname.includes('/groups')) return 'groups';
@@ -32,9 +30,6 @@ const Community = () => {
   return (
     <>
       <Navigation />
-      <div className="container mx-auto pt-24 px-4">
-        <Breadcrumbs items={breadcrumbs} />
-      </div>
       <CommunityLayout 
         activeTab={activeTab}
         topic={topic}

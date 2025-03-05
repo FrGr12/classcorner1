@@ -2,15 +2,15 @@
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
-import { UseFormReturn } from "react-hook-form";
+import { SessionsForm } from "@/components/teach/SessionsForm";
 
-interface ScheduleSectionProps {
-  form: UseFormReturn<any>;
-}
-
-const ScheduleSection = ({ form }: ScheduleSectionProps) => {
+const ScheduleSection = ({ 
+  sessions,
+  setSessions
+}: { 
+  sessions: any[];
+  setSessions: (sessions: any[]) => void;
+}) => {
   return (
     <Card className="p-6">
       <div className="space-y-6">
@@ -24,19 +24,8 @@ const ScheduleSection = ({ form }: ScheduleSectionProps) => {
         <Separator />
         
         <div className="space-y-4">
-          <Label className="text-base">Schedule Type</Label>
-          {/* Form fields for schedule type, dates, times */}
-          <div className="flex justify-end">
-            <Button 
-              type="button" 
-              variant="accent"
-              size="sm"
-              className="mt-2"
-            >
-              <PlusCircle className="h-4 w-4 mr-2" />
-              Add Session
-            </Button>
-          </div>
+          <Label className="text-base">Session Details</Label>
+          <SessionsForm sessions={sessions} setSessions={setSessions} />
         </div>
       </div>
     </Card>

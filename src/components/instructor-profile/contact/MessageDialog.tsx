@@ -107,12 +107,9 @@ const MessageDialog = ({ isOpen, onOpenChange, instructor }: MessageDialogProps)
           </Button>
           <Button
             onClick={handleSendMessage}
-            isLoading={isLoading}
-            loadingText="Sending..."
-            disabled={!message.trim() || !subject.trim()}
-            size="default"
+            disabled={isLoading || !message.trim() || !subject.trim()}
           >
-            Send Message
+            {isLoading ? "Sending..." : "Send Message"}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -22,7 +22,7 @@ export const GroupsList = ({ groups, onGroupClick, onViewAllClick }: GroupsListP
           variant="outline" 
           size="sm" 
           onClick={onViewAllClick}
-          className="ml-auto"
+          className="ml-auto text-sm font-medium"
         >
           View All
         </Button>

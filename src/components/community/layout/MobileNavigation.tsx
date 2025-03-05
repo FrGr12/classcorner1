@@ -9,36 +9,36 @@ interface MobileNavigationProps {
 
 export const MobileNavigation = ({ activeTab, onTabClick }: MobileNavigationProps) => {
   return (
-    <nav className="lg:hidden bg-background border rounded-lg mb-6" aria-label="Mobile navigation">
+    <div className="lg:hidden bg-background border rounded-lg mb-6">
       <div className="flex items-center justify-around p-2">
         <Button 
-          variant={activeTab === 'topics' ? "default" : "ghost"}
-          className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
+          variant="ghost" 
+          className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+            ${activeTab === 'topics' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} 
           onClick={() => onTabClick('topics')}
-          aria-current={activeTab === 'topics' ? 'page' : undefined}
         >
-          <Hash className="h-5 w-5" aria-hidden="true" />
+          <Hash className="h-5 w-5" />
           <span className="text-sm font-medium">Topics</span>
         </Button>
         <Button 
-          variant={activeTab === 'groups' ? "default" : "ghost"}
-          className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
+          variant="ghost" 
+          className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+            ${activeTab === 'groups' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} 
           onClick={() => onTabClick('groups')}
-          aria-current={activeTab === 'groups' ? 'page' : undefined}
         >
-          <Users className="h-5 w-5" aria-hidden="true" />
+          <Users className="h-5 w-5" />
           <span className="text-sm font-medium">Groups</span>
         </Button>
         <Button 
-          variant={activeTab === 'resources' ? "default" : "ghost"}
-          className="flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors" 
+          variant="ghost" 
+          className={`flex flex-col items-center w-24 gap-2 h-auto py-2 rounded-lg transition-colors
+            ${activeTab === 'resources' ? 'bg-accent-purple/10 text-accent-purple border border-accent-purple/20' : 'hover:bg-accent-purple/5'}`} 
           onClick={() => onTabClick('resources')}
-          aria-current={activeTab === 'resources' ? 'page' : undefined}
         >
-          <BookOpen className="h-5 w-5" aria-hidden="true" />
+          <BookOpen className="h-5 w-5" />
           <span className="text-sm font-medium">Resources</span>
         </Button>
       </div>
-    </nav>
+    </div>
   );
 };
