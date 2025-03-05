@@ -36,11 +36,16 @@ const EmailVerification = () => {
         throw new Error("No email found");
       }
 
-      const { error } = await supabase.auth.verifyOtp({
+      // For debugging purposes, log the OTP verification request
+      console.log(`Verifying OTP with: email=${email}, token=${token}, type=${type}`);
+      
+      const { data, error } = await supabase.auth.verifyOtp({
         email,
         token,
         type: type === "signup" ? "signup" : "recovery"
       });
+
+      console.log("OTP verification response:", { data, error });
 
       if (error) throw error;
 
@@ -68,6 +73,10 @@ const EmailVerification = () => {
     window.location.href = "mailto:support@classcorner.com";
   };
 
+  const handleGoToLogin = () => {
+    navigate("/auth");
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-neutral-50">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-sm">
@@ -86,7 +95,7 @@ const EmailVerification = () => {
             <p className="text-neutral-600 mb-4">
               Your email has been successfully verified. You will be redirected to the login page shortly.
             </p>
-            <Button onClick={() => navigate("/auth")} className="w-full">
+            <Button onClick={handleGoToLogin} className="w-full">
               Go to Login
             </Button>
           </div>
@@ -100,6 +109,9 @@ const EmailVerification = () => {
             <div className="space-y-3">
               <Button onClick={handleRetry} variant="outline" className="w-full">
                 Try Again
+              </Button>
+              <Button onClick={handleGoToLogin} variant="default" className="w-full">
+                Go to Login
               </Button>
               <Button onClick={handleContactSupport} variant="secondary" className="w-full">
                 Contact Support

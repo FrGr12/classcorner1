@@ -34,6 +34,9 @@ const PasswordReset = () => {
         }
       });
     }
+
+    // Log the current URL for debugging
+    console.log("Current URL:", window.location.href);
   }, [accessToken]);
 
   const handleRequestReset = async (e: React.FormEvent) => {
@@ -41,6 +44,7 @@ const PasswordReset = () => {
     setLoading(true);
 
     try {
+      console.log("Requesting password reset for:", email);
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/password-reset`,
       });
@@ -67,6 +71,7 @@ const PasswordReset = () => {
     setLoading(true);
 
     try {
+      console.log("Updating password");
       const { error } = await supabase.auth.updateUser({
         password: password,
       });

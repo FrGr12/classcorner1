@@ -68,7 +68,7 @@ export function useBookingConfirmation() {
             id: classItem.id,
             title: classItem.title,
             price: classItem.price,
-            instructor: classItem.instructor,
+            instructor_id: classItem.instructor_id || '00000000-0000-0000-0000-000000000000', // Default UUID if missing
             category: classItem.category || 'Other',
             location: classItem.city,
             description: `This is a demo course for ${classItem.title}`,

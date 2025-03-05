@@ -18,6 +18,7 @@ const Auth = () => {
   useEffect(() => {
     // Check for existing session
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log("Auth: Initial session check:", session);
       setSession(session);
       
       // If user is already logged in, redirect them
@@ -40,6 +41,12 @@ const Auth = () => {
 
     return () => subscription.unsubscribe();
   }, [navigate, returnTo]);
+
+  // Console log current window URL for debugging
+  useEffect(() => {
+    console.log("Current URL:", window.location.href);
+    console.log("Redirect URL will be:", `${window.location.origin}/auth/callback`);
+  }, []);
 
   return (
     <div className="min-h-screen bg-neutral-100 flex items-center justify-center p-4">

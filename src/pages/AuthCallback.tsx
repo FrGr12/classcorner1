@@ -16,6 +16,7 @@ const AuthCallback = () => {
         sessionStorage.removeItem('returnTo'); // Clean up
         
         console.log("Processing auth callback, will redirect to:", returnTo);
+        console.log("Current URL:", window.location.href);
         
         // Process the auth callback
         const { data, error } = await supabase.auth.getSession();
@@ -24,6 +25,7 @@ const AuthCallback = () => {
         
         if (data.session) {
           // Successfully authenticated
+          console.log("Authentication successful, session:", data.session);
           toast.success("Authentication successful");
           navigate(returnTo);
         } else {
