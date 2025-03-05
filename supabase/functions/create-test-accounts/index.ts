@@ -14,15 +14,31 @@ serve(async (req) => {
   }
 
   try {
-    // Connect to Supabase using service role key for admin operations
+    // Log environment variables (without revealing full keys)
     const supabaseUrl = Deno.env.get("SUPABASE_URL");
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
     
+    console.log("Environment check:", {
+      "SUPABASE_URL": supabaseUrl ? "✓ Set" : "✗ Missing",
+      "SUPABASE_SERVICE_ROLE_KEY": supabaseServiceKey ? "✓ Set (hidden)" : "✗ Missing",
+    });
+    
     if (!supabaseUrl || !supabaseServiceKey) {
-      console.error("Missing environment variables");
-      throw new Error("Server configuration error");
+      console.error("Missing required environment variables");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Server configuration error: Missing environment variables" 
+        }),
+        {
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 500,
+        }
+      );
     }
 
+    console.log("Creating Supabase admin client...");
+    
     const supabaseAdmin = createClient(
       supabaseUrl,
       supabaseServiceKey,
@@ -34,7 +50,8 @@ serve(async (req) => {
       }
     );
 
-    console.log("Creating test accounts...");
+    console.log("Supabase admin client created successfully");
+    console.log("Preparing test accounts...");
 
     // Test account credentials
     const testAccounts = [
@@ -62,14 +79,22 @@ serve(async (req) => {
 
     for (const account of testAccounts) {
       try {
+        console.log(`Processing account: ${account.email}`);
+        
         // Check if user already exists
+        console.log(`Checking if user ${account.email} already exists...`);
         const { data: existingUser, error: fetchError } = await supabaseAdmin.auth.admin.getUserByEmail(
           account.email
         );
 
         if (fetchError) {
           console.error(`Error checking if user ${account.email} exists:`, fetchError);
-          throw fetchError;
+          results.push({
+            email: account.email,
+            status: "error",
+            message: `Error checking user: ${fetchError.message}`
+          });
+          continue;
         }
 
         if (existingUser) {
@@ -83,6 +108,7 @@ serve(async (req) => {
         }
 
         // Create user
+        console.log(`Creating user ${account.email}...`);
         const { data, error } = await supabaseAdmin.auth.admin.createUser({
           email: account.email,
           password: account.password,
@@ -106,7 +132,7 @@ serve(async (req) => {
           });
         }
       } catch (accountError) {
-        console.error(`Error processing account ${account.email}:`, accountError);
+        console.error(`Unexpected error processing account ${account.email}:`, accountError);
         results.push({
           email: account.email,
           status: "error",
@@ -115,14 +141,20 @@ serve(async (req) => {
       }
     }
 
+    console.log("All accounts processed. Results:", results);
+
     return new Response(JSON.stringify({ success: true, accounts: results }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
       status: 200,
     });
   } catch (error) {
-    console.error("Error in create-test-accounts function:", error);
+    console.error("Fatal error in create-test-accounts function:", error);
     return new Response(
-      JSON.stringify({ success: false, error: error.message }),
+      JSON.stringify({ 
+        success: false, 
+        error: error.message,
+        stack: error.stack
+      }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
         status: 500,

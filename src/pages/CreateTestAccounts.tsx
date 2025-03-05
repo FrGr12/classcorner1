@@ -8,27 +8,38 @@ import { toast } from "sonner";
 const CreateTestAccounts = () => {
   const [loading, setLoading] = useState(false);
   const [accounts, setAccounts] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
 
   const handleCreateTestAccounts = async () => {
     setLoading(true);
+    setError(null);
+    
     try {
-      // Add logging to debug the issue
       console.log("Invoking create-test-accounts function");
       
+      // Attempt to invoke the edge function
       const { data, error } = await supabase.functions.invoke('create-test-accounts');
       
       console.log("Function response:", { data, error });
       
       if (error) {
-        throw new Error(error.message);
+        console.error("Edge function error:", error);
+        throw new Error(`Edge function error: ${error.message}`);
+      }
+      
+      if (!data) {
+        throw new Error("No data returned from edge function");
       }
       
       if (data?.accounts) {
         setAccounts(data.accounts);
-        toast.success('Test accounts created successfully!');
+        toast.success('Test accounts processed successfully!');
+      } else {
+        throw new Error("Unexpected response format from edge function");
       }
     } catch (error: any) {
       console.error('Error creating test accounts:', error);
+      setError(error.message || "Unknown error occurred");
       toast.error(`Error creating test accounts: ${error.message}`);
     } finally {
       setLoading(false);
@@ -54,6 +65,17 @@ const CreateTestAccounts = () => {
               {loading ? "Creating..." : "Create Test Accounts"}
             </Button>
           </div>
+          
+          {error && (
+            <div className="mt-4 p-4 border rounded-md bg-red-50 text-red-800">
+              <p className="font-medium">Error:</p>
+              <p className="text-sm">{error}</p>
+              <p className="mt-2 text-xs">
+                Make sure that the Supabase Edge Function is deployed and has the necessary environment 
+                variables (SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY) configured.
+              </p>
+            </div>
+          )}
           
           {accounts.length > 0 && (
             <div className="mt-6">
