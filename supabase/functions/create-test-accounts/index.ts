@@ -50,6 +50,45 @@ serve(async (req) => {
       }
     );
     
+    // Check if the profiles table exists - this appears to be a common source of errors
+    try {
+      const { error: tableCheckError } = await supabaseAdmin.from('profiles').select('count', { count: 'exact', head: true });
+      
+      if (tableCheckError) {
+        console.error('Error checking profiles table:', tableCheckError.message);
+        if (tableCheckError.message.includes('relation "profiles" does not exist')) {
+          return new Response(
+            JSON.stringify({ 
+              success: false, 
+              error: "Database setup incomplete: The profiles table does not exist. Please run the initial database setup.",
+              accounts: [
+                {
+                  email: "test.student@classcorner.demo",
+                  status: "error",
+                  message: "Database setup issue: The profiles table does not exist",
+                  password: "classcorner2024"
+                },
+                {
+                  email: "test.teacher@classcorner.demo",
+                  status: "error",
+                  message: "Database setup issue: The profiles table does not exist",
+                  password: "classcorner2024"
+                }
+              ]
+            }),
+            {
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+              status: 200, // Still return 200 to show the error in the UI
+            }
+          );
+        }
+      } else {
+        console.log('Profiles table exists and is accessible');
+      }
+    } catch (tableError) {
+      console.error('Unexpected error checking profiles table:', tableError);
+    }
+    
     // Test accounts data
     const testAccounts = [
       {
@@ -90,6 +129,7 @@ serve(async (req) => {
         
         if (userError) {
           console.error(`Error checking existing user: ${userError.message}`);
+          throw new Error(`Error checking existing user: ${userError.message}`);
         }
         
         // If user exists, delete it first to start clean
@@ -104,12 +144,20 @@ serve(async (req) => {
           
           if (deleteError) {
             console.log(`Error deleting existing user: ${deleteError.message}`);
-            throw new Error(`Failed to delete existing user: ${deleteError.message}`);
+            // Don't throw an error, just log it and continue with creation
+            // This handles cases where the user might be referenced by other tables
+            results.push({
+              email: account.email,
+              status: "warning",
+              message: `Could not delete existing user: ${deleteError.message}. Please delete this user manually from the Supabase dashboard.`,
+              password: account.password
+            });
+            continue; // Skip to next account
           } else {
             console.log(`Successfully deleted existing user: ${account.email}`);
             
             // Add a small delay to ensure deletion propagates
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            await new Promise(resolve => setTimeout(resolve, 2000));
           }
         } else {
           console.log(`No existing user found with email: ${account.email}`);
@@ -126,10 +174,19 @@ serve(async (req) => {
 
         if (error) {
           console.error(`Error creating user ${account.email}:`, error);
+          
+          // Check for specific error types and provide more user-friendly messages
+          let errorMessage = error.message;
+          if (error.message.includes("foreign key constraint")) {
+            errorMessage = "Database constraint error: This may indicate missing tables or incorrect schema.";
+          } else if (error.message.includes("duplicate key")) {
+            errorMessage = "User already exists and could not be replaced. Try signing in with these credentials.";
+          }
+          
           results.push({
             email: account.email,
             status: "error",
-            message: `Error creating user: ${error.message}`,
+            message: `Error creating user: ${errorMessage}`,
             password: account.password
           });
         } else {
@@ -162,7 +219,8 @@ serve(async (req) => {
         results.push({
           email: account.email,
           status: "error",
-          message: accountError.message || "Unknown error"
+          message: accountError.message || "Unknown error",
+          password: account.password
         });
       }
     }
@@ -179,11 +237,25 @@ serve(async (req) => {
       JSON.stringify({ 
         success: false, 
         error: error.message,
-        stack: error.stack
+        stack: error.stack,
+        accounts: [
+          {
+            email: "test.student@classcorner.demo",
+            status: "error",
+            message: `Fatal error: ${error.message}`,
+            password: "classcorner2024"
+          },
+          {
+            email: "test.teacher@classcorner.demo",
+            status: "error",
+            message: `Fatal error: ${error.message}`,
+            password: "classcorner2024"
+          }
+        ]
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
-        status: 500,
+        status: 200, // Return 200 so the frontend can display the error
       }
     );
   }

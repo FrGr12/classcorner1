@@ -42,7 +42,24 @@ export const useTestAccounts = () => {
       
       if (data?.accounts) {
         setAccounts(data.accounts);
-        toast.success('Test accounts processed successfully!');
+        
+        // Check if any accounts were actually created successfully
+        const successAccounts = data.accounts.filter((acc: TestAccount) => acc.status === 'created');
+        
+        if (successAccounts.length > 0) {
+          toast.success('Test accounts created successfully!');
+        } else {
+          // If no accounts were created successfully, show a warning
+          const hasDbError = data.accounts.some((acc: TestAccount) => 
+            acc.message?.includes('Database') || acc.message?.includes('profiles table')
+          );
+          
+          if (hasDbError) {
+            toast.error('Database setup issue detected. Please check the troubleshooting guide.');
+          } else {
+            toast.warning('Test accounts processed with warnings. See details below.');
+          }
+        }
       } else {
         throw new Error("Unexpected response format from edge function");
       }

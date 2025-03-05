@@ -26,12 +26,22 @@ const AccountsDisplay = ({
 }: AccountsDisplayProps) => {
   if (accounts.length === 0) return null;
 
+  // Check if we have any successful accounts
+  const hasSuccessfulAccount = accounts.some(account => account.status === 'created');
+  
+  // Check if we have database errors
+  const hasDatabaseError = accounts.some(account => 
+    account.message?.includes('Database') || 
+    account.message?.includes('profiles')
+  );
+
   return (
     <div className="mt-6">
       <h3 className="text-lg font-medium mb-4">Test Account Credentials:</h3>
       
       <SetupInstructions />
-      <LoginInstructions />
+      
+      {hasSuccessfulAccount && <LoginInstructions />}
       
       <div className="space-y-4">
         {accounts.map((account, index) => (
@@ -56,7 +66,21 @@ const AccountsDisplay = ({
         </Alert>
       )}
       
-      <TroubleshootingGuide />
+      {hasDatabaseError ? (
+        <div className="mt-4 p-4 border rounded-md bg-red-50 border-red-100">
+          <h4 className="font-medium text-red-800">Database Setup Issue Detected</h4>
+          <p className="mt-1 text-sm text-red-700">
+            The error messages indicate a database setup issue. You need to make sure:
+          </p>
+          <ol className="list-decimal pl-5 mt-2 text-sm text-red-700 space-y-1">
+            <li>Your Supabase project has a <code className="bg-red-100 px-1 rounded">profiles</code> table</li>
+            <li>There is a function and trigger that creates a profile when a user signs up</li>
+            <li>All required database triggers and RLS policies are in place</li>
+          </ol>
+        </div>
+      ) : (
+        <TroubleshootingGuide />
+      )}
       
       <div className="mt-4 text-center">
         <Button variant="outline" asChild>

@@ -18,6 +18,12 @@ const CreateTestAccounts = () => {
     copyToClipboard
   } = useTestAccounts();
 
+  // Check if there are database setup issues
+  const hasDatabaseSetupIssues = accounts.some(account => 
+    account.message?.includes('Database') || 
+    account.message?.includes('profiles table')
+  );
+
   return (
     <div className="container py-10 max-w-3xl mx-auto">
       <Card>
@@ -39,7 +45,7 @@ const CreateTestAccounts = () => {
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating...
                 </>
-              ) : "Create Test Accounts"}
+              ) : accounts.length > 0 ? "Recreate Test Accounts" : "Create Test Accounts"}
             </Button>
           </div>
           
@@ -53,6 +59,17 @@ const CreateTestAccounts = () => {
               onTestLogin={testLogin}
               onCopy={copyToClipboard}
             />
+          )}
+          
+          {hasDatabaseSetupIssues && (
+            <div className="p-4 mt-4 border rounded-md bg-blue-50 border-blue-100">
+              <h4 className="font-medium text-blue-800">Database Setup Required</h4>
+              <p className="mt-1 text-sm text-blue-700">
+                It appears your Supabase project might be missing the required database setup. 
+                This is common when starting a new project. You need to make sure your database 
+                has the proper tables and functions configured.
+              </p>
+            </div>
           )}
         </CardContent>
       </Card>
