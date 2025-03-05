@@ -12,9 +12,24 @@ interface DemoModeContextType {
 const DemoModeContext = createContext<DemoModeContextType | undefined>(undefined);
 
 export function DemoModeProvider({ children }: { children: ReactNode }) {
-  const [isDemoMode, setIsDemoMode] = useState(false);
+  const [isDemoMode, setIsDemoMode] = useState<boolean>(false);
+  const [initialized, setInitialized] = useState<boolean>(false);
+
+  // Initialize demo mode from localStorage
+  useEffect(() => {
+    console.log("Checking localStorage for demo mode...");
+    const savedDemoMode = localStorage.getItem("demoMode");
+    if (savedDemoMode === "true") {
+      console.log("Demo mode found in localStorage, enabling...");
+      setIsDemoMode(true);
+    } else {
+      console.log("Demo mode not found in localStorage.");
+    }
+    setInitialized(true);
+  }, []);
 
   const enableDemoMode = () => {
+    console.log("Enabling demo mode...");
     setIsDemoMode(true);
     toast.info("Demo Mode enabled - all pages are accessible without login", {
       duration: 5000,
@@ -23,6 +38,7 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
   };
 
   const disableDemoMode = () => {
+    console.log("Disabling demo mode...");
     setIsDemoMode(false);
     toast.info("Demo Mode disabled - authentication required", {
       duration: 3000,
@@ -37,14 +53,6 @@ export function DemoModeProvider({ children }: { children: ReactNode }) {
       enableDemoMode();
     }
   };
-
-  // Check for demo mode in localStorage on initial load
-  useEffect(() => {
-    const savedDemoMode = localStorage.getItem("demoMode");
-    if (savedDemoMode === "true") {
-      setIsDemoMode(true);
-    }
-  }, []);
 
   return (
     <DemoModeContext.Provider value={{ isDemoMode, enableDemoMode, disableDemoMode, toggleDemoMode }}>

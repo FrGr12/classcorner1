@@ -68,7 +68,7 @@ const Navigation = () => {
   };
 
   const handleDashboardClick = () => {
-    navigate(userType === 'student' ? '/user-dashboard' : '/dashboard');
+    navigate(userType === 'student' ? '/student-dashboard' : '/dashboard');
   };
 
   const handleLogout = async () => {

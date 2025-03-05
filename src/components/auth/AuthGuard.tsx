@@ -16,6 +16,8 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
   const { isDemoMode } = useDemoMode();
 
   useEffect(() => {
+    console.log("AuthGuard - Demo mode status:", isDemoMode);
+    
     // If demo mode is active, allow access to protected routes immediately
     if (isDemoMode) {
       console.log("Demo mode active, bypassing authentication check");
@@ -70,7 +72,7 @@ const AuthGuard = ({ children }: AuthGuardProps) => {
     );
   }
 
-  // Return children immediately if in demo mode or authenticated
+  // If in demo mode or authenticated, render children
   return (isDemoMode || isAuthenticated) ? <>{children}</> : null;
 };
 
