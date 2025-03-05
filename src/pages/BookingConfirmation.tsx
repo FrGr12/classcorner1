@@ -1,185 +1,31 @@
 
-import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import Navigation from "@/components/landing/Navigation";
 import Footer from "@/components/landing/Footer";
-import { ClassItem } from "@/types/class";
-import { ArrowLeft, Info } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-import type { Booking } from "@/types/booking";
 import ClassInfoSummary from "@/components/booking/ClassInfoSummary";
 import GuestBookingForm from "@/components/booking/GuestBookingForm";
 import BookingDetailsCard from "@/components/booking/BookingDetailsCard";
 import BookingFooterActions from "@/components/booking/BookingFooterActions";
+import BackButton from "@/components/booking/BackButton";
+import BookingAlert from "@/components/booking/BookingAlert";
+import { useBookingConfirmation } from "@/hooks/useBookingConfirmation";
 
 const BookingConfirmation = () => {
-  const location = useLocation();
-  const navigate = useNavigate();
-  const [classItem, setClassItem] = useState<ClassItem & { sessionId?: number } | null>(
-    location.state?.classItem || null
-  );
-  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
-  const [isCancellationOpen, setIsCancellationOpen] = useState(false);
-  const [booking, setBooking] = useState<Booking | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [guestEmail, setGuestEmail] = useState("");
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [isGuestBooking, setIsGuestBooking] = useState(false);
-
-  // Check for classItem in location state when component mounts or location changes
-  useEffect(() => {
-    console.log("BookingConfirmation: location.state:", location.state);
-    if (location.state?.classItem) {
-      setClassItem(location.state.classItem);
-    } else if (!classItem) {
-      console.log("BookingConfirmation: No class item found, redirecting to browse");
-      navigate("/browse", { 
-        replace: true,
-        state: { error: "No class selected. Please choose a class first." }
-      });
-    }
-  }, [location, navigate]);
-
-  const handleGuestBooking = async () => {
-    try {
-      setIsSubmitting(true);
-      
-      if (!classItem) {
-        toast.error("No class selected. Please choose a class first.");
-        return;
-      }
-      
-      console.log("Creating guest booking with date:", classItem.date);
-      
-      // Convert the date to an ISO string if it's a Date object
-      const selectedDate = classItem.date instanceof Date 
-        ? classItem.date.toISOString() 
-        : Array.isArray(classItem.date) && classItem.date.length > 0
-          ? classItem.date[0].toISOString()
-          : null;
-      
-      // First, check if the course exists in the database
-      const { data: courseExists, error: courseCheckError } = await supabase
-        .from('courses')
-        .select('id')
-        .eq('id', classItem.id)
-        .single();
-
-      if (courseCheckError) {
-        // If the course doesn't exist in production, create a "stub" entry for it
-        // This is a workaround for demo purposes only
-        const { data: newCourse, error: createCourseError } = await supabase
-          .from('courses')
-          .insert({
-            id: classItem.id,
-            title: classItem.title,
-            price: classItem.price,
-            instructor: classItem.instructor,
-            category: classItem.category || 'Other',
-            location: classItem.city,
-            description: `This is a demo course for ${classItem.title}`,
-            status: 'published'
-          })
-          .select()
-          .single();
-
-        if (createCourseError) {
-          throw new Error(`Failed to create course: ${createCourseError.message}`);
-        }
-      }
-
-      const { data, error } = await supabase
-        .from('guest_bookings')
-        .insert({
-          email: guestEmail,
-          first_name: firstName,
-          last_name: lastName,
-          course_id: classItem.id,
-          selected_date: selectedDate,
-          total_price: classItem.price,
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      toast.success("Booking initiated! Please check your email to complete the process.");
-      
-      navigate("/booking-success", { 
-        state: { 
-          isGuest: true,
-          email: guestEmail
-        }
-      });
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create guest booking");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleProceedToPayment = async () => {
-    try {
-      setIsSubmitting(true);
-      
-      if (!classItem) {
-        toast.error("No class selected. Please choose a class first.");
-        return;
-      }
-      
-      const { data: { user } } = await supabase.auth.getUser();
-      
-      if (!user) {
-        setIsGuestBooking(true);
-        return;
-      }
-
-      const { data: newBooking, error } = await supabase
-        .from('bookings')
-        .insert({
-          course_id: classItem.id,
-          student_id: user.id,
-          selected_date: classItem.date,
-          total_price: classItem.price,
-          status: 'pending'
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-      setBooking(newBooking);
-      
-      navigate("/payment", { 
-        state: { 
-          classItem,
-          bookingId: newBooking.id
-        }
-      });
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create booking");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleGoBack = () => {
-    if (isGuestBooking) {
-      setIsGuestBooking(false);
-      return;
-    }
-
-    if (classItem?.id && classItem?.category) {
-      navigate(`/class/${classItem.category}/${classItem.id}`);
-    } else {
-      navigate("/browse");
-    }
-  };
+  const {
+    classItem,
+    booking,
+    isSubmitting,
+    guestEmail,
+    firstName,
+    lastName,
+    isGuestBooking,
+    setGuestEmail,
+    setFirstName,
+    setLastName,
+    handleGuestBooking,
+    handleProceedToPayment,
+    handleGoBack
+  } = useBookingConfirmation();
 
   // If we're still checking or no class item was found, don't render the full page
   if (!classItem) {
@@ -190,27 +36,11 @@ const BookingConfirmation = () => {
     <div className="min-h-screen bg-neutral-100">
       <Navigation />
       <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <Button
-          variant="outline"
-          size="lg"
-          className="mb-6 gap-2 text-base hover:bg-neutral-100"
-          onClick={handleGoBack}
-        >
-          <ArrowLeft className="h-5 w-5" />
-          {isGuestBooking ? "Back to booking details" : "Back to class details"}
-        </Button>
+        <BackButton onClick={handleGoBack} isGuestBooking={isGuestBooking} />
 
         <h1 className="text-3xl font-bold mb-8">Booking Confirmation</h1>
 
-        {!isGuestBooking && (
-          <Alert className="mb-6">
-            <Info className="h-4 w-4" />
-            <AlertDescription>
-              Our flexible refund policy: Get a full refund if you cancel more than 48 hours before the class. 
-              No refunds are available within 48 hours of the class start time.
-            </AlertDescription>
-          </Alert>
-        )}
+        {!isGuestBooking && <BookingAlert />}
         
         <ClassInfoSummary classItem={classItem} />
         
