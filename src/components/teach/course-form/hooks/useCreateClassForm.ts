@@ -1,173 +1,173 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useNavigate } from "react-router-dom";
-import { useToast } from "@/hooks/use-toast";
-import { CourseFormValues, courseFormSchema } from "../CourseFormContext";
-import { handleError } from "@/utils/errorHandler";
+import { courseFormSchema, CourseFormValues } from "../CourseFormContext";
 import { Session } from "@/types/session";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 export const useCreateClassForm = (
-  isSubmitting: boolean,
+  isSubmitting: boolean, 
   setIsSubmitting: (value: boolean) => void,
-  draftCount: number
+  draftCount: number,
+  userId: string | null
 ) => {
-  const { toast } = useToast();
-  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
+  const [currentStepString, setCurrentStepString] = useState("general");
   const [sessions, setSessions] = useState<Session[]>([]);
+  const totalSteps = 5; // Total number of steps in the form
 
+  // Initialize form with zod resolver
   const form = useForm<CourseFormValues>({
     resolver: zodResolver(courseFormSchema),
     defaultValues: {
-      title: '',
-      description: '',
-      category: '',
-      location: '',
-      address: '',
-      city: '',
+      title: "",
+      description: "",
+      category: "",
+      location: "",
       is_online: false,
-      capacity: 1,
+      capacity: 5,
       price: 0,
-      duration: "60", // Store as string to match database
+      duration: "60",
       sessions: [],
-      learning_outcomes: [''],
-      requirements: [''],
-      items_to_bring: [''],
+      learning_outcomes: [""],
+      requirements: [""],
+      items_to_bring: [""],
       images: [],
-      status: 'draft',
+      status: "draft",
       min_participants: 1,
       max_participants: 10,
       waitlist_enabled: false,
-      max_waitlist_size: 5,
       private_bookings_enabled: false,
       group_bookings_enabled: false
-    },
-    mode: "onChange",
+    }
   });
 
-  // Form step navigation
-  const nextStep = () => setCurrentStep(currentStep + 1);
-  const prevStep = () => setCurrentStep(currentStep - 1);
-
-  const totalSteps = 5;
-  
-  // String values for step navigation
-  const currentStepString = String(currentStep);
-  const setCurrentStepString = (step: string) => setCurrentStep(Number(step));
-  
   // Navigation functions
-  const goToNextStep = () => nextStep();
-  const goToPreviousStep = () => prevStep();
+  const goToNextStep = useCallback(() => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep(prev => prev + 1);
+      
+      // Update step string based on index
+      const stepStrings = ["general", "details", "sessions", "pricing", "media"];
+      setCurrentStepString(stepStrings[currentStep + 1]);
+    }
+  }, [currentStep, totalSteps]);
 
-  const handleSubmitDraft = async () => {
+  const goToPreviousStep = useCallback(() => {
+    if (currentStep > 0) {
+      setCurrentStep(prev => prev - 1);
+      
+      // Update step string based on index
+      const stepStrings = ["general", "details", "sessions", "pricing", "media"];
+      setCurrentStepString(stepStrings[currentStep - 1]);
+    }
+  }, [currentStep]);
+
+  // Form submission handlers
+  const handleSubmitDraft = useCallback(async () => {
     try {
-      const formValues = form.getValues();
-      // Format form values to match database structure
+      if (!userId) {
+        toast.error("You need to be logged in to save a draft");
+        return;
+      }
+
       setIsSubmitting(true);
       
-      // Since we're bypassing auth, let's use a mock instructor ID
-      const mockInstructorId = "instructor456";
-  
-      // Make sure we're providing all required fields
-      const courseData = {
-        instructor_id: mockInstructorId,
-        title: formValues.title || 'Untitled Course',
-        description: formValues.description || 'No description',
-        category: formValues.category || 'Uncategorized',
-        location: formValues.location || 'Unknown',
-        price: formValues.price || 0,
-        duration: String(formValues.duration), // Ensure duration is always a string
-        capacity: formValues.capacity,
-        is_online: formValues.is_online,
-        address: formValues.address,
-        city: formValues.city,
-        learning_outcomes: formValues.learning_outcomes,
-        requirements: formValues.requirements,
-        items_to_bring: formValues.items_to_bring,
-        status: "draft" as const,
-        images: formValues.images,
-        sessions: formValues.sessions,
-        min_participants: formValues.min_participants,
-        max_participants: formValues.max_participants,
-        waitlist_enabled: formValues.waitlist_enabled,
-        max_waitlist_size: formValues.max_waitlist_size,
-        private_bookings_enabled: formValues.private_bookings_enabled,
-        group_bookings_enabled: formValues.group_bookings_enabled
-      };
+      // Get form values
+      const values = form.getValues();
       
-      // For demo purposes, just show a success toast instead of calling the database
-      setTimeout(() => {
-        toast({
-          title: "Draft saved",
-          description: "Your class has been saved as a draft.",
-        });
-        setIsSubmitting(false);
-      }, 1500);
-    } catch (error) {
-      handleError(error, {
-        title: "Failed to save draft",
-        description: "Please check your connection and try again.",
-        position: "top-right",
-      });
+      // Add sessions info
+      values.sessions = sessions;
+      
+      // Set status to draft
+      values.status = "draft";
+      
+      console.log("Submitting draft with values:", values);
+      
+      // Insert into Supabase
+      const { data, error } = await supabase
+        .from('courses')
+        .insert({
+          ...values,
+          instructor_id: userId
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      toast.success("Draft saved successfully!");
+      console.log("Draft saved:", data);
+      
+      // Reset form after successful submission if needed
+      // form.reset();
+      
+    } catch (error: any) {
+      console.error("Error saving draft:", error);
+      toast.error(`Failed to save draft: ${error.message}`);
+    } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [form, sessions, setIsSubmitting, userId]);
 
-  const handleSubmitClass = async () => {
+  const handleSubmitClass = useCallback(async () => {
     try {
-      setIsSubmitting(true);
-      const formValues = form.getValues();
+      if (!userId) {
+        toast.error("You need to be logged in to publish a class");
+        return;
+      }
 
-      // Since we're bypassing auth, let's use a mock instructor ID
-      const mockInstructorId = "instructor456";
-  
-      // Make sure we're providing all required fields
-      const courseData = {
-        instructor_id: mockInstructorId,
-        title: formValues.title || 'Untitled Course',
-        description: formValues.description || 'No description',
-        category: formValues.category || 'Uncategorized',
-        location: formValues.location || 'Unknown',
-        price: formValues.price || 0,
-        duration: String(formValues.duration), // Ensure duration is always a string
-        capacity: formValues.capacity,
-        is_online: formValues.is_online,
-        address: formValues.address,
-        city: formValues.city,
-        learning_outcomes: formValues.learning_outcomes,
-        requirements: formValues.requirements,
-        items_to_bring: formValues.items_to_bring,
-        status: "published" as const,
-        images: formValues.images,
-        sessions: formValues.sessions,
-        min_participants: formValues.min_participants,
-        max_participants: formValues.max_participants,
-        waitlist_enabled: formValues.waitlist_enabled,
-        max_waitlist_size: formValues.max_waitlist_size,
-        private_bookings_enabled: formValues.private_bookings_enabled,
-        group_bookings_enabled: formValues.group_bookings_enabled
-      };
+      setIsSubmitting(true);
       
-      // For demo purposes, just show a success toast instead of calling the database
-      setTimeout(() => {
-        toast({
-          title: "Class created",
-          description: "Your class has been created and is now live!",
-        });
-        navigate('/dashboard');
+      // Validate all fields
+      const valid = await form.trigger();
+      if (!valid) {
+        toast.error("Please fill in all required fields");
         setIsSubmitting(false);
-      }, 1500);
-    } catch (error) {
-      handleError(error, {
-        title: "Failed to create class",
-        description: "Please check your connection and try again.",
-        position: "top-right",
-      });
+        return;
+      }
+      
+      // Get form values
+      const values = form.getValues();
+      
+      // Add sessions info
+      values.sessions = sessions;
+      
+      // Set status to published
+      values.status = "published";
+      
+      console.log("Publishing class with values:", values);
+      
+      // Insert into Supabase
+      const { data, error } = await supabase
+        .from('courses')
+        .insert({
+          ...values,
+          instructor_id: userId
+        })
+        .select()
+        .single();
+      
+      if (error) throw error;
+      
+      toast.success("Class published successfully!");
+      console.log("Class published:", data);
+      
+      // Reset form after successful submission
+      form.reset();
+      setSessions([]);
+      setCurrentStep(0);
+      setCurrentStepString("general");
+      
+    } catch (error: any) {
+      console.error("Error publishing class:", error);
+      toast.error(`Failed to publish class: ${error.message}`);
+    } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [form, sessions, setIsSubmitting, userId]);
 
   return {
     form,

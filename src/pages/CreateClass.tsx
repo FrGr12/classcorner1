@@ -6,23 +6,52 @@ import CreateClassForm from "@/components/teach/course-form/CreateClassForm";
 import { handleError } from "@/utils/errorHandler";
 import { Skeleton } from "@/components/ui/skeleton/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
 const CreateClass = () => {
   const [draftCount, setDraftCount] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userId, setUserId] = useState<string | null>(null);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchDraftCount = async () => {
+    const checkUserAndFetchDrafts = async () => {
       try {
         setIsLoading(true);
-        // Since we're bypassing auth, let's set a mock instructor ID
-        const mockInstructorId = "instructor456";
-
-        // In a real app, we would get the user ID from auth
-        // For now, let's set a mock draft count to simulate data
-        setDraftCount(3);
+        
+        // Get current user
+        const { data: { user }, error: userError } = await supabase.auth.getUser();
+        
+        if (userError) {
+          throw userError;
+        }
+        
+        if (!user) {
+          toast({
+            title: "Authentication required",
+            description: "Please sign in to create classes",
+            variant: "destructive"
+          });
+          navigate("/auth");
+          return;
+        }
+        
+        setUserId(user.id);
+        
+        // Get draft count for the current user
+        const { data: drafts, error: draftsError } = await supabase
+          .from('courses')
+          .select('id')
+          .eq('instructor_id', user.id)
+          .eq('status', 'draft');
+          
+        if (draftsError) {
+          throw draftsError;
+        }
+        
+        setDraftCount(drafts?.length || 0);
         setIsLoading(false);
       } catch (error) {
         handleError(error, {
@@ -31,15 +60,15 @@ const CreateClass = () => {
           position: "top-right",
           action: {
             label: "Retry",
-            onClick: () => fetchDraftCount()
+            onClick: () => checkUserAndFetchDrafts()
           }
         });
         setIsLoading(false);
       }
     };
 
-    fetchDraftCount();
-  }, []);
+    checkUserAndFetchDrafts();
+  }, [navigate, toast]);
 
   if (isLoading) {
     return (
@@ -68,6 +97,7 @@ const CreateClass = () => {
         isSubmitting={isSubmitting}
         setIsSubmitting={setIsSubmitting}
         draftCount={draftCount}
+        userId={userId}
       />
     </div>
   );

@@ -9,12 +9,14 @@ interface CreateClassFormProps {
   isSubmitting: boolean;
   setIsSubmitting: (isSubmitting: boolean) => void;
   draftCount: number;
+  userId: string | null;
 }
 
 const CreateClassForm = ({ 
   isSubmitting, 
   setIsSubmitting,
-  draftCount 
+  draftCount,
+  userId
 }: CreateClassFormProps) => {
   const {
     form,
@@ -28,7 +30,7 @@ const CreateClassForm = ({
     setSessions,
     handleSubmitDraft,
     handleSubmitClass
-  } = useCreateClassForm(isSubmitting, setIsSubmitting, draftCount);
+  } = useCreateClassForm(isSubmitting, setIsSubmitting, draftCount, userId);
 
   return (
     <CourseFormProvider 
