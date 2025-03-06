@@ -28,7 +28,9 @@ export const courseFormSchema = z.object({
   waitlist_enabled: z.boolean().default(false),
   max_waitlist_size: z.number().int().nonnegative().optional(),
   private_bookings_enabled: z.boolean().default(false),
-  group_bookings_enabled: z.boolean().default(false)
+  group_bookings_enabled: z.boolean().default(false),
+  // Add the instructor_id field
+  instructor_id: z.string().optional()
 });
 
 export type CourseFormValues = z.infer<typeof courseFormSchema>;

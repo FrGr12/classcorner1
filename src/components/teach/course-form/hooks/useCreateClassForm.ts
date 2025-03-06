@@ -78,8 +78,8 @@ export const useCreateClassForm = (
       // Get form values
       const values = form.getValues();
       
-      // Add sessions info
-      const courseData = {
+      // Prepare course data with all required fields
+      const courseData: CourseFormValues = {
         ...values,
         sessions: sessions,
         status: "draft",
@@ -105,9 +105,6 @@ export const useCreateClassForm = (
       
       toast.success("Draft saved successfully!");
       console.log("Draft saved:", data);
-      
-      // Reset form after successful submission if needed
-      // form.reset();
       
     } catch (error: any) {
       console.error("Error saving draft:", error);
@@ -138,7 +135,7 @@ export const useCreateClassForm = (
       const values = form.getValues();
       
       // Prepare course data with all required fields
-      const courseData = {
+      const courseData: CourseFormValues = {
         ...values,
         sessions: sessions,
         status: "published",
