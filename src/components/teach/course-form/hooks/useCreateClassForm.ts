@@ -79,20 +79,25 @@ export const useCreateClassForm = (
       const values = form.getValues();
       
       // Add sessions info
-      values.sessions = sessions;
+      const courseData = {
+        ...values,
+        sessions: sessions,
+        status: "draft",
+        instructor_id: userId,
+        // Ensure required fields have values (they're required by the database schema)
+        category: values.category || "",
+        description: values.description || "",
+        location: values.location || "",
+        title: values.title || "",
+        price: values.price || 0
+      };
       
-      // Set status to draft
-      values.status = "draft";
-      
-      console.log("Submitting draft with values:", values);
+      console.log("Submitting draft with values:", courseData);
       
       // Insert into Supabase
       const { data, error } = await supabase
         .from('courses')
-        .insert({
-          ...values,
-          instructor_id: userId
-        })
+        .insert(courseData)
         .select()
         .single();
       
@@ -132,21 +137,26 @@ export const useCreateClassForm = (
       // Get form values
       const values = form.getValues();
       
-      // Add sessions info
-      values.sessions = sessions;
+      // Prepare course data with all required fields
+      const courseData = {
+        ...values,
+        sessions: sessions,
+        status: "published",
+        instructor_id: userId,
+        // Ensure required fields have values (they're required by the database schema)
+        category: values.category || "",
+        description: values.description || "",
+        location: values.location || "",
+        title: values.title || "",
+        price: values.price || 0
+      };
       
-      // Set status to published
-      values.status = "published";
-      
-      console.log("Publishing class with values:", values);
+      console.log("Publishing class with values:", courseData);
       
       // Insert into Supabase
       const { data, error } = await supabase
         .from('courses')
-        .insert({
-          ...values,
-          instructor_id: userId
-        })
+        .insert(courseData)
         .select()
         .single();
       
