@@ -78,13 +78,13 @@ export const useCreateClassForm = (
       // Get form values
       const values = form.getValues();
       
-      // Prepare course data with all required fields
-      const courseData: CourseFormValues = {
+      // Prepare course data with required fields to match database schema
+      const courseData = {
         ...values,
         sessions: sessions,
-        status: "draft",
+        status: "draft" as const,
         instructor_id: userId,
-        // Ensure required fields have values (they're required by the database schema)
+        // Ensure required fields have values
         category: values.category || "",
         description: values.description || "",
         location: values.location || "",
@@ -134,13 +134,13 @@ export const useCreateClassForm = (
       // Get form values
       const values = form.getValues();
       
-      // Prepare course data with all required fields
-      const courseData: CourseFormValues = {
+      // Prepare course data with required fields to match database schema
+      const courseData = {
         ...values,
         sessions: sessions,
-        status: "published",
+        status: "published" as const,
         instructor_id: userId,
-        // Ensure required fields have values (they're required by the database schema)
+        // Ensure required fields have values
         category: values.category || "",
         description: values.description || "",
         location: values.location || "",
