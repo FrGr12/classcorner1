@@ -6,12 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { AuthError } from "@supabase/supabase-js";
 
 const Auth = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [session, setSession] = useState<any>(null);
   const [authError, setAuthError] = useState<string | null>(null);
+  const [lastAttemptedEmail, setLastAttemptedEmail] = useState<string | null>(null);
   
   // Get return path from state (if available)
   const returnTo = location.state?.returnTo || "/";
@@ -72,6 +74,9 @@ const Auth = () => {
       
       if (!email || !password) return;
       
+      setLastAttemptedEmail(email);
+      console.log("Manual login attempt for:", email);
+      
       const { data, error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -79,8 +84,7 @@ const Auth = () => {
       
       if (error) {
         console.error("Manual login error:", error);
-        setAuthError(error.message);
-        toast.error(error.message);
+        handleAuthError(error, email);
       } else {
         console.log("Manual login success:", data);
         toast.success("Login successful");
@@ -89,6 +93,75 @@ const Auth = () => {
       console.error("Unexpected error:", error);
       setAuthError(error.message);
       toast.error(error.message);
+    }
+  };
+
+  // Try magic link login for debugging
+  const handleMagicLinkLogin = async () => {
+    try {
+      const email = prompt('Enter your email for magic link');
+      if (!email) return;
+      
+      setLastAttemptedEmail(email);
+      console.log("Sending magic link to:", email);
+      
+      const { data, error } = await supabase.auth.signInWithOtp({
+        email,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
+      });
+      
+      if (error) {
+        console.error("Magic link error:", error);
+        handleAuthError(error, email);
+      } else {
+        console.log("Magic link sent:", data);
+        toast.success("Magic link sent! Check your email");
+      }
+    } catch (error: any) {
+      console.error("Unexpected error:", error);
+      setAuthError(error.message);
+      toast.error(error.message);
+    }
+  };
+
+  // Handle specific auth errors with more helpful messages
+  const handleAuthError = (error: AuthError, email?: string) => {
+    console.error("Auth error details:", error);
+    
+    // Check if user exists but incorrect password
+    if (error.message.includes("Invalid login credentials")) {
+      // Try to get more details about the user
+      checkUserExists(email || lastAttemptedEmail);
+    }
+    
+    setAuthError(error.message);
+    toast.error(error.message);
+  };
+
+  // Helper to check if user exists
+  const checkUserExists = async (email: string | null) => {
+    if (!email) return;
+    
+    try {
+      // Try password reset as a way to verify if email exists
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/password-reset`,
+      });
+      
+      if (error) {
+        console.error("Email check error:", error);
+        if (error.message.includes("Email not found")) {
+          setAuthError("Account doesn't exist with this email. Please sign up first.");
+          toast.error("Account doesn't exist with this email");
+        }
+      } else {
+        console.log("User exists, password reset email sent");
+        toast.info("Password reset email sent. Please check your inbox.");
+      }
+    } catch (error) {
+      console.error("User check error:", error);
     }
   };
 
@@ -136,7 +209,7 @@ const Auth = () => {
             Forgot your password?
           </Button>
           
-          <div className="pt-2">
+          <div className="pt-2 flex justify-center space-x-2">
             <Button
               variant="outline"
               size="sm"
@@ -144,6 +217,15 @@ const Auth = () => {
               className="text-xs"
             >
               Debug Login
+            </Button>
+            
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleMagicLinkLogin}
+              className="text-xs"
+            >
+              Debug Magic Link
             </Button>
           </div>
         </div>
